@@ -1,0 +1,46 @@
+<app-admin-layout>
+  <button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
+  <nz-table #basicTable [nzData]="languages" [nzScroll]="{ x: '1000', y: '240px' }">
+    <thead>
+      <tr>
+        <th nzWidth="200px">Name</th>
+        <th nzWidth="200px">Dialect</th>
+        <th nzWidth="200px">Short</th>
+        <th nzWidth="100px" nzRight="0px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of languages">
+        <td>{{data.name}}</td>
+        <td>{{data.nameDialect}}</td>
+        <td>{{data.short}}</td>
+        <td (click)="edit(data.id)" style="cursor:pointer" nzRight="0px">
+          <i nz-icon nzType="edit" nzTheme="outline"></i>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <form nz-form [formGroup]="form">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="name">Name</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="name" type="name" id="name" formControlName="name">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="nameDialect">Name dialect</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="nameDialect" type="nameDialect" id="nameDialect" formControlName="nameDialect">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="short">Short</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="short" type="short" id="short" formControlName="short">
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </nz-modal>
+</app-admin-layout>

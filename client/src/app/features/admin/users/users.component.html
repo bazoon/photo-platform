@@ -1,0 +1,73 @@
+<app-admin-layout>
+  <nz-table #basicTable [nzData]="users" [nzScroll]="{ x: '2260px', y: '240px' }">
+    <thead>
+      <tr>
+        <th nzWidth="60px">id</th>
+        <th nzWidth="200px">firstName</th>
+        <th nzWidth="200px">lastName</th>
+        <th nzWidth="200px">nickName</th>
+        <th nzWidth="200px">avatar</th>
+        <th nzWidth="200px">email</th>
+        <th nzWidth="200px">phone</th>
+        <th nzWidth="200px">userType</th>
+        <th nzWidth="200px">awards</th>
+        <th nzWidth="200px">createdAt</th>
+        <th nzWidth="200px">rowState</th>
+        <th nzWidth="100px" nzRight="0px">action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of users">
+        <td>{{data.id}}</td>
+        <td>{{data.firstName}}</td>
+        <td>{{data.lastName}}</td>
+        <td>{{data.nickName}}</td>
+        <td>{{data.avatar}}</td>
+        <td>{{data.email}}</td>
+        <td>{{data.phone}}</td>
+        <td>{{data.userType}}</td>
+        <td>{{data.awards}}</td>
+        <td>{{data.createdAt}}</td>
+        <td>{{data.rowState}}</td>
+        <td (click)="edit(data.id)" style="cursor:pointer" nzRight="0px">
+          <i nz-icon nzType="edit" nzTheme="outline"></i>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <form nz-form [formGroup]="userForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="firstName">First name</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="firstName" type="firstName" id="firstName" formControlName="firstName">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="lastName">Last name</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="lastName" type="lastName" id="lastName" formControlName="lastName">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="nickName">Nick name</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="nickName" type="nickName" id="nickName" formControlName="nickName">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="email">Email</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="email" type="email" id="email" formControlName="email">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="phone">Phone</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="phone" type="phone" id="phone" formControlName="phone">
+        </nz-form-control>
+      </nz-form-item>
+
+    </form>
+  </nz-modal>
+</app-admin-layout>

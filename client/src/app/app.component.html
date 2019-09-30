@@ -1,0 +1,34 @@
+<nz-layout>
+  <nz-header>
+    <div class="logo-menu-container">
+      <a routerLink="/" class="logo">
+        <i nz-icon [nzType]="'home'"></i>
+      </a>
+      <ul nz-menu nzTheme="dark" nzMode="horizontal">
+        <li nz-menu-item>{{'contest.about' | translate}}</li>
+        <li nz-menu-item>{{'news' | translate}}</li>
+        <li nz-menu-item>{{'photos' | translate}}</li>
+        <li nz-menu-item>{{'contacts' | translate}}</li>
+        <li nz-menu-item>{{'archive' | translate}}</li>
+      </ul>
+    </div>
+    <div>
+      {{currentUser.user.firstName}}
+    </div>
+
+    <a *ngIf="!currentUser.isLoggedIn" routerLink="login" class="user-login">
+      <i nz-icon [nzType]="'user'"></i>
+      {{'login' | translate}}
+    </a>
+    <span *ngIf="currentUser.isLoggedIn" (click)="logout()" class="user-login">
+      <i nz-icon [nzType]="'user'"></i>
+      {{'logout' | translate}}
+    </span>
+
+    <div class="logo-menu-container">
+      <app-lang-selector></app-lang-selector>
+    </div>
+  </nz-header>
+  <router-outlet></router-outlet>
+  <nz-footer>Ant Design ©2019 Implement By Angular</nz-footer>
+</nz-layout>

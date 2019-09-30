@@ -1,0 +1,42 @@
+<nz-layout>
+  <nz-sider nzWidth="200px">
+    <div class="logo"></div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-submenu nzTitle="Справочники" nzIcon="user">
+        <ul>
+          <li nz-menu-item>
+            <a routerLink="/admin/languages">Языки</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/admin/users">Пользователи</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/admin/admins">Админы</a>
+          </li>
+          <li nz-menu-item>Салоны</li>
+          <li nz-menu-item>
+            <a routerLink="/admin/organizers">Организаторы</a>
+          </li>
+          <li nz-menu-item>Конкурсы</li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Team" nzIcon="team">
+        <ul>
+          <li nz-menu-item>Team 1</li>
+          <li nz-menu-item>Team 2</li>
+        </ul>
+      </li>
+      <li nz-menu-item>
+        <i nz-icon nzType="file"></i>
+        <span>File</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-content>
+      <div class="inner-content">
+        <ng-content></ng-content>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
