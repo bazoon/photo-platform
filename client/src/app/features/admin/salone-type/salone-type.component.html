@@ -1,0 +1,32 @@
+<app-admin-layout>
+  <h1>Типы салонов</h1>
+  <button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
+  <nz-table [nzData]="entities" [nzScroll]="{ x: '1000', y: '240px' }">
+    <thead>
+      <tr>
+        <th nzWidth="30px"></th>
+        <th nzWidth="200px">Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of entities">
+        <td style="cursor:pointer">
+          <i (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
+        </td>
+        <td>{{data.name}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <form nz-form [formGroup]="form">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="name">Name</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="name" type="name" id="name" formControlName="name">
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </nz-modal>
+</app-admin-layout>

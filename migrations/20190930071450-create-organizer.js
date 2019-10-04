@@ -60,7 +60,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       dateStatus: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,

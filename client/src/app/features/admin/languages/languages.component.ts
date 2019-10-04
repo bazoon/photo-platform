@@ -2,67 +2,51 @@ import { Component } from '@angular/core';
 import { Language, emptyLanguage } from '../../../core/types/language';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
+import { CrudComponent } from '../../../shared/crud';
 
 @Component({
   selector: 'app-languages',
   templateUrl: './languages.component.html',
   styleUrls: ['./languages.component.less']
 })
-export class LanguagesComponent {
+export class LanguagesComponent extends CrudComponent<Language>{
 
-  languages: Array<Language> = [];
-  editedLanguage: Language = emptyLanguage;
-  isEditVisible: boolean = false;
-  form: FormGroup;
+  getEmptyEntity() {
+    return emptyLanguage;
+  }
 
+  getEntities() {
+    return this.api.get<Array<Language>>("api/admin/languages");
+  }
 
-  constructor(private api: ApiService, private fb: FormBuilder) {
-    api.get<Array<Language>>("api/admin/languages").subscribe(languages => {
-      this.languages = languages;
-    });
+  putEntity(id: string, data: any) {
+    return this.api.put<Language>(`/api/admin/languages/${id}`, data);
+  }
 
-    this.form = this.fb.group({
+  postEntity(data: any) {
+    return this.api.post<Language>(`/api/admin/languages`, data);
+  }
+
+  deleteEntity(id: string) {
+    return this.api.delete<Language>(`/api/admin/languages/${id}`);
+  }
+
+  getForm() {
+    return this.fb.group({
       id: [],
       name: [null, []],
       nameDialect: [null, []],
       short: [null, []],
     });
-
   }
 
-  append() {
-    this.editedLanguage = emptyLanguage;
-    this.isEditVisible = true;
+  find(id: String) {
+    return this.entities.find(e => e.id === +id) || this.getEmptyEntity();
   }
 
-  edit(id: string) {
-    this.editedLanguage = this.languages.find(l => l.id == +id) || emptyLanguage;
-    this.isEditVisible = true;
-    this.form.patchValue(this.editedLanguage);
+  isEqual(e1: Language, e2: Language) {
+    return e1.id === e2.id;
   }
 
-  handleOk() {
-    this.isEditVisible = false;
-    if (this.form.value.id) {
-      this.api.put<Language>(`api/admin/languages/${this.form.value.id}`, this.form.value).subscribe(language => {
-        this.languages = this.languages.map(l => {
-          if (l.id == language.id) {
-            return language;
-          } else {
-            return l;
-          }
-        })
-      });
-    } else {
-      this.api.post<Language>(`api/admin/languages`, this.form.value).subscribe(language => {
-        this.languages.push(language);
-      });
-    }
-
-  }
-
-  handleCancel() {
-    this.isEditVisible = false;
-  }
 
 }

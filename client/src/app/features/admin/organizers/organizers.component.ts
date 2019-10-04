@@ -3,66 +3,50 @@ import { Organizer, emptyOrganizer } from '../../../core/types/organizer';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { Language, emptyLanguage } from '../../../core/types/language';
+import { CrudComponent } from '../../../shared/crud';
+
 
 @Component({
   selector: 'app-organizers',
   templateUrl: './organizers.component.html',
   styleUrls: ['./organizers.component.less']
 })
-export class OrganizersComponent {
-  organizers: Array<Organizer> = [];
+export class OrganizersComponent extends CrudComponent<Organizer> {
   languages: Array<Language> = [];
-  editedOrganizer: Organizer = emptyOrganizer;
-  isEditVisible: boolean = false;
-  form: FormGroup;
 
+  getEmptyEntity() {
+    return emptyOrganizer;
+  }
 
-  constructor(private api: ApiService, private fb: FormBuilder) {
-    api.get<Array<Organizer>>("api/admin/organizers").subscribe(organizers => {
-      this.organizers = organizers;
-    });
-
-    api.get<Array<Language>>("api/admin/languages").subscribe(languages => {
+  getEntities() {
+    this.api.get<Array<Language>>("api/admin/languages").subscribe(languages => {
       this.languages = languages;
     });
-
-    this.form = this.fb.group(emptyOrganizer);
+    return this.api.get<Array<Organizer>>("api/admin/Organizers");
   }
 
-  append() {
-    this.editedOrganizer = emptyOrganizer;
-    this.isEditVisible = true;
+  putEntity(id: string, data: any) {
+    return this.api.put<Organizer>(`/api/admin/Organizers/${id}`, data);
   }
 
-  edit(id: string) {
-    this.editedOrganizer = this.organizers.find(l => l.id == +id) || emptyOrganizer;
-    console.log(this.organizers)
-    this.isEditVisible = true;
-    this.form.patchValue(this.editedOrganizer);
+  postEntity(data: any) {
+    return this.api.post<Organizer>(`/api/admin/Organizers`, data);
   }
 
-  handleOk() {
-    this.isEditVisible = false;
-    if (this.form.value.id) {
-      this.api.put<Organizer>(`api/admin/organizers/${this.form.value.id}`, this.form.value).subscribe(Organizer => {
-        this.organizers = this.organizers.map(l => {
-          if (l.id == Organizer.id) {
-            return Organizer;
-          } else {
-            return l;
-          }
-        })
-      });
-    } else {
-      this.api.post<Organizer>(`api/admin/organizers`, this.form.value).subscribe(Organizer => {
-        this.organizers.push(Organizer);
-      });
-    }
-
+  deleteEntity(id: string) {
+    return this.api.delete<Organizer>(`/api/admin/Organizers/${id}`);
   }
 
-  handleCancel() {
-    this.isEditVisible = false;
+  getForm() {
+    return this.fb.group(emptyOrganizer);
+  }
+
+  find(id: String) {
+    return this.entities.find(e => e.id === +id) || this.getEmptyEntity();
+  }
+
+  isEqual(e1: Organizer, e2: Organizer) {
+    return e1.id === e2.id;
   }
 
 

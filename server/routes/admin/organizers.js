@@ -1,8 +1,31 @@
 const Router = require("koa-router");
 const router = new Router();
 const models = require("../../../models");
+const R = require("ramda");
 
 const expiresIn = 24 * 60 * 60 * 30;
+const fields = [
+  'id',
+  'languageId',
+  'name',
+  'emailSys',
+  'emailPub',
+  'addressLine1',
+  'addressLine2',
+  'www',
+  'phone',
+  'phoneTech',
+  'officer',
+  'logo',
+  'virtual',
+  'smtp',
+  'smtpPassword',
+  'smtpUsePub',
+  'createdA',
+  'rowState',
+  'dateStatus'
+];
+
 
 router.get("/", async ctx => {
   const query = `select organizers.id,languages.id as language_id, languages.name as language, organizers.name, email_sys, email_pub,
@@ -39,55 +62,17 @@ router.get("/", async ctx => {
 });
 
 router.put("/:id", async ctx => {
-  const {
-    languageId,
-    name,
-    emailSys,
-    emailPub,
-    addressLine1,
-    addressLine2,
-    www,
-    phone,
-    phoneTech,
-    officer,
-    logo,
-    virtual,
-    smtp,
-    smtpPassword,
-    smtpUsePub,
-    createdA,
-    rowState,
-    dateStatus
-  } = ctx.request.body;
-
-  console.log(ctx.request.body)
-
   const { id } = ctx.params;
+  const organizerValues = R.pick(fields, ctx.request.body);
+  organizerValues.dateStatus = organizerValues.dateStatus || new Date();
+
   const organizer = await models.Organizer.findOne({
     where: {
       id
     }
   });
 
-  await organizer.update({
-    languageId,
-    name,
-    emailSys,
-    emailPub,
-    addressLine1,
-    addressLine2,
-    www,
-    phone,
-    phoneTech,
-    officer,
-    logo,
-    virtual,
-    smtp,
-    smtp_psw: smtpPassword,
-    smtpUsePub,
-    rowState,
-    dateStatus: dateStatus || new Date()
-  });
+  await organizer.update(organizerValues);
 
   const language = await models.Language.findOne({
     where: {
@@ -96,47 +81,28 @@ router.put("/:id", async ctx => {
   });
 
   ctx.body = {
-    id: organizer.id,
+    ...R.pick(fields, organizer),
     language: language.name,
-    languageId: organizer.languageId,
-    name: organizer.name,
-    emailSys: organizer.emailSys,
-    emailPub: organizer.emailPub,
-    addressLine1: organizer.addressLine1,
-    addressLine2: organizer.addressLine2,
-    www: organizer.www,
-    phone: organizer.phone,
-    phoneTech: organizer.phoneTech,
-    officer: organizer.officer,
-    logo: organizer.logo,
-    virtual: organizer.virtual,
-    smtp: organizer.smtp,
-    smtp_psw: organizer.smtpPassword,
-    smtpUsePub: organizer.smtpUsePub,
-    rowState: organizer.rowState,
-    dateStatus: dateStatus || new Date()
   };
 });
 
 router.post("/", async ctx => {
-  const {
-    name,
-    nameDialect,
-    short,
-  } = ctx.request.body;
+  const organizerValues = R.pick(fields, ctx.request.body);
+  delete organizerValues.id;
+  organizerValues.dateStatus = organizerValues.dateStatus || new Date();
 
-  const language = await models.Language.create({
-    name,
-    nameDialect,
-    short,
+  const organizer = await models.Organizer.create(organizerValues);
+
+  const language = await models.Language.findOne({
+    where: {
+      id: organizer.languageId
+    }
   });
 
   ctx.body = {
-    id: language.id,
-    name: language.name,
-    nameDialect: language.nameDialect,
-    short: language.short,
-  }
+    ...R.pick(fields, organizer),
+    language: language.name,
+  };
 });
 
 

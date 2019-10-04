@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { User, emptyUser } from '../../../core/types/user';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { CrudComponent } from '../../../shared/crud';
 
 
 
@@ -10,51 +11,46 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.less']
 })
-export class UsersComponent {
-  users: Array<User>;
-  editedUser: User = emptyUser;
-  isEditVisible: boolean = false;
-  userForm: FormGroup;
+export class UsersComponent extends CrudComponent<User> {
+  getEmptyEntity() {
+    return emptyUser;
+  }
 
-  constructor(private api: ApiService, private fb: FormBuilder) {
-    this.users = [];
+  getEntities() {
+    return this.api.get<Array<User>>("api/admin/users");
+  }
 
-    api.get<Array<User>>("api/users").subscribe(users => {
-      this.users = users;
-    });
+  putEntity(id: string, data: any) {
+    return this.api.put<User>(`/api/admin/users/${id}`, data);
+  }
 
-    this.userForm = this.fb.group({
+  postEntity(data: any) {
+    return this.api.post<User>(`/api/admin/users`, data);
+  }
+
+  deleteEntity(id: string) {
+    return this.api.delete<User>(`/api/admin/users/${id}`);
+  }
+
+  getForm() {
+    return this.fb.group({
       id: [],
       email: [null, [Validators.email, Validators.required]],
-      firstName: ['mool'],
+      firstName: [''],
       lastName: [],
       nickName: [null, [Validators.required]],
       phone: [null, [Validators.required]],
-    });
-
-  }
-
-  edit(id: string) {
-    this.editedUser = this.users.find(u => u.id == +id) || emptyUser;
-    this.isEditVisible = true;
-    this.userForm.patchValue(this.editedUser);
-  }
-
-  handleOk() {
-    this.isEditVisible = false;
-    this.api.put<User>(`api/users/${this.userForm.value.id}`, this.userForm.value).subscribe(user => {
-      this.users = this.users.map(u => {
-        if (u.id == user.id) {
-          return user;
-        } else {
-          return u;
-        }
-      })
+      psw: [null, [Validators.required]],
     });
   }
 
-  handleCancel() {
-    this.isEditVisible = false;
+  find(id: String) {
+    return this.entities.find(e => e.id === +id) || this.getEmptyEntity();
   }
+
+  isEqual(e1: User, e2: User) {
+    return e1.id === e2.id;
+  }
+
 
 }

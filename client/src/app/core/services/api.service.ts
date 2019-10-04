@@ -45,4 +45,8 @@ export class ApiService {
     }
   }
 
+  delete<T>(url: string) {
+    return this.http.delete(url);
+  }
+
 }

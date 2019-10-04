@@ -1,14 +1,31 @@
 const Router = require("koa-router");
 const koaBody = require("koa-body");
 const router = new Router();
-const uploadFiles = require("../utils/uploadFiles");
-const getUploadFilePath = require("../utils/getUploadPath");
-const models = require("../../models");
+const uploadFiles = require("../../utils/uploadFiles");
+const getUploadFilePath = require("../../utils/getUploadPath");
+const models = require("../../../models");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
+const R = require("ramda");
 
-const expiresIn = 24 * 60 * 60 * 30;
+const publicFields = [
+  'id',
+  'email',
+  'firstName',
+  'lastName',
+  'nickName',
+  'phone',
+];
 
+const postFields = [
+  'id',
+  'email',
+  'firstName',
+  'lastName',
+  'nickName',
+  'phone',
+  'psw'
+];
 
 router.get("/", async ctx => {
   const users = await models.User.findAll();
@@ -70,5 +87,21 @@ router.put("/:id", async ctx => {
   }
 });
 
+router.post("/", async ctx => {
+  const userValues = R.pick(postFields, ctx.request.body);
+  delete userValues.id;
+  var salt = bcrypt.genSaltSync(10);
+  userValues.psw = bcrypt.hashSync(userValues.psw, salt);
+  const salonType = await models.User.create({
+    ...userValues,
+    userType: 1,
+    emailState: 1,
+    rowState: 1,
+    salt,
+    avatar: ''
+  });
+
+  ctx.body = R.pick(publicFields, salonType);
+});
 
 module.exports = router;

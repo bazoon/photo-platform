@@ -5,7 +5,9 @@ import { UsersComponent } from './users/users.component';
 import { AdminsComponent } from '../../features/admin/admins/admins.component';
 import { OrganizersComponent } from './organizers/organizers.component';
 import { LanguagesComponent } from './languages/languages.component';
-
+import { SaloneTypeComponent } from './salone-type/salone-type.component';
+import { SaloneComponent } from './salone/salone.component';
+import { ContestComponent } from './contest/contest.component';
 
 const routes: Routes = [
   {
@@ -23,6 +25,15 @@ const routes: Routes = [
       },
       {
         path: 'languages', component: LanguagesComponent
+      },
+      {
+        path: 'salon-types', component: SaloneTypeComponent
+      },
+      {
+        path: 'salones', component: SaloneComponent
+      },
+      {
+        path: 'contests', component: ContestComponent
       }
     ]
   }

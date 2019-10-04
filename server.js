@@ -28,16 +28,23 @@ app.use(koaBody());
 app.use(serve("client/dist/client"));
 app.use(mount("/uploads", serve("uploads")));
 
-// app.use(async (ctx, next) => {
-
-// });
+app.use(async (ctx, next) => {
+  const cookie = ctx.request.header.cookie;
+  const parts = cookie.split(";");
+  const tokenPart = parts.find(p => p.indexOf("token=") > 0);
+  const token = tokenPart && tokenPart.split("=")[1];
+  if (token) {
+    const decoded = jwt.verify(token, process.env.API_TOKEN);
+    ctx.user = decoded;
+  }
+  await next();
+});
 
 // app.use(async (ctx, next) => {
 //   await send(ctx, path.resolve("/client/dist", "index.html"));
 // });
 
 
-// app.use(koaJwt({ secret: process.env.API_TOKEN }));
 app.use(loginRouter.routes()).use(loginRouter.allowedMethods());
 app.use(koaJwt({ secret: process.env.API_TOKEN, cookie: "token" }));
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods());

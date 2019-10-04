@@ -1,40 +1,54 @@
 <app-admin-layout>
-  <nz-table #basicTable [nzData]="users" [nzScroll]="{ x: '900px', y: '240px' }">
+  <h1>Админы</h1>
+  <button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
+  <nz-table #basicTable [nzData]="entities" [nzScroll]="{ x: '900px', y: '240px' }">
     <thead>
       <tr>
-        <th nzWidth="20px">id</th>
+        <th nzWidth="60px" nzLeft="0px"></th>
         <th nzWidth="200px">Организатор</th>
         <th nzWidth="200px">Пользователь</th>
         <th nzWidth="200px">Тип</th>
-        <th nzWidth="200px" nzRight="0px"></th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of users">
-        <td>{{data.id}}</td>
-        <td>{{data.firstName}}</td>
-        <td>{{data.lastName}}</td>
-        <td>{{data.nickName}}</td>
-        <td (click)="edit(data.id)" style="cursor:pointer" nzRight="0px">
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
+      <tr *ngFor="let data of entities">
+        <td style="cursor:pointer">
+          <i (click)="edit(data.userId)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.userId)"></i>
         </td>
+        <td>{{data.organizer}}</td>
+        <td>{{data.user}}</td>
+        <td>{{formatAdminType(data.admType)}}</td>
       </tr>
     </tbody>
   </nz-table>
   <nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
     <form nz-form [formGroup]="form">
       <nz-form-item>
-        <nz-form-label [nzSpan]="6" nzFor="firstName">First name</nz-form-label>
+        <nz-form-label [nzSpan]="6" nzFor="organizerId">Organizer</nz-form-label>
         <nz-form-control [nzSpan]="14">
-          <input nz-input name="firstName" type="firstName" id="firstName" formControlName="firstName">
+          <nz-select formControlName="organizerId" nzAllowClear nzPlaceHolder="Организатор">
+            <nz-option *ngFor="let organizer of organizers" [nzValue]="organizer.id" [nzLabel]="organizer.name"></nz-option>
+          </nz-select>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-label [nzSpan]="6" nzFor="lastName">Last name</nz-form-label>
+        <nz-form-label [nzSpan]="6" nzFor="userId">User</nz-form-label>
         <nz-form-control [nzSpan]="14">
-          <input nz-input name="lastName" type="lastName" id="lastName" formControlName="lastName">
+          <nz-select formControlName="userId" nzAllowClear nzPlaceHolder="Пользователь" nzShowSearch="true">
+            <nz-option *ngFor="let user of users" [nzValue]="user.id" [nzLabel]="user.firstName + ' ' + user.lastName"></nz-option>
+          </nz-select>
         </nz-form-control>
       </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="userId">Type</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-select formControlName="admType" nzAllowClear nzShowSearch="true">
+            <nz-option *ngFor="let admType of admTypes" [nzValue]="admType.id" [nzLabel]="admType.name"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
     </form>
   </nz-modal>
 </app-admin-layout>

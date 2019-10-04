@@ -78,7 +78,6 @@ router.post("/login", async ctx => {
     nickName,
     password
   } = ctx.request.body;
-  console.log(nickName, password)
 
   const user = await models.User.findOne({
     where: {

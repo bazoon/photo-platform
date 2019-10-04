@@ -1,7 +1,10 @@
 <app-admin-layout>
-  <nz-table #basicTable [nzData]="users" [nzScroll]="{ x: '2260px', y: '240px' }">
+  <h1>Пользователи</h1>
+  <button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
+  <nz-table [nzData]="entities" [nzScroll]="{ x: '2260px', y: '240px' }">
     <thead>
       <tr>
+        <th nzWidth="60px"></th>
         <th nzWidth="60px">id</th>
         <th nzWidth="200px">firstName</th>
         <th nzWidth="200px">lastName</th>
@@ -13,11 +16,14 @@
         <th nzWidth="200px">awards</th>
         <th nzWidth="200px">createdAt</th>
         <th nzWidth="200px">rowState</th>
-        <th nzWidth="100px" nzRight="0px">action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of users">
+      <tr *ngFor="let data of entities">
+        <td style="cursor:pointer">
+          <i (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
+        </td>
         <td>{{data.id}}</td>
         <td>{{data.firstName}}</td>
         <td>{{data.lastName}}</td>
@@ -29,14 +35,11 @@
         <td>{{data.awards}}</td>
         <td>{{data.createdAt}}</td>
         <td>{{data.rowState}}</td>
-        <td (click)="edit(data.id)" style="cursor:pointer" nzRight="0px">
-          <i nz-icon nzType="edit" nzTheme="outline"></i>
-        </td>
       </tr>
     </tbody>
   </nz-table>
   <nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
-    <form nz-form [formGroup]="userForm">
+    <form nz-form [formGroup]="form">
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="firstName">First name</nz-form-label>
         <nz-form-control [nzSpan]="14">
@@ -65,6 +68,12 @@
         <nz-form-label [nzSpan]="6" nzFor="phone">Phone</nz-form-label>
         <nz-form-control [nzSpan]="14">
           <input nz-input name="phone" type="phone" id="phone" formControlName="phone">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="password">Password</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="password" type="password" id="password" formControlName="psw">
         </nz-form-control>
       </nz-form-item>
 

@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+
 import ru from '@angular/common/locales/ru';
 import { LoginComponent } from './features/login/login.component';
 import { MainComponent } from './features/main/main.component';
@@ -15,25 +15,13 @@ import { RegisterComponent } from './features/register/register.component';
 import { LangSelectorComponent } from './features/lang-selector/lang-selector.component';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { UserComponent } from './layout/user/user.component';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { UserComponent } from './layout/user/user.component';
-
+import { TranslationLoader, HttpLoaderFactory } from './core/misc/translationLoader';
 
 registerLocaleData(ru);
-
-export class TranslationLoader implements TranslateLoader {
-  constructor(private http: HttpClient) { }
-
-  getTranslation(lang: string): Observable<any> {
-    return this.http.get("/api/translation/" + lang);
-  }
-}
-
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslationLoader(http);
-}
-
 
 @NgModule({
   declarations: [
@@ -58,7 +46,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-
+  ],
+  exports: [
+    SharedModule
   ],
   bootstrap: [AppComponent],
 })

@@ -2,7 +2,7 @@
   <nz-sider nzWidth="200px">
     <div class="logo"></div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzTitle="Справочники" nzIcon="user">
+      <li nz-submenu nzTitle="Основные" nzIcon="user" nzOpen="true">
         <ul>
           <li nz-menu-item>
             <a routerLink="/admin/languages">Языки</a>
@@ -13,23 +13,29 @@
           <li nz-menu-item>
             <a routerLink="/admin/admins">Админы</a>
           </li>
-          <li nz-menu-item>Салоны</li>
+          <li nz-menu-item>
+            <a routerLink="/admin/contests">Конкурсы</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/admin/salones">Салоны</a>
+          </li>
           <li nz-menu-item>
             <a routerLink="/admin/organizers">Организаторы</a>
           </li>
           <li nz-menu-item>Конкурсы</li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Team" nzIcon="team">
+      <li nz-submenu nzTitle="Справочники" nzIcon="team">
         <ul>
-          <li nz-menu-item>Team 1</li>
-          <li nz-menu-item>Team 2</li>
+          <li nz-menu-item>
+            <a routerLink="/admin/salon-types">Типы салонов</a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/admin/users">Пользователи</a>
+          </li>
         </ul>
       </li>
-      <li nz-menu-item>
-        <i nz-icon nzType="file"></i>
-        <span>File</span>
-      </li>
+
     </ul>
   </nz-sider>
   <nz-layout>

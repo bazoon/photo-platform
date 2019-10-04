@@ -18,15 +18,14 @@ router.get("/:locale", koaBody({ multipart: true }), async ctx => {
     replacements: { locale }
   });
 
+  console.log(translations);
+
   translations.forEach(t => {
     let keys = t.code.split(".");
     insertValueAtKey(dict, keys, t.name)
   });
 
-
-
   ctx.body = dict;
-
 });
 
 function insertValueAtKey(obj, keys, value) {
@@ -36,7 +35,7 @@ function insertValueAtKey(obj, keys, value) {
     return;
   }
 
-  obj[key] = {};
+  obj[key] = obj[key] || {};
 
   insertValueAtKey(obj[key], keys, value);
 }
