@@ -2,39 +2,45 @@
   <nz-sider nzWidth="200px">
     <div class="logo"></div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+
       <li nz-submenu nzTitle="Основные" nzIcon="user" nzOpen="true">
         <ul>
           <li nz-menu-item>
             <a routerLink="/admin/languages">Языки</a>
           </li>
           <li nz-menu-item>
+            <a routerLink="/admin/languages">Словари</a>
+          </li>
+        </ul>
+      </li>
+
+      <li nz-submenu nzTitle="Пользователи" nzIcon="user" nzOpen="true">
+        <ul>
+          <li nz-menu-item>
             <a routerLink="/admin/users">Пользователи</a>
           </li>
           <li nz-menu-item>
             <a routerLink="/admin/admins">Админы</a>
           </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Организация" nzIcon="team" nzOpen="true">
+        <ul>
           <li nz-menu-item>
-            <a routerLink="/admin/contests">Конкурсы</a>
+            <a routerLink="/admin/organizers">Организаторы</a>
           </li>
           <li nz-menu-item>
             <a routerLink="/admin/salones">Салоны</a>
           </li>
           <li nz-menu-item>
-            <a routerLink="/admin/organizers">Организаторы</a>
-          </li>
-          <li nz-menu-item>Конкурсы</li>
-        </ul>
-      </li>
-      <li nz-submenu nzTitle="Справочники" nzIcon="team">
-        <ul>
-          <li nz-menu-item>
-            <a routerLink="/admin/salon-types">Типы салонов</a>
+            <a routerLink="/admin/contests">Конкурсы</a>
           </li>
           <li nz-menu-item>
-            <a routerLink="/admin/users">Пользователи</a>
+            <a routerLink="/admin/contests-menu">Меню</a>
           </li>
         </ul>
       </li>
+
 
     </ul>
   </nz-sider>

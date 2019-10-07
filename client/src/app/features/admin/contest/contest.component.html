@@ -23,29 +23,31 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of entities" (click)="loadAbout(data.id)">
+      <tr *ngFor="let data of entities" (click)="loadRelated(data.id)">
         <td style="cursor:pointer" nzLeft="0px">
           <i (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
           <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
         </td>
-        <th nzWidth="200px">{{data.salone}}</th>
-        <th nzWidth="200px">{{data.subname}}</th>
-        <th nzWidth="200px">{{data.years}}</th>
-        <th nzWidth="200px">{{data.dateStart | date}}</th>
-        <th nzWidth="200px">{{data.dateStop}}</th>
-        <th nzWidth="200px">{{data.dateJuriEnd}}</th>
-        <th nzWidth="200px">{{data.dateRateShow}}</th>
-        <th nzWidth="200px">{{data.showType}}</th>
-        <th nzWidth="200px">{{data.showRateState}}</th>
-        <th nzWidth="200px">{{data.democraty}}</th>
-        <th nzWidth="200px">{{data.payType}}</th>
-        <th nzWidth="200px">{{data.sectionCount}}</th>
-        <th nzWidth="200px">{{data.maxRate}}</th>
-        <th nzWidth="200px">{{data.maxSize}}</th>
-        <th nzWidth="200px">{{data.maxWeight}}</th>
+        <td nzWidth="200px">{{data.salone}}</td>
+        <td nzWidth="200px">{{data.subname}}</td>
+        <td nzWidth="200px">{{data.years}}</td>
+        <td nzWidth="200px">{{data.dateStart | date}}</td>
+        <td nzWidth="200px">{{data.dateStop}}</td>
+        <td nzWidth="200px">{{data.dateJuriEnd}}</td>
+        <td nzWidth="200px">{{data.dateRateShow}}</td>
+        <td nzWidth="200px">{{data.showType}}</td>
+        <td nzWidth="200px">{{data.showRateState}}</td>
+        <td nzWidth="200px">{{data.democraty}}</td>
+        <td nzWidth="200px">{{data.payType}}</td>
+        <td nzWidth="200px">{{data.sectionCount}}</td>
+        <td nzWidth="200px">{{data.maxRate}}</td>
+        <td nzWidth="200px">{{data.maxSize}}</td>
+        <td nzWidth="200px">{{data.maxWeight}}</td>
       </tr>
     </tbody>
   </nz-table>
+
+  <h1>О конкурсе</h1>
 
   <button [disabled]="!currentContest.id" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="appendAbout()">Добавить</button>
   <nz-table [nzData]="abouts" [nzLoading]="isAboutsLoading" [nzScroll]="{ x: '700px', y: '240px' }">
@@ -64,6 +66,31 @@
         </td>
         <td>{{data.name}}</td>
         <td>{{data.language}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <h1>Меню публикаций</h1>
+
+  <button [disabled]="!currentContest.id" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="appendMenu()">Добавить</button>
+  <nz-table [nzData]="abouts" [nzLoading]="isMenusLoading" [nzScroll]="{ x: '700px', y: '240px' }">
+    <thead>
+      <tr>
+        <th nzWidth="100px" nzLeft="0px"></th>
+        <th nzWidth="200px">id</th>
+        <th nzWidth="200px">Position</th>
+        <th nzWidth="200px">Parent id</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of contestMenus">
+        <td style="cursor:pointer" nzLeft="0px">
+          <i (click)="editContestMenu(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="removeAbout(data.id)"></i>
+        </td>
+        <td>{{data.id}}</td>
+        <td>{{data.position}}</td>
+        <td>{{data.parentId}}</td>
       </tr>
     </tbody>
   </nz-table>
@@ -190,6 +217,25 @@
         <ckeditor formControlName="rules" [editor]="Editor" [config]="ckconfig"></ckeditor>
       </nz-form-item>
     </form>
+  </nz-modal>
 
+  <nz-modal nzWidth="1000" [(nzVisible)]="isContestMenuVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelMenu()"
+    (nzOnOk)="handleOkMenu()">
+    <form nz-form [formGroup]="contestMenuForm">
+      <nz-form-item>
+        <nz-form-label nzFor="name">Position</nz-form-label>
+        <nz-form-control>
+          <input nz-input name="position" type="position" id="position" formControlName="position">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzFor="name">Parent Id</nz-form-label>
+        <nz-form-control>
+          <nz-select formControlName="parentId" nzAllowClear nzPlaceHolder="Parent">
+            <nz-option *ngFor="let menu of contestMenus" [nzValue]="menu.id" [nzLabel]="menu.id"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
   </nz-modal>
 </app-admin-layout>

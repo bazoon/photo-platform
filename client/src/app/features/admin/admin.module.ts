@@ -20,6 +20,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { TranslationLoader, HttpLoaderFactory } from '../../core/misc/translationLoader';
+import { ContestMenuComponent } from './contest-menu/contest-menu.component';
 
 
 
@@ -32,7 +33,8 @@ import { TranslationLoader, HttpLoaderFactory } from '../../core/misc/translatio
     LanguagesComponent,
     SaloneTypeComponent,
     SaloneComponent,
-    ContestComponent
+    ContestComponent,
+    ContestMenuComponent
   ],
   imports: [
 

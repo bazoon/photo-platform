@@ -9,7 +9,7 @@ import { UploadAdapter, TheUploadAdapterPlugin } from '../../../core/misc/upload
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import editorConfig from '../../../core/config/editorConfig';
 import { Salone } from '../../../core/types/salone';
-
+import { ContestMenu, emptyContestMenu } from '../../../core/types/contestMenu';
 
 
 @Component({
@@ -20,6 +20,8 @@ import { Salone } from '../../../core/types/salone';
 export class ContestComponent extends CrudComponent<Contest> {
   Contests: Array<Contest> = [];
   isAboutVisible = false;
+  isMenusLoading = false;
+  isContestMenuVisible = false;
   aboutForm: FormGroup = this.fb.group({
     id: [],
     name: [null, []],
@@ -27,12 +29,21 @@ export class ContestComponent extends CrudComponent<Contest> {
     thesis: '',
     rules: '',
   });
+  contestMenuForm = this.fb.group({
+    id: [],
+    contestId: [],
+    position: [],
+    parentId: []
+  });
   salones: Array<Salone> = [];
   abouts: Array<ContestAbout> = [];
+  contestMenus: Array<ContestMenu> = [];
   languages: Array<Language> = [];
   currentContest = emptyContest;
   isEditingAbout = 0;
+  isEditingMenu = 0;
   editingAbout = emptyContestAbout;
+  editingMenu = emptyContestMenu;
   isAboutsLoading = false;
   Editor = ClassicEditor;
   ckconfig = editorConfig
@@ -101,12 +112,25 @@ export class ContestComponent extends CrudComponent<Contest> {
     return e1.id === e2.id;
   }
 
-  loadAbout(id: string) {
+  loadRelated(id: string) {
     this.currentContest = this.find(id);
+    this.loadAbouts(id);
+    this.loadContestMenu(id);
+  }
+
+  loadAbouts(id: string) {
     this.isAboutsLoading = true;
-    this.api.get<Array<ContestAbout>>(`api/admin/ContestsAbout/all/${id}`).subscribe(abouts => {
+    this.api.get<Array<ContestAbout>>(`api/admin/contestsAbout/all/${id}`).subscribe(abouts => {
       this.abouts = abouts;
       this.isAboutsLoading = false;
+    });
+  }
+
+  loadContestMenu(id: string = '') {
+    this.isMenusLoading = true;
+    this.api.get<Array<ContestAbout>>(`api/admin/contestMenus/all/${id}`).subscribe(contestMenus => {
+      this.contestMenus = contestMenus;
+      this.isMenusLoading = false;
     });
   }
 
@@ -132,7 +156,6 @@ export class ContestComponent extends CrudComponent<Contest> {
   }
 
   handleOkAbout() {
-    console.log(1, this.aboutForm.value.content)
     const payload = {
       ...this.aboutForm.value,
       ContestId: this.currentContest && this.currentContest.id
@@ -161,6 +184,54 @@ export class ContestComponent extends CrudComponent<Contest> {
     this.api.delete(`/api/admin/ContestsAbout/${id}`).subscribe(() => {
       this.abouts = this.abouts.filter(a => a.id !== id);
     });
+  }
+
+  editContestMenu(id: string) {
+    this.editingEntity = this.find(id);
+    this.isEditingMenu = 2;
+    this.isContestMenuVisible = true;
+    this.api.get<ContestMenu>(`/api/admin/contestMenus/${id}`).subscribe(menu => {
+      this.editingMenu = menu;
+      this.contestMenuForm.patchValue(this.editingMenu);
+    });
+  }
+
+  handleOkMenu() {
+    const payload = {
+      ...this.contestMenuForm.value,
+      ContestId: this.currentContest && this.currentContest.id
+    }
+    this.isContestMenuVisible = false;
+
+    if (this.isEditingMenu === 1) {
+      this.api.post<ContestAbout>(`/api/admin/contestMenus/${this.currentContest.id}`, payload).subscribe(menu => {
+        this.contestMenus = this.contestMenus.concat([menu]);
+      });
+    } else if (this.isEditingMenu === 2) {
+      this.api.put<ContestAbout>(`/api/admin/contestMenus/${this.editingMenu.id}`, payload).subscribe(menu => {
+        this.contestMenus = this.contestMenus.map(m => {
+
+          if (m.id === menu.id) {
+            return menu;
+          }
+
+          return m;
+        });
+      });
+    }
+  }
+
+  handleCancelMenu() {
+    this.isContestMenuVisible = false;
+  }
+
+  appendMenu() {
+    this.editingMenu = emptyContestMenu;
+    this.isContestMenuVisible = true;
+    this.isEditingMenu = 1;
+    const id = this.currentContest && this.currentContest.id
+    this.loadContestMenu(id ? id + '' : '');
+    this.contestMenuForm.patchValue(emptyContestMenu);
   }
 
   // getRegularType(id: number) {
