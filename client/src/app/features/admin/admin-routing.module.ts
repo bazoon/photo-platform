@@ -8,6 +8,8 @@ import { LanguagesComponent } from './languages/languages.component';
 import { SaloneTypeComponent } from './salone-type/salone-type.component';
 import { SaloneComponent } from './salone/salone.component';
 import { ContestComponent } from './contest/contest.component';
+import { LexiconComponent } from './lexicon/lexicon.component';
+
 
 const routes: Routes = [
   {
@@ -34,6 +36,9 @@ const routes: Routes = [
       },
       {
         path: 'contests', component: ContestComponent
+      },
+      {
+        path: 'lexicons', component: LexiconComponent
       }
     ]
   }
