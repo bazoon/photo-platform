@@ -10,6 +10,8 @@ import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import editorConfig from '../../../core/config/editorConfig';
 import { Salone } from '../../../core/types/salone';
 import { ContestMenu, emptyContestMenu } from '../../../core/types/contestMenu';
+import { Lexicon } from '../../../core/types/lexicon';
+import { PubMenu } from '../../../core/types/pubMenu';
 
 
 @Component({
@@ -20,6 +22,7 @@ import { ContestMenu, emptyContestMenu } from '../../../core/types/contestMenu';
 export class ContestComponent extends CrudComponent<Contest> {
   Contests: Array<Contest> = [];
   isAboutVisible = false;
+  isLexiconVisible = false;
   isMenusLoading = false;
   isContestMenuVisible = false;
   aboutForm: FormGroup = this.fb.group({
@@ -35,8 +38,13 @@ export class ContestComponent extends CrudComponent<Contest> {
     position: [],
     parentId: []
   });
+  lexiconForm = this.fb.group({
+    lexiconId: [],
+  });
+  menuPubs: Array<any> = [];
   salones: Array<Salone> = [];
   abouts: Array<ContestAbout> = [];
+  lexicons: Array<Lexicon> = [];
   contestMenus: Array<ContestMenu> = [];
   languages: Array<Language> = [];
   currentContest = emptyContest;
@@ -47,12 +55,13 @@ export class ContestComponent extends CrudComponent<Contest> {
   isAboutsLoading = false;
   Editor = ClassicEditor;
   ckconfig = editorConfig
-
+  menuTree: Array<any> = [];
+  lexiconsModel = {};
+  currentMenuNode?: any;
+  isAppendingRootMenu = false;
 
   constructor(protected fb: FormBuilder, protected api: ApiService) {
     super(fb, api);
-
-
   }
 
   getEmptyEntity() {
@@ -116,6 +125,7 @@ export class ContestComponent extends CrudComponent<Contest> {
     this.currentContest = this.find(id);
     this.loadAbouts(id);
     this.loadContestMenu(id);
+    this.loadLexicons();
   }
 
   loadAbouts(id: string) {
@@ -129,8 +139,16 @@ export class ContestComponent extends CrudComponent<Contest> {
   loadContestMenu(id: string = '') {
     this.isMenusLoading = true;
     this.api.get<Array<ContestAbout>>(`api/admin/contestMenus/all/${id}`).subscribe(contestMenus => {
+
       this.contestMenus = contestMenus;
       this.isMenusLoading = false;
+      this.menuTree = contestMenus;
+    });
+  }
+
+  loadLexicons() {
+    this.api.get<Array<Lexicon>>(`api/admin/lexicons`).subscribe(lexicons => {
+      this.lexicons = lexicons;
     });
   }
 
@@ -225,15 +243,26 @@ export class ContestComponent extends CrudComponent<Contest> {
     this.isContestMenuVisible = false;
   }
 
-  appendMenu() {
-    this.editingMenu = emptyContestMenu;
-    this.isContestMenuVisible = true;
-    this.isEditingMenu = 1;
-    const id = this.currentContest && this.currentContest.id
-    this.loadContestMenu(id ? id + '' : '');
-    this.contestMenuForm.patchValue(emptyContestMenu);
+  appendMenu(lexiconId: number) {
+    this.isAppendingRootMenu = true;
+    this.api.post<ContestMenu>(`/api/admin/contestMenus/root`, { id: this.currentContest.id, lexiconId }).subscribe(menu => {
+      this.editingMenu = menu;
+      this.menuTree = this.menuTree.concat([{ lexiconId: menu.lexiconId, key: menu.id, }]);
+      this.isAppendingRootMenu = false;
+    });
   }
 
+  appendMenuNode(node: any, lexiconId: number) {
+    this.api.post<ContestMenu>(`/api/admin/contestMenus/${node.key}`, { contestId: this.currentContest.id, lexiconId }).subscribe(menu => {
+      node.addChildren([
+        {
+          lexiconId: menu.lexiconId,
+          key: menu.id,
+          position: menu.position
+        }
+      ]);
+    });
+  }
   // getRegularType(id: number) {
   //   return this.regularTypes[id].name;
   // }
@@ -241,5 +270,36 @@ export class ContestComponent extends CrudComponent<Contest> {
   // getPrivateType(id: number) {
   //   return this.privateTypes[id].name;
   // }
+
+
+  getLexicon(isAppendingRootMenu: boolean, node?: any) {
+    this.isAppendingRootMenu = isAppendingRootMenu;
+    this.isLexiconVisible = true;
+    this.currentMenuNode = node;
+  }
+
+  handleCancelLexicon() {
+    this.isLexiconVisible = false;
+  }
+
+  handleOkLexicon() {
+    this.isLexiconVisible = false;
+    if (this.isAppendingRootMenu) {
+      this.appendMenu(this.lexiconForm.value.lexiconId);
+    } else {
+      this.appendMenuNode(this.currentMenuNode, this.lexiconForm.value.lexiconId);
+    }
+  }
+
+  pubMenuLexiconChanged(node: any) {
+    return this.api.put<PubMenu>(`/api/admin/contestMenus/${node.key}`, {
+      contestMenuId: node.key,
+      lexiconId: node.origin.lexiconId
+    }).subscribe(pubMenus => {
+      console.log(pubMenus)
+
+    });
+  }
+
 
 }

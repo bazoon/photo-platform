@@ -3,7 +3,6 @@ import { SaloneType, emptySaloneType } from '../../../core/types/saloneType';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { CrudComponent } from '../../../shared/crud';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-salon-type',

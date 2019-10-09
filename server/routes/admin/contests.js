@@ -57,7 +57,6 @@ router.get("/", async ctx => {
 router.post("/", async ctx => {
   const contestValues = R.pick(fields, ctx.request.body);
   delete contestValues.id;
-  console.log(contestValues)
   let contest = await models.Contest.create(contestValues);
   ctx.body = await getContest(contest);
 });

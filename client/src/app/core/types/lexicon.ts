@@ -1,15 +1,13 @@
 export interface Lexicon {
   id?: number,
-  languageId?: number,
   code: string,
-  name: string,
-  category?: number
+  category?: number,
+  commentPhrase: string,
 };
 
 export const emptyLexicon: Lexicon = {
   id: undefined,
-  languageId: undefined,
   code: '',
-  name: '',
-  category: undefined
+  category: undefined,
+  commentPhrase: ''
 };

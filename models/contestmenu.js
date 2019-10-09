@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
   const ContestMenu = sequelize.define('ContestMenu', {
     contestId: DataTypes.INTEGER,
     position: DataTypes.INTEGER,
-    parentId: DataTypes.INTEGER
+    parentId: DataTypes.INTEGER,
+    lexiconId: DataTypes.INTEGER
   }, {
       timestamps: false
     });

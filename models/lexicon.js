@@ -1,10 +1,9 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Lexicon = sequelize.define('Lexicon', {
-    languageId: DataTypes.INTEGER,
     code: DataTypes.STRING,
-    name: DataTypes.STRING,
-    category: DataTypes.INTEGER
+    category: DataTypes.INTEGER,
+    commentPhrase: DataTypes.STRING
   }, {
       timestamps: false
     });

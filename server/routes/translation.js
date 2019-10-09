@@ -9,8 +9,12 @@ const expiresIn = 24 * 60 * 60 * 30;
 router.get("/:locale", koaBody({ multipart: true }), async ctx => {
   const { locale } = ctx.params;
   const query = `
-    select code, lexicons.name from lexicons, languages
-    where lexicons.language_id=languages.id and languages.short=:locale
+    select code, phrases.name from lexicons, languages, phrases
+    where 
+    phrases.language_id=languages.id and
+    phrases.lexicon_id=lexicons.id and
+    languages.short=:locale
+    
   `;
   let dict = {};
 

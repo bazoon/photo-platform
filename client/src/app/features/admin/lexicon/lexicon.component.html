@@ -1,32 +1,77 @@
 <app-admin-layout>
-  <h1>Словари</h1>
+  <h1>Термины</h1>
   <button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
   <nz-table [nzData]="entities" [nzScroll]="{ x: '1000', y: '240px' }">
     <thead>
       <tr>
         <th nzWidth="60px"></th>
-        <th nzWidth="200px">Language</th>
         <th nzWidth="200px">Code</th>
-        <th nzWidth="200px">Name</th>
         <th nzWidth="200px">Category</th>
+        <th nzWidth="200px">Comment</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of entities">
+      <tr *ngFor="let data of entities" (click)="editPhrases(data.id)" [class.selected]="currentLexiconId===data.id">
         <td style="cursor:pointer">
           <i (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
           <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
         </td>
-        <td>{{data.language}}</td>
         <td>{{data.code}}</td>
         <td>{{data.name}}</td>
-        <td>{{data.category}}</td>
+        <td>{{data.commentPhrase}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+
+  <h1>Слова</h1>
+  <button [disabled]="!currentLexiconId" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="appendPhrase()">Добавить</button>
+  <nz-table [nzData]="phrases" [nzScroll]="{ x: '1000', y: '240px' }">
+    <thead>
+      <tr>
+        <th nzWidth="60px"></th>
+        <th nzWidth="200px">Language</th>
+        <th nzWidth="200px">Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of phrases">
+        <td style="cursor:pointer">
+          <i (click)="editPhrase(data)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="removePhrase(data.id)"></i>
+        </td>
+        <td>{{data.language}}</td>
+        <td>{{data.name}}</td>
       </tr>
     </tbody>
   </nz-table>
 
   <nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
     <form nz-form [formGroup]="form">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="code">Code</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="code" type="code" id="code" formControlName="code">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="category">Category</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="category" type="category" id="category" formControlName="category">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="commentPhrase">Comment</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="commentPhrase" type="commentPhrase" id="commentPhrase" formControlName="commentPhrase">
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </nz-modal>
+
+
+  <nz-modal [(nzVisible)]="isEditPhraseVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelPhrase()" (nzOnOk)="handleOkPhrase()">
+    <form nz-form [formGroup]="phraseForm">
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="language">Language</nz-form-label>
         <nz-form-control [nzSpan]="14">
@@ -36,21 +81,9 @@
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-label [nzSpan]="6" nzFor="code">Code</nz-form-label>
-        <nz-form-control [nzSpan]="14">
-          <input nz-input name="code" type="code" id="code" formControlName="code">
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="name">Name</nz-form-label>
         <nz-form-control [nzSpan]="14">
           <input nz-input name="name" type="name" id="name" formControlName="name">
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSpan]="6" nzFor="category">Category</nz-form-label>
-        <nz-form-control [nzSpan]="14">
-          <input nz-input name="category" type="category" id="category" formControlName="category">
         </nz-form-control>
       </nz-form-item>
     </form>

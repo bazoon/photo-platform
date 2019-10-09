@@ -6,30 +6,17 @@ const R = require("ramda");
 
 const fields = [
   'id',
-  'languageId',
   'code',
-  'name',
-  'category'
+  'category',
+  'commentPhrase'
 ];
 
 const fullFields = ['language'].concat(fields);
 
 
 router.get("/", async ctx => {
-  const query = `select languages.name as language, language_id, lexicons.id, code, lexicons.name, category from
-    lexicons, languages where lexicons.language_id=languages.id
-  `;
-  const [lexicons] = await models.sequelize.query(query);
-  ctx.body = lexicons.map(l => {
-    return {
-      id: l.id,
-      language: l.language,
-      languageId: l.language_id,
-      code: l.code,
-      category: l.category,
-      name: l.name
-    };
-  });
+  const lexicons = await models.Lexicon.findAll();
+  ctx.body = R.map(R.pick(fields), lexicons);
 });
 
 router.put("/:id", async ctx => {

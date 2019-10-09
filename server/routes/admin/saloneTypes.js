@@ -3,7 +3,7 @@ const router = new Router();
 const models = require("../../../models");
 const R = require("ramda");
 
-const expiresIn = 24 * 60 * 60 * 30;
+
 const fields = [
   'id',
   'name',

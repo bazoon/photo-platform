@@ -8,35 +8,55 @@ const fields = [
   'contestId',
   'position',
   'parentId',
+  'lexiconId'
 ];
+
+router.post("/root", async ctx => {
+  const { id, lexiconId } = ctx.request.body;
+  const contestMenu = await models.ContestMenu.create({
+    contestId: id,
+    position: 0,
+    parentId: -1,
+    lexiconId
+  });
+
+  ctx.body = R.pick(fields, contestMenu);
+});
 
 router.post("/:id", async ctx => {
   const { id } = ctx.params;
-  const contestMenuValues = {
-    ...R.pick(fields, ctx.request.body),
-    contestId: id,
-  };
-  const contestMenu = await models.ContestMenu.create(contestMenuValues);
-  ctx.body = R.pick(fields, contestMenu);
+  const { contestId, lexiconId } = ctx.request.body;
+  const contestMenu = await models.ContestMenu.create({
+    contestId,
+    parentId: id,
+    position: -1,
+    lexiconId
+  });
+  ctx.body = contestMenu;
 });
 
 router.put("/:id", async ctx => {
   const { id } = ctx.params;
 
-  let contestAbout = await models.ContestAbout.findOne({
+  let contestMenu = await models.ContestMenu.findOne({
     where: {
       id
     }
   });
 
-  await contestAbout.update(R.pick(fields, ctx.request.body));
-  ctx.body = R.pick(fields, contestAbout);
+  await contestMenu.update(R.pick(fields, ctx.request.body));
+  ctx.body = R.pick(fields, contestMenu);
 });
 
-router.get("/all/:id", async ctx => {
+router.get("/tree/:id", async ctx => {
   const {
     id
   } = ctx.params;
+
+  const query = `select contest_menus.id, position, parent_id, lexicons.code, lexicons.name 
+    from contest_menus, lexicons, pub_menus where
+    contest_menus.id=pub_menus.contest_menu_id and pub_menus.lexicon_id=lexicons.id
+  `;
 
   const contestMenus = await models.ContestMenu.findAll({
     where: {
@@ -45,6 +65,54 @@ router.get("/all/:id", async ctx => {
   });
 
   ctx.body = R.map(R.pick(fields), contestMenus);
+});
+
+router.get("/all/:id", async ctx => {
+  const {
+    id
+  } = ctx.params;
+
+
+  const query = `select contest_menus.id, lexicon_id, position, parent_id, code from
+    contest_menus, lexicons where contest_menus.contest_id=:id and contest_menus.lexicon_id=lexicons.id
+  `;
+
+  let [contestMenus] = await models.sequelize.query(query, {
+    replacements: {
+      id
+    }
+  });
+
+  contestMenus = contestMenus.map(m => {
+    return {
+      id: m.id,
+      key: m.id,
+      parentId: m.parent_id,
+      position: m.position,
+      title: m.code,
+      lexiconId: m.lexicon_id
+    }
+  });
+
+  const lookup = {};
+
+  contestMenus.forEach(menu => {
+    lookup[menu.id] = menu;
+  });
+
+  const r = contestMenus.reduce((acc, menu) => {
+    menu.children = menu.children || [];
+
+    if (menu.parentId && menu.parentId !== -1) {
+      const parentMenu = lookup[menu.parentId];
+      parentMenu.children = parentMenu.children || [];
+      parentMenu.children.push(menu);
+      return acc;
+    }
+    return acc.concat([menu]);
+  }, []);
+
+  ctx.body = r;
 });
 
 router.get("/:id", async ctx => {
