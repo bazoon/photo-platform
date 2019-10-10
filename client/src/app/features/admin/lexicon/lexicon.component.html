@@ -11,7 +11,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of entities" (click)="editPhrases(data.id)" [class.selected]="currentLexiconId===data.id">
+      <tr *ngFor="let data of entities" (click)="editPhrases(data.id)" [class.selectedRow]="currentLexiconId===data.id">
         <td style="cursor:pointer">
           <i (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
           <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>

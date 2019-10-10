@@ -9,6 +9,7 @@ import { SaloneTypeComponent } from './salone-type/salone-type.component';
 import { SaloneComponent } from './salone/salone.component';
 import { ContestComponent } from './contest/contest.component';
 import { LexiconComponent } from './lexicon/lexicon.component';
+import { PublicationsComponent } from './publications/publications.component';
 
 
 const routes: Routes = [
@@ -35,6 +36,9 @@ const routes: Routes = [
         path: 'salones', component: SaloneComponent
       },
       {
+        path: 'contests/:menuId/pubs', component: PublicationsComponent
+      },
+      {
         path: 'contests', component: ContestComponent
       },
       {
@@ -47,6 +51,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+
     RouterModule.forChild(routes)
   ],
   exports: [RouterModule]

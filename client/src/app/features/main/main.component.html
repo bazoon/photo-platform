@@ -2,16 +2,4 @@
   Adelaide AV Fest International Audio Visual Festival
 </div>
 <div class="banner-container">
-
-
-  <ul nz-menu nzMode="horizontal">
-    <li *ngFor="let m of menu" nz-submenu [nzTitle]="m.name" (click)="open(m.id)">
-      <ul>
-        <li *ngFor="let s of m.children" nz-menu-item (click)="open(s.id)">{{s.name}}</li>
-      </ul>
-    </li>
-
-
-  </ul>
-
 </div>

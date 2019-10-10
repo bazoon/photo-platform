@@ -5,11 +5,11 @@
         <i nz-icon [nzType]="'home'"></i>
       </a>
       <ul nz-menu nzTheme="dark" nzMode="horizontal">
-        <li nz-menu-item>{{'contest.about' | translate}}</li>
-        <li nz-menu-item>{{'news' | translate}}</li>
-        <li nz-menu-item>{{'photos' | translate}}</li>
-        <li nz-menu-item>{{'contacts' | translate}}</li>
-        <li nz-menu-item>{{'archive' | translate}}</li>
+        <li *ngFor="let m of contestMenus" [routerLink]="'/sections/'+m.id" nz-submenu [nzTitle]="m.title | translate">
+          <ul>
+            <li *ngFor="let s of m.children" nz-menu-item [routerLink]="'/sections/'+s.id">{{s.title | translate}}</li>
+          </ul>
+        </li>
       </ul>
     </div>
     <div>
@@ -29,6 +29,10 @@
       <app-lang-selector></app-lang-selector>
     </div>
   </nz-header>
-  <router-outlet></router-outlet>
-  <nz-footer>Ant Design ©2019 Implement By Angular</nz-footer>
+
+  <nz-content>
+    <router-outlet></router-outlet>
+  </nz-content>
+
+  <nz-footer nzTheme="dark">Тут будет подвал</nz-footer>
 </nz-layout>

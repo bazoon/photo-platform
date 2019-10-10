@@ -1,0 +1,10 @@
+<div class="content-container">
+  <div class="publication">
+    <h1>{{pub.name}}</h1>
+    <div>{{pub.dateCreate | date}}</div>
+
+    <div [innerHTML]="pub.content | safeHtml">
+
+    </div>
+  </div>
+</div>

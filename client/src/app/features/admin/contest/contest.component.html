@@ -23,7 +23,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of entities" (click)="loadRelated(data.id)">
+      <tr *ngFor="let data of entities" (click)="loadRelated(data.id)" [class.selectedRow]="currentContest.id===data.id">
         <td style="cursor:pointer" nzLeft="0px">
           <i (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
           <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
@@ -85,42 +85,17 @@
       <button (click)="getLexicon(false, node)">
         <i nz-icon nzType="plus"></i>
       </button>
+      <button (click)="openPublications(node.key)">
+        <i nz-icon nzType="book" (click)="openPublications(node.key)"></i>
+      </button>
       <button (click)="editPubs(node)">
         <i nz-icon nzType="delete"></i>
       </button>
 
     </span>
-    <!-- <span class="custom-node" [class.active]="activedNode?.key === node.key">
-        <span *ngIf="!node.isLeaf" (contextmenu)="contextMenu($event, menu)">
-          <i nz-icon [nzType]="node.isExpanded ? 'folder-open' : 'folder'" (click)="openFolder(node)"></i>
-          <span class="folder-name">{{ node.title }}</span>
-          <span class="folder-desc">created by {{ node?.origin?.author | lowercase }}</span>
-        </span>
-      </span> -->
+
   </ng-template>
 
-  <!-- <button [disabled]="!currentContest.id" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="appendMenu()">Добавить</button>
-  <nz-table [nzData]="abouts" [nzLoading]="isMenusLoading" [nzScroll]="{ x: '700px', y: '240px' }">
-    <thead>
-      <tr>
-        <th nzWidth="100px" nzLeft="0px"></th>
-        <th nzWidth="200px">id</th>
-        <th nzWidth="200px">Position</th>
-        <th nzWidth="200px">Parent id</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of contestMenus">
-        <td style="cursor:pointer" nzLeft="0px">
-          <i (click)="editContestMenu(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
-          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="removeAbout(data.id)"></i>
-        </td>
-        <td>{{data.id}}</td>
-        <td>{{data.position}}</td>
-        <td>{{data.parentId}}</td>
-      </tr>
-    </tbody>
-  </nz-table> -->
 
   <nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
     <form nz-form [formGroup]="form">
@@ -246,61 +221,6 @@
     </form>
   </nz-modal>
 
-  <nz-modal nzWidth="1000" [(nzVisible)]="isContestMenuVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelMenu()"
-    (nzOnOk)="handleOkMenu()">
-    <form nz-form [formGroup]="contestMenuForm">
-      <nz-form-item>
-        <nz-form-label nzFor="name">Position</nz-form-label>
-        <nz-form-control>
-          <input nz-input name="position" type="position" id="position" formControlName="position">
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzFor="name">Parent Id</nz-form-label>
-        <nz-form-control>
-          <nz-select formControlName="parentId" nzAllowClear nzPlaceHolder="Parent">
-            <nz-option *ngFor="let menu of contestMenus" [nzValue]="menu.id" [nzLabel]="menu.id"></nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
-    </form>
-  </nz-modal>
-
-  <nz-modal nzWidth="700" [(nzVisible)]="isPubsVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelPubs()" (nzOnOk)="handleOkPubs()">
-    <button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="appendPub()">Добавить</button>
-    <button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="savePubs()">Сохранить</button>
-    <nz-table [nzData]="menuPubs">
-      <thead>
-        <tr>
-          <th nzWidth="100px" nzLeft="0px"></th>
-          <th nzWidth="200px">Name</th>
-          <th nzWidth="200px">Code</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let data of menuPubs">
-          <td style="cursor:pointer" nzLeft="0px">
-            <i (click)="editAbout(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
-            <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="removeAbout(data.id)"></i>
-          </td>
-          <td>
-            <div class="editable-cell" *ngIf="pubEditId !== data.id; else editTpl">
-              <div class="editable-cell-value-wrap" (click)="startEditPub(data.id, $event)">
-                {{ data.name }}
-              </div>
-            </div>
-            <ng-template #editTpl>
-              <!-- <input type="text" nz-input [(ngModel)]="data.name" /> -->
-              <nz-select [(ngModel)]="data.lexiconId" style="width:100%" nzAllowClear>
-                <nz-option *ngFor="let lexicon of lexicons" [nzValue]="lexicon.id" [nzLabel]="lexicon.code | translate"></nz-option>
-              </nz-select>
-            </ng-template>
-          </td>
-          <td>{{data.code | translate}}</td>
-        </tr>
-      </tbody>
-    </nz-table>
-  </nz-modal>
 
   <nz-modal nzWidth="500" [(nzVisible)]="isLexiconVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelLexicon()" (nzOnOk)="handleOkLexicon()">
     <form nz-form [formGroup]="lexiconForm">
@@ -313,5 +233,10 @@
         </nz-form-control>
       </nz-form-item>
     </form>
+  </nz-modal>
+
+  <nz-modal *ngIf="isPublicationsVisible" nzWidth="800" [(nzVisible)]="isPublicationsVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelPub()"
+    (nzOnOk)="handleOkPub()">
+    <app-publications [languages]="languages" [contestMenuId]="currentMenuNodeId"></app-publications>
   </nz-modal>
 </app-admin-layout>

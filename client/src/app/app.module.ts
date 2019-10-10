@@ -20,6 +20,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslationLoader, HttpLoaderFactory } from './core/misc/translationLoader';
+import { PublicationComponent } from './features/publication/publication.component';
+import { PublicationsComponent } from './features/publications/publications.component';
+import { MenuComponent } from './features/menu/menu.component';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 
 registerLocaleData(ru);
 
@@ -31,6 +35,10 @@ registerLocaleData(ru);
     RegisterComponent,
     LangSelectorComponent,
     UserComponent,
+    PublicationComponent,
+    PublicationsComponent,
+    MenuComponent,
+    SafeHtmlPipe,
   ],
   imports: [
     BrowserModule,

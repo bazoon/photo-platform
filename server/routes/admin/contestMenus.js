@@ -72,16 +72,25 @@ router.get("/all/:id", async ctx => {
     id
   } = ctx.params;
 
+  const { host } = ctx.request.header;
 
-  const query = `select contest_menus.id, lexicon_id, position, parent_id, code from
-    contest_menus, lexicons where contest_menus.contest_id=:id and contest_menus.lexicon_id=lexicons.id
+  const [domain, port] = host.split(":");
+
+  const query = `select contest_menus.id, lexicon_id, position, parent_id, code, domen from
+    contests, salones,contest_menus, lexicons where
+    contest_menus.contest_id=:id and contest_menus.lexicon_id=lexicons.id and
+    contest_menus.contest_id=contests.id and contests.salone_id=salones.id and
+    domen=:domain
   `;
 
   let [contestMenus] = await models.sequelize.query(query, {
     replacements: {
-      id
+      id,
+      domain
     }
   });
+
+
 
   contestMenus = contestMenus.map(m => {
     return {

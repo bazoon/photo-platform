@@ -30,12 +30,15 @@ app.use(mount("/uploads", serve("uploads")));
 
 app.use(async (ctx, next) => {
   const cookie = ctx.request.header.cookie;
-  const parts = cookie.split(";");
-  const tokenPart = parts.find(p => p.indexOf("token=") > 0);
-  const token = tokenPart && tokenPart.split("=")[1];
-  if (token) {
-    const decoded = jwt.verify(token, process.env.API_TOKEN);
-    ctx.user = decoded;
+  if (cookie) {
+    const parts = cookie.split(";");
+    const tokenPart = parts.find(p => p.indexOf("token=") > 0);
+    const token = tokenPart && tokenPart.split("=")[1];
+    if (token) {
+      const decoded = jwt.verify(token, process.env.API_TOKEN);
+      ctx.user = decoded;
+    }
+
   }
   await next();
 });

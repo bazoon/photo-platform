@@ -1,0 +1,106 @@
+<h1>Публикации</h1>
+<button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
+<nz-table [nzData]="entities" [nzScroll]="{ x: '1000px', y: '100px' }">
+  <thead>
+    <tr>
+      <th nzWidth="100px" nzLeft="0px"></th>
+      <th nzWidth="100px">Created</th>
+      <th nzWidth="100px">Show</th>
+      <th nzWidth="100px">Visible</th>
+      <th nzWidth="100px">Type</th>
+      <th nzWidth="100px">Archived</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of entities" (click)=loadTexts(data.id) [class.selectedRow]="data.id==selectedPubId">
+      <td style="cursor:pointer" nzLeft="0px">
+        <i (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+        <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
+      </td>
+      <td>{{data.dateCreate}}</td>
+      <td>{{data.dateShow}}</td>
+      <td>{{data.visible}}</td>
+      <td>{{data.pubtype}}</td>
+      <td>{{data.archive}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<h1>Тексты</h1>
+<button [disabled]="!selectedPubId" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="appendText()">Добавить</button>
+<nz-table [nzData]="texts" [nzScroll]="{ x: '300px', y: '100px' }">
+  <thead>
+    <tr>
+      <th nzWidth="50px" nzLeft="0px"></th>
+      <th nzWidth="100px">language</th>
+      <th nzWidth="100px">name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of texts">
+      <td style="cursor:pointer" nzLeft="0px">
+        <i (click)="editText(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+        <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="removeText(data.id)"></i>
+      </td>
+      <td>{{data.language}}</td>
+      <td>{{data.name}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+
+<nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <form nz-form [formGroup]="form">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="dateShow">Show date</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <nz-date-picker nzFormat="dd.MM.yyyy" formControlName="dateShow"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="visible">Visible</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input nz-input name="visible" type="visible" id="visible" formControlName="visible">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="pubtype">Type</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input nz-input name="pubtype" type="pubtype" id="pubtype" formControlName="pubtype">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="archive">Archive</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input nz-input name="archive" type="archive" id="archive" formControlName="archive">
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>
+
+<nz-modal nzWidth="1000" [(nzVisible)]="isTextVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelText()" (nzOnOk)="handleOkText()">
+  <form nz-form [formGroup]="textForm">
+    <nz-form-item>
+      <nz-form-label nzFor="name">name</nz-form-label>
+      <nz-form-control>
+        <input nz-input name="name" type="name" id="name" formControlName="name">
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzFor="language">Language</nz-form-label>
+      <nz-form-control>
+        <nz-select formControlName="languageId" nzAllowClear nzPlaceHolder="Язык">
+          <nz-option *ngFor="let language of languages" [nzValue]="language.id" [nzLabel]="language.name"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzFor="content">Content</nz-form-label>
+      <ckeditor formControlName="content" [editor]="Editor" [config]="ckconfig"></ckeditor>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzFor="digest">Digest</nz-form-label>
+      <ckeditor formControlName="digest" [editor]="Editor" [config]="ckconfig"></ckeditor>
+    </nz-form-item>
+  </form>
+</nz-modal>

@@ -22,6 +22,7 @@ import { Observable } from 'rxjs';
 import { TranslationLoader, HttpLoaderFactory } from '../../core/misc/translationLoader';
 import { ContestMenuComponent } from './contest-menu/contest-menu.component';
 import { LexiconComponent } from './lexicon/lexicon.component';
+import { PublicationsComponent } from './publications/publications.component';
 
 
 
@@ -36,7 +37,8 @@ import { LexiconComponent } from './lexicon/lexicon.component';
     SaloneComponent,
     ContestComponent,
     ContestMenuComponent,
-    LexiconComponent
+    LexiconComponent,
+    PublicationsComponent
   ],
   imports: [
 

@@ -12,6 +12,11 @@ import { Salone } from '../../../core/types/salone';
 import { ContestMenu, emptyContestMenu } from '../../../core/types/contestMenu';
 import { Lexicon } from '../../../core/types/lexicon';
 import { PubMenu } from '../../../core/types/pubMenu';
+import { PublicationsComponent } from '../publications/publications.component';
+import { of, Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+
 
 
 @Component({
@@ -32,6 +37,7 @@ export class ContestComponent extends CrudComponent<Contest> {
     thesis: '',
     rules: '',
   });
+
   contestMenuForm = this.fb.group({
     id: [],
     contestId: [],
@@ -41,12 +47,12 @@ export class ContestComponent extends CrudComponent<Contest> {
   lexiconForm = this.fb.group({
     lexiconId: [],
   });
-  menuPubs: Array<any> = [];
   salones: Array<Salone> = [];
   abouts: Array<ContestAbout> = [];
   lexicons: Array<Lexicon> = [];
   contestMenus: Array<ContestMenu> = [];
   languages: Array<Language> = [];
+
   currentContest = emptyContest;
   isEditingAbout = 0;
   isEditingMenu = 0;
@@ -56,9 +62,10 @@ export class ContestComponent extends CrudComponent<Contest> {
   Editor = ClassicEditor;
   ckconfig = editorConfig
   menuTree: Array<any> = [];
-  lexiconsModel = {};
   currentMenuNode?: any;
   isAppendingRootMenu = false;
+  isPublicationsVisible = false;
+  currentMenuNodeId: number = -10;
 
   constructor(protected fb: FormBuilder, protected api: ApiService) {
     super(fb, api);
@@ -138,8 +145,7 @@ export class ContestComponent extends CrudComponent<Contest> {
 
   loadContestMenu(id: string = '') {
     this.isMenusLoading = true;
-    this.api.get<Array<ContestAbout>>(`api/admin/contestMenus/all/${id}`).subscribe(contestMenus => {
-
+    this.api.get<Array<ContestMenu>>(`api/admin/contestMenus/all/${id}`).subscribe(contestMenus => {
       this.contestMenus = contestMenus;
       this.isMenusLoading = false;
       this.menuTree = contestMenus;
@@ -204,45 +210,6 @@ export class ContestComponent extends CrudComponent<Contest> {
     });
   }
 
-  editContestMenu(id: string) {
-    this.editingEntity = this.find(id);
-    this.isEditingMenu = 2;
-    this.isContestMenuVisible = true;
-    this.api.get<ContestMenu>(`/api/admin/contestMenus/${id}`).subscribe(menu => {
-      this.editingMenu = menu;
-      this.contestMenuForm.patchValue(this.editingMenu);
-    });
-  }
-
-  handleOkMenu() {
-    const payload = {
-      ...this.contestMenuForm.value,
-      ContestId: this.currentContest && this.currentContest.id
-    }
-    this.isContestMenuVisible = false;
-
-    if (this.isEditingMenu === 1) {
-      this.api.post<ContestAbout>(`/api/admin/contestMenus/${this.currentContest.id}`, payload).subscribe(menu => {
-        this.contestMenus = this.contestMenus.concat([menu]);
-      });
-    } else if (this.isEditingMenu === 2) {
-      this.api.put<ContestAbout>(`/api/admin/contestMenus/${this.editingMenu.id}`, payload).subscribe(menu => {
-        this.contestMenus = this.contestMenus.map(m => {
-
-          if (m.id === menu.id) {
-            return menu;
-          }
-
-          return m;
-        });
-      });
-    }
-  }
-
-  handleCancelMenu() {
-    this.isContestMenuVisible = false;
-  }
-
   appendMenu(lexiconId: number) {
     this.isAppendingRootMenu = true;
     this.api.post<ContestMenu>(`/api/admin/contestMenus/root`, { id: this.currentContest.id, lexiconId }).subscribe(menu => {
@@ -297,9 +264,20 @@ export class ContestComponent extends CrudComponent<Contest> {
       lexiconId: node.origin.lexiconId
     }).subscribe(pubMenus => {
       console.log(pubMenus)
-
     });
   }
 
+  openPublications(id: number) {
+    this.currentMenuNodeId = (id);
+    this.isPublicationsVisible = true;
+  }
+
+  handleOkPub() {
+    this.isPublicationsVisible = false;
+  }
+
+  handleCancelPub() {
+    this.isPublicationsVisible = false;
+  }
 
 }
