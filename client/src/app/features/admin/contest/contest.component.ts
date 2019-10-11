@@ -15,9 +15,7 @@ import { PubMenu } from '../../../core/types/pubMenu';
 import { PublicationsComponent } from '../publications/publications.component';
 import { of, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-
-
+import { ContestSection, emptyContestSection } from '../../../core/types/contestSection';
 
 @Component({
   selector: 'app-contest',
@@ -66,6 +64,13 @@ export class ContestComponent extends CrudComponent<Contest> {
   isAppendingRootMenu = false;
   isPublicationsVisible = false;
   currentMenuNodeId: number = -10;
+  contestSections: Array<ContestSection> = [];
+  isSectionVisible = false;
+  sectionForm = this.fb.group({
+    maxCountImg: [],
+    name: []
+  });
+  editingSection?: ContestSection;
 
   constructor(protected fb: FormBuilder, protected api: ApiService) {
     super(fb, api);
@@ -132,7 +137,14 @@ export class ContestComponent extends CrudComponent<Contest> {
     this.currentContest = this.find(id);
     this.loadAbouts(id);
     this.loadContestMenu(id);
+    this.loadSections(id);
     this.loadLexicons();
+  }
+
+  loadSections(id: string) {
+    this.api.get<Array<ContestSection>>(`api/admin/contestSections/all/${id}`).subscribe(contestSections => {
+      this.contestSections = contestSections;
+    });
   }
 
   loadAbouts(id: string) {
@@ -278,6 +290,41 @@ export class ContestComponent extends CrudComponent<Contest> {
 
   handleCancelPub() {
     this.isPublicationsVisible = false;
+  }
+
+  appendSection() {
+    this.isSectionVisible = true;
+    this.editingSection = undefined;
+  }
+
+  editSection(id: number) {
+    debugger
+    this.editingSection = this.contestSections.find(s => s.id == id) || emptyContestSection;
+    this.sectionForm.patchValue(this.editingSection);
+    this.isSectionVisible = true;
+  }
+
+  removeSection(id: number) {
+    this.api.delete(`/api/admin/contestSections/${id}`).subscribe(() => {
+      this.contestSections = this.contestSections.filter(a => a.id !== id);
+    });
+  }
+
+  handleOkSection() {
+    this.isSectionVisible = false;
+    if (this.editingSection) {
+      this.api.put<ContestSection>(`/api/admin/contestSections/${this.editingSection.id}`, this.sectionForm.value).subscribe(section => {
+        this.contestSections = this.contestSections.concat([section]);
+      });
+    } else {
+      this.api.post<ContestSection>(`/api/admin/contestSections/${this.currentContest.id}`, this.sectionForm.value).subscribe(section => {
+        this.contestSections = this.contestSections.concat([section]);
+      });
+    }
+  }
+
+  handleCancelSection() {
+    this.isSectionVisible = false;
   }
 
 }

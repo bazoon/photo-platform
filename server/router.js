@@ -15,8 +15,9 @@ const lexicons = require("./routes/admin/lexicons");
 const phrases = require("./routes/admin/phrases");
 const publications = require("./routes/admin/publications");
 const publicationTexts = require("./routes/admin/publicationTexts");
-const upload = require("./routes/upload");
+const contestSections = require("./routes/admin/contestSections");
 
+const upload = require("./routes/upload");
 const pubs = require("./routes/publications");
 
 router.use("/api/upload", upload.routes());
@@ -35,7 +36,7 @@ router.use("/api/admin/lexicons", lexicons.routes());
 router.use("/api/admin/phrases", phrases.routes());
 router.use("/api/admin/publications", publications.routes());
 router.use("/api/admin/publicationTexts", publicationTexts.routes());
-
+router.use("/api/admin/contestSections", contestSections.routes());
 
 router.use("/api/publications", pubs.routes());
 module.exports = router;

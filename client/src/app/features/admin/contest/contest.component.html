@@ -47,7 +47,7 @@
     </tbody>
   </nz-table>
 
-  <h1>О конкурсе</h1>
+  <h2>О конкурсе</h2>
 
   <button [disabled]="!currentContest.id" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="appendAbout()">Добавить</button>
   <nz-table [nzData]="abouts" [nzLoading]="isAboutsLoading" [nzScroll]="{ x: '700px', y: '240px' }">
@@ -70,7 +70,30 @@
     </tbody>
   </nz-table>
 
-  <h1>Меню публикаций</h1>
+  <h2>Секции</h2>
+  <button [disabled]="!currentContest.id" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="appendSection()">Добавить</button>
+  <nz-table [nzData]="contestSections" [nzLoading]="isAboutsLoading" [nzScroll]="{ x: '700px', y: '240px' }">
+    <thead>
+      <tr>
+        <th nzWidth="100px" nzLeft="0px"></th>
+        <th nzWidth="200px">Количество</th>
+        <th nzWidth="200px">Наименование</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of contestSections">
+        <td style="cursor:pointer" nzLeft="0px">
+          <i (click)="editSection(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="removeSection(data.id)"></i>
+        </td>
+        <td>{{data.maxCountImg}}</td>
+        <td>{{data.name}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+
+  <h2>Меню публикаций</h2>
   <button [disabled]="!currentContest.id" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="getLexicon(true)">Добавить</button>
 
   <nz-tree [nzData]="menuTree" [nzTreeTemplate]="nzTreeTemplate">
@@ -217,6 +240,23 @@
       <nz-form-item>
         <nz-form-label nzFor="rules">Rules</nz-form-label>
         <ckeditor formControlName="rules" [editor]="Editor" [config]="ckconfig"></ckeditor>
+      </nz-form-item>
+    </form>
+  </nz-modal>
+
+  <nz-modal nzWidth="1000" [(nzVisible)]="isSectionVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelSection()" (nzOnOk)="handleOkSection()">
+    <form nz-form [formGroup]="sectionForm">
+      <nz-form-item>
+        <nz-form-label nzFor="maxCountImg">Количество</nz-form-label>
+        <nz-form-control>
+          <input nz-input name="maxCountImg" type="maxCountImg" id="maxCountImg" formControlName="maxCountImg">
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label nzFor="name">Name</nz-form-label>
+        <nz-form-control>
+          <input nz-input name="name" type="name" id="name" formControlName="name">
+        </nz-form-control>
       </nz-form-item>
     </form>
   </nz-modal>

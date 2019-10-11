@@ -41,7 +41,6 @@ import { PublicationsComponent } from './publications/publications.component';
     PublicationsComponent
   ],
   imports: [
-
     CommonModule,
     AdminRoutingModule,
     SharedModule,
