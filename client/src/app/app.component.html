@@ -16,6 +16,8 @@
       {{currentUser.user.firstName}}
     </div>
 
+    <a routerLink="/admin/contests">admin</a>
+
     <a *ngIf="!currentUser.isLoggedIn" routerLink="login" class="user-login">
       <i nz-icon [nzType]="'user'"></i>
       {{'login' | translate}}

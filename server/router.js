@@ -8,7 +8,7 @@ const organizers = require("./routes/admin/organizers");
 const saloneTypes = require("./routes/admin/saloneTypes");
 const salones = require("./routes/admin/salones");
 const saloneAbout = require("./routes/admin/saloneAbout");
-const contests = require("./routes/admin/contests");
+const adminContests = require("./routes/admin/contests");
 const contestAbouts = require("./routes/admin/contestAbouts");
 const contestMenus = require("./routes/admin/contestMenus");
 const lexicons = require("./routes/admin/lexicons");
@@ -19,6 +19,8 @@ const contestSections = require("./routes/admin/contestSections");
 
 const upload = require("./routes/upload");
 const pubs = require("./routes/publications");
+const contestApplications = require("./routes/contestApplications");
+const contests = require("./routes/contests");
 
 router.use("/api/upload", upload.routes());
 router.use("/api/admin/users", users.routes());
@@ -29,7 +31,7 @@ router.use("/api/admin/organizers", organizers.routes());
 router.use("/api/admin/saloneTypes", saloneTypes.routes());
 router.use("/api/admin/salonesAbout", saloneAbout.routes());
 router.use("/api/admin/salones", salones.routes());
-router.use("/api/admin/contests", contests.routes());
+router.use("/api/admin/contests", adminContests.routes());
 router.use("/api/admin/contestsAbout", contestAbouts.routes());
 router.use("/api/admin/contestMenus", contestMenus.routes());
 router.use("/api/admin/lexicons", lexicons.routes());
@@ -39,4 +41,7 @@ router.use("/api/admin/publicationTexts", publicationTexts.routes());
 router.use("/api/admin/contestSections", contestSections.routes());
 
 router.use("/api/publications", pubs.routes());
+router.use("/api/contestApplications", contestApplications.routes());
+router.use("/api/contests", contests.routes());
+
 module.exports = router;

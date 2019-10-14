@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'admin', loadChildren: "./features/admin/admin.module#AdminModule" },
+  { path: 'user', loadChildren: "./features/user/user.module#UserModule" },
   {
     path: 'publications/:id', component: PublicationComponent
   },

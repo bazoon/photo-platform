@@ -17,9 +17,6 @@ export class AppComponent {
   constructor(private api: ApiService, public currentUser: CurrentUserService, private translate: TranslateService) {
     this.translate.use("ru");
     this.loadMenu();
-    // this.translate.onLangChange.subscribe((t: any) => {
-    //   this.loadMenu(t.lang);
-    // });
   }
 
   loadMenu() {
