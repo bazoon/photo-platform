@@ -23,7 +23,7 @@ module.exports = {
       private: {
         type: Sequelize.INTEGER
       },
-      domen: {
+      domain: {
         type: Sequelize.STRING
       },
       design_code: {

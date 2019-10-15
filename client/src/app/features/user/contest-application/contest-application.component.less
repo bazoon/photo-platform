@@ -5,4 +5,76 @@
 .sections-wrapper {
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
+}
+
+.upload-wrapper {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+
+  input {
+    width: 400px;
+  }
+
+  * {
+    margin-right: 10px;
+  }
+
+  *:last-child {
+    margin-right: 0px;
+  }
+
+  i {
+    cursor: pointer;
+  }
+}
+
+.file-list {
+  margin-bottom: 10px;
+}
+
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+
+  img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+  }
+}
+
+.thumb { 
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  &:last-child {
+    margin-right: 0px;
+  }
+}
+
+.thumb-wrap {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  max-width: 150px;
+  i {
+    cursor: pointer;
+  }
+}
+
+.file-name {
+  overflow: hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  width:150px;
+  display:inline-block;
 }

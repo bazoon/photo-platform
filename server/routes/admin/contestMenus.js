@@ -76,11 +76,11 @@ router.get("/all/:id", async ctx => {
 
   const [domain, port] = host.split(":");
 
-  const query = `select contest_menus.id, lexicon_id, position, parent_id, code, domen from
+  const query = `select contest_menus.id, lexicon_id, position, parent_id, code, domain from
     contests, salones,contest_menus, lexicons where
     contest_menus.contest_id=:id and contest_menus.lexicon_id=lexicons.id and
     contest_menus.contest_id=contests.id and contests.salone_id=salones.id and
-    domen=:domain
+    domain=:domain
   `;
 
   let [contestMenus] = await models.sequelize.query(query, {

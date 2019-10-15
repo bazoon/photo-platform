@@ -10,7 +10,7 @@
         <th nzWidth="200px">Organizer</th>
         <th nzWidth="200px">Regular</th>
         <th nzWidth="200px">Private</th>
-        <th nzWidth="200px">Domen</th>
+        <th nzWidth="200px">domain</th>
         <th nzWidth="200px">Design code</th>
         <th nzWidth="200px">Row state</th>
       </tr>
@@ -26,7 +26,7 @@
         <td>{{data.organizer}}</td>
         <td>{{getRegularType(data.regular) | translate}}</td>
         <td>{{getPrivateType(data.private) | translate}}</td>
-        <td>{{data.domen}}</td>
+        <td>{{data.domain}}</td>
         <td>{{data.designCode}}</td>
         <td>{{data.rowState}}</td>
       </tr>
@@ -95,9 +95,9 @@
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <nz-form-label [nzSpan]="6" nzFor="domen">domen</nz-form-label>
+        <nz-form-label [nzSpan]="6" nzFor="domain">domain</nz-form-label>
         <nz-form-control [nzSpan]="14">
-          <input nz-input name="domen" type="domen" id="domen" formControlName="domen">
+          <input nz-input name="domain" type="domain" id="domain" formControlName="domain">
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>

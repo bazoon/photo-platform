@@ -89,7 +89,7 @@ export class SaloneComponent extends CrudComponent<Salone> {
       organizerId: [null, []],
       regular: [null, []],
       private: [null, []],
-      domen: [null, []],
+      domain: [null, []],
       designCode: [null, []],
       rowState: [null, []],
     });

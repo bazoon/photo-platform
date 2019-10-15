@@ -6,7 +6,7 @@ export interface Salone {
   organizer: string,
   name: string,
   regular: number,
-  domen: string,
+  domain: string,
   designCode: string,
   rowState: string,
   private: number
@@ -20,7 +20,7 @@ export const emptySalone: Salone = {
   organizer: '',
   name: '',
   regular: -1,
-  domen: '',
+  domain: '',
   designCode: '',
   rowState: '',
   private: -1

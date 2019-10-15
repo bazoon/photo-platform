@@ -60,7 +60,7 @@ router.delete("/:id", async ctx => {
 async function getSalone(record) {
   const query = `
     select organizers.name as organizer, spr_salone_types.name as saloneType, spr_salone_type_id, organizer_id,
-    salones.name, regular, private, domen, design_code, salones.row_state, salones.id
+    salones.name, regular, private, domain, design_code, salones.row_state, salones.id
     from salones, organizers, spr_salone_types
     where
     salones.spr_salone_type_id=spr_salone_types.id and salones.organizer_id=organizers.id and salones.id=:id
@@ -80,7 +80,7 @@ async function getSalone(record) {
     name: salone.name,
     regular: salone.regular,
     private: salone.private,
-    domen: salone.domen,
+    domain: salone.domain,
     designCode: salone.design_code,
     rowState: salone.row_state
   }

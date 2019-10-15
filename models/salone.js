@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     regular: DataTypes.INTEGER,
     private: DataTypes.INTEGER,
-    domen: DataTypes.STRING,
+    domain: DataTypes.STRING,
     designCode: DataTypes.STRING,
     rowState: DataTypes.STRING
   }, {

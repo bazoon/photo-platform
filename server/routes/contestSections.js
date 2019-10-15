@@ -28,6 +28,41 @@ router.get("/all/:id", async ctx => {
   ctx.body = R.map(R.pick(fields), sections);
 });
 
+router.get("/:id/files", async ctx => {
+  const {
+    id
+  } = ctx.params;
+
+  let files = await models.Photowork.findAll({
+    where: {
+      sectionId: id
+    }
+  });
+
+  ctx.body = files.map(f => {
+    return {
+      id: f.id,
+      name: f.name,
+      filename: getUploadFilePath(f.filename),
+    }
+  });
+});
+
+router.delete("/files/:id", async ctx => {
+  const {
+    id
+  } = ctx.params;
+
+  await models.Photowork.destroy({
+    where: {
+      id
+    }
+  });
+
+  ctx.body = {};
+});
+
+
 router.get("/:id", async ctx => {
   const {
     id
@@ -46,7 +81,9 @@ router.post("/:id/uploads", koaBody({ multipart: true }), async ctx => {
   const { id } = ctx.params;
   const userId = ctx.user.id;
   const { file } = ctx.request.files;
+  const names = JSON.parse(ctx.request.body.names);
   const files = file ? (Array.isArray(file) ? file : [file]) : [];
+
   await uploadFiles(files);
 
   const section = await models.Section.findOne({
@@ -66,13 +103,13 @@ router.post("/:id/uploads", koaBody({ multipart: true }), async ctx => {
     return {
       registrationContestId: registration.id,
       sectionId: id,
-      name: 'Foo',
+      name: names[f.name],
       filename: f.name,
       moder: 0,
     }
   }));
 
-  // const section = await models.Section.create(values);
+
   ctx.body = [];
 });
 
