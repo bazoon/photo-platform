@@ -23,6 +23,7 @@ import { TranslationLoader, HttpLoaderFactory } from '../../core/misc/translatio
 import { ContestMenuComponent } from './contest-menu/contest-menu.component';
 import { LexiconComponent } from './lexicon/lexicon.component';
 import { PublicationsComponent } from './publications/publications.component';
+import { ContestApplicationsComponent } from './contest-applications/contest-applications.component';
 
 
 
@@ -38,7 +39,8 @@ import { PublicationsComponent } from './publications/publications.component';
     ContestComponent,
     ContestMenuComponent,
     LexiconComponent,
-    PublicationsComponent
+    PublicationsComponent,
+    ContestApplicationsComponent,
   ],
   imports: [
     CommonModule,

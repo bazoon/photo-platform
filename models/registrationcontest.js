@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     dateReg: DataTypes.DATE,
     sectionCount: DataTypes.INTEGER,
     regState: DataTypes.INTEGER,
-    rejectReason: DataTypes.STRING
+    rejectionReason: DataTypes.STRING
   }, {
       createdAt: 'dateReg',
       updatedAt: false

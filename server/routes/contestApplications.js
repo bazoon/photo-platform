@@ -34,10 +34,16 @@ router.post("/", async ctx => {
   const { id } = ctx.user;
   const { contestId, sectionCount } = ctx.request.body;
 
+  const contest = await models.Contest.findOne({
+    where: {
+      id: contestId
+    }
+  });
+
   const application = await models.RegistrationContest.create({
     userId: id,
     contestId,
-    regState: 0,
+    regState: contest.payType === 0 ? 0 : 2,
     sectionCount
   });
 

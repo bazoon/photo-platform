@@ -119,6 +119,8 @@
 
   </ng-template>
 
+  <app-contest-applications [contestId]="currentContest && currentContest.id"></app-contest-applications>
+
 
   <nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
     <form nz-form [formGroup]="form">

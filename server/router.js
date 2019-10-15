@@ -15,12 +15,14 @@ const lexicons = require("./routes/admin/lexicons");
 const phrases = require("./routes/admin/phrases");
 const publications = require("./routes/admin/publications");
 const publicationTexts = require("./routes/admin/publicationTexts");
-const contestSections = require("./routes/admin/contestSections");
+const adminContestSections = require("./routes/admin/contestSections");
+const adminContestApplications = require("./routes/admin/contestApplications");
 
 const upload = require("./routes/upload");
 const pubs = require("./routes/publications");
 const contestApplications = require("./routes/contestApplications");
 const contests = require("./routes/contests");
+const contestSections = require("./routes/contestSections");
 
 router.use("/api/upload", upload.routes());
 router.use("/api/admin/users", users.routes());
@@ -38,10 +40,12 @@ router.use("/api/admin/lexicons", lexicons.routes());
 router.use("/api/admin/phrases", phrases.routes());
 router.use("/api/admin/publications", publications.routes());
 router.use("/api/admin/publicationTexts", publicationTexts.routes());
-router.use("/api/admin/contestSections", contestSections.routes());
+router.use("/api/admin/contestSections", adminContestSections.routes());
+router.use("/api/admin/contestApplications", adminContestApplications.routes());
 
 router.use("/api/publications", pubs.routes());
 router.use("/api/contestApplications", contestApplications.routes());
 router.use("/api/contests", contests.routes());
+router.use("/api/contestSections", contestSections.routes());
 
 module.exports = router;

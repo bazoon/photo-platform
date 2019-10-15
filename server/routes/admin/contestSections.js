@@ -1,7 +1,10 @@
 const Router = require("koa-router");
 const router = new Router();
+const koaBody = require("koa-body");
 const models = require("../../../models");
 const R = require("ramda");
+const uploadFiles = require("../../utils/uploadFiles");
+const getUploadFilePath = require("../../utils/getUploadPath");
 
 const fields = [
   'id',
@@ -69,5 +72,7 @@ router.delete("/:id", async ctx => {
 
   ctx.body = {};
 });
+
+
 
 module.exports = router;

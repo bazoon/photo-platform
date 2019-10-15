@@ -23,10 +23,6 @@ export class ContestApplicationsComponent implements OnInit {
   constructor(private api: ApiService, protected fb: FormBuilder) { }
 
   ngOnInit() {
-    this.api.get<Array<ContestRegistration>>("api/contestApplications").subscribe(contestRegistrations => {
-      this.contestRegistrations = this.contestRegistrations;
-    });
-
     this.api.get<Array<UserContest>>("api/contests").subscribe(contests => {
       this.contests = contests;
     });

@@ -1,0 +1,19 @@
+<app-user-layout>
+  <h1>Секции</h1>
+  <div class="sections-wrapper">
+    <nz-select class="sections" [(ngModel)]="currentSection" nzPlaceHolder="Секция">
+      <nz-option *ngFor="let section of sections" [nzValue]="section.id" [nzLabel]="section.name"></nz-option>
+    </nz-select>
+    <button nz-button (click)="upload(section.id)">
+      Upload
+    </button>
+
+    <nz-upload [(nzFileList)]="fileList" nzMultiple="true" [nzBeforeUpload]="beforeUpload">
+      <button nz-button>
+        <i nz-icon nzType="upload"></i>
+        <span>Select File</span>
+      </button>
+    </nz-upload>
+  </div>
+
+</app-user-layout>

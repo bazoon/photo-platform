@@ -43,7 +43,6 @@ export class PublicationsComponent {
   }
 
   ngOnInit() {
-    console.log(this.contestMenuId);
     this.getEntities();
   }
 

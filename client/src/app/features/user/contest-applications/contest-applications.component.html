@@ -8,6 +8,7 @@
         <th nzWidth="200px">Date start</th>
         <th nzWidth="200px">Date stop</th>
         <th nzWidth="200px"></th>
+        <th nzWidth="200px"></th>
       </tr>
     </thead>
     <tbody>
@@ -24,12 +25,13 @@
             <span *ngSwitchCase="2">Ожидает оплаты</span>
             <span *ngSwitchCase="3">Отклонена</span>
           </div>
-
+        </td>
+        <td nzWidth="200px">
+          <i nz-icon nzType="camera" nzTheme="outline" [routerLink]="data.id"></i>
         </td>
       </tr>
     </tbody>
   </nz-table>
-
 
   <nz-modal [nzOkDisabled]="sectionForm.invalid" nzWidth="300" [(nzVisible)]="isApplicationVisible" nzTitle="Заявка" (nzOnCancel)="handleCancelApplication()"
     (nzOnOk)="handleOkApplication()">
