@@ -11,6 +11,7 @@ import { ContestComponent } from './contest/contest.component';
 import { LexiconComponent } from './lexicon/lexicon.component';
 import { PublicationsComponent } from './publications/publications.component';
 import { ContestPhotoworksComponent } from './contest-photoworks/contest-photoworks.component';
+import { ContestJuriesComponent } from './contest-juries/contest-juries.component';
 
 
 const routes: Routes = [
@@ -38,6 +39,9 @@ const routes: Routes = [
       },
       {
         path: 'contests/:id/works', component: ContestPhotoworksComponent
+      },
+      {
+        path: 'contests/:id/juries', component: ContestJuriesComponent
       },
       {
         path: 'contests/:menuId/pubs', component: PublicationsComponent

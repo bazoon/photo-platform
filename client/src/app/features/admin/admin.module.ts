@@ -25,6 +25,7 @@ import { LexiconComponent } from './lexicon/lexicon.component';
 import { PublicationsComponent } from './publications/publications.component';
 import { ContestApplicationsComponent } from './contest-applications/contest-applications.component';
 import { ContestPhotoworksComponent } from './contest-photoworks/contest-photoworks.component';
+import { ContestJuriesComponent } from './contest-juries/contest-juries.component';
 
 
 
@@ -43,6 +44,7 @@ import { ContestPhotoworksComponent } from './contest-photoworks/contest-photowo
     PublicationsComponent,
     ContestApplicationsComponent,
     ContestPhotoworksComponent,
+    ContestJuriesComponent,
   ],
   imports: [
     CommonModule,

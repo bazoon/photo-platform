@@ -17,6 +17,7 @@ const publications = require("./routes/admin/publications");
 const publicationTexts = require("./routes/admin/publicationTexts");
 const adminContestSections = require("./routes/admin/contestSections");
 const adminContestApplications = require("./routes/admin/contestApplications");
+const contestJuries = require("./routes/admin/contestJuries");
 
 const upload = require("./routes/upload");
 const pubs = require("./routes/publications");
@@ -42,6 +43,7 @@ router.use("/api/admin/publications", publications.routes());
 router.use("/api/admin/publicationTexts", publicationTexts.routes());
 router.use("/api/admin/contestSections", adminContestSections.routes());
 router.use("/api/admin/contestApplications", adminContestApplications.routes());
+router.use("/api/admin/contestJuries", contestJuries.routes());
 
 router.use("/api/publications", pubs.routes());
 router.use("/api/contestApplications", contestApplications.routes());

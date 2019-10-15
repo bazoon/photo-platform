@@ -1,0 +1,42 @@
+<app-admin-layout>
+  <h1>Жюри</h1>
+  <button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
+  <nz-table [nzData]="entities" [nzScroll]="{ x: '1000', y: '240px' }">
+    <thead>
+      <tr>
+        <th nzWidth="100px"></th>
+        <th nzWidth="200px">Name</th>
+        <th nzWidth="200px">Rank</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of entities">
+        <td style="cursor:pointer">
+          <i (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
+        </td>
+        <td>{{data.user}}</td>
+        <td>{{data.rank}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <form nz-form [formGroup]="form">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="userId">User</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-select formControlName="userId" nzAllowClear>
+            <nz-option *ngFor="let user of users" [nzValue]="user.id" [nzLabel]="user.firstName + ' ' + user.lastName"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="rank">Rank</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input name="rank" type="rank" id="rank" formControlName="rank">
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </nz-modal>
+</app-admin-layout>

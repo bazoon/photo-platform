@@ -4,7 +4,6 @@ import { ApiService } from '../../../core/services/api.service';
 import { ContestSection } from '../../../core/types/contestSection';
 import { ActivatedRoute } from '@angular/router';
 
-
 @Component({
   selector: 'app-contest-photoworks',
   templateUrl: './contest-photoworks.component.html',
