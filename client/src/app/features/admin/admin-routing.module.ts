@@ -10,6 +10,7 @@ import { SaloneComponent } from './salone/salone.component';
 import { ContestComponent } from './contest/contest.component';
 import { LexiconComponent } from './lexicon/lexicon.component';
 import { PublicationsComponent } from './publications/publications.component';
+import { ContestPhotoworksComponent } from './contest-photoworks/contest-photoworks.component';
 
 
 const routes: Routes = [
@@ -34,6 +35,9 @@ const routes: Routes = [
       },
       {
         path: 'salones', component: SaloneComponent
+      },
+      {
+        path: 'contests/:id/works', component: ContestPhotoworksComponent
       },
       {
         path: 'contests/:menuId/pubs', component: PublicationsComponent

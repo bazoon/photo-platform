@@ -26,6 +26,7 @@ import { MenuComponent } from './features/menu/menu.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 
 
+
 registerLocaleData(ru);
 
 @NgModule({

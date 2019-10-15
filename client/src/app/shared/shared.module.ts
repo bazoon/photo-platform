@@ -4,11 +4,13 @@ import { NgModule } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RegStatePipe } from '../pipes/reg-state.pipe';
+import { ModerStatePipe } from '../pipes/moder-state.pipe';
 
 
 @NgModule({
   declarations: [
-    RegStatePipe
+    RegStatePipe,
+    ModerStatePipe
   ],
   imports: [
     NgZorroAntdModule,
@@ -21,7 +23,8 @@ import { RegStatePipe } from '../pipes/reg-state.pipe';
     NgZorroAntdModule,
     ReactiveFormsModule,
     FormsModule,
-    RegStatePipe
+    RegStatePipe,
+    ModerStatePipe
   ]
 
 })

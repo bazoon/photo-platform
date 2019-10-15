@@ -13,6 +13,29 @@ const fields = [
   'name'
 ];
 
+router.post("/:id/approves", async ctx => {
+  const { id } = ctx.params;
+  const { ids } = ctx.request.body;
+  const inIds = ids.join(',');
+  const query = `
+    update photoworks set moder = 1 where id in (${inIds})
+  `;
+  await models.sequelize.query(query);
+  ctx.body = {}
+});
+
+router.post("/:id/declines", async ctx => {
+  const { id } = ctx.params;
+  const { ids } = ctx.request.body;
+  const inIds = ids.join(',');
+  const query = `
+    update photoworks set moder = 2 where id in (${inIds})
+  `;
+  await models.sequelize.query(query);
+  ctx.body = {}
+});
+
+
 router.post("/:id", async ctx => {
   const { id } = ctx.params;
   const values = { ...R.pick(fields, ctx.request.body), contestId: id };

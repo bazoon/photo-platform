@@ -1,11 +1,13 @@
 export interface Photowork {
-  id?: number,
+  id: number,
   name?: string,
-  filename?: string
+  filename?: string,
+  moder: number
 };
 
 export const emptyPhotowork: Photowork = {
-  id: undefined,
+  id: -1,
   name: '',
-  filename: ''
+  filename: '',
+  moder: 0
 };

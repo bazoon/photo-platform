@@ -44,6 +44,7 @@ router.get("/:id/files", async ctx => {
       id: f.id,
       name: f.name,
       filename: getUploadFilePath(f.filename),
+      moder: f.moder
     }
   });
 });

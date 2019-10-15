@@ -26,7 +26,9 @@
       <tr *ngFor="let data of entities" (click)="loadRelated(data.id)" [class.selectedRow]="currentContest.id===data.id">
         <td style="cursor:pointer" nzLeft="0px">
           <i (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
-          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
+          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"
+            style="margin-right: 10px"></i>
+          <i nz-icon nzType="file-image" nzTheme="outline" [routerLink]="data.id + '/works'"></i>
         </td>
         <td nzWidth="200px">{{data.salone}}</td>
         <td nzWidth="200px">{{data.subname}}</td>
