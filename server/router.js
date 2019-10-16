@@ -24,6 +24,7 @@ const pubs = require("./routes/publications");
 const contestApplications = require("./routes/contestApplications");
 const contests = require("./routes/contests");
 const contestSections = require("./routes/contestSections");
+const userMenu = require("./routes/userMenu");
 
 router.use("/api/upload", upload.routes());
 router.use("/api/admin/users", users.routes());
@@ -49,5 +50,6 @@ router.use("/api/publications", pubs.routes());
 router.use("/api/contestApplications", contestApplications.routes());
 router.use("/api/contests", contests.routes());
 router.use("/api/contestSections", contestSections.routes());
+router.use("/api/userMenu", userMenu.routes());
 
 module.exports = router;

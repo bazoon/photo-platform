@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserSalonesComponent } from './salones/salones.component';
 import { ContestApplicationsComponent } from './contest-applications/contest-applications.component';
 import { ContestApplicationComponent } from './contest-application/contest-application.component';
+import { JuryComponent } from './jury/jury.component';
+
 
 const routes: Routes = [
   {
@@ -17,6 +19,9 @@ const routes: Routes = [
       {
         path: 'applications', component: ContestApplicationsComponent
       },
+      {
+        path: 'jury', component: JuryComponent
+      }
     ]
   }
 
@@ -24,6 +29,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
+
     RouterModule.forChild(routes)
   ],
   exports: [RouterModule]

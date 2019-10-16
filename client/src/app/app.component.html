@@ -12,8 +12,9 @@
         </li>
       </ul>
     </div>
+
     <div>
-      {{currentUser.user.firstName}}
+
     </div>
 
     <a routerLink="/admin/contests">admin</a>
@@ -30,6 +31,10 @@
     <div class="logo-menu-container">
       <app-lang-selector></app-lang-selector>
     </div>
+
+    <a *ngIf="currentUser.isLoggedIn" routerLink="/user/applications" class="user-login">
+      {{currentUser.user.firstName}}
+    </a>
   </nz-header>
 
   <nz-content>
