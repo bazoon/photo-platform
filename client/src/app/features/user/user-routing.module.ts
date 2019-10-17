@@ -4,6 +4,7 @@ import { UserSalonesComponent } from './salones/salones.component';
 import { ContestApplicationsComponent } from './contest-applications/contest-applications.component';
 import { ContestApplicationComponent } from './contest-application/contest-application.component';
 import { JuryComponent } from './jury/jury.component';
+import { ShortListComponent } from './short-list/short-list.component';
 
 
 const routes: Routes = [
@@ -21,6 +22,9 @@ const routes: Routes = [
       },
       {
         path: 'jury', component: JuryComponent
+      },
+      {
+        path: 'shortList', component: ShortListComponent
       }
     ]
   }
@@ -29,7 +33,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-
     RouterModule.forChild(routes)
   ],
   exports: [RouterModule]

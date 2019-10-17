@@ -7,6 +7,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { ContestApplicationsComponent } from './contest-applications/contest-applications.component';
 import { ContestApplicationComponent } from './contest-application/contest-application.component';
 import { JuryComponent } from './jury/jury.component';
+import { ShortListComponent } from './short-list/short-list.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { JuryComponent } from './jury/jury.component';
     UserSalonesComponent,
     ContestApplicationsComponent,
     ContestApplicationComponent,
-    JuryComponent
+    JuryComponent,
+    ShortListComponent
   ],
   imports: [
     SharedModule,

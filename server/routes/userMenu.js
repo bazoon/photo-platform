@@ -29,6 +29,10 @@ router.get("/", async ctx => {
       name: 'Жюри',
       url: '/user/jury'
     });
+    menu.push({
+      name: 'Short list',
+      url: '/user/shortList'
+    });
   }
 
   ctx.body = menu;
