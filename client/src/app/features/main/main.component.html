@@ -1,5 +1,15 @@
-<div class="competition-header">
-  Adelaide AV Fest International Audio Visual Festival
-</div>
-<div class="banner-container">
+<div class="main">
+  <div class="competition-header">
+    <div class="salone-name">
+      {{contest.name}}
+    </div>
+    <div class="contest-name">
+      {{contest.subname}}
+    </div>
+  </div>
+  <div class="image-container">
+    <img [src]="image" class="img" />
+    <i nz-icon nzType="left" nzTheme="outline" class="icon-left" (click)="prev()"></i>
+    <i nz-icon nzType="right" nzTheme="outline" class="icon-right" (click)="next()"></i>
+  </div>
 </div>
