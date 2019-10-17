@@ -35,13 +35,13 @@ export class JuryComponent implements OnInit {
   }
 
   handleChangeSection() {
-    this.api.get<Array<Photowork>>(`/api/contestSections/${this.currentSection}/files`).subscribe(files => {
+    this.api.get<Array<Photowork>>(`/api/rates/${this.currentSection}`).subscribe(files => {
       this.files = files;
     });
   }
 
   handleRateChange(rate: number, id: number) {
-    this.api.post(`/api/contestSections/rates/${id}`, { rate, contestId: this.currentContestId }).subscribe(() => {
+    this.api.post(`/api/rates/${id}`, { rate, contestId: this.currentContestId }).subscribe(() => {
 
     });
   }

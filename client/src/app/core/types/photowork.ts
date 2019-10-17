@@ -3,7 +3,9 @@ export interface Photowork {
   name?: string,
   filename?: string,
   moder: number,
-  rate?: number
+  rate?: number,
+  average?: number,
+  median?: number
 };
 
 export const emptyPhotowork: Photowork = {
@@ -11,5 +13,7 @@ export const emptyPhotowork: Photowork = {
   name: '',
   filename: '',
   moder: 0,
-  rate: undefined
+  rate: undefined,
+  average: undefined,
+  median: undefined
 };

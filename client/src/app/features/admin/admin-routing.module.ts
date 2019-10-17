@@ -12,12 +12,11 @@ import { LexiconComponent } from './lexicon/lexicon.component';
 import { PublicationsComponent } from './publications/publications.component';
 import { ContestPhotoworksComponent } from './contest-photoworks/contest-photoworks.component';
 import { ContestJuriesComponent } from './contest-juries/contest-juries.component';
-
+import { ContestResultsComponent } from './contest-results/contest-results.component';
 
 const routes: Routes = [
   {
     path: '',
-    // component: AdminComponent,
     children: [
       {
         path: 'users', component: UsersComponent
@@ -42,6 +41,9 @@ const routes: Routes = [
       },
       {
         path: 'contests/:id/juries', component: ContestJuriesComponent
+      },
+      {
+        path: 'contests/:id/results', component: ContestResultsComponent
       },
       {
         path: 'contests/:menuId/pubs', component: PublicationsComponent

@@ -28,24 +28,17 @@ router.get("/all/:id", async ctx => {
   ctx.body = R.map(R.pick(fields), sections);
 });
 
-router.get("/:id/files", async ctx => {
+router.get("/:sectionId/files", async ctx => {
   const {
-    id
+    sectionId
   } = ctx.params;
-  const userId = ctx.user.id;
 
-  const query = `
-    select photoworks.id, name, filename, rate_value, moder,juries.user_id from photoworks
-    left join rates on photoworks.id=rates.photowork_id
-    left join juries on rates.jury_id=juries.id
-    where user_id=:userId or user_id is null
-  `;
-
-  const [files] = await models.sequelize.query(query, {
-    replacements: {
-      userId: id
+  const files = await models.Photowork.findAll({
+    where: {
+      sectionId
     }
-  });
+  })
+
 
   ctx.body = files.map(f => {
     return {
@@ -53,44 +46,11 @@ router.get("/:id/files", async ctx => {
       name: f.name,
       filename: getUploadFilePath(f.filename),
       moder: f.moder,
-      rate: f.rate_value
     }
   });
 });
 
-router.post("/rates/:photoWorkId", async ctx => {
-  const { photoWorkId } = ctx.params;
-  const { rate, contestId } = ctx.request.body;
-  const userId = ctx.user.id;
 
-  const jury = await models.Jury.findOne({
-    where: {
-      userId,
-      contestId
-    }
-  });
-
-  let rateRecord = await models.Rate.findOne({
-    where: {
-      juryId: jury.id,
-      photoworkId: photoWorkId,
-    }
-  });
-
-  if (!rateRecord) {
-    rateRecord = await models.Rate.create({
-      juryId: jury.id,
-      photoworkId: photoWorkId,
-      rateValue: rate
-    });
-  } else {
-    rateRecord.update({
-      rateValue: rate
-    });
-  }
-
-  ctx.body = rateRecord;
-});
 
 router.delete("/files/:id", async ctx => {
   const {

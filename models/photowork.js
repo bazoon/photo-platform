@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     reasonModeration: DataTypes.STRING,
     dateAdd: DataTypes.DATE,
     average: DataTypes.DOUBLE,
-    mediane: DataTypes.DOUBLE,
+    median: DataTypes.DOUBLE,
     demosRate: DataTypes.DOUBLE,
     yearShot: DataTypes.STRING,
     locateShot: DataTypes.STRING
