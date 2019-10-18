@@ -5,6 +5,11 @@
         <i nz-icon [nzType]="'home'"></i>
       </a>
       <ul nz-menu nzTheme="dark" nzMode="horizontal">
+        <li *ngFor="let m of staticMenu" [routerLink]="m.url" nz-submenu [nzTitle]="m.title | translate">
+          <ul>
+            <li *ngFor="let s of m.children" nz-menu-item [routerLink]="'/sections/'+s.id">{{s.title | translate}}</li>
+          </ul>
+        </li>
         <li *ngFor="let m of contestMenus" [routerLink]="'/sections/'+m.id" nz-submenu [nzTitle]="m.title | translate">
           <ul>
             <li *ngFor="let s of m.children" nz-menu-item [routerLink]="'/sections/'+s.id">{{s.title | translate}}</li>

@@ -28,6 +28,7 @@ const userMenu = require("./routes/userMenu");
 const rates = require("./routes/rates");
 const results = require("./routes/results");
 const shortLists = require("./routes/shortLists");
+const staticMenu = require("./routes/staticMenu");
 
 router.use("/api/upload", upload.routes());
 router.use("/api/admin/users", users.routes());
@@ -57,5 +58,6 @@ router.use("/api/userMenu", userMenu.routes());
 router.use("/api/rates", rates.routes());
 router.use("/api/results", results.routes());
 router.use("/api/shortLists", shortLists.routes());
+router.use("/api/staticMenu", staticMenu.routes());
 
 module.exports = router;
