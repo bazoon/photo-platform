@@ -46,14 +46,6 @@ export class ContestResultsComponent implements OnInit {
     this.visibleWorks = works;
   }
 
-  handleCancelImage() {
-    this.isImageVisible = false;
-  }
-
-  handleOkImage() {
-    this.isImageVisible = false;
-  }
-
   viewImage(image: string) {
     this.currentImage = image;
     this.isImageVisible = true;

@@ -34,6 +34,5 @@
   </nz-table>
 </app-admin-layout>
 
-<nz-modal nzWidth="1000" [nzFooter]="null" [(nzVisible)]="isImageVisible " (nzOnCancel)="handleCancelImage() " (nzOnOk)="handleOkImage() ">
-  <img *ngIf="isImageVisible" [src]="currentImage" class="img" id="img" />
-</nz-modal>
+<app-preview-image [isImageVisible]="isImageVisible" [image]="currentImage" (clicked)="isImageVisible=false">
+</app-preview-image>

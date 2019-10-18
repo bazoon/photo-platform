@@ -17,6 +17,8 @@ export class JuryComponent implements OnInit {
   sections: Array<ContestSection> = [];
   files: Array<Photowork> = [];
   rates: { [key: string]: number } = {};
+  isImageVisible = false;
+  currentImage = "";
 
   constructor(private api: ApiService) { }
 
@@ -44,6 +46,11 @@ export class JuryComponent implements OnInit {
     this.api.post(`/api/rates/${id}`, { rate, contestId: this.currentContestId }).subscribe(() => {
 
     });
+  }
+
+  viewImage(image: string) {
+    this.currentImage = image;
+    this.isImageVisible = true;
   }
 
 

@@ -23,11 +23,10 @@
     </div>
   </div>
 
-
   <div class="images">
     <div *ngFor="let file of files" class="thumb-wrap">
       <span class="file-name">{{file.name}}</span>
-      <img class="thumb" [src]="file.filename">
+      <img class="thumb" [src]="file.filename" (click)="viewImage(file.filename)">
       <div class="thumb-controls">
         <nz-rate [nzCount]="currentContest.maxrate" [ngModel]="file.rate" (ngModelChange)="handleRateChange($event, file.id)" nzAllowHalf></nz-rate>
       </div>
@@ -35,3 +34,6 @@
   </div>
 
 </app-user-layout>
+
+<app-preview-image [isImageVisible]="isImageVisible" [image]="currentImage" (clicked)="isImageVisible=false">
+</app-preview-image>

@@ -5,14 +5,18 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RegStatePipe } from '../pipes/reg-state.pipe';
 import { ModerStatePipe } from '../pipes/moder-state.pipe';
+import { PreviewImageComponent } from '../features/preview-image/preview-image.component';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
   declarations: [
     RegStatePipe,
-    ModerStatePipe
+    ModerStatePipe,
+    PreviewImageComponent
   ],
   imports: [
+    CommonModule,
     NgZorroAntdModule,
     ReactiveFormsModule,
     FormsModule,
@@ -24,7 +28,8 @@ import { ModerStatePipe } from '../pipes/moder-state.pipe';
     ReactiveFormsModule,
     FormsModule,
     RegStatePipe,
-    ModerStatePipe
+    ModerStatePipe,
+    PreviewImageComponent
   ]
 
 })

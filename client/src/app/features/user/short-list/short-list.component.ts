@@ -16,6 +16,8 @@ export class ShortListComponent implements OnInit {
   currentContest?: Contest;
   sections: Array<ContestSection> = [];
   files: Array<Photowork> = [];
+  isImageVisible = false;
+  currentImage = "";
 
   constructor(private api: ApiService) { }
 
@@ -39,6 +41,9 @@ export class ShortListComponent implements OnInit {
     });
   }
 
-
+  viewImage(image: string) {
+    this.currentImage = image;
+    this.isImageVisible = true;
+  }
 
 }
