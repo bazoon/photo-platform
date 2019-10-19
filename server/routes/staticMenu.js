@@ -11,7 +11,7 @@ router.get("/", async ctx => {
   const staticMenu = [
     {
       title: 'photos',
-      url: '/photos'
+      url: '/photos/sections'
     }
   ];
 

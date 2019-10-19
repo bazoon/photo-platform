@@ -298,7 +298,6 @@ export class ContestComponent extends CrudComponent<Contest> {
   }
 
   editSection(id: number) {
-    debugger
     this.editingSection = this.contestSections.find(s => s.id == id) || emptyContestSection;
     this.sectionForm.patchValue(this.editingSection);
     this.isSectionVisible = true;
@@ -314,7 +313,12 @@ export class ContestComponent extends CrudComponent<Contest> {
     this.isSectionVisible = false;
     if (this.editingSection) {
       this.api.put<ContestSection>(`/api/admin/contestSections/${this.editingSection.id}`, this.sectionForm.value).subscribe(section => {
-        this.contestSections = this.contestSections.concat([section]);
+        this.contestSections = this.contestSections.map(s => {
+          if (section.id === s.id) {
+            return section;
+          }
+          return s;
+        });
       });
     } else {
       this.api.post<ContestSection>(`/api/admin/contestSections/${this.currentContest.id}`, this.sectionForm.value).subscribe(section => {
@@ -325,6 +329,12 @@ export class ContestComponent extends CrudComponent<Contest> {
 
   handleCancelSection() {
     this.isSectionVisible = false;
+  }
+
+  removeMenuNode(id: string) {
+    this.api.delete(`/api/admin/contestMenus/${id}`).subscribe(() => {
+      this.loadContestMenu(this.currentContest.id + '');
+    });
   }
 
 }

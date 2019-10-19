@@ -77,6 +77,4 @@ router.get("/:id", async ctx => {
   ctx.body = contest;
 });
 
-
-
 module.exports = router;

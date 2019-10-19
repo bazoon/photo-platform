@@ -1,0 +1,50 @@
+.thumb { 
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  &:last-child {
+    margin-right: 0px;
+  }
+}
+
+.thumb-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  max-width: 150px;
+  i {
+    cursor: pointer;
+  }
+
+  &:hover {
+    .rate {
+      display: block;
+    }
+  }
+}
+
+.thumb {
+  &:hover {
+    filter: brightness(0.4);
+  }
+}
+
+
+.photos {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.rate {
+  font-size: 14px;
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: white;
+  font-weight: bold;
+  transform: translate(-50%, -50%);
+}

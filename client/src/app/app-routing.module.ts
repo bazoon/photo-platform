@@ -5,6 +5,10 @@ import { MainComponent } from './features/main/main.component';
 import { RegisterComponent } from './features/register/register.component';
 import { PublicationComponent } from './features/publication/publication.component';
 import { PublicationsComponent } from './features/publications/publications.component';
+import { ContestPhotosComponent } from './features/contest-photos/contest-photos.component';
+import { SectionPhotosComponent } from './features/section-photos/section-photos.component';
+
+
 
 const routes: Routes = [
   { path: '', component: MainComponent },
@@ -17,6 +21,12 @@ const routes: Routes = [
   },
   {
     path: 'sections/:id', component: PublicationsComponent
+  },
+  {
+    path: 'photos/sections', component: ContestPhotosComponent
+  },
+  {
+    path: 'photos/:sectionId', component: SectionPhotosComponent
   }
 ];
 

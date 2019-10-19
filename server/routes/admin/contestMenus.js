@@ -183,7 +183,7 @@ router.get("/:id", async ctx => {
 router.delete("/:id", async ctx => {
   const { id } = ctx.params;
 
-  await models.ContestAbout.destroy({
+  await models.ContestMenu.destroy({
     where: {
       id
     }

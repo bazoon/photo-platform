@@ -12,10 +12,9 @@ const Router = require("koa-router");
 const mount = require("koa-mount");
 const router = new Router();
 const koaBody = require("koa-body");
-// const uploadFiles = require("./utils/uploadFiles");
 const models = require("./models");
-
 const app = new Koa();
+
 app.use(cors());
 
 const http = require("http").Server(app.callback());
@@ -51,17 +50,6 @@ app.use(async (ctx, next) => {
 app.use(loginRouter.routes()).use(loginRouter.allowedMethods());
 app.use(koaJwt({ secret: process.env.API_TOKEN, cookie: "token" }));
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods());
-
-// (async function () {
-//   const u = await models.User.findOne({
-//     where: {
-//       id: 8
-//     }
-//   });
-//   // console.log(u);
-// }())
-
-
 
 http.listen(port, () => console.log(`Server is running on ${port}`));
 

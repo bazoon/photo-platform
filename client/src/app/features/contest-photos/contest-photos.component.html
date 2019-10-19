@@ -1,0 +1,19 @@
+<div class="content-container">
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a routerLink="/">{{'main' | translate}}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      {{'sections' | translate}}
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <h1>{{'sections' | translate}}</h1>
+  <div class="sections">
+    <div *ngFor="let section of sections" class="section-wrap" [routerLink]="'/photos/'+section.id">
+      <img [src]=" section.imageUrl " />
+      <div class="section-name ">
+        {{section.name}}
+      </div>
+    </div>
+  </div>
+</div>

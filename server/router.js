@@ -29,6 +29,7 @@ const rates = require("./routes/rates");
 const results = require("./routes/results");
 const shortLists = require("./routes/shortLists");
 const staticMenu = require("./routes/staticMenu");
+const contestPhotos = require("./routes/contestPhotos");
 
 router.use("/api/upload", upload.routes());
 router.use("/api/admin/users", users.routes());
@@ -59,5 +60,6 @@ router.use("/api/rates", rates.routes());
 router.use("/api/results", results.routes());
 router.use("/api/shortLists", shortLists.routes());
 router.use("/api/staticMenu", staticMenu.routes());
+router.use("/api/contestPhotos", contestPhotos.routes());
 
 module.exports = router;

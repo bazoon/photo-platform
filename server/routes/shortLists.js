@@ -18,7 +18,7 @@ router.get("/:sectionId", async ctx => {
     select photoworks.id, filename, average
     from photoworks
     where section_id=:sectionId
-    order by average desc limit 50
+    order by average desc limit 3
   `;
 
   const [files] = await models.sequelize.query(query, {
