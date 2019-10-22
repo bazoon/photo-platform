@@ -7,29 +7,41 @@ import { RegStatePipe } from '../pipes/reg-state.pipe';
 import { ModerStatePipe } from '../pipes/moder-state.pipe';
 import { PreviewImageComponent } from '../features/preview-image/preview-image.component';
 import { CommonModule } from '@angular/common';
+import { RbacShowDirective } from '../core/directives/rbac-show.directive';
+import { VkComponentIcon } from '../core/icons/vk/vk.component';
+import { FbComponentIcon } from '../core/icons/fb/fb.component';
+
 
 
 @NgModule({
   declarations: [
     RegStatePipe,
     ModerStatePipe,
-    PreviewImageComponent
+    PreviewImageComponent,
+    RbacShowDirective,
+    VkComponentIcon,
+    FbComponentIcon
   ],
   imports: [
+
+
     CommonModule,
     NgZorroAntdModule,
     ReactiveFormsModule,
     FormsModule,
-
   ],
   providers: [{ provide: NZ_I18N, useValue: ru_RU }],
   exports: [
+    CommonModule,
     NgZorroAntdModule,
     ReactiveFormsModule,
     FormsModule,
     RegStatePipe,
     ModerStatePipe,
-    PreviewImageComponent
+    PreviewImageComponent,
+    RbacShowDirective,
+    VkComponentIcon,
+    FbComponentIcon
   ]
 
 })

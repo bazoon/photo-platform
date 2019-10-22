@@ -40,16 +40,26 @@ router.post("/", async ctx => {
     }
   });
 
-  const application = await models.RegistrationContest.create({
-    userId: id,
-    contestId,
-    regState: contest.payType === 0 ? 0 : 2,
-    sectionCount
+  let application = await models.RegistrationContest.findOne({
+    where: {
+      userId: id,
+      contestId,
+    }
   });
 
+  if (!application) {
+    application = await models.RegistrationContest.create({
+      userId: id,
+      contestId,
+      regState: contest.payType === 0 ? 0 : 2,
+      sectionCount
+    });
+  }
+
   ctx.body = {
-    contestId,
+    id: contestId,
     canApply: false,
+    canPostPhotos: application.reg_state === 1,
     regState: application.regState
   };
 

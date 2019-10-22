@@ -4,6 +4,7 @@ import { SignupUser } from '../core/types/signupUser';
 import { ApiService } from '../core/services/api.service';
 import { User } from '../core/types/user';
 import { Login } from '../core/types/login';
+import { of, Observable, BehaviorSubject } from 'rxjs';
 
 
 const emptyUser: User = {
@@ -28,9 +29,10 @@ const emptyUser: User = {
   providedIn: 'root'
 })
 export class CurrentUserService {
-  user: User = emptyUser;
+  user?: User;
   isLoggedIn: boolean = false;
-
+  _roles: BehaviorSubject<Array<string>> = new BehaviorSubject([""]);
+  roles: Observable<Array<string>> = this._roles.asObservable();
 
   constructor(private api: ApiService, private router: Router) {
     this.load();
@@ -41,6 +43,17 @@ export class CurrentUserService {
       this.user = u;
       this.isLoggedIn = true;
       this.save();
+      this.updateRoles();
+      this.router.navigate(["/"]);
+    });
+  }
+
+  loginFb(payload: any) {
+    this.api.post<User>(`api/login-fb`, payload).subscribe(user => {
+      this.user = user;
+      this.isLoggedIn = true;
+      this.save();
+      this.updateRoles();
       this.router.navigate(["/"]);
     });
   }
@@ -55,6 +68,7 @@ export class CurrentUserService {
       this.user = u;
       this.isLoggedIn = true;
       this.save();
+      this.updateRoles();
       this.router.navigate(["/"]);
     });
   }
@@ -68,6 +82,7 @@ export class CurrentUserService {
     if (storedUser) {
       this.user = JSON.parse(storedUser);
       this.isLoggedIn = true;
+      this.updateRoles();
     }
   }
 
@@ -76,13 +91,32 @@ export class CurrentUserService {
   }
 
   logout() {
-    console.log('out')
     this.api.postEmpty("api/logout").subscribe(() => {
       this.remove();
       this.isLoggedIn = false;
-      this.user = emptyUser;
+      this.user = undefined;
+      this.updateRoles();
       this.router.navigate(["/"]);
     });
+  }
+
+  updateRoles() {
+    const userType = this.user && this.user.userType;
+    if (!this.isLoggedIn) {
+      this._roles.next([]);
+    } else if (userType === 0) {
+      // this.roles.push('admin');
+      this._roles.next(["admin"]);
+      // this._roles = this._roles.concat(['admin']);
+    } else if (userType === 1) {
+      // this.roles.push("user");
+    } else if (userType === 2) {
+      // this.roles.push("moder");
+    }
+  }
+
+  getRoles() {
+    return of(this.roles);
   }
 
 }

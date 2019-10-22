@@ -6,6 +6,7 @@ export interface UserContest {
   dateStop?: Date,
   regState?: number,
   canApply: boolean,
+  canPostPhotos: boolean,
   sectionCount?: number
 };
 
@@ -17,5 +18,6 @@ export const emptyUserContest: UserContest = {
   dateStop: undefined,
   regState: undefined,
   canApply: false,
+  canPostPhotos: false,
   sectionCount: undefined
 };

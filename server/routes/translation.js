@@ -22,7 +22,6 @@ router.get("/:locale", koaBody({ multipart: true }), async ctx => {
     replacements: { locale }
   });
 
-  console.log(translations);
 
   translations.forEach(t => {
     let keys = t.code.split(".");

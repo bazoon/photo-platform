@@ -73,7 +73,6 @@ router.post("/", async ctx => {
     data
   } = ctx.request.body;
 
-  console.log(contestMenuId, data);
   ctx.body = {};
 });
 

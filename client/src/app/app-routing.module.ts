@@ -7,12 +7,16 @@ import { PublicationComponent } from './features/publication/publication.compone
 import { PublicationsComponent } from './features/publications/publications.component';
 import { ContestPhotosComponent } from './features/contest-photos/contest-photos.component';
 import { SectionPhotosComponent } from './features/section-photos/section-photos.component';
+import { VkComponent } from './features/login/vk/vk.component';
+import { FbComponent } from './features/login/fb/fb.component';
 
 
 
 const routes: Routes = [
   { path: '', component: MainComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'oauth/vk', component: VkComponent },
+  { path: 'oauth/fb', component: FbComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'admin', loadChildren: "./features/admin/admin.module#AdminModule" },
   { path: 'user', loadChildren: "./features/user/user.module#UserModule" },

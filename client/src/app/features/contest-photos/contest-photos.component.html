@@ -10,9 +10,11 @@
   <h1>{{'sections' | translate}}</h1>
   <div class="sections">
     <div *ngFor="let section of sections" class="section-wrap" [routerLink]="'/photos/'+section.id">
-      <img [src]=" section.imageUrl " />
-      <div class="section-name ">
-        {{section.name}}
+      <div *ngIf="section.imageUrl">
+        <img [src]="section.imageUrl " />
+        <div class="section-name ">
+          {{section.name}}
+        </div>
       </div>
     </div>
   </div>

@@ -33,6 +33,8 @@ router.get("/:sectionId/files", async ctx => {
     sectionId
   } = ctx.params;
 
+  const userId = ctx.user.id;
+
   const files = await models.Photowork.findAll({
     where: {
       sectionId

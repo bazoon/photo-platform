@@ -7,12 +7,19 @@ const getUploadFilePath = require("../utils/getUploadPath");
 
 
 router.get("/", async ctx => {
-  const [contests] = await models.sequelize.query(`
-  select contests.id, subname, date_start, date_stop, salones.name as salone, reg_state, contests.section_count, maxrate from salones, contests
-  left join registration_contests on contests.id=registration_contests.contest_id
-  where contests.salone_id=salones.id 
-  `
-  );
+  const userId = ctx.user.id;
+  const query = `
+    select contests.id, subname, date_start, date_stop, salones.name as salone, reg_state, contests.section_count, maxrate from salones, contests
+    left join registration_contests on contests.id=registration_contests.contest_id and registration_contests.user_id=:userId
+    where contests.salone_id=salones.id 
+  `;
+
+  const [contests] = await models.sequelize.query(query, {
+    replacements: {
+      userId
+    }
+  });
+
   ctx.body = contests.map(c => {
     return {
       id: c.id,
@@ -22,6 +29,7 @@ router.get("/", async ctx => {
       dateStop: c.date_stop,
       regState: c.reg_state,
       canApply: c.reg_state === null,
+      canPostPhotos: c.reg_state === 1,
       sectionCount: c.section_count,
       maxrate: c.maxrate
     }

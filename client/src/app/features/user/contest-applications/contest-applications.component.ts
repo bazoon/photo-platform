@@ -5,6 +5,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { UserContest } from '../../../core/types/userContest';
 import { FormBuilder, Validators } from '@angular/forms';
 
+
 @Component({
   selector: 'app-contest-applications',
   templateUrl: './contest-applications.component.html',
@@ -49,10 +50,12 @@ export class ContestApplicationsComponent implements OnInit {
       ...this.sectionForm.value
     };
 
-    this.api.post<Array<UserContest>>("api/contestApplications", payload).subscribe(contests => {
-      const contest = this.contests.find(c => c.id === this.currentContestId);
+    this.api.post<UserContest>("api/contestApplications", payload).subscribe(userContest => {
+      const contest = this.contests.find(c => c.id === userContest.id);
       if (contest) {
-        contest.canApply = false;
+        contest.regState = userContest.regState;
+        contest.canApply = userContest.canApply;
+        contest.canPostPhotos = userContest.canPostPhotos;
       }
       this.isApplicationVisible = false;
     });

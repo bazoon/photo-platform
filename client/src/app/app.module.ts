@@ -26,6 +26,8 @@ import { MenuComponent } from './features/menu/menu.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { ContestPhotosComponent } from './features/contest-photos/contest-photos.component';
 import { SectionPhotosComponent } from './features/section-photos/section-photos.component';
+import { VkComponent } from './features/login/vk/vk.component';
+import { FbComponent } from './features/login/fb/fb.component';
 
 
 registerLocaleData(ru);
@@ -44,6 +46,9 @@ registerLocaleData(ru);
     SafeHtmlPipe,
     ContestPhotosComponent,
     SectionPhotosComponent,
+    VkComponent,
+    FbComponent,
+
   ],
   imports: [
     BrowserModule,

@@ -27,7 +27,7 @@
           </div>
         </td>
         <td nzWidth="200px">
-          <i nz-icon nzType="camera" nzTheme="outline" [routerLink]="data.id"></i>
+          <i *ngIf="data.canPostPhotos" nz-icon nzType="camera" nzTheme="outline" [routerLink]="data.id"></i>
         </td>
       </tr>
     </tbody>

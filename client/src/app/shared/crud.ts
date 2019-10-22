@@ -61,7 +61,6 @@ export class CrudComponent<T> {
   edit(id: string) {
     this.editingEntity = this.find(id);
     this.isEditVisible = true;
-    console.log(this.editingEntity);
     this.form.patchValue(this.editingEntity);
     this.editState = 2;
   }

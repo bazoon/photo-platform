@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CurrentUserService } from '../../state/current-user.service';
 
+const fbLink = "https://www.facebook.com/v4.0/dialog/oauth?scope=email&client_id=521960325035333&redirect_uri=https://worldecophoto.com:4200/oauth/fb&state=somestate&response_type=token";
+
 
 @Component({
   selector: 'app-login',
@@ -29,5 +31,9 @@ export class LoginComponent {
     });
   }
 
+  fbLogin(e: any) {
+    e.preventDefault();
+    window.location.replace(fbLink);
+  }
 
 }
