@@ -22,7 +22,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslationLoader, HttpLoaderFactory } from './core/misc/translationLoader';
 import { PublicationComponent } from './features/publication/publication.component';
 import { PublicationsComponent } from './features/publications/publications.component';
-import { MenuComponent } from './features/menu/menu.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
 import { ContestPhotosComponent } from './features/contest-photos/contest-photos.component';
 import { SectionPhotosComponent } from './features/section-photos/section-photos.component';
@@ -42,7 +41,6 @@ registerLocaleData(ru);
     UserComponent,
     PublicationComponent,
     PublicationsComponent,
-    MenuComponent,
     SafeHtmlPipe,
     ContestPhotosComponent,
     SectionPhotosComponent,

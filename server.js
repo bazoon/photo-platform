@@ -111,8 +111,8 @@ http.listen(port, () => console.log(`Server is running on ${port}`));
 const h = https
   .createServer(
     {
-      key: fs.readFileSync("./ssl/server.key"),
-      cert: fs.readFileSync("./ssl/server.cert")
+      key: fs.readFileSync("./ssl/private.key"),
+      cert: fs.readFileSync("./ssl/certificate.crt")
     },
     app.callback()
   )
