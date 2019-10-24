@@ -6,7 +6,6 @@
 /.temp
 /.tmp
 /build
-/dist
 /uploads
 
 # dependencies

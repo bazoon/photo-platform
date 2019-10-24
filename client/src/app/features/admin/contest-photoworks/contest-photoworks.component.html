@@ -9,11 +9,10 @@
   </div>
 
 
-  <nz-table [nzData]="works" nzShowPagination (nzCurrentPageDataChange)="currentPageDataChange($event)" [nzLoading]="isAboutsLoading"
-    [nzScroll]="{ x: '700px', y: '500px' }">
+  <nz-table [nzData]="works" nzShowPagination (nzCurrentPageDataChange)="currentPageDataChange($event)" [nzScroll]="{ x: '700px', y: '500px' }">
     <thead>
       <tr>
-        <th nzWidth="100px" nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" [nzIndeterminate]="isIndeterminate" (nzCheckedChange)="checkAll($event)"></th>
+        <th nzWidth="100px" nzShowCheckbox [(nzChecked)]="isAllDisplayDataChecked" (nzCheckedChange)="checkAll($event)"></th>
         <th nzWidth="200px">Name</th>
         <th nzWidth="200px">Image</th>
         <th nzWidth="200px">Moder</th>
