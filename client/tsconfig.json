@@ -19,16 +19,18 @@
       "es2018",
       "dom"
     ],
-    // "strict": true,
-    // "noImplicitReturns": true,
-    // "allowSyntheticDefaultImports": true
+    "strict": true,
+    "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true
   },
   "angularCompilerOptions": {
-    // "fullTemplateTypeCheck": true,
-    // "strictInjectionParameters": true
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
   },
   "exclude": [
     "node_modules",
-    "**/*.spec.ts"
+    "public",
+    "typings/browser.d.ts",
+    "typings/browser/**"
   ]
 }

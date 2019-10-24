@@ -1,21 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { CrudComponent } from '../../../shared/crud';
-import { Contest, emptyContest } from '../../../core/types/contest';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { ApiService } from '../../../core/services/api.service';
-import { ContestAbout, emptyContestAbout } from '../../../core/types/contestAbout';
-import { Language } from '../../../core/types/language';
-import { UploadAdapter, TheUploadAdapterPlugin } from '../../../core/misc/uploadAdapter';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 import editorConfig from '../../../core/config/editorConfig';
-import { Salone } from '../../../core/types/salone';
+import { ApiService } from '../../../core/services/api.service';
+import { Contest, emptyContest } from '../../../core/types/contest';
+import { ContestAbout, emptyContestAbout } from '../../../core/types/contestAbout';
 import { ContestMenu, emptyContestMenu } from '../../../core/types/contestMenu';
+import { ContestSection, emptyContestSection } from '../../../core/types/contestSection';
+import { Language } from '../../../core/types/language';
 import { Lexicon } from '../../../core/types/lexicon';
 import { PubMenu } from '../../../core/types/pubMenu';
-import { PublicationsComponent } from '../publications/publications.component';
-import { of, Observable, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ContestSection, emptyContestSection } from '../../../core/types/contestSection';
+import { Salone } from '../../../core/types/salone';
+import { CrudComponent } from '../../../shared/crud';
 
 @Component({
   selector: 'app-contest',

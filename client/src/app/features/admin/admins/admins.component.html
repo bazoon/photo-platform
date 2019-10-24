@@ -1,6 +1,6 @@
 <app-admin-layout>
   <h1>Админы</h1>
-  <button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
+  <button *rbacShow="['superAdmin']" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
   <nz-table #basicTable [nzData]="entities" [nzScroll]="{ x: '900px', y: '240px' }">
     <thead>
       <tr>
@@ -13,8 +13,9 @@
     <tbody>
       <tr *ngFor="let data of entities">
         <td style="cursor:pointer">
-          <i (click)="edit(data.userId)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
-          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.userId)"></i>
+          <i *rbacShow="['superAdmin']" (click)="edit(data.userId)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+          <i *rbacShow="['superAdmin']" nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top"
+            (nzOnConfirm)="remove(data.userId)"></i>
         </td>
         <td>{{data.organizer}}</td>
         <td>{{data.user}}</td>

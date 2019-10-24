@@ -30,6 +30,8 @@ const results = require("./routes/results");
 const shortLists = require("./routes/shortLists");
 const staticMenu = require("./routes/staticMenu");
 const contestPhotos = require("./routes/contestPhotos");
+const roles = require("./routes/roles");
+
 
 router.use("/api/upload", upload.routes());
 router.use("/api/admin/users", users.routes());
@@ -61,5 +63,6 @@ router.use("/api/results", results.routes());
 router.use("/api/shortLists", shortLists.routes());
 router.use("/api/staticMenu", staticMenu.routes());
 router.use("/api/contestPhotos", contestPhotos.routes());
+router.use("/api/roles", roles.routes());
 
 module.exports = router;

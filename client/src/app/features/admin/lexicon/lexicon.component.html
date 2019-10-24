@@ -1,6 +1,6 @@
 <app-admin-layout>
   <h1>Термины</h1>
-  <button class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
+  <button *rbacShow="['superAdmin']" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
   <nz-table [nzData]="entities" [nzScroll]="{ x: '1000', y: '240px' }">
     <thead>
       <tr>
@@ -13,8 +13,9 @@
     <tbody>
       <tr *ngFor="let data of entities" (click)="editPhrases(data.id)" [class.selectedRow]="currentLexiconId===data.id">
         <td style="cursor:pointer">
-          <i (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
-          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
+          <i *rbacShow="['superAdmin']" (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+          <i *rbacShow="['superAdmin']" nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top"
+            (nzOnConfirm)="remove(data.id)"></i>
         </td>
         <td>{{data.code}}</td>
         <td>{{data.name}}</td>
@@ -25,7 +26,8 @@
 
 
   <h1>Слова</h1>
-  <button [disabled]="!currentLexiconId" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="appendPhrase()">Добавить</button>
+  <button *rbacShow="['superAdmin']" [disabled]="!currentLexiconId" class="margin-top-small margin-bottom-small" nz-button
+    nzType="primary" (click)="appendPhrase()">Добавить</button>
   <nz-table [nzData]="phrases" [nzScroll]="{ x: '1000', y: '240px' }">
     <thead>
       <tr>
@@ -37,8 +39,9 @@
     <tbody>
       <tr *ngFor="let data of phrases">
         <td style="cursor:pointer">
-          <i (click)="editPhrase(data)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
-          <i nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top" (nzOnConfirm)="removePhrase(data.id)"></i>
+          <i *rbacShow="['superAdmin']" (click)="editPhrase(data)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
+          <i *rbacShow="['superAdmin']" nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?" nzPopconfirmPlacement="top"
+            (nzOnConfirm)="removePhrase(data.id)"></i>
         </td>
         <td>{{data.language}}</td>
         <td>{{data.name}}</td>

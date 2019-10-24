@@ -23,13 +23,52 @@ const fields = [
 ];
 
 router.get("/", async ctx => {
-  const query = `
-    select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-    show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight from
-    contests, salones
-    where contests.salone_id=salones.id
-  `;
-  const [contests] = await models.sequelize.query(query);
+  const { host } = ctx.request.header;
+  const [domain] = host.split(":");
+
+  const user = await models.User.findOne({
+    where: {
+      id: ctx.user.id
+    }
+  });
+
+  const isAdmin = user.userType == 0;
+  const isModer = user.userType === 2;
+  let query;
+
+  if (isAdmin) {
+    console.log('isAdmin');
+    query = `
+      select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
+      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight from
+      contests, salones
+      where contests.salone_id=salones.id
+    `;
+  } else if (isModer) {
+    console.log('isModer');
+    query = `
+      select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
+      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight from
+      contests, salones
+      where contests.salone_id=salones.id and salones.domain=:domain
+    `;
+  } else {
+    console.log('may be admin or moder for domain');
+    query = `
+      select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
+      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight 
+      from contests, salones, admins, organizers
+      where contests.salone_id=salones.id and salones.domain=:domain and salones.organizer_id=organizers.id and
+      admins.organizer_id=organizers.id and admins.user_id=:userId
+    `;
+  }
+
+  const [contests] = await models.sequelize.query(query, {
+    replacements: {
+      domain,
+      userId: user.id
+    }
+  });
 
   ctx.body = contests.map(contest => {
     return {

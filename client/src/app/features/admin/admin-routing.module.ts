@@ -13,6 +13,7 @@ import { PublicationsComponent } from './publications/publications.component';
 import { ContestPhotoworksComponent } from './contest-photoworks/contest-photoworks.component';
 import { ContestJuriesComponent } from './contest-juries/contest-juries.component';
 import { ContestResultsComponent } from './contest-results/contest-results.component';
+import { AwardsStacksComponent } from './awards-stacks/awards-stacks.component';
 
 const routes: Routes = [
   {
@@ -53,6 +54,9 @@ const routes: Routes = [
       },
       {
         path: 'lexicons', component: LexiconComponent
+      },
+      {
+        path: 'awards-stacks', component: AwardsStacksComponent
       }
     ]
   }
@@ -61,7 +65,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-
     RouterModule.forChild(routes)
   ],
   exports: [RouterModule]

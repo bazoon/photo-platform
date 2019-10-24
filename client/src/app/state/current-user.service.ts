@@ -101,18 +101,9 @@ export class CurrentUserService {
   }
 
   updateRoles() {
-    const userType = this.user && this.user.userType;
-    if (!this.isLoggedIn) {
-      this._roles.next([]);
-    } else if (userType === 0) {
-      // this.roles.push('admin');
-      this._roles.next(["admin"]);
-      // this._roles = this._roles.concat(['admin']);
-    } else if (userType === 1) {
-      // this.roles.push("user");
-    } else if (userType === 2) {
-      // this.roles.push("moder");
-    }
+    this.api.get<any>('api/roles').subscribe(role => {
+      this._roles.next([role.role]);
+    });
   }
 
   getRoles() {
