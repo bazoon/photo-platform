@@ -4,7 +4,7 @@ const users = require("./routes/admin/users");
 const admins = require("./routes/admin/admins");
 const translation = require("./routes/translation");
 const languages = require("./routes/admin/languages");
-const organizers = require("./routes/admin/organizers");
+const adminOrganizers = require("./routes/admin/organizers");
 const saloneTypes = require("./routes/admin/saloneTypes");
 const salones = require("./routes/admin/salones");
 const saloneAbout = require("./routes/admin/saloneAbout");
@@ -31,6 +31,7 @@ const shortLists = require("./routes/shortLists");
 const staticMenu = require("./routes/staticMenu");
 const contestPhotos = require("./routes/contestPhotos");
 const roles = require("./routes/roles");
+const organizers = require("./routes/organizers");
 
 
 router.use("/api/upload", upload.routes());
@@ -38,7 +39,7 @@ router.use("/api/admin/users", users.routes());
 router.use("/api/admin/admins", admins.routes());
 router.use("/api/translation", translation.routes());
 router.use("/api/admin/languages", languages.routes());
-router.use("/api/admin/organizers", organizers.routes());
+router.use("/api/admin/organizers", adminOrganizers.routes());
 router.use("/api/admin/saloneTypes", saloneTypes.routes());
 router.use("/api/admin/salonesAbout", saloneAbout.routes());
 router.use("/api/admin/salones", salones.routes());
@@ -64,5 +65,6 @@ router.use("/api/shortLists", shortLists.routes());
 router.use("/api/staticMenu", staticMenu.routes());
 router.use("/api/contestPhotos", contestPhotos.routes());
 router.use("/api/roles", roles.routes());
+router.use("/api/organizers", organizers.routes());
 
 module.exports = router;

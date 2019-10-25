@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CurrentUserService } from '../../state/current-user.service';
 
-const fbLink = "https://www.facebook.com/v4.0/dialog/oauth?scope=email&client_id=521960325035333&redirect_uri=https://worldecophoto.com:4200/oauth/fb&state=somestate&response_type=token";
+const fbLink = `https://www.facebook.com/v4.0/dialog/oauth?scope=email&client_id=521960325035333&redirect_uri=${location.origin}/oauth/fb&state=somestate&response_type=token`;
 
 
 @Component({
@@ -12,6 +12,7 @@ const fbLink = "https://www.facebook.com/v4.0/dialog/oauth?scope=email&client_id
 })
 export class LoginComponent {
   validateForm: FormGroup;
+
 
 
   submitForm(): void {

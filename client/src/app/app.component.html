@@ -42,5 +42,16 @@
     <router-outlet></router-outlet>
   </nz-content>
 
-  <nz-footer nzTheme="dark">Тут будет подвал</nz-footer>
+  <nz-footer nzTheme="dark">
+    <div class="footer-wrap">
+      <div class="left">
+        <div>{{organizer.name}}</div>
+        <div>{{organizer.emailPub}}</div>
+      </div>
+      <div class="right">
+        <div>{{organizer.address}}</div>
+        <div>{{organizer.www}}</div>
+      </div>
+    </div>
+  </nz-footer>
 </nz-layout>
