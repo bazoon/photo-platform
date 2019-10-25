@@ -10,8 +10,6 @@ import { SectionPhotosComponent } from './features/section-photos/section-photos
 import { VkComponent } from './features/login/vk/vk.component';
 import { FbComponent } from './features/login/fb/fb.component';
 
-
-
 const routes: Routes = [
   { path: '', component: MainComponent },
   { path: 'login', component: LoginComponent },
@@ -31,11 +29,12 @@ const routes: Routes = [
   },
   {
     path: 'photos/:sectionId', component: SectionPhotosComponent
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
+
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

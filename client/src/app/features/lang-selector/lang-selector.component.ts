@@ -25,13 +25,8 @@ export class LangSelectorComponent {
         this.i18n.setLocale(ru_RU);
         break;
       }
-
     }
-
-
-
-
-
+    
     this.translate.use(locale);
   }
 

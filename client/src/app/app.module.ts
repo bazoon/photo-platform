@@ -47,6 +47,7 @@ registerLocaleData(ru);
     VkComponent,
     FbComponent,
 
+
   ],
   imports: [
     BrowserModule,

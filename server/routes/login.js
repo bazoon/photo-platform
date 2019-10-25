@@ -35,7 +35,7 @@ router.post("/register", koaBody({ multipart: true }), async ctx => {
     lastName,
     nickName,
     phone,
-    avatar: avatar.name,
+    avatar: avatar && avatar.name,
     salt,
     psw: hashedPassword,
     userType: 1,
