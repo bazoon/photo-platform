@@ -58,6 +58,16 @@ export class CurrentUserService {
     });
   }
 
+  loginVk(payload: any) {
+    this.api.post<User>(`api/login-vk`, payload).subscribe(user => {
+      this.user = user;
+      this.isLoggedIn = true;
+      this.save();
+      this.updateRoles();
+      this.router.navigate(["/"]);
+    });
+  }
+
   register(user: SignupUser) {
     const formData = new FormData();
     for (let f in user) {
