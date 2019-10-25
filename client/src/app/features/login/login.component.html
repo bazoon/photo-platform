@@ -24,7 +24,7 @@
 
         <a routerLink="/register" class="user-login">{{'register' | translate}}</a>
         <br>
-        <a href="https://oauth.vk.com/authorize?scope=client_id=7176269&display=page&redirect_uri=http://worldecophoto.com:4200/oauth/vk?scope=email&response_type=token&v=5.59">
+        <a (click)="vkLogin($event)">
           <i nz-icon style="width: 32px;margin-right: 5px;">
             <vk-icon></vk-icon>
           </i>

@@ -101,7 +101,7 @@ router.post("/login", async ctx => {
       expiresIn: expiresIn
     }
   );
-  console.log("set cookie", token);
+
   ctx.cookies.set("token", token, { httpOnly: false });
 
   ctx.body = {
@@ -177,27 +177,25 @@ router.post('/login-fb', async ctx => {
 
 router.post("/login-vk", async ctx => {
   const {
-    access_token, user_id
+    access_token, user_id, email
   } = ctx.request.body;
 
-
   var salt = bcrypt.genSaltSync(10);
-  var hashedPassword = bcrypt.hashSync(password, salt);
+  var hashedPassword = bcrypt.hashSync(Math.random() + '', salt);
   const { data } = await axios.get(`https://api.vk.com/method/users.get?user_ids=${user_id}&access_token=${access_token}&v=5.102`);
   const { first_name, last_name } = data.response[0];
 
   let user = await models.User.findOne({
     where: {
-      nickName
+      email
     }
   });
 
   if (!user) {
-
     const user = await models.User.create({
       email,
-      firstName: name,
-      lastName: '',
+      firstName: first_name,
+      lastName: last_name,
       nickName,
       phone,
       avatar: 'none',
@@ -207,11 +205,15 @@ router.post("/login-vk", async ctx => {
       emailState: 0,
       rowState: 0,
     });
-
-
   }
 
-
+  const token = jwt.sign(
+    { firstName: user.firstName, lastName: user.lastName, id: user.id, userType: user.type },
+    process.env.API_TOKEN,
+    {
+      expiresIn: expiresIn
+    }
+  );
 
   ctx.cookies.set("token", token, { httpOnly: false });
 

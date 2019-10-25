@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
+import { CurrentUserService } from '../../../state/current-user.service';
 @Component({
   selector: 'app-vk',
   templateUrl: './vk.component.html',
@@ -9,9 +10,10 @@ import { ApiService } from '../../../core/services/api.service';
 export class VkComponent implements OnInit {
 
 
-  constructor(private route: ActivatedRoute, private api: ApiService) {
+  constructor(private route: ActivatedRoute, private api: ApiService, private currentUser: CurrentUserService) {
 
   }
+
 
   ngOnInit() {
     this.route.fragment.subscribe((fragment: string) => {
@@ -21,16 +23,8 @@ export class VkComponent implements OnInit {
         acc[key] = e[1];
         return acc;
       }, {});
-
-      this.api.post(`api/login-vk`, payload).subscribe(user => {
-        console.log(user);
-      });
-
-    })
-
-
-
-
+      this.currentUser.loginVk(payload);
+    });
   }
 
 }
