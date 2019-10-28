@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     logo: DataTypes.STRING,
     virtual: DataTypes.INTEGER,
     smtp: DataTypes.STRING,
-    smtp_psw: DataTypes.STRING,
+    smtpPassword: {
+      type: DataTypes.STRING,
+      field: 'smtp_psw'
+    },
     smtpUsePub: DataTypes.INTEGER,
     dateCreate: DataTypes.DATE,
     rowState: DataTypes.INTEGER,

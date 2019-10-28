@@ -7,9 +7,9 @@ const models = require("../../models");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
+const mailer = require("../services/mail");
 
 const expiresIn = 24 * 60 * 60 * 30;
-
 
 router.post("/register", koaBody({ multipart: true }), async ctx => {
   const {
@@ -85,6 +85,11 @@ router.post("/login", async ctx => {
       nickName
     }
   });
+
+  const { host } = ctx.request.header;
+  const [domain] = host.split(":");
+
+  // mailer.sendFromCurrentOrganizer({ domain, to: 'vith@yandex.ru', subject: 'Suject', text: '<h1>Hello!</h1>' });
 
   const isValidUser = await bcrypt.compare(password, user.psw);
 
