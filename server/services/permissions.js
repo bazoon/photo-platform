@@ -35,6 +35,12 @@ module.exports = {
       return 'superAdmin';
     }
 
+    if (user.userType === 2) {
+      return 'moder';
+    }
+
+
+
     const query = `
       select admins.adm_type 
       from admins, organizers, salones 

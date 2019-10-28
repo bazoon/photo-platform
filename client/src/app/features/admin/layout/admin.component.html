@@ -3,7 +3,7 @@
     <div class="logo"></div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
 
-      <li nz-submenu nzTitle="Основные" nzIcon="user" nzOpen="true">
+      <li *rbacShow="['superAdmin']" nz-submenu nzTitle="Основные" nzIcon="user" nzOpen="true">
         <ul>
           <li nz-menu-item>
             <a routerLink="/admin/languages">Языки</a>
@@ -17,7 +17,7 @@
         </ul>
       </li>
 
-      <li nz-submenu nzTitle="Пользователи" nzIcon="user" nzOpen="true">
+      <li *rbacShow="['superAdmin', 'admin']" nz-submenu nzTitle="Пользователи" nzIcon="user" nzOpen="true">
         <ul>
           <li nz-menu-item>
             <a routerLink="/admin/users">Пользователи</a>
@@ -27,23 +27,20 @@
           </li>
         </ul>
       </li>
+
       <li nz-submenu nzTitle="Организация" nzIcon="team" nzOpen="true">
         <ul>
-          <li nz-menu-item>
+          <li *rbacShow="['superAdmin']" nz-menu-item>
             <a routerLink="/admin/organizers">Организаторы</a>
           </li>
-          <li nz-menu-item>
+          <li *rbacShow="['superAdmin', 'admin']" nz-menu-item>
             <a routerLink="/admin/salones">Салоны</a>
           </li>
-          <li nz-menu-item>
+          <li *rbacShow="['superAdmin', 'admin', 'moder']" nz-menu-item>
             <a routerLink="/admin/contests">Конкурсы</a>
-          </li>
-          <li nz-menu-item>
-            <a routerLink="/admin/contests-menu">Меню</a>
           </li>
         </ul>
       </li>
-
 
     </ul>
   </nz-sider>

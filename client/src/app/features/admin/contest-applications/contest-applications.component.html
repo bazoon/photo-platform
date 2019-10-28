@@ -13,8 +13,8 @@
   <tbody>
     <tr *ngFor="let data of applications">
       <td style="cursor:pointer">
-        <i (click)="approve(data.id)" nz-icon nzType="check" nzTheme="outline" style="margin-right: 10px"></i>
-        <i nz-icon nzType="stop" nzTheme="outline" (click)="decline(data.id)"></i>
+        <i *rbacShow="['superAdmin', 'admin', 'moder']" (click)="approve(data.id)" nz-icon nzType="check" nzTheme="outline" style="margin-right: 10px"></i>
+        <i *rbacShow="['superAdmin', 'admin', 'moder']" nz-icon nzType="stop" nzTheme="outline" (click)="decline(data.id)"></i>
       </td>
       <td nzWidth="200px">{{data.user}}</td>
       <td nzWidth="200px">{{data.dateReg}}</td>
