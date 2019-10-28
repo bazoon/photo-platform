@@ -15,13 +15,4 @@ export class PreviewImageComponent {
     this.clicked.emit();
   }
 
-  handleOkImage() {
-    this.clicked.emit();
-  }
-
-  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-    console.log(this.isImageVisible)
-  }
-
-
 }

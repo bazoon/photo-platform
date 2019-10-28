@@ -1,4 +1,5 @@
-<nz-modal nzClosable="false" nzWidth="1000" [nzFooter]="null" [(nzVisible)]="isImageVisible " (nzOnCancel)="handleCancelImage() "
-  (nzOnOk)="handleOkImage() ">
-  <img *ngIf="isImageVisible" [src]="image" class="img" id="img" />
-</nz-modal>
+<div *ngIf="isImageVisible" class="mask" (click)="handleCancelImage()">
+  <div class="modal">
+    <img *ngIf="isImageVisible" [src]="image" class="img" id="img" />
+  </div>
+</div>
