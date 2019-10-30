@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { filter } from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -16,6 +15,9 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   post<T>(url: string, data: string | FormData | object) {
+    /* if (!this.currentUser.isLoggedIn) { */
+    /*   return; */
+    /* } */
 
     if (data instanceof FormData) {
       return this.http.post<T>(url, data);
@@ -27,15 +29,23 @@ export class ApiService {
   }
 
   postEmpty(url: string) {
-    return this.http.post(url, "", httpOptions);
+    /* if (!this.currentUser.isLoggedIn) { */
+    /*   return; */
+    /* } */
+    return this.http.post(url, '', httpOptions);
   }
 
   get<T>(url: string) {
-    const req = new HttpRequest('GET', url);
-    return this.http.get<T>(url);//.pipe(filter(e => e instanceof HttpResponse));
+    /* if (!this.currentUser.isLoggedIn) { */
+    /*   return; */
+    /* } */
+    return this.http.get<T>(url);
   }
 
   put<T>(url: string, data: string | FormData | object) {
+    /* if (!this.currentUser.isLoggedIn) { */
+    /*   return; */
+    /* } */
     if (data instanceof FormData) {
       return this.http.put<T>(url, data);
     } else if (typeof data === 'object') {
@@ -46,6 +56,9 @@ export class ApiService {
   }
 
   delete<T>(url: string) {
+    /* if (!this.currentUser.isLoggedIn) { */
+    /*   return; */
+    /* } */
     return this.http.delete(url);
   }
 

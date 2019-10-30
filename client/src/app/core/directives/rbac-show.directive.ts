@@ -1,14 +1,14 @@
-import { Directive, Input, TemplateRef, ViewContainerRef } from "@angular/core";
+import { Directive, Input, TemplateRef, ViewContainerRef, OnInit, OnDestroy } from '@angular/core';
 import { CurrentUserService } from '../../state/current-user.service';
 import { Observable, of, Subscription } from 'rxjs';
 
 
 @Directive({
-  selector: "[rbacShow]"
+  selector: '[rbacShow]'
 })
-export class RbacShowDirective {
+export class RbacShowDirective implements OnInit, OnDestroy {
   allowedRoles: string[] = [];
-  roles: Observable<Array<string>> = of([])
+  roles: Observable<Array<string>> = of([]);
   subscription?: Subscription;
 
   constructor(
@@ -34,8 +34,7 @@ export class RbacShowDirective {
 
       if (allowed) {
         this.viewContainer.createEmbeddedView(this.templateRef);
-      }
-      else {
+      } else {
         this.viewContainer.clear();
       }
     });

@@ -28,6 +28,8 @@ import { ContestPhotoworksComponent } from './contest-photoworks/contest-photowo
 import { ContestJuriesComponent } from './contest-juries/contest-juries.component';
 import { ContestResultsComponent } from './contest-results/contest-results.component';
 import { AwardsStacksComponent } from './awards-stacks/awards-stacks.component';
+import { ContestAboutComponent } from './contest-about/contest-about.component';
+import { ContestSectionsComponent } from './contest-sections/contest-sections.component';
 
 
 
@@ -49,6 +51,8 @@ import { AwardsStacksComponent } from './awards-stacks/awards-stacks.component';
     ContestJuriesComponent,
     ContestResultsComponent,
     AwardsStacksComponent,
+    ContestAboutComponent,
+    ContestSectionsComponent,
   ],
   imports: [
     CommonModule,

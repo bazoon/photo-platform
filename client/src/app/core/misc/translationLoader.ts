@@ -7,7 +7,7 @@ export class TranslationLoader implements TranslateLoader {
   constructor(private http: HttpClient) { }
 
   getTranslation(lang: string): Observable<any> {
-    return this.http.get("/api/translation/" + lang);
+    return this.http.get('/api/translation/' + lang);
   }
 }
 

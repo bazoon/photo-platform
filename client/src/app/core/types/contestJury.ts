@@ -1,8 +1,8 @@
 export interface ContestJury {
-  id?: number,
-  userId?: number,
-  user: string
-};
+  id?: number;
+  userId?: number;
+  user: string;
+}
 
 export const emptyContestJury: ContestJury = {
   id: undefined,

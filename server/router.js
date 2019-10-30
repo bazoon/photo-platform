@@ -2,7 +2,6 @@ const Router = require("koa-router");
 const router = new Router();
 const users = require("./routes/admin/users");
 const admins = require("./routes/admin/admins");
-const translation = require("./routes/translation");
 const languages = require("./routes/admin/languages");
 const adminOrganizers = require("./routes/admin/organizers");
 const saloneTypes = require("./routes/admin/saloneTypes");
@@ -28,16 +27,12 @@ const userMenu = require("./routes/userMenu");
 const rates = require("./routes/rates");
 const results = require("./routes/results");
 const shortLists = require("./routes/shortLists");
-const staticMenu = require("./routes/staticMenu");
 const contestPhotos = require("./routes/contestPhotos");
 const roles = require("./routes/roles");
-const organizers = require("./routes/organizers");
-
 
 router.use("/api/upload", upload.routes());
 router.use("/api/admin/users", users.routes());
 router.use("/api/admin/admins", admins.routes());
-router.use("/api/translation", translation.routes());
 router.use("/api/admin/languages", languages.routes());
 router.use("/api/admin/organizers", adminOrganizers.routes());
 router.use("/api/admin/saloneTypes", saloneTypes.routes());
@@ -62,9 +57,6 @@ router.use("/api/userMenu", userMenu.routes());
 router.use("/api/rates", rates.routes());
 router.use("/api/results", results.routes());
 router.use("/api/shortLists", shortLists.routes());
-router.use("/api/staticMenu", staticMenu.routes());
 router.use("/api/contestPhotos", contestPhotos.routes());
 router.use("/api/roles", roles.routes());
-router.use("/api/organizers", organizers.routes());
-
 module.exports = router;

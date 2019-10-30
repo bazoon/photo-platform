@@ -1,11 +1,11 @@
 export interface Award {
-  id?: number,
-  name?: string,
-  img?: string
-};
+  id?: number;
+  name?: string;
+  img?: string;
+}
 
 export const emptyAward: Award = {
   id: undefined,
-  name: undefined,
-  img: undefined
+  img: undefined,
+  name: undefined
 };

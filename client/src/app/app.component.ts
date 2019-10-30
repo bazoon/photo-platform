@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ApiService } from "./core/services/api.service";
+import { ApiService } from './core/services/api.service';
 import { CurrentUserService } from './state/current-user.service';
 import { User } from './core/types/user';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,9 +16,8 @@ export class AppComponent {
   staticMenu: Array<ContestMenu> = [];
   contestMenus: Array<ContestMenu> = [];
   organizer: Organizer = emptyOrganizer;
-
   constructor(private api: ApiService, public currentUser: CurrentUserService, private translate: TranslateService) {
-    this.translate.use("ru");
+    this.translate.use('ru');
     this.loadMenu();
     this.loadFooter();
   }
@@ -36,7 +35,7 @@ export class AppComponent {
   loadFooter() {
     this.api.get<Organizer>(`api/organizers`).subscribe(organizer => {
       this.organizer = organizer;
-      console.log(this.organizer)
+      console.log(this.organizer);
     });
   }
 

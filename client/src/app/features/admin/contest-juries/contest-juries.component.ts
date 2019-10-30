@@ -6,13 +6,12 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 
-
 @Component({
   selector: 'app-contest-juries',
   templateUrl: './contest-juries.component.html',
   styleUrls: ['./contest-juries.component.less']
 })
-export class ContestJuriesComponent {
+export class ContestJuriesComponent implements OnInit {
   users: Array<User> = [];
   entities: Array<ContestJury> = [];
   jury: ContestJury = emptyContestJury;
@@ -23,10 +22,9 @@ export class ContestJuriesComponent {
     userId: [[], []],
     rank: []
   });
-  editState: number = 0;
+  editState = 0;
 
   constructor(private route: ActivatedRoute, protected fb: FormBuilder, protected api: ApiService) {
-
   }
 
 
@@ -38,7 +36,7 @@ export class ContestJuriesComponent {
       });
     });
 
-    this.api.get<Array<User>>("api/admin/users").subscribe(users => {
+    this.api.get<Array<User>>('api/admin/users').subscribe(users => {
       this.users = users;
       console.log(this.users);
     });
@@ -66,7 +64,7 @@ export class ContestJuriesComponent {
     return emptyContestJury;
   }
 
-  find(id: String) {
+  find(id: string) {
     return this.entities.find(e => e.id === +id) || this.getEmptyEntity();
   }
 

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core'
-import { Router } from '@angular/router';;
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { SignupUser } from '../core/types/signupUser';
 import { ApiService } from '../core/services/api.service';
 import { User } from '../core/types/user';
@@ -9,17 +9,17 @@ import { of, Observable, BehaviorSubject } from 'rxjs';
 
 const emptyUser: User = {
   id: -1,
-  firstName: "",
-  lastName: "",
-  nickName: "",
-  avatar: "",
-  email: "",
-  phone: "",
+  firstName: '',
+  lastName: '',
+  nickName: '',
+  avatar: '',
+  email: '',
+  phone: '',
   userType: -1,
   emailState: -1,
-  emailCode: "",
-  biography: "",
-  awards: "",
+  emailCode: '',
+  biography: '',
+  awards: '',
   createdAt: new Date(),
   rowState: -1,
 };
@@ -30,8 +30,8 @@ const emptyUser: User = {
 })
 export class CurrentUserService {
   user?: User;
-  isLoggedIn: boolean = false;
-  _roles: BehaviorSubject<Array<string>> = new BehaviorSubject([""]);
+  isLoggedIn = false;
+  _roles: BehaviorSubject<Array<string>> = new BehaviorSubject(['']);
   roles: Observable<Array<string>> = this._roles.asObservable();
 
   constructor(private api: ApiService, private router: Router) {
@@ -44,7 +44,7 @@ export class CurrentUserService {
       this.isLoggedIn = true;
       this.save();
       this.updateRoles();
-      this.router.navigate(["/"]);
+      this.router.navigate(['/']);
     });
   }
 
@@ -54,7 +54,7 @@ export class CurrentUserService {
       this.isLoggedIn = true;
       this.save();
       this.updateRoles();
-      this.router.navigate(["/"]);
+      this.router.navigate(['/']);
     });
   }
 
@@ -64,22 +64,22 @@ export class CurrentUserService {
       this.isLoggedIn = true;
       this.save();
       this.updateRoles();
-      this.router.navigate(["/"]);
+      this.router.navigate(['/']);
     });
   }
 
   register(user: SignupUser) {
     const formData = new FormData();
-    for (let f in user) {
+    for (const f in user) {
       formData.append(f, user[f]);
     }
 
-    this.api.post<User>("api/register", formData).subscribe(u => {
+    this.api.post<User>('api/register', formData).subscribe(u => {
       this.user = u;
       this.isLoggedIn = true;
       this.save();
       this.updateRoles();
-      this.router.navigate(["/"]);
+      this.router.navigate(['/']);
     });
   }
 
@@ -101,19 +101,19 @@ export class CurrentUserService {
   }
 
   logout() {
-    this.api.postEmpty("api/logout").subscribe(() => {
+    this.api.postEmpty('api/logout').subscribe(() => {
       this.remove();
       this.isLoggedIn = false;
       this.user = undefined;
       this.updateRoles();
-      this.router.navigate(["/"]);
+      this.router.navigate(['/']);
     });
   }
 
   updateRoles() {
     this.api.get<any>('api/roles').subscribe(role => {
       this._roles.next([role.role]);
-    });
+    }, () => this._roles.next([]));
   }
 
   getRoles() {

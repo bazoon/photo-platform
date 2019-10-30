@@ -27,7 +27,7 @@
         <td style="cursor:pointer" nzLeft="0px">
           <i *rbacShow="['superAdmin', 'admin']" class="icon" (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline"></i>
           <i *rbacShow="['superAdmin', 'admin']" class="icon" nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?"
-            nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
+                                                                                                                      nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
           <i *rbacShow="['superAdmin', 'admin', 'moder']" class="icon" nz-icon nzType="file-image" nzTheme="outline" [routerLink]="data.id + '/works'"></i>
           <i *rbacShow="['superAdmin', 'admin']" class="icon" nz-icon nzType="user-add" nzTheme="outline" [routerLink]="data.id + '/juries'"></i>
           <i *rbacShow="['superAdmin', 'admin']" class="icon" nz-icon nzType="picture" nzTheme="outline" [routerLink]="data.id + '/results'"></i>
@@ -51,60 +51,14 @@
     </tbody>
   </nz-table>
 
-  <h2>О конкурсе</h2>
+  <app-contest-about *rbacShow="['superAdmin', 'admin', 'moder']" [contestId]="currentContest && currentContest.id"></app-contest-about> 
 
-  <button *rbacShow="['superAdmin', 'admin']" [disabled]="!currentContest.id" class="margin-top-small margin-bottom-small"
-    nz-button nzType="primary" (click)="appendAbout()">Добавить</button>
-  <nz-table [nzData]="abouts" [nzLoading]="isAboutsLoading" [nzScroll]="{ x: '700px', y: '240px' }">
-    <thead>
-      <tr>
-        <th nzWidth="100px" nzLeft="0px"></th>
-        <th nzWidth="200px">Name</th>
-        <th nzWidth="200px">Language</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of abouts">
-        <td style="cursor:pointer" nzLeft="0px">
-          <i *rbacShow="['superAdmin', 'admin']" (click)="editAbout(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
-          <i *rbacShow="['superAdmin', 'admin']" nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?"
-            nzPopconfirmPlacement="top" (nzOnConfirm)="removeAbout(data.id)"></i>
-        </td>
-        <td>{{data.name}}</td>
-        <td>{{data.language}}</td>
-      </tr>
-    </tbody>
-  </nz-table>
-
-  <h2>Секции</h2>
-  <button *rbacShow="['superAdmin', 'admin']" [disabled]="!currentContest.id" class="margin-top-small margin-bottom-small"
-    nz-button nzType="primary" (click)="appendSection()">Добавить</button>
-  <nz-table [nzData]="contestSections" [nzLoading]="isAboutsLoading" [nzScroll]="{ x: '700px', y: '240px' }">
-    <thead>
-      <tr>
-        <th nzWidth="100px" nzLeft="0px"></th>
-        <th nzWidth="200px">Количество</th>
-        <th nzWidth="200px">Наименование</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of contestSections">
-        <td style="cursor:pointer" nzLeft="0px">
-          <i *rbacShow="['superAdmin', 'admin']" (click)="editSection(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
-          <i *rbacShow="['superAdmin', 'admin']" nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?"
-            nzPopconfirmPlacement="top" (nzOnConfirm)="removeSection(data.id)"></i>
-        </td>
-        <td>{{data.maxCountImg}}</td>
-        <td>{{data.name}}</td>
-      </tr>
-    </tbody>
-  </nz-table>
-
+  <app-contest-sections *rbacShow="['superAdmin', 'admin']" [contestId]="currentContest && currentContest.id"></app-contest-sections>
 
   <h2>Меню публикаций</h2>
 
   <button *rbacShow="['superAdmin', 'admin']" [disabled]="!currentContest.id" class="margin-top-small margin-bottom-small"
-    nz-button nzType="primary" (click)="getLexicon(true)">Добавить</button>
+                                                                              nz-button nzType="primary" (click)="getLexicon(true)">Добавить</button>
 
   <nz-tree [nzData]="menuTree" [nzTreeTemplate]="nzTreeTemplate">
   </nz-tree>
@@ -229,49 +183,6 @@
     </form>
   </nz-modal>
 
-  <nz-modal nzWidth="1000" [(nzVisible)]="isAboutVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelAbout()" (nzOnOk)="handleOkAbout()">
-    <form nz-form [formGroup]="aboutForm">
-      <nz-form-item>
-        <nz-form-label nzFor="name">Name</nz-form-label>
-        <nz-form-control>
-          <input nz-input name="name" type="name" id="name" formControlName="name">
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzFor="language">Language</nz-form-label>
-        <nz-form-control>
-          <nz-select formControlName="languageId" nzAllowClear nzPlaceHolder="Язык">
-            <nz-option *ngFor="let language of languages" [nzValue]="language.id" [nzLabel]="language.name"></nz-option>
-          </nz-select>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzFor="thesis">Thesis</nz-form-label>
-        <ckeditor formControlName="thesis" [editor]="Editor" [config]="ckconfig"></ckeditor>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzFor="rules">Rules</nz-form-label>
-        <ckeditor formControlName="rules" [editor]="Editor" [config]="ckconfig"></ckeditor>
-      </nz-form-item>
-    </form>
-  </nz-modal>
-
-  <nz-modal nzWidth="1000" [(nzVisible)]="isSectionVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelSection()" (nzOnOk)="handleOkSection()">
-    <form nz-form [formGroup]="sectionForm">
-      <nz-form-item>
-        <nz-form-label nzFor="maxCountImg">Количество</nz-form-label>
-        <nz-form-control>
-          <input nz-input name="maxCountImg" type="maxCountImg" id="maxCountImg" formControlName="maxCountImg">
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label nzFor="name">Name</nz-form-label>
-        <nz-form-control>
-          <input nz-input name="name" type="name" id="name" formControlName="name">
-        </nz-form-control>
-      </nz-form-item>
-    </form>
-  </nz-modal>
 
 
   <nz-modal nzWidth="500" [(nzVisible)]="isLexiconVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelLexicon()" (nzOnOk)="handleOkLexicon()">
@@ -287,8 +198,7 @@
     </form>
   </nz-modal>
 
-  <nz-modal *ngIf="isPublicationsVisible" nzWidth="800" [(nzVisible)]="isPublicationsVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelPub()"
-    (nzOnOk)="handleOkPub()">
+  <nz-modal *ngIf="isPublicationsVisible" nzWidth="800" [(nzVisible)]="isPublicationsVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelPub()" (nzOnOk)="handleOkPub()">
     <app-publications [languages]="languages" [contestMenuId]="currentMenuNodeId"></app-publications>
   </nz-modal>
 </app-admin-layout>

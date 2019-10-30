@@ -17,7 +17,7 @@ export class ContestResultsComponent implements OnInit {
   visibleWorks: Array<Photowork> = [];
   pageSize = 10;
   isImageVisible = false;
-  currentImage = "";
+  currentImage = '';
 
 
   constructor(private api: ApiService, private route: ActivatedRoute) {

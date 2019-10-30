@@ -1,7 +1,7 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const models = require("../../../models");
-const R = require("ramda");
+const models = require('../../../models');
+const R = require('ramda');
 
 const fields = [
   'id',
@@ -11,7 +11,7 @@ const fields = [
   'lexiconId'
 ];
 
-router.post("/root", async ctx => {
+router.post('/root', async ctx => {
   const { id, lexiconId } = ctx.request.body;
   const contestMenu = await models.ContestMenu.create({
     contestId: id,
@@ -23,7 +23,7 @@ router.post("/root", async ctx => {
   ctx.body = R.pick(fields, contestMenu);
 });
 
-router.post("/:id", async ctx => {
+router.post('/:id', async ctx => {
   const { id } = ctx.params;
   const { contestId, lexiconId } = ctx.request.body;
   const contestMenu = await models.ContestMenu.create({
@@ -35,7 +35,7 @@ router.post("/:id", async ctx => {
   ctx.body = contestMenu;
 });
 
-router.put("/:id", async ctx => {
+router.put('/:id', async ctx => {
   const { id } = ctx.params;
 
   let contestMenu = await models.ContestMenu.findOne({
@@ -48,7 +48,7 @@ router.put("/:id", async ctx => {
   ctx.body = R.pick(fields, contestMenu);
 });
 
-router.get("/tree/:id", async ctx => {
+router.get('/tree/:id', async ctx => {
   const {
     id
   } = ctx.params;
@@ -67,9 +67,9 @@ router.get("/tree/:id", async ctx => {
   ctx.body = R.map(R.pick(fields), contestMenus);
 });
 
-router.get("/all", async ctx => {
+router.get('/all', async ctx => {
   const { host } = ctx.request.header;
-  const [domain, port] = host.split(":");
+  const [domain, port] = host.split(':');
 
   const query = `select contest_menus.id, lexicon_id, position, parent_id, code, domain from
     contests, salones,contest_menus, lexicons where
@@ -106,8 +106,10 @@ router.get("/all", async ctx => {
 
     if (menu.parentId && menu.parentId !== -1) {
       const parentMenu = lookup[menu.parentId];
-      parentMenu.children = parentMenu.children || [];
-      parentMenu.children.push(menu);
+      if (parentMenu) {
+        parentMenu.children = parentMenu.children || [];
+        parentMenu.children.push(menu);
+      }
       return acc;
     }
     return acc.concat([menu]);
@@ -116,10 +118,10 @@ router.get("/all", async ctx => {
   ctx.body = r;
 });
 
-router.get("/all/:id", async ctx => {
+router.get('/all/:id', async ctx => {
   const { id } = ctx.params;
   const { host } = ctx.request.header;
-  const [domain, port] = host.split(":");
+  const [domain, port] = host.split(':');
 
   const query = `select contest_menus.id, lexicon_id, position, parent_id, code, domain from
     contests, salones,contest_menus, lexicons where
@@ -156,8 +158,10 @@ router.get("/all/:id", async ctx => {
 
     if (menu.parentId && menu.parentId !== -1) {
       const parentMenu = lookup[menu.parentId];
-      parentMenu.children = parentMenu.children || [];
-      parentMenu.children.push(menu);
+      if (parentMenu) {
+        parentMenu.children = parentMenu.children || [];
+        parentMenu.children.push(menu);
+      }
       return acc;
     }
     return acc.concat([menu]);
@@ -166,7 +170,7 @@ router.get("/all/:id", async ctx => {
   ctx.body = r;
 });
 
-router.get("/:id", async ctx => {
+router.get('/:id', async ctx => {
   const {
     id
   } = ctx.params;
@@ -180,7 +184,7 @@ router.get("/:id", async ctx => {
   ctx.body = contestMenu || {};
 });
 
-router.delete("/:id", async ctx => {
+router.delete('/:id', async ctx => {
   const { id } = ctx.params;
 
   await models.ContestMenu.destroy({

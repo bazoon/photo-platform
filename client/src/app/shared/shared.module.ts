@@ -23,8 +23,6 @@ import { FbComponentIcon } from '../core/icons/fb/fb.component';
     FbComponentIcon
   ],
   imports: [
-
-
     CommonModule,
     NgZorroAntdModule,
     ReactiveFormsModule,

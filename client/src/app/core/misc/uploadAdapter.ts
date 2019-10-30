@@ -10,9 +10,9 @@ export class UploadAdapter {
     return new Promise((resolve, reject) => {
       this.loader.file.then((file: File) => {
         const formData = new FormData();
-        formData.append("file", file);
-        return fetch("/api/upload", {
-          method: "post",
+        formData.append('file', file);
+        return fetch('/api/upload', {
+          method: 'post',
           body: formData
         }).then(r => {
           r.json().then(({ file }) => {
