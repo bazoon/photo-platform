@@ -1,1 +1,46 @@
-<p>contest-menu works!</p>
+
+<h2>Меню публикаций</h2>
+
+<button [disabled]="!contestId" class="margin-top-small margin-bottom-small"
+                                nz-button nzType="primary" (click)="getLexicon(true)">Добавить</button>
+
+<nz-tree [nzData]="menuTree" [nzTreeTemplate]="nzTreeTemplate">
+</nz-tree>
+
+
+<ng-template #nzTreeTemplate let-node>
+  <span>
+    <nz-select [(ngModel)]="node.origin.lexiconId" style="width: 300px" (ngModelChange)="pubMenuLexiconChanged(node)">
+      <nz-option *ngFor="let lexicon of lexicons" [nzValue]="lexicon.id" [nzLabel]="lexicon.code | translate"></nz-option>
+    </nz-select>
+    <button *rbacShow="['superAdmin', 'admin']" (click)="getLexicon(false, node)">
+      <i nz-icon nzType="plus"></i>
+    </button>
+    <button *rbacShow="['superAdmin', 'admin', 'moder']" (click)="openPublications(node.key)">
+      <i nz-icon nzType="book" (click)="openPublications(node.key)"></i>
+    </button>
+    <button *rbacShow="['superAdmin', 'admin']" (click)="removeMenuNode(node.key)">
+      <i nz-icon nzType="delete"></i>
+    </button>
+
+  </span>
+
+</ng-template>
+
+
+<nz-modal nzWidth="500" [(nzVisible)]="isLexiconVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelLexicon()" (nzOnOk)="handleOkLexicon()">
+  <form nz-form [formGroup]="lexiconForm">
+    <nz-form-item>
+      <nz-form-label nzFor="name">Name</nz-form-label>
+      <nz-form-control>
+        <nz-select formControlName="lexiconId" nzAllowClear>
+          <nz-option *ngFor="let lexicon of lexicons" [nzValue]="lexicon.id" [nzLabel]="lexicon.code | translate"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>
+
+<nz-modal *ngIf="isPublicationsVisible" nzWidth="800" [(nzVisible)]="isPublicationsVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelPub()" (nzOnOk)="handleOkPub()">
+  <app-publications [languages]="langService.languages" [contestMenuId]="currentMenuNodeId"></app-publications>
+</nz-modal>
