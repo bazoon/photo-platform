@@ -30,6 +30,7 @@ import { ContestResultsComponent } from './contest-results/contest-results.compo
 import { ContestAboutComponent } from './contest-about/contest-about.component';
 import { ContestSectionsComponent } from './contest-sections/contest-sections.component';
 import { AwardTypesComponent } from './award-types/award-types.component';
+import { ContestAwardStackComponent } from './contest-award-stack/contest-award-stack.component';
 
 
 
@@ -53,6 +54,7 @@ import { AwardTypesComponent } from './award-types/award-types.component';
     ContestAboutComponent,
     ContestSectionsComponent,
     AwardTypesComponent,
+    ContestAwardStackComponent,
   ],
   imports: [
     CommonModule,

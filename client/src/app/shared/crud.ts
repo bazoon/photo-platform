@@ -8,11 +8,11 @@ import { ApiService } from '../core/services/api.service';
 import { Observable, of } from 'rxjs';
 
 export class CrudComponent<T> {
-  idField: string = 'id';
+  idField = 'id';
   entities: Array<T> = [];
   editingEntity?: T;
-  isEditVisible: boolean = false;
-  editState: number = 0; // 0 no edit, 1 - create, 2 - edit
+  isEditVisible = false;
+  editState = 0; // 0 no edit, 1 - create, 2 - edit
   form: FormGroup;
 
   getEmptyEntity(): T {
@@ -58,7 +58,7 @@ export class CrudComponent<T> {
   append() {
     this.editingEntity = this.getEmptyEntity();
     this.isEditVisible = true;
-    this.form.patchValue(this.editingEntity);
+    this.form.reset();
     this.editState = 1;
   }
 
@@ -76,16 +76,9 @@ export class CrudComponent<T> {
     });
   }
 
-  afterPost() {
+  afterPost() {}
 
-
-  }
-
-
-  afterPut() {
-
-
-  }
+  afterPut() {}
 
   handleOk() {
     this.isEditVisible = false;

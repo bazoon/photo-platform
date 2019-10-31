@@ -1,0 +1,107 @@
+<h2>Награды</h2>
+<button
+  [disabled]="!contestId"
+  *rbacShow="['superAdmin']"
+  class="margin-top-small margin-bottom-small"
+  nz-button
+  nzType="primary"
+  (click)="append()"
+>
+  Добавить
+</button>
+<nz-table
+  #basicTable
+  [nzData]="entities"
+  [nzScroll]="{ x: '1000', y: '240px' }"
+>
+  <thead>
+    <tr>
+      <th nzWidth="60px" nzLeft="0px"></th>
+      <th nzWidth="200px">Type</th>
+      <th nzWidth="200px">Position</th>
+      <th nzWidth="200px">Count</th>
+      <th nzWidth="200px">Issued</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of entities">
+      <td style="cursor:pointer">
+        <i
+          *rbacShow="['superAdmin']"
+          (click)="edit(data.id)"
+          nz-icon
+          nzType="edit"
+          nzTheme="outline"
+          style="margin-right: 10px"
+        ></i>
+        <i
+          *rbacShow="['superAdmin']"
+          nz-icon
+          nzType="delete"
+          nzTheme="outline"
+          nz-popconfirm
+          nzPopconfirmTitle="Удалить?"
+          nzPopconfirmPlacement="top"
+          (nzOnConfirm)="remove(data.id)"
+        ></i>
+      </td>
+      <td>{{data.name}}</td>
+      <td>{{data.position}}</td>
+      <td>{{data.countAwards}}</td>
+      <td>{{data.issued}}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<app-preview-image
+  [isImageVisible]="isImageVisible"
+  [image]="currentImage"
+  (clicked)="isImageVisible=false"
+>
+</app-preview-image>
+
+<nz-modal
+  [(nzVisible)]="isEditVisible"
+  nzTitle="Редактирование"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
+  <form nz-form [formGroup]="form">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="awardTypeId">Type</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <nz-select formControlName="awardTypeId" nzAllowClear>
+          <nz-option
+            *ngFor="let awardType of awardTypes"
+            [nzValue]="awardType.id"
+            [nzLabel]="awardType.name"
+          ></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="position">Position</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input
+          nz-input
+          position="position"
+          type="position"
+          id="position"
+          formControlName="position"
+        />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6" nzFor="countAwards">Count</nz-form-label>
+      <nz-form-control [nzSpan]="14">
+        <input
+          nz-input
+          countAwards="countAwards"
+          type="countAwards"
+          id="countAwards"
+          formControlName="countAwards"
+        />
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-modal>

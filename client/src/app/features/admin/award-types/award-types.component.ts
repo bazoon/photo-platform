@@ -18,9 +18,9 @@ export class AwardTypesComponent extends CrudComponent<AwardType> {
     return false;
   };
 
-  getEmptyEntity() {
-    return emptyAwardType;
-  }
+  /* getEmptyEntity() { */
+  /*   return emptyAwardType; */
+  /* } */
 
   getEntities() {
     return this.api.get<Array<AwardType>>('api/admin/awardTypes');

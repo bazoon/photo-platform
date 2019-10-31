@@ -13,60 +13,75 @@ import { PublicationsComponent } from './publications/publications.component';
 import { ContestPhotoworksComponent } from './contest-photoworks/contest-photoworks.component';
 import { ContestJuriesComponent } from './contest-juries/contest-juries.component';
 import { ContestResultsComponent } from './contest-results/contest-results.component';
-import {AwardTypesComponent} from 'src/app/features/admin/award-types/award-types.component';
+import { AwardTypesComponent } from 'src/app/features/admin/award-types/award-types.component';
+import { ContestAwardStackComponent } from 'src/app/features/admin/contest-award-stack/contest-award-stack.component';
 
 const routes: Routes = [
   {
     path: '',
     children: [
       {
-        path: 'users', component: UsersComponent
+        path: 'users',
+        component: UsersComponent
       },
       {
-        path: 'admins', component: AdminsComponent
+        path: 'admins',
+        component: AdminsComponent
       },
       {
-        path: 'organizers', component: OrganizersComponent
+        path: 'organizers',
+        component: OrganizersComponent
       },
       {
-        path: 'languages', component: LanguagesComponent
+        path: 'languages',
+        component: LanguagesComponent
       },
       {
-        path: 'salon-types', component: SaloneTypeComponent
+        path: 'salon-types',
+        component: SaloneTypeComponent
       },
       {
-        path: 'salones', component: SaloneComponent
+        path: 'salones',
+        component: SaloneComponent
       },
       {
-        path: 'contests/:id/works', component: ContestPhotoworksComponent
+        path: 'contests/:id/works',
+        component: ContestPhotoworksComponent
       },
       {
-        path: 'contests/:id/juries', component: ContestJuriesComponent
+        path: 'contests/:id/juries',
+        component: ContestJuriesComponent
       },
       {
-        path: 'contests/:id/results', component: ContestResultsComponent
+        path: 'contests/:id/results',
+        component: ContestResultsComponent
       },
       {
-        path: 'contests/:menuId/pubs', component: PublicationsComponent
+        path: 'contests/:menuId/pubs',
+        component: PublicationsComponent
       },
       {
-        path: 'contests', component: ContestComponent
+        path: 'contests/:id/awardStacks',
+        component: ContestAwardStackComponent
       },
       {
-        path: 'lexicons', component: LexiconComponent
+        path: 'contests',
+        component: ContestComponent
       },
       {
-        path: 'award-types', component: AwardTypesComponent
+        path: 'lexicons',
+        component: LexiconComponent
+      },
+      {
+        path: 'award-types',
+        component: AwardTypesComponent
       }
     ]
   }
-
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes)
-  ],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AdminRoutingModule { }
+export class AdminRoutingModule {}
