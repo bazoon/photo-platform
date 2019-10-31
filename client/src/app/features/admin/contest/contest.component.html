@@ -80,14 +80,6 @@
             nzTheme="outline"
             [routerLink]="data.id + '/results'"
           ></i>
-          <i
-            *rbacShow="['superAdmin', 'admin']"
-            class="icon"
-            nz-icon
-            nzType="crown"
-            nzTheme="outline"
-            [routerLink]="data.id + '/awardStacks'"
-          ></i>
         </td>
         <td nzWidth="200px">{{data.salone}}</td>
         <td nzWidth="200px">{{data.subname}}</td>
