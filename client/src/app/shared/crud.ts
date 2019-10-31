@@ -1,10 +1,14 @@
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl
+} from '@angular/forms';
 import { ApiService } from '../core/services/api.service';
 import { Observable, of } from 'rxjs';
 
-
 export class CrudComponent<T> {
-  idField: string = "id";
+  idField: string = 'id';
   entities: Array<T> = [];
   editingEntity?: T;
   isEditVisible: boolean = false;
@@ -72,6 +76,17 @@ export class CrudComponent<T> {
     });
   }
 
+  afterPost() {
+
+
+  }
+
+
+  afterPut() {
+
+
+  }
+
   handleOk() {
     this.isEditVisible = false;
     const id = this.form.value[this.idField] || this.form.value.id;
@@ -86,11 +101,13 @@ export class CrudComponent<T> {
             return e;
           }
         });
+        this.afterPut();
       });
     } else {
       this.postEntity(this.form.value).subscribe(entity => {
         this.editState = 0;
-        this.entities = this.entities.concat([entity])
+        this.entities = this.entities.concat([entity]);
+        this.afterPost();
       });
     }
   }
@@ -98,5 +115,4 @@ export class CrudComponent<T> {
   handleCancel() {
     this.isEditVisible = false;
   }
-
 }

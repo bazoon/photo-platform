@@ -27,7 +27,10 @@ export class AwardTypesComponent extends CrudComponent<AwardType> {
   }
 
   putEntity(id: string, data: any) {
-    return this.api.put<AwardType>(`/api/admin/awardTypes/${id}`, data);
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('img', this.fileList[0]);
+    return this.api.put<AwardType>(`/api/admin/awardTypes/${id}`, formData);
   }
 
   postEntity(data: any) {
@@ -60,5 +63,13 @@ export class AwardTypesComponent extends CrudComponent<AwardType> {
   showImage(image: string) {
     this.currentImage = image;
     this.isImageVisible = true;
+  }
+
+  afterPost() {
+    this.fileList = [];
+  }
+
+  afterPut() {
+    this.fileList = [];
   }
 }
