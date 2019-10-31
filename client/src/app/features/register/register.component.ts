@@ -29,7 +29,7 @@ export class RegisterComponent {
   beforeUpload = (file: UploadFile): boolean => {
     this.fileList = [file];
     return false;
-  };
+  }
 
   confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
     if (!control.value) {
@@ -38,7 +38,7 @@ export class RegisterComponent {
       return { confirm: true, error: true };
     }
     return {};
-  };
+  }
 
   submitForm(): void {
     const { value } = this.validateForm;

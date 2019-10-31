@@ -1,17 +1,17 @@
-const Router = require("koa-router");
-const koaBody = require("koa-body");
+const Router = require('koa-router');
+const koaBody = require('koa-body');
 const router = new Router();
-const uploadFiles = require("../utils/uploadFiles");
-const getUploadFilePath = require("../utils/getUploadPath");
-const models = require("../../models");
+const uploadFiles = require('../utils/uploadFiles');
+const getUploadFilePath = require('../utils/getUploadPath');
+const models = require('../../models');
 const bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
-const axios = require("axios");
-const mailer = require("../services/mail");
+const jwt = require('jsonwebtoken');
+const axios = require('axios');
+const mailer = require('../services/mail');
 
 const expiresIn = 24 * 60 * 60 * 30;
 
-router.post("/register", koaBody({ multipart: true }), async ctx => {
+router.post('/register', koaBody({ multipart: true }), async ctx => {
   const {
     email,
     firstName,
@@ -51,7 +51,7 @@ router.post("/register", koaBody({ multipart: true }), async ctx => {
     }
   );
 
-  ctx.cookies.set("token", token, { httpOnly: false });
+  ctx.cookies.set('token', token, { httpOnly: false });
 
   ctx.body = {
     email: user.email,
@@ -67,14 +67,14 @@ router.post("/register", koaBody({ multipart: true }), async ctx => {
   }
 });
 
-router.get("/", async (ctx, next) => {
+router.get('/', async (ctx, next) => {
   ctx.body = {
     id: 1,
     firstName: 'John'
   };
 });
 
-router.post("/login", async ctx => {
+router.post('/login', async ctx => {
   const {
     nickName,
     password
@@ -87,7 +87,7 @@ router.post("/login", async ctx => {
   });
 
   const { host } = ctx.request.header;
-  const [domain] = host.split(":");
+  const [domain] = host.split(':');
 
   // mailer.sendFromCurrentOrganizer({ domain, to: 'vith@yandex.ru', subject: 'Suject', text: '<h1>Hello!</h1>' });
 
@@ -107,7 +107,7 @@ router.post("/login", async ctx => {
     }
   );
 
-  ctx.cookies.set("token", token, { httpOnly: false });
+  ctx.cookies.set('token', token, { httpOnly: false });
 
   ctx.body = {
     email: user.email,
@@ -164,7 +164,7 @@ router.post('/login-fb', async ctx => {
     }
   );
 
-  ctx.cookies.set("token", token, { httpOnly: false });
+  ctx.cookies.set('token', token, { httpOnly: false });
   ctx.body = {
     email: user.email,
     firstName: user.firstName,
@@ -180,7 +180,7 @@ router.post('/login-fb', async ctx => {
 });
 
 
-router.post("/login-vk", async ctx => {
+router.post('/login-vk', async ctx => {
   const {
     access_token, user_id, email
   } = ctx.request.body;
@@ -220,7 +220,7 @@ router.post("/login-vk", async ctx => {
     }
   );
 
-  ctx.cookies.set("token", token, { httpOnly: false });
+  ctx.cookies.set('token', token, { httpOnly: false });
 
   ctx.body = {
     email: user.email,
@@ -237,8 +237,8 @@ router.post("/login-vk", async ctx => {
 });
 
 
-router.post("/logout", async ctx => {
-  ctx.cookies.set("token", null, { httpOnly: false });
+router.post('/logout', async ctx => {
+  ctx.cookies.set('token', null, { httpOnly: false });
   ctx.body = {};
 });
 
