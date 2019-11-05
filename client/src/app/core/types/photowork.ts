@@ -1,12 +1,13 @@
 export interface Photowork {
-  id: number,
-  name?: string,
-  filename?: string,
-  moder: number,
-  rate?: number,
-  average?: number,
-  median?: number
-};
+  id: number;
+  name?: string;
+  filename?: string;
+  moder: number;
+  rate?: number;
+  average?: number;
+  median?: number;
+  awardsStackId?: number;
+}
 
 export const emptyPhotowork: Photowork = {
   id: -1,

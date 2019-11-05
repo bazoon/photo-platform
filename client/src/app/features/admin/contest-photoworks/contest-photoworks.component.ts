@@ -44,7 +44,6 @@ export class ContestPhotoworksComponent implements OnInit {
   }
 
   refreshStatus(): void {
-    console.log(this.mapOfCheckedId);
     this.isAllDisplayDataChecked = this.listOfDisplayData.every(item => this.mapOfCheckedId[item.id]);
   }
 

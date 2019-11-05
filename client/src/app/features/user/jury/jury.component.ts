@@ -18,40 +18,45 @@ export class JuryComponent implements OnInit {
   files: Array<Photowork> = [];
   rates: { [key: string]: number } = {};
   isImageVisible = false;
-  currentImage = "";
+  currentImage = '';
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService) {}
 
   ngOnInit() {
-    this.api.get<Array<Contest>>("/api/contests").subscribe(contests => {
+    this.api.get<Array<Contest>>('/api/contests').subscribe(contests => {
       this.contests = contests;
     });
   }
 
   handleChangeContest() {
-    this.currentContest = this.contests.find(c => c.id === this.currentContestId);
-    console.log(this.currentContest);
-    this.api.get<Array<ContestSection>>(`/api/contestSections/all/${this.currentContestId}`).subscribe(sections => {
-      this.sections = sections;
-    });
+    this.currentContest = this.contests.find(
+      c => c.id === this.currentContestId
+    );
+    this.api
+      .get<Array<ContestSection>>(
+        `/api/contestSections/all/${this.currentContestId}`
+      )
+      .subscribe(sections => {
+        this.sections = sections;
+      });
   }
 
   handleChangeSection() {
-    this.api.get<Array<Photowork>>(`/api/rates/${this.currentSection}`).subscribe(files => {
-      this.files = files;
-    });
+    this.api
+      .get<Array<Photowork>>(`/api/rates/${this.currentSection}`)
+      .subscribe(files => {
+        this.files = files;
+      });
   }
 
   handleRateChange(rate: number, id: number) {
-    this.api.post(`/api/rates/${id}`, { rate, contestId: this.currentContestId }).subscribe(() => {
-
-    });
+    this.api
+      .post(`/api/rates/${id}`, { rate, contestId: this.currentContestId })
+      .subscribe(() => {});
   }
 
   viewImage(image: string) {
     this.currentImage = image;
     this.isImageVisible = true;
   }
-
-
 }

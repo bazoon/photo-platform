@@ -126,9 +126,6 @@ export class SaloneComponent extends CrudComponent<Salone> {
     this.api.get<SaloneAbout>(`/api/admin/salonesAbout/${id}`).subscribe(about => {
       this.editingAbout = about;
       this.aboutForm.patchValue(this.editingAbout);
-      console.log(this.editingAbout.content)
-      console.log(this.aboutForm.value.content)
-
     });
   }
 
@@ -137,7 +134,6 @@ export class SaloneComponent extends CrudComponent<Salone> {
   }
 
   handleOkAbout() {
-    console.log(1, this.aboutForm.value.content)
     const payload = {
       ...this.aboutForm.value,
       saloneId: this.currentSalone && this.currentSalone.id

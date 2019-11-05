@@ -30,7 +30,6 @@ export class ContestAwardStackComponent extends CrudComponent<AwardStack>
   }
 
   loadAwardTypes() {
-    console.log(this.contestId);
     this.api
       .get<Array<AwardType>>('api/admin/awardTypes')
       .subscribe(awardTypes => {

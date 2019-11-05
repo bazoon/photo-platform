@@ -23,11 +23,8 @@ export class UploadAdapter {
     });
   }
 
-  abort() {
-    console.log('UploadAdapter abort');
-  }
+  abort() {}
 }
-
 
 export function TheUploadAdapterPlugin(editor: any) {
   editor.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {

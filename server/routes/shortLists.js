@@ -1,29 +1,24 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const koaBody = require("koa-body");
-const models = require("../../models");
-const R = require("ramda");
-const uploadFiles = require("../utils/uploadFiles");
-const getUploadFilePath = require("../utils/getUploadPath");
+const models = require('../../models');
+const getUploadFilePath = require('../utils/getUploadPath');
 
+const limit = 50;
 
-router.get("/:sectionId", async ctx => {
-  const {
-    sectionId
-  } = ctx.params;
-
-  const userId = ctx.user.id;
+router.get('/:sectionId', async ctx => {
+  const { sectionId } = ctx.params;
 
   const query = `
-    select photoworks.id, filename, average
+    select photoworks.id, filename, average, awards_stack_id
     from photoworks
+    left join awards on awards.photowork_id=photoworks.id
     where section_id=:sectionId
-    order by average desc limit 3
+    order by average desc limit ${limit}
   `;
 
   const [files] = await models.sequelize.query(query, {
     replacements: {
-      sectionId,
+      sectionId
     }
   });
 
@@ -32,8 +27,9 @@ router.get("/:sectionId", async ctx => {
       id: f.id,
       name: f.name,
       filename: getUploadFilePath(f.filename),
-      average: f.average
-    }
+      average: f.average,
+      awardsStackId: f.awards_stack_id
+    };
   });
 });
 

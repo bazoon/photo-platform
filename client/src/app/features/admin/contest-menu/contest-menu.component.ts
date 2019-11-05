@@ -127,7 +127,6 @@ export class ContestMenuComponent implements OnChanges {
       lexiconId: node.origin.lexiconId
     })
     .subscribe(pubMenus => {
-      console.log(pubMenus);
     });
   }
 

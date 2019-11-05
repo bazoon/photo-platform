@@ -105,7 +105,6 @@ export class LexiconComponent extends CrudComponent<Lexicon> {
         this.isEditPhraseVisible = false;
         this.currentPhraseId = undefined;
       }, ({ error }) => {
-        console.log(error.error);
       });
     }
   }

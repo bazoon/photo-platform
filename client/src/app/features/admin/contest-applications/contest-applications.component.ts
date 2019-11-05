@@ -38,7 +38,6 @@ export class ContestApplicationsComponent implements OnInit {
     this.api.post<ContestRegistration>(`api/admin/contestApplications/declines/${id}`, {}).subscribe(application => {
       this.applications = this.applications.map(a => {
         if (a.id == application.id) {
-          console.log(application)
           return { ...a, regState: application.regState };
         }
         return a;

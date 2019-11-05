@@ -11,7 +11,6 @@ export class LanguagesService  {
   constructor(private api: ApiService) {
     this.api .get<Array<Language>>('api/admin/languages') .subscribe(languages => {
       this.languages = languages;
-      console.log(this.languages);
     });
   }
 

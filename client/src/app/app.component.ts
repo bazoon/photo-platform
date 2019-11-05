@@ -35,7 +35,6 @@ export class AppComponent {
   loadFooter() {
     this.api.get<Organizer>(`api/organizers`).subscribe(organizer => {
       this.organizer = organizer;
-      console.log(this.organizer);
     });
   }
 

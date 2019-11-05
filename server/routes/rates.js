@@ -1,16 +1,13 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const koaBody = require("koa-body");
-const models = require("../../models");
-const R = require("ramda");
-const uploadFiles = require("../utils/uploadFiles");
-const getUploadFilePath = require("../utils/getUploadPath");
+const koaBody = require('koa-body');
+const models = require('../../models');
+const R = require('ramda');
+const uploadFiles = require('../utils/uploadFiles');
+const getUploadFilePath = require('../utils/getUploadPath');
 
-
-router.get("/:sectionId", async ctx => {
-  const {
-    sectionId
-  } = ctx.params;
+router.get('/:sectionId', async ctx => {
+  const { sectionId } = ctx.params;
 
   const userId = ctx.user.id;
 
@@ -25,7 +22,7 @@ router.get("/:sectionId", async ctx => {
       contestId: contestSection.contestId,
       userId
     }
-  })
+  });
 
   const query = `
     select photoworks.id, name, filename, 
@@ -46,16 +43,14 @@ router.get("/:sectionId", async ctx => {
       name: f.name,
       filename: getUploadFilePath(f.filename),
       rate: f.rate_value
-    }
+    };
   });
 });
 
-router.post("/:photoWorkId", async ctx => {
+router.post('/:photoWorkId', async ctx => {
   const { photoWorkId } = ctx.params;
   const { rate, contestId } = ctx.request.body;
   const userId = ctx.user.id;
-
-
 
   const jury = await models.Jury.findOne({
     where: {
@@ -67,7 +62,7 @@ router.post("/:photoWorkId", async ctx => {
   let rateRecord = await models.Rate.findOne({
     where: {
       juryId: jury.id,
-      photoworkId: photoWorkId,
+      photoworkId: photoWorkId
     }
   });
 
@@ -78,7 +73,7 @@ router.post("/:photoWorkId", async ctx => {
       rateValue: rate
     });
   } else {
-    rateRecord.update({
+    await rateRecord.update({
       rateValue: rate
     });
   }

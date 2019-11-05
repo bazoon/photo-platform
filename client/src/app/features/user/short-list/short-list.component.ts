@@ -3,6 +3,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { Contest } from '../../../core/types/contest';
 import { ContestSection } from '../../../core/types/contestSection';
 import { Photowork } from '../../../core/types/photowork';
+import { AwardStack } from '../../../core/types/awardStack';
 
 @Component({
   selector: 'app-short-list',
@@ -11,34 +12,56 @@ import { Photowork } from '../../../core/types/photowork';
 })
 export class ShortListComponent implements OnInit {
   contests: Array<Contest> = [];
-  currentContestId: number = -1;
-  currentSection: number = -1;
+  currentContestId = -1;
+  currentSection = 1;
   currentContest?: Contest;
   sections: Array<ContestSection> = [];
   files: Array<Photowork> = [];
   isImageVisible = false;
-  currentImage = "";
+  currentImage = '';
+  awardsStacks: Array<AwardStack> = [];
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService) {}
 
   ngOnInit() {
-    this.api.get<Array<Contest>>("/api/contests").subscribe(contests => {
+    this.api.get<Array<Contest>>('/api/contests').subscribe(contests => {
       this.contests = contests;
     });
   }
 
   handleChangeContest() {
-    this.currentContest = this.contests.find(c => c.id === this.currentContestId);
-    console.log(this.currentContest);
-    this.api.get<Array<ContestSection>>(`/api/contestSections/all/${this.currentContestId}`).subscribe(sections => {
-      this.sections = sections;
-    });
+    this.currentContest = this.contests.find(
+      c => c.id === this.currentContestId
+    );
+
+    this.api
+      .get<Array<ContestSection>>(
+        `/api/contestSections/all/${this.currentContestId}`
+      )
+      .subscribe(sections => {
+        this.sections = sections;
+        if (sections.length > 0) {
+          this.handleChangeSection();
+        }
+      });
+
+    this.loadAwardsStacks();
+  }
+
+  loadAwardsStacks() {
+    this.api
+      .get<Array<AwardStack>>(`api/awardsStacks/${this.currentContestId}`)
+      .subscribe(awardsStacks => {
+        this.awardsStacks = awardsStacks;
+      });
   }
 
   handleChangeSection() {
-    this.api.get<Array<Photowork>>(`/api/shortLists/${this.currentSection}`).subscribe(files => {
-      this.files = files;
-    });
+    this.api
+      .get<Array<Photowork>>(`/api/shortLists/${this.currentSection}`)
+      .subscribe(files => {
+        this.files = files;
+      });
   }
 
   viewImage(image: string) {
@@ -46,4 +69,28 @@ export class ShortListComponent implements OnInit {
     this.isImageVisible = true;
   }
 
+  handleAwardChange(file: Photowork) {
+    if (file.awardsStackId) {
+      this.updateAward(file);
+    } else {
+      this.removeReward(file);
+    }
+  }
+
+  updateAward(file: Photowork) {
+    this.api
+      .put('/api/awardsStacks', {
+        id: file.id,
+        awardsStackId: file.awardsStackId
+      })
+      .subscribe(() => {
+        this.loadAwardsStacks();
+      });
+  }
+
+  removeReward(file: Photowork) {
+    this.api.delete(`/api/awardsStacks/${file.id}`).subscribe(() => {
+      this.loadAwardsStacks();
+    });
+  }
 }

@@ -32,7 +32,6 @@ export class SectionPhotosComponent implements OnInit {
       });
       this.api.get<ContestSection>(`api/contestSections/${id}`).subscribe(section => {
         this.section = section;
-        console.log(this.section)
       });
     });
   }

@@ -5,8 +5,17 @@
       <nz-form-item>
         <nz-form-label nzFor="email">Конкурсы</nz-form-label>
         <nz-form-control>
-          <nz-select class="select" [(ngModel)]="currentContestId" nzPlaceHolder="Конкурс" (ngModelChange)="handleChangeContest()">
-            <nz-option *ngFor="let contest of contests" [nzValue]="contest.id" [nzLabel]="contest.subname"></nz-option>
+          <nz-select
+            class="select"
+            [(ngModel)]="currentContestId"
+            nzPlaceHolder="Конкурс"
+            (ngModelChange)="handleChangeContest()"
+          >
+            <nz-option
+              *ngFor="let contest of contests"
+              [nzValue]="contest.id"
+              [nzLabel]="contest.subname"
+            ></nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>
@@ -15,26 +24,61 @@
       <nz-form-item>
         <nz-form-label nzFor="email">Секции</nz-form-label>
         <nz-form-control>
-          <nz-select [disabled]="currentContestId < 0" class="select" [(ngModel)]="currentSection" nzPlaceHolder="Секция" (ngModelChange)="handleChangeSection()">
-            <nz-option *ngFor="let section of sections" [nzValue]="section.id" [nzLabel]="section.name"></nz-option>
+          <nz-select
+            [disabled]="currentContestId < 0"
+            class="select"
+            [(ngModel)]="currentSection"
+            nzPlaceHolder="Секция"
+            (ngModelChange)="handleChangeSection()"
+          >
+            <nz-option
+              *ngFor="let section of sections"
+              [nzValue]="section.id"
+              [nzLabel]="section.name"
+            ></nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>
     </div>
   </div>
 
-
-  <div class="images">
-    <div *ngFor="let file of files" class="thumb-wrap">
-      <span class="file-name">{{file.name}}</span>
-      <img class="thumb" [src]="file.filename" (click)="viewImage(file.filename)">
-      <div class="thumb-controls">
-        {{file.average | number:'1.1-2'}}
-      </div>
-    </div>
-  </div>
-
+  <nz-table #basicTable [nzData]="files">
+    <tbody>
+      <tr *ngFor="let file of files">
+        <td>{{file.name}}</td>
+        <td>
+          <img
+            class="thumb"
+            [src]="file.filename"
+            (click)="viewImage(file.filename)"
+          />
+        </td>
+        <td>
+          {{file.average | number:'1.1-2'}}
+        </td>
+        <td>
+          <nz-select
+            [(ngModel)]="file.awardsStackId"
+            [nzAllowClear]="true"
+            style="width: 200px"
+            (ngModelChange)="handleAwardChange(file)"
+          >
+            <nz-option
+              *ngFor="let awardStack of awardsStacks"
+              [nzDisabled]="awardStack.countAwards === awardStack.issued"
+              [nzValue]="awardStack.id"
+              [nzLabel]="awardStack.name"
+            ></nz-option>
+          </nz-select>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
 </app-user-layout>
 
-<app-preview-image [isImageVisible]="isImageVisible" [image]="currentImage" (clicked)="isImageVisible=false">
+<app-preview-image
+  [isImageVisible]="isImageVisible"
+  [image]="currentImage"
+  (clicked)="isImageVisible=false"
+>
 </app-preview-image>

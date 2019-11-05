@@ -38,7 +38,6 @@ export class ContestJuriesComponent implements OnInit {
 
     this.api.get<Array<User>>('api/admin/users').subscribe(users => {
       this.users = users;
-      console.log(this.users);
     });
   }
 
