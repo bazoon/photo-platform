@@ -1,6 +1,18 @@
 <h2>Секции</h2>
-<button  [disabled]="!contestId" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="appendSection()">Добавить</button>
-<nz-table [nzData]="contestSections" [nzLoading]="isAboutsLoading" [nzScroll]="{ x: '700px', y: '240px' }">
+<button
+  [disabled]="!contestId"
+  class="margin-top-small margin-bottom-small"
+  nz-button
+  nzType="primary"
+  (click)="append()"
+>
+  Добавить
+</button>
+<nz-table
+  [nzData]="entities"
+  [nzLoading]="isAboutsLoading"
+  [nzScroll]="{ x: '700px', y: '240px' }"
+>
   <thead>
     <tr>
       <th nzWidth="100px" nzLeft="0px"></th>
@@ -9,11 +21,26 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of contestSections">
+    <tr *ngFor="let data of entities">
       <td style="cursor:pointer" nzLeft="0px">
-        <i *rbacShow="['superAdmin', 'admin']" (click)="editSection(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
-        <i *rbacShow="['superAdmin', 'admin']" nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?"
-                                                                                                       nzPopconfirmPlacement="top" (nzOnConfirm)="removeSection(data.id)"></i>
+        <i
+          *rbacShow="['superAdmin', 'admin']"
+          (click)="edit(data.id)"
+          nz-icon
+          nzType="edit"
+          nzTheme="outline"
+          style="margin-right: 10px"
+        ></i>
+        <i
+          *rbacShow="['superAdmin', 'admin']"
+          nz-icon
+          nzType="delete"
+          nzTheme="outline"
+          nz-popconfirm
+          nzPopconfirmTitle="Удалить?"
+          nzPopconfirmPlacement="top"
+          (nzOnConfirm)="remove(data.id)"
+        ></i>
       </td>
       <td>{{data.maxCountImg}}</td>
       <td>{{data.name}}</td>
@@ -21,19 +48,36 @@
   </tbody>
 </nz-table>
 
-
-<nz-modal nzWidth="1000" [(nzVisible)]="isSectionVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancelSection()" (nzOnOk)="handleOkSection()">
-  <form nz-form [formGroup]="sectionForm">
+<nz-modal
+  nzWidth="1000"
+  [(nzVisible)]="isEditVisible"
+  nzTitle="Редактирование"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
+  <form nz-form [formGroup]="form">
     <nz-form-item>
       <nz-form-label nzFor="maxCountImg">Количество</nz-form-label>
       <nz-form-control>
-        <input nz-input name="maxCountImg" type="maxCountImg" id="maxCountImg" formControlName="maxCountImg">
+        <input
+          nz-input
+          name="maxCountImg"
+          type="maxCountImg"
+          id="maxCountImg"
+          formControlName="maxCountImg"
+        />
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-label nzFor="name">Name</nz-form-label>
       <nz-form-control>
-        <input nz-input name="name" type="name" id="name" formControlName="name">
+        <input
+          nz-input
+          name="name"
+          type="name"
+          id="name"
+          formControlName="name"
+        />
       </nz-form-control>
     </nz-form-item>
   </form>
