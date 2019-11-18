@@ -1,16 +1,31 @@
 <div class="login-form-container">
-  <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+  <form
+    nz-form
+    [formGroup]="validateForm"
+    class="login-form"
+    (ngSubmit)="submitForm()"
+  >
     <nz-form-item>
       <nz-form-control nzErrorTip="Please input your nickName!">
         <nz-input-group nzPrefixIcon="user">
-          <input type="text" nz-input formControlName="nickName" placeholder="nickName" />
+          <input
+            type="text"
+            nz-input
+            formControlName="nickName"
+            placeholder="nickName"
+          />
         </nz-input-group>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
       <nz-form-control nzErrorTip="Please input your Password!">
         <nz-input-group nzPrefixIcon="lock">
-          <input type="password" nz-input formControlName="password" placeholder="Password" />
+          <input
+            type="password"
+            nz-input
+            formControlName="password"
+            placeholder="Password"
+          />
         </nz-input-group>
       </nz-form-control>
     </nz-form-item>
@@ -19,11 +34,20 @@
         <label nz-checkbox formControlName="remember">
           <span>{{'rememberMe' | translate }}</span>
         </label>
-        <a class="login-form-forgot" class="login-form-forgot">{{'forgotPassword' | translate}}</a>
-        <button nz-button class="login-form-button" [nzType]="'primary'">{{'logIn' | translate}}</button>
+        <div class="login-error" *ngIf="currentUser.hasLoginError">
+          Неправильный логин или пароль
+        </div>
+        <a class="login-form-forgot" class="login-form-forgot"
+          >{{'forgotPassword' | translate}}</a
+        >
+        <button nz-button class="login-form-button" [nzType]="'primary'">
+          {{'logIn' | translate}}
+        </button>
 
-        <a routerLink="/register" class="user-login">{{'register' | translate}}</a>
-        <br>
+        <a routerLink="/register" class="user-login"
+          >{{'register' | translate}}</a
+        >
+        <br />
         <a (click)="vkLogin($event)">
           <i nz-icon style="width: 32px;margin-right: 5px;">
             <vk-icon></vk-icon>
@@ -34,8 +58,11 @@
             <fb-icon></fb-icon>
           </i>
         </a>
-
-
+        <a (click)="googleLogin($event)" href="#">
+          <i nz-icon style="width: 32px;">
+            <google-icon></google-icon>
+          </i>
+        </a>
       </nz-form-control>
     </nz-form-item>
   </form>

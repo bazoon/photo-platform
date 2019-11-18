@@ -1,12 +1,12 @@
-const Router = require("koa-router");
-const koaBody = require("koa-body");
+const Router = require('koa-router');
+const koaBody = require('koa-body');
 const router = new Router();
-const uploadFiles = require("../../utils/uploadFiles");
-const getUploadFilePath = require("../../utils/getUploadPath");
-const models = require("../../../models");
+const uploadFiles = require('../../utils/uploadFiles');
+const getUploadFilePath = require('../../utils/getUploadPath');
+const models = require('../../../models');
 const bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
-const R = require("ramda");
+const jwt = require('jsonwebtoken');
+const R = require('ramda');
 
 const publicFields = [
   'id',
@@ -14,7 +14,7 @@ const publicFields = [
   'firstName',
   'lastName',
   'nickName',
-  'phone',
+  'phone'
 ];
 
 const postFields = [
@@ -27,7 +27,7 @@ const postFields = [
   'psw'
 ];
 
-router.get("/", async ctx => {
+router.get('/', async ctx => {
   const users = await models.User.findAll();
 
   ctx.body = users.map(user => {
@@ -48,17 +48,10 @@ router.get("/", async ctx => {
       rowState: user.rowState
     };
   });
-
 });
 
-router.put("/:id", async ctx => {
-  const {
-    email,
-    firstName,
-    lastName,
-    nickName,
-    phone,
-  } = ctx.request.body;
+router.put('/:id', async ctx => {
+  const { email, firstName, lastName, nickName, phone, psw } = ctx.request.body;
 
   const { id } = ctx.params;
 
@@ -66,16 +59,24 @@ router.put("/:id", async ctx => {
     where: {
       id
     }
-  })
+  });
 
   await user.update({
     email,
     firstName,
     lastName,
     nickName,
-    phone,
+    phone
   });
 
+  if (psw) {
+    let salt = bcrypt.genSaltSync(10);
+    let hashedPassword = bcrypt.hashSync(psw, salt);
+    await user.update({
+      psw: hashedPassword,
+      salt
+    });
+  }
 
   ctx.body = {
     id: user.id,
@@ -83,11 +84,11 @@ router.put("/:id", async ctx => {
     firstName: user.firstName,
     lastName: user.lastName,
     nickName: user.nickName,
-    phone: user.phone,
-  }
+    phone: user.phone
+  };
 });
 
-router.post("/", async ctx => {
+router.post('/', async ctx => {
   const userValues = R.pick(postFields, ctx.request.body);
   delete userValues.id;
   var salt = bcrypt.genSaltSync(10);

@@ -6,7 +6,6 @@ import { User } from '../core/types/user';
 import { Login } from '../core/types/login';
 import { of, Observable, BehaviorSubject } from 'rxjs';
 
-
 const emptyUser: User = {
   id: -1,
   firstName: '',
@@ -21,9 +20,8 @@ const emptyUser: User = {
   biography: '',
   awards: '',
   createdAt: new Date(),
-  rowState: -1,
+  rowState: -1
 };
-
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +29,7 @@ const emptyUser: User = {
 export class CurrentUserService {
   user?: User;
   isLoggedIn = false;
+  hasLoginError = false;
   _roles: BehaviorSubject<Array<string>> = new BehaviorSubject(['']);
   roles: Observable<Array<string>> = this._roles.asObservable();
 
@@ -39,13 +38,18 @@ export class CurrentUserService {
   }
 
   login(loginData: Login) {
-    this.api.post<User>('api/login', loginData).subscribe(u => {
-      this.user = u;
-      this.isLoggedIn = true;
-      this.save();
-      this.updateRoles();
-      this.router.navigate(['/']);
-    });
+    this.api.post<User>('api/login', loginData).subscribe(
+      u => {
+        this.user = u;
+        this.isLoggedIn = true;
+        this.save();
+        this.updateRoles();
+        this.router.navigate(['/']);
+      },
+      e => {
+        this.hasLoginError = true;
+      }
+    );
   }
 
   loginFb(payload: any) {
@@ -60,6 +64,17 @@ export class CurrentUserService {
 
   loginVk(payload: any) {
     this.api.post<User>(`api/login-vk`, payload).subscribe(user => {
+      this.user = user;
+      this.isLoggedIn = true;
+      this.save();
+      this.updateRoles();
+      this.router.navigate(['/']);
+    });
+  }
+
+  loginGoogle(payload: any) {
+    console.log(payload);
+    this.api.post<User>(`api/login-google`, payload).subscribe(user => {
       this.user = user;
       this.isLoggedIn = true;
       this.save();
@@ -111,13 +126,15 @@ export class CurrentUserService {
   }
 
   updateRoles() {
-    this.api.get<any>('api/roles').subscribe(role => {
-      this._roles.next([role.role]);
-    }, () => this._roles.next([]));
+    this.api.get<any>('api/roles').subscribe(
+      role => {
+        this._roles.next([role.role]);
+      },
+      () => this._roles.next([])
+    );
   }
 
   getRoles() {
     return of(this.roles);
   }
-
 }

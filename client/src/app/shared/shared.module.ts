@@ -10,8 +10,7 @@ import { CommonModule } from '@angular/common';
 import { RbacShowDirective } from '../core/directives/rbac-show.directive';
 import { VkComponentIcon } from '../core/icons/vk/vk.component';
 import { FbComponentIcon } from '../core/icons/fb/fb.component';
-
-
+import { GoogleComponentIcon } from '../core/icons/google/google.component';
 
 @NgModule({
   declarations: [
@@ -20,14 +19,10 @@ import { FbComponentIcon } from '../core/icons/fb/fb.component';
     PreviewImageComponent,
     RbacShowDirective,
     VkComponentIcon,
-    FbComponentIcon
+    FbComponentIcon,
+    GoogleComponentIcon
   ],
-  imports: [
-    CommonModule,
-    NgZorroAntdModule,
-    ReactiveFormsModule,
-    FormsModule,
-  ],
+  imports: [CommonModule, NgZorroAntdModule, ReactiveFormsModule, FormsModule],
   providers: [{ provide: NZ_I18N, useValue: ru_RU }],
   exports: [
     CommonModule,
@@ -39,8 +34,8 @@ import { FbComponentIcon } from '../core/icons/fb/fb.component';
     PreviewImageComponent,
     RbacShowDirective,
     VkComponentIcon,
-    FbComponentIcon
+    FbComponentIcon,
+    GoogleComponentIcon
   ]
-
 })
-export class SharedModule { }
+export class SharedModule {}

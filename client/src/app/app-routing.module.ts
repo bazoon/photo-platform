@@ -8,28 +8,34 @@ import { PublicationsComponent } from './features/publications/publications.comp
 import { ContestPhotosComponent } from './features/contest-photos/contest-photos.component';
 import { SectionPhotosComponent } from './features/section-photos/section-photos.component';
 import { VkComponent } from './features/login/vk/vk.component';
-import {FbComponent} from 'src/app/features/login/fb/fb.component';
+import { FbComponent } from './features/login/fb/fb.component';
+import { GoogleComponent } from 'src/app/features/login/google/google.component';
 
 const routes: Routes = [
   { path: '', component: MainComponent },
   { path: 'login', component: LoginComponent },
   { path: 'oauth/vk', component: VkComponent },
   { path: 'oauth/fb', component: FbComponent },
+  { path: 'oauth/google', component: GoogleComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'admin', loadChildren: './features/admin/admin.module#AdminModule' },
   { path: 'user', loadChildren: './features/user/user.module#UserModule' },
   {
-    path: 'publications/:id', component: PublicationComponent
+    path: 'publications/:id',
+    component: PublicationComponent
   },
   {
-    path: 'sections/:id', component: PublicationsComponent
+    path: 'sections/:id',
+    component: PublicationsComponent
   },
   {
-    path: 'photos/sections', component: ContestPhotosComponent
+    path: 'photos/sections',
+    component: ContestPhotosComponent
   },
   {
-    path: 'photos/:sectionId', component: SectionPhotosComponent
-  },
+    path: 'photos/:sectionId',
+    component: SectionPhotosComponent
+  }
 ];
 
 @NgModule({
@@ -37,4 +43,4 @@ const routes: Routes = [
 
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

@@ -19,7 +19,10 @@ import { UserComponent } from './layout/user/user.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { TranslationLoader, HttpLoaderFactory } from './core/misc/translationLoader';
+import {
+  TranslationLoader,
+  HttpLoaderFactory
+} from './core/misc/translationLoader';
 import { PublicationComponent } from './features/publication/publication.component';
 import { PublicationsComponent } from './features/publications/publications.component';
 import { SafeHtmlPipe } from './pipes/safe-html.pipe';
@@ -27,7 +30,7 @@ import { ContestPhotosComponent } from './features/contest-photos/contest-photos
 import { SectionPhotosComponent } from './features/section-photos/section-photos.component';
 import { VkComponent } from './features/login/vk/vk.component';
 import { FbComponent } from './features/login/fb/fb.component';
-
+import { GoogleComponent } from './features/login/google/google.component';
 
 registerLocaleData(ru);
 
@@ -46,8 +49,7 @@ registerLocaleData(ru);
     SectionPhotosComponent,
     VkComponent,
     FbComponent,
-
-
+    GoogleComponent
   ],
   imports: [
     BrowserModule,
@@ -62,11 +64,9 @@ registerLocaleData(ru);
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    }),
+    })
   ],
-  exports: [
-    SharedModule
-  ],
-  bootstrap: [AppComponent],
+  exports: [SharedModule],
+  bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
