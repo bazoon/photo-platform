@@ -1,15 +1,21 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl
+} from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { Language, emptyLanguage } from '../../../core/types/language';
 import { CrudComponent } from '../../../shared/crud';
 import { Publication, emptyPublication } from '../../../core/types/publication';
 import { Observable, of, Subject } from 'rxjs';
-import { PublicationText, emptyPublicationText } from '../../../core/types/publicationText';
+import {
+  PublicationText,
+  emptyPublicationText
+} from '../../../core/types/publicationText';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import editorConfig from '../../../core/config/editorConfig';
-
-
 
 @Component({
   selector: 'app-publications',
@@ -34,9 +40,8 @@ export class PublicationsComponent {
     digest: []
   });
   Editor = ClassicEditor;
-  ckconfig = editorConfig
+  ckconfig = editorConfig;
   selectedText?: PublicationText;
-
 
   constructor(private api: ApiService, protected fb: FormBuilder) {
     this.form = this.getForm();
@@ -72,7 +77,7 @@ export class PublicationsComponent {
             return pub;
           }
           return p;
-        })
+        });
       });
     } else {
       this.postEntity(this.form.value).subscribe(pub => {
@@ -86,9 +91,11 @@ export class PublicationsComponent {
   }
 
   getEntities() {
-    this.api.get<Array<Publication>>(`api/admin/publications/${this.contestMenuId}`).subscribe(pubs => {
-      this.entities = pubs;
-    });
+    this.api
+      .get<Array<Publication>>(`api/admin/publications/${this.contestMenuId}`)
+      .subscribe(pubs => {
+        this.entities = pubs;
+      });
   }
 
   putEntity(id: number, data: any) {
@@ -96,7 +103,10 @@ export class PublicationsComponent {
   }
 
   postEntity(data: any) {
-    return this.api.post<Publication>(`/api/admin/publications/${this.contestMenuId}`, data);
+    return this.api.post<Publication>(
+      `/api/admin/publications/${this.contestMenuId}`,
+      data
+    );
   }
 
   deleteEntity(id: string) {
@@ -123,9 +133,11 @@ export class PublicationsComponent {
 
   loadTexts(id: number) {
     this.selectedPubId = id;
-    this.api.get<Array<PublicationText>>(`api/admin/publicationTexts/${id}`).subscribe(texts => {
-      this.texts = texts;
-    });
+    this.api
+      .get<Array<PublicationText>>(`api/admin/publicationTexts/${id}`)
+      .subscribe(texts => {
+        this.texts = texts;
+      });
   }
 
   appendText() {
@@ -142,21 +154,30 @@ export class PublicationsComponent {
 
   handleOkText() {
     if (this.selectedText) {
-      this.api.put<PublicationText>(`/api/admin/publicationTexts/${this.selectedText.id}`, this.textForm.value).subscribe(text => {
-        this.texts = this.texts.map(t => {
-          if (t.id === text.id) {
-            return text;
-          }
-          return t;
-        })
-        this.isTextVisible = false;
-      });
+      this.api
+        .put<PublicationText>(
+          `/api/admin/publicationTexts/${this.selectedText.id}`,
+          this.textForm.value
+        )
+        .subscribe(text => {
+          this.texts = this.texts.map(t => {
+            if (t.id === text.id) {
+              return text;
+            }
+            return t;
+          });
+          this.isTextVisible = false;
+        });
     } else {
-      this.api.post<PublicationText>(`/api/admin/publicationTexts/${this.selectedPubId}`, this.textForm.value).subscribe(text => {
-        this.texts = this.texts.concat([text]);
-        this.isTextVisible = false;
-      });
-
+      this.api
+        .post<PublicationText>(
+          `/api/admin/publicationTexts/${this.selectedPubId}`,
+          this.textForm.value
+        )
+        .subscribe(text => {
+          this.texts = this.texts.concat([text]);
+          this.isTextVisible = false;
+        });
     }
   }
 
@@ -164,4 +185,11 @@ export class PublicationsComponent {
     this.isTextVisible = false;
   }
 
+  remove(a: any) {
+    //TODO
+  }
+
+  removeText(a: any) {
+    //TODO
+  }
 }

@@ -26,10 +26,7 @@ export class LoginComponent {
     this.currentUser.login(value);
   }
 
-  constructor(
-    private fb: FormBuilder,
-    private currentUser: CurrentUserService
-  ) {
+  constructor(private fb: FormBuilder, public currentUser: CurrentUserService) {
     this.validateForm = this.fb.group({
       nickName: [null, [Validators.required]],
       password: [null, [Validators.required]],

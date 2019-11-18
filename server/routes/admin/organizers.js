@@ -1,7 +1,7 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const models = require("../../../models");
-const R = require("ramda");
+const models = require('../../../models');
+const R = require('ramda');
 
 const expiresIn = 24 * 60 * 60 * 30;
 const fields = [
@@ -26,8 +26,7 @@ const fields = [
   'dateStatus'
 ];
 
-
-router.get("/", async ctx => {
+router.get('/', async ctx => {
   const query = `select organizers.id,languages.id as language_id, languages.name as language, organizers.name, email_sys, email_pub,
     address_line1, address_line2, www, phone, phone_tech,officer,logo,virtual,
     smtp,smtp_use_pub,date_status from organizers, languages where organizers.language_id=languages.id
@@ -61,7 +60,7 @@ router.get("/", async ctx => {
   });
 });
 
-router.put("/:id", async ctx => {
+router.put('/:id', async ctx => {
   const { id } = ctx.params;
   const organizerValues = R.pick(fields, ctx.request.body);
   organizerValues.dateStatus = organizerValues.dateStatus || new Date();
@@ -82,11 +81,11 @@ router.put("/:id", async ctx => {
 
   ctx.body = {
     ...R.pick(fields, organizer),
-    language: language.name,
+    language: language.name
   };
 });
 
-router.post("/", async ctx => {
+router.post('/', async ctx => {
   const organizerValues = R.pick(fields, ctx.request.body);
   delete organizerValues.id;
   organizerValues.dateStatus = organizerValues.dateStatus || new Date();
@@ -101,9 +100,8 @@ router.post("/", async ctx => {
 
   ctx.body = {
     ...R.pick(fields, organizer),
-    language: language.name,
+    language: language.name
   };
 });
-
 
 module.exports = router;

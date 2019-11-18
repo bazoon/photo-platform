@@ -1,12 +1,11 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const koaBody = require("koa-body");
-const models = require("../../models");
+const koaBody = require('koa-body');
+const models = require('../../models');
 
-
-router.get("/", async ctx => {
+router.get('/', async ctx => {
   const { host } = ctx.request.header;
-  const [domain] = host.split(":");
+  const [domain] = host.split(':');
 
   const query = `
     select organizers.name, organizers.email_pub, organizers.www, organizers.phone, organizers.address_line1 
@@ -24,7 +23,7 @@ router.get("/", async ctx => {
     emailPub: organizer.email_pub,
     www: organizer.www,
     phone: organizer.phone,
-    address: organizer.address_line1
+    addressLine1: organizer.address_line1
   };
 });
 

@@ -5,8 +5,17 @@
       <nz-form-item>
         <nz-form-label nzFor="email">Конкурсы</nz-form-label>
         <nz-form-control>
-          <nz-select class="select" [(ngModel)]="currentContestId" nzPlaceHolder="Конкурс" (ngModelChange)="handleChangeContest()">
-            <nz-option *ngFor="let contest of contests" [nzValue]="contest.id" [nzLabel]="contest.subname"></nz-option>
+          <nz-select
+            class="select"
+            [(ngModel)]="currentContestId"
+            nzPlaceHolder="Конкурс"
+            (ngModelChange)="handleChangeContest()"
+          >
+            <nz-option
+              *ngFor="let contest of contests"
+              [nzValue]="contest.id"
+              [nzLabel]="contest.subname"
+            ></nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>
@@ -15,8 +24,18 @@
       <nz-form-item>
         <nz-form-label nzFor="email">Секции</nz-form-label>
         <nz-form-control>
-          <nz-select [disabled]="currentContestId < 0" class="select" [(ngModel)]="currentSection" nzPlaceHolder="Секция" (ngModelChange)="handleChangeSection()">
-            <nz-option *ngFor="let section of sections" [nzValue]="section.id" [nzLabel]="section.name"></nz-option>
+          <nz-select
+            [disabled]="currentContestId < 0"
+            class="select"
+            [(ngModel)]="currentSection"
+            nzPlaceHolder="Секция"
+            (ngModelChange)="handleChangeSection()"
+          >
+            <nz-option
+              *ngFor="let section of sections"
+              [nzValue]="section.id"
+              [nzLabel]="section.name"
+            ></nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>
@@ -26,14 +45,26 @@
   <div class="images">
     <div *ngFor="let file of files" class="thumb-wrap">
       <span class="file-name">{{file.name}}</span>
-      <img class="thumb" [src]="file.filename" (click)="viewImage(file.filename)">
+      <img
+        class="thumb"
+        [src]="file.filename"
+        (click)="viewImage(file.filename)"
+      />
       <div class="thumb-controls">
-        <nz-rate [nzCount]="currentContest.maxrate" [ngModel]="file.rate" (ngModelChange)="handleRateChange($event, file.id)" nzAllowHalf></nz-rate>
+        <nz-rate
+          [nzCount]="currentContest && currentContest.maxrate"
+          [ngModel]="file.rate"
+          (ngModelChange)="handleRateChange($event, file.id)"
+          nzAllowHalf
+        ></nz-rate>
       </div>
     </div>
   </div>
-
 </app-user-layout>
 
-<app-preview-image [isImageVisible]="isImageVisible" [image]="currentImage" (clicked)="isImageVisible=false">
+<app-preview-image
+  [isImageVisible]="isImageVisible"
+  [image]="currentImage"
+  (clicked)="isImageVisible=false"
+>
 </app-preview-image>

@@ -1,10 +1,15 @@
 import { Component, OnInit, OnChanges, Input } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl
+} from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { ContestMenu, emptyContestMenu } from '../../../core/types/contestMenu';
 import { Lexicon } from '../../../core/types/lexicon';
 import { PubMenu } from '../../../core/types/pubMenu';
-import {LanguagesService} from 'src/app/core/services/languages.service';
+import { LanguagesService } from 'src/app/core/services/languages.service';
 
 @Component({
   selector: 'app-contest-menu',
@@ -29,9 +34,11 @@ export class ContestMenuComponent implements OnChanges {
     lexiconId: []
   });
 
-  constructor(private fb: FormBuilder, private api: ApiService, protected langService: LanguagesService) {
-
-  }
+  constructor(
+    private fb: FormBuilder,
+    private api: ApiService,
+    public langService: LanguagesService
+  ) {}
 
   contestMenuForm = this.fb.group({
     id: [],
@@ -47,49 +54,48 @@ export class ContestMenuComponent implements OnChanges {
     }
   }
 
-
   loadContestMenu() {
     this.isMenusLoading = true;
     this.api
-    .get<Array<ContestMenu>>(`api/admin/contestMenus/all/${this.contestId}`)
-    .subscribe(contestMenus => {
-      this.contestMenus = contestMenus;
-      this.isMenusLoading = false;
-      this.menuTree = contestMenus;
-    });
+      .get<Array<ContestMenu>>(`api/admin/contestMenus/all/${this.contestId}`)
+      .subscribe(contestMenus => {
+        this.contestMenus = contestMenus;
+        this.isMenusLoading = false;
+        this.menuTree = contestMenus;
+      });
   }
 
   appendMenu(lexiconId: number) {
     this.isAppendingRootMenu = true;
     this.api
-    .post<ContestMenu>(`/api/admin/contestMenus/root`, {
-      id: this.contestId,
-      lexiconId
-    })
-    .subscribe(menu => {
-      this.editingMenu = menu;
-      this.menuTree = this.menuTree.concat([
-        { lexiconId: menu.lexiconId, key: menu.id }
-      ]);
-      this.isAppendingRootMenu = false;
-    });
+      .post<ContestMenu>(`/api/admin/contestMenus/root`, {
+        id: this.contestId,
+        lexiconId
+      })
+      .subscribe(menu => {
+        this.editingMenu = menu;
+        this.menuTree = this.menuTree.concat([
+          { lexiconId: menu.lexiconId, key: menu.id }
+        ]);
+        this.isAppendingRootMenu = false;
+      });
   }
 
   appendMenuNode(node: any, lexiconId: number) {
     this.api
-    .post<ContestMenu>(`/api/admin/contestMenus/${node.key}`, {
-      contestId: this.contestId,
-      lexiconId
-    })
-    .subscribe(menu => {
-      node.addChildren([
-        {
-          lexiconId: menu.lexiconId,
-          key: menu.id,
-          position: menu.position
-        }
-      ]);
-    });
+      .post<ContestMenu>(`/api/admin/contestMenus/${node.key}`, {
+        contestId: this.contestId,
+        lexiconId
+      })
+      .subscribe(menu => {
+        node.addChildren([
+          {
+            lexiconId: menu.lexiconId,
+            key: menu.id,
+            position: menu.position
+          }
+        ]);
+      });
   }
 
   loadLexicons() {
@@ -122,12 +128,11 @@ export class ContestMenuComponent implements OnChanges {
 
   pubMenuLexiconChanged(node: any) {
     return this.api
-    .put<PubMenu>(`/api/admin/contestMenus/${node.key}`, {
-      contestMenuId: node.key,
-      lexiconId: node.origin.lexiconId
-    })
-    .subscribe(pubMenus => {
-    });
+      .put<PubMenu>(`/api/admin/contestMenus/${node.key}`, {
+        contestMenuId: node.key,
+        lexiconId: node.origin.lexiconId
+      })
+      .subscribe(pubMenus => {});
   }
 
   openPublications(id: number) {
@@ -143,13 +148,9 @@ export class ContestMenuComponent implements OnChanges {
     this.isPublicationsVisible = false;
   }
 
-
   removeMenuNode(id: string) {
     this.api.delete(`/api/admin/contestMenus/${id}`).subscribe(() => {
       this.loadContestMenu();
     });
   }
-
-
-
 }

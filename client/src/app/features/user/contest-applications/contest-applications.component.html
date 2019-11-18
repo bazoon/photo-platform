@@ -18,7 +18,13 @@
         <td nzWidth="200px">{{data.dateStart | date}}</td>
         <td nzWidth="200px">{{data.dateStop}}</td>
         <td nzWidth="200px">
-          <button nz-button *ngIf="data.canApply" (click)="applyForContest(data.id, data.sectionCount)">Request</button>
+          <button
+            nz-button
+            *ngIf="data.canApply"
+            (click)="applyForContest(data.id, data.sectionCount)"
+          >
+            Request
+          </button>
           <div [ngSwitch]="data.regState">
             <span *ngSwitchCase="0">Подана заявка</span>
             <span *ngSwitchCase="1">Принята</span>
@@ -27,32 +33,58 @@
           </div>
         </td>
         <td nzWidth="200px">
-          <i *ngIf="data.canPostPhotos" nz-icon nzType="camera" nzTheme="outline" [routerLink]="data.id"></i>
+          <i
+            *ngIf="data.canPostPhotos"
+            nz-icon
+            nzType="camera"
+            nzTheme="outline"
+            [routerLink]="data.id"
+          ></i>
         </td>
       </tr>
     </tbody>
   </nz-table>
 
-  <nz-modal [nzOkDisabled]="sectionForm.invalid" nzWidth="300" [(nzVisible)]="isApplicationVisible" nzTitle="Заявка" (nzOnCancel)="handleCancelApplication()"
-    (nzOnOk)="handleOkApplication()">
+  <nz-modal
+    [nzOkDisabled]="sectionForm.invalid"
+    nzWidth="300"
+    [(nzVisible)]="isApplicationVisible"
+    nzTitle="Заявка"
+    (nzOnCancel)="handleCancelApplication()"
+    (nzOnOk)="handleOkApplication()"
+  >
     <form nz-form [formGroup]="sectionForm">
       <nz-form-item>
         <nz-form-label nzFor="maxCountImg">Количество секций</nz-form-label>
         <nz-form-control>
-          <input nz-input name="sectionCount" type="sectionCount" id="sectionCount" formControlName="sectionCount">
-          <div *ngIf="sectionForm.controls.sectionCount.invalid && (sectionForm.controls.sectionCount.dirty || sectionForm.controls.sectionCount.touched)">
-            <nz-alert nzType="error" *ngIf="sectionForm.controls.sectionCount.errors.required" nzMessage="Это поле обязательно для заполнения"></nz-alert>
-            <nz-alert nzType="error" *ngIf="sectionForm.controls.sectionCount.errors.min" nzMessage="Это поле должно быть больше нуля!"></nz-alert>
-            <nz-alert nzType="error" *ngIf="sectionForm.controls.sectionCount.errors.max" nzMessage="Это поле должно быть меньше или равно {{currentSectionCount}}"></nz-alert>
+          <input
+            nz-input
+            name="sectionCount"
+            type="sectionCount"
+            id="sectionCount"
+            formControlName="sectionCount"
+          />
+          <div
+            *ngIf="sectionForm.controls.sectionCount.invalid && (sectionForm.controls.sectionCount.dirty || sectionForm.controls.sectionCount.touched)"
+          >
+            <nz-alert
+              nzType="error"
+              *ngIf="sectionForm && sectionForm.controls && sectionForm.controls.sectionCount && sectionForm.controls.sectionCount.errors && sectionForm.controls.sectionCount.errors.required"
+              nzMessage="Это поле обязательно для заполнения"
+            ></nz-alert>
+            <nz-alert
+              nzType="error"
+              *ngIf="sectionForm && sectionForm.controls && sectionForm.controls.sectionCount && sectionForm.controls.sectionCount.errors && sectionForm.controls.sectionCount.errors.min"
+              nzMessage="Это поле должно быть больше нуля!"
+            ></nz-alert>
+            <nz-alert
+              nzType="error"
+              *ngIf="sectionForm && sectionForm.controls && sectionForm.controls.sectionCount && sectionForm.controls.sectionCount.errors && sectionForm.controls.sectionCount.errors.max"
+              nzMessage="Это поле должно быть меньше или равно {{currentSectionCount}}"
+            ></nz-alert>
           </div>
         </nz-form-control>
       </nz-form-item>
     </form>
   </nz-modal>
-
-
-
-
-
-
 </app-user-layout>

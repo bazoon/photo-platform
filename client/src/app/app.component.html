@@ -5,20 +5,44 @@
         <i nz-icon [nzType]="'home'"></i>
       </a>
       <ul nz-menu nzTheme="dark" nzMode="horizontal">
-        <li *ngFor="let m of staticMenu" [routerLink]="m.url" nz-submenu [nzTitle]="m.title | translate">
+        <li
+          *ngFor="let m of staticMenu"
+          [routerLink]="m.url"
+          nz-submenu
+          [nzTitle]="m.title | translate"
+        >
           <ul>
-            <li *ngFor="let s of m.children" nz-menu-item [routerLink]="'/sections/'+s.id">{{s.title | translate}}</li>
+            <li
+              *ngFor="let s of m.children"
+              nz-menu-item
+              [routerLink]="'/sections/'+s.id"
+            >
+              {{s.title | translate}}
+            </li>
           </ul>
         </li>
-        <li *ngFor="let m of contestMenus" [routerLink]="'/sections/'+m.id" nz-submenu [nzTitle]="m.title | translate">
+        <li
+          *ngFor="let m of contestMenus"
+          [routerLink]="'/sections/'+m.id"
+          nz-submenu
+          [nzTitle]="m.title | translate"
+        >
           <ul>
-            <li *ngFor="let s of m.children" nz-menu-item [routerLink]="'/sections/'+s.id">{{s.title | translate}}</li>
+            <li
+              *ngFor="let s of m.children"
+              nz-menu-item
+              [routerLink]="'/sections/'+s.id"
+            >
+              {{s.title | translate}}
+            </li>
           </ul>
         </li>
       </ul>
     </div>
 
-    <a *rbacShow="['superAdmin', 'admin', 'moder']" routerLink="/admin/contests">admin</a>
+    <a *rbacShow="['superAdmin', 'admin', 'moder']" routerLink="/admin/contests"
+      >admin</a
+    >
 
     <a *ngIf="!currentUser.isLoggedIn" routerLink="login" class="user-login">
       <i nz-icon [nzType]="'user'"></i>
@@ -33,8 +57,12 @@
       <app-lang-selector></app-lang-selector>
     </div>
 
-    <a *ngIf="currentUser.isLoggedIn" routerLink="/user/applications" class="user-login">
-      {{currentUser.user.firstName}}
+    <a
+      *ngIf="currentUser.isLoggedIn"
+      routerLink="/user/applications"
+      class="user-login"
+    >
+      {{currentUser && currentUser.user && currentUser.user.firstName}}
     </a>
   </nz-header>
 
@@ -49,7 +77,7 @@
         <div>{{organizer.emailPub}}</div>
       </div>
       <div class="right">
-        <div>{{organizer.address}}</div>
+        <div>{{organizer.addressLine1}}</div>
         <div>{{organizer.www}}</div>
       </div>
     </div>
