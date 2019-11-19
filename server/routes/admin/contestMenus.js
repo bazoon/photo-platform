@@ -3,13 +3,7 @@ const router = new Router();
 const models = require('../../../models');
 const R = require('ramda');
 
-const fields = [
-  'id',
-  'contestId',
-  'position',
-  'parentId',
-  'lexiconId'
-];
+const fields = ['id', 'contestId', 'position', 'parentId', 'lexiconId'];
 
 router.post('/root', async ctx => {
   const { id, lexiconId } = ctx.request.body;
@@ -49,9 +43,7 @@ router.put('/:id', async ctx => {
 });
 
 router.get('/tree/:id', async ctx => {
-  const {
-    id
-  } = ctx.params;
+  const { id } = ctx.params;
 
   const query = `select contest_menus.id, position, parent_id, lexicons.code, lexicons.name 
     from contest_menus, lexicons, pub_menus where
@@ -69,10 +61,10 @@ router.get('/tree/:id', async ctx => {
 
 router.get('/all', async ctx => {
   const { host } = ctx.request.header;
-  const [domain, port] = host.split(':');
+  const [domain] = host.split(':');
 
   const query = `select contest_menus.id, lexicon_id, position, parent_id, code, domain from
-    contests, salones,contest_menus, lexicons where
+    contests, salones, contest_menus, lexicons where
     contest_menus.lexicon_id=lexicons.id and
     contest_menus.contest_id=contests.id and contests.salone_id=salones.id and
     domain=:domain
@@ -92,7 +84,7 @@ router.get('/all', async ctx => {
       position: m.position,
       title: m.code,
       lexiconId: m.lexicon_id
-    }
+    };
   });
 
   const lookup = {};
@@ -144,7 +136,7 @@ router.get('/all/:id', async ctx => {
       position: m.position,
       title: m.code,
       lexiconId: m.lexicon_id
-    }
+    };
   });
 
   const lookup = {};
@@ -171,9 +163,7 @@ router.get('/all/:id', async ctx => {
 });
 
 router.get('/:id', async ctx => {
-  const {
-    id
-  } = ctx.params;
+  const { id } = ctx.params;
 
   let contestMenu = await models.ContestMenu.findOne({
     where: {
@@ -195,7 +185,5 @@ router.delete('/:id', async ctx => {
 
   ctx.body = {};
 });
-
-
 
 module.exports = router;

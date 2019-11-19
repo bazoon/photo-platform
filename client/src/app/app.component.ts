@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { ContestMenu } from './core/types/contestMenu';
 import { Organizer, emptyOrganizer } from './core/types/organizer';
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,9 +13,12 @@ import { Organizer, emptyOrganizer } from './core/types/organizer';
 })
 export class AppComponent {
   staticMenu: Array<ContestMenu> = [];
-  contestMenus: Array<ContestMenu> = [];
   organizer: Organizer = emptyOrganizer;
-  constructor(private api: ApiService, public currentUser: CurrentUserService, private translate: TranslateService) {
+  constructor(
+    private api: ApiService,
+    public currentUser: CurrentUserService,
+    private translate: TranslateService
+  ) {
     this.translate.use('ru');
     this.loadMenu();
     this.loadFooter();
@@ -25,10 +27,6 @@ export class AppComponent {
   loadMenu() {
     this.api.get<Array<ContestMenu>>(`api/staticMenu`).subscribe(menu => {
       this.staticMenu = menu;
-    });
-
-    this.api.get<Array<ContestMenu>>(`api/admin/contestMenus/all`).subscribe(contestMenus => {
-      this.contestMenus = contestMenus;
     });
   }
 

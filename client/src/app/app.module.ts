@@ -31,6 +31,10 @@ import { SectionPhotosComponent } from './features/section-photos/section-photos
 import { VkComponent } from './features/login/vk/vk.component';
 import { FbComponent } from './features/login/fb/fb.component';
 import { GoogleComponent } from './features/login/google/google.component';
+import { AboutComponent } from './features/about/about.component';
+import { ThesisComponent } from './features/thesis/thesis.component';
+import { RulesComponent } from './features/rules/rules.component';
+import { ContactsComponent } from './features/contacts/contacts.component';
 
 registerLocaleData(ru);
 
@@ -49,7 +53,11 @@ registerLocaleData(ru);
     SectionPhotosComponent,
     VkComponent,
     FbComponent,
-    GoogleComponent
+    GoogleComponent,
+    AboutComponent,
+    ThesisComponent,
+    RulesComponent,
+    ContactsComponent
   ],
   imports: [
     BrowserModule,

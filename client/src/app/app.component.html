@@ -15,23 +15,7 @@
             <li
               *ngFor="let s of m.children"
               nz-menu-item
-              [routerLink]="'/sections/'+s.id"
-            >
-              {{s.title | translate}}
-            </li>
-          </ul>
-        </li>
-        <li
-          *ngFor="let m of contestMenus"
-          [routerLink]="'/sections/'+m.id"
-          nz-submenu
-          [nzTitle]="m.title | translate"
-        >
-          <ul>
-            <li
-              *ngFor="let s of m.children"
-              nz-menu-item
-              [routerLink]="'/sections/'+s.id"
+              [routerLink]="s.id ? '/sections/'+s.id : s.url"
             >
               {{s.title | translate}}
             </li>

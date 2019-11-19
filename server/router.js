@@ -1,4 +1,5 @@
 const Router = require('koa-router');
+const fs = require('fs');
 const router = new Router();
 const users = require('./routes/admin/users');
 const admins = require('./routes/admin/admins');
@@ -32,6 +33,17 @@ const shortLists = require('./routes/shortLists');
 const contestPhotos = require('./routes/contestPhotos');
 const roles = require('./routes/roles');
 const awardsStacks = require('./routes/awardsStacks');
+
+// const files = fs
+//   .readdirSync(__dirname + '/routes/')
+//   .filter(name => !name.startsWith('.'));
+// console.log(files);
+
+// files.forEach(function(f) {
+//   let [name] = f.split('.');
+//   let routes = require(`./routes/${name}`).routes();
+//   router.user(``, routes
+// });
 
 router.use('/api/upload', upload.routes());
 router.use('/api/admin/users', users.routes());

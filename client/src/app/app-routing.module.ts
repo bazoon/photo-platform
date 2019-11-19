@@ -10,9 +10,17 @@ import { SectionPhotosComponent } from './features/section-photos/section-photos
 import { VkComponent } from './features/login/vk/vk.component';
 import { FbComponent } from './features/login/fb/fb.component';
 import { GoogleComponent } from 'src/app/features/login/google/google.component';
+import { AboutComponent } from 'src/app/features/about/about.component';
+import { ThesisComponent } from 'src/app/features/thesis/thesis.component';
+import { RulesComponent } from 'src/app/features/rules/rules.component';
+import { ContactsComponent } from 'src/app/features/contacts/contacts.component';
 
 const routes: Routes = [
   { path: '', component: MainComponent },
+  { path: 'about-us', component: AboutComponent },
+  { path: 'thesis', component: ThesisComponent },
+  { path: 'rules', component: RulesComponent },
+  { path: 'contacts', component: ContactsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'oauth/vk', component: VkComponent },
   { path: 'oauth/fb', component: FbComponent },

@@ -1,14 +1,15 @@
 const Router = require('koa-router');
 const router = new Router();
-const koaBody = require('koa-body');
 const models = require('../../models');
+const getUploadPath = require('../utils/getUploadPath');
 
 router.get('/', async ctx => {
   const { host } = ctx.request.header;
   const [domain] = host.split(':');
 
   const query = `
-    select organizers.name, organizers.email_pub, organizers.www, organizers.phone, organizers.address_line1 
+    select organizers.name, email_pub, www, phone, address_line1,
+    address_line2, officer, logo
     from organizers, salones where salones.organizer_id=organizers.id and salones.domain=:domain
   `;
 
@@ -23,7 +24,9 @@ router.get('/', async ctx => {
     emailPub: organizer.email_pub,
     www: organizer.www,
     phone: organizer.phone,
-    addressLine1: organizer.address_line1
+    addressLine1: organizer.address_line1,
+    officer: organizer.officer,
+    logo: getUploadPath(organizer.logo)
   };
 });
 
