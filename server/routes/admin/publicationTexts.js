@@ -1,29 +1,23 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const models = require("../../../models");
-const R = require("ramda");
+const models = require('../../../models');
+const R = require('ramda');
+const camelizeObject = require('../../utils/camelizeObject');
 
-const fields = [
-  'id',
-  'languageId',
-  'name',
-  'content',
-  'digest'
-];
+const fields = ['id', 'languageId', 'name', 'content', 'digest'];
 
-router.get("/:publicationId", async ctx => {
+router.get('/:publicationId', async ctx => {
   const { publicationId } = ctx.params;
-
-  const pubs = await models.PublicationText.findAll({
-    where: {
-      publicationId: publicationId
-    }
+  const query = `select publictxts.id, language_id, publictxts.name, content, digest, languages.name as language
+                 from publictxts, languages
+                 where publictxts.language_id=languages.id and publication_id=:id`;
+  const [texts] = await models.sequelize.query(query, {
+    replacements: { id: publicationId }
   });
-
-  ctx.body = R.map(R.pick(fields), pubs);
+  ctx.body = R.map(camelizeObject, texts);
 });
 
-router.put("/:id", async ctx => {
+router.put('/:id', async ctx => {
   const { id } = ctx.params;
   const pubTextValues = R.pick(fields, ctx.request.body);
   const pubText = await models.PublicationText.findOne({
@@ -33,22 +27,22 @@ router.put("/:id", async ctx => {
   });
 
   await pubText.update(pubTextValues);
-  ctx.body = R.pick(fields, pubText);
+  ctx.body = await getText(id);
 });
 
-router.post("/:publicationId", async ctx => {
+router.post('/:publicationId', async ctx => {
   const { publicationId } = ctx.params;
   const pubTextValues = R.pick(fields, ctx.request.body);
   delete pubTextValues.id;
   pubTextValues.publicationId = publicationId;
-  let pub = await models.PublicationText.create(pubTextValues);
-  ctx.body = await R.pick(fields, pub);
+  const pub = await models.PublicationText.create(pubTextValues);
+  ctx.body = await getText(pub.id);
 });
 
-router.delete("/:id", async ctx => {
+router.delete('/:id', async ctx => {
   const { id } = ctx.params;
 
-  await models.Salone.destroy({
+  await models.PublicationText.destroy({
     where: {
       id
     }
@@ -57,35 +51,17 @@ router.delete("/:id", async ctx => {
   ctx.body = {};
 });
 
-async function getSalone(record) {
-  const query = `
-    select organizers.name as organizer, spr_salone_types.name as saloneType, spr_salone_type_id, organizer_id,
-    salones.name, regular, private, domain, design_code, salones.row_state, salones.id
-    from salones, organizers, spr_salone_types
-    where
-    salones.spr_salone_type_id=spr_salone_types.id and salones.organizer_id=organizers.id and salones.id=:id
-  `;
-  const [[salone]] = await models.sequelize.query(query, {
+async function getText(id) {
+  const query = `select publictxts.id, language_id, publictxts.name, content, digest, languages.name as language
+                 from publictxts, languages
+                 where publictxts.language_id=languages.id and publictxts.id=:id`;
+  const [[text]] = await models.sequelize.query(query, {
     replacements: {
-      id: record.id
+      id
     }
   });
 
-  return {
-    id: salone.id,
-    organizer: salone.organizer,
-    saloneType: salone.salonetype,
-    sprSaloneTypeId: salone.spr_salone_type_id,
-    organizerId: salone.organizer_id,
-    name: salone.name,
-    regular: salone.regular,
-    private: salone.private,
-    domain: salone.domain,
-    designCode: salone.design_code,
-    rowState: salone.row_state
-  }
+  return camelizeObject(text);
 }
-
-
 
 module.exports = router;

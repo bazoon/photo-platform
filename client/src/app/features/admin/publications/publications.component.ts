@@ -22,8 +22,8 @@ import editorConfig from '../../../core/config/editorConfig';
   templateUrl: './publications.component.html',
   styleUrls: ['./publications.component.less']
 })
-export class PublicationsComponent {
-  @Input() contestMenuId: number = -1;
+export class PublicationsComponent implements OnInit {
+  @Input() contestMenuId = -1;
   @Input() languages: Array<Language> = [];
 
   form: FormGroup;
@@ -185,11 +185,16 @@ export class PublicationsComponent {
     this.isTextVisible = false;
   }
 
-  remove(a: any) {
-    //TODO
+  remove(id: number) {
+    this.api.delete(`/api/admin/publications/${id}`).subscribe(() => {
+      this.entities = this.entities.filter(e => e.id !== id);
+      this.texts = [];
+    });
   }
 
-  removeText(a: any) {
-    //TODO
+  removeText(id: number) {
+    this.api.delete(`/api/admin/publicationTexts/${id}`).subscribe(() => {
+      this.texts = this.texts.filter(e => e.id !== id);
+    });
   }
 }

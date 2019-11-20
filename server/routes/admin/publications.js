@@ -1,7 +1,7 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const models = require("../../../models");
-const R = require("ramda");
+const models = require('../../../models');
+const R = require('ramda');
 
 const fields = [
   'id',
@@ -13,7 +13,7 @@ const fields = [
   'archive'
 ];
 
-router.get("/:contestMenuId", async ctx => {
+router.get('/:contestMenuId', async ctx => {
   const { contestMenuId } = ctx.params;
 
   const pubs = await models.Publication.findAll({
@@ -25,7 +25,7 @@ router.get("/:contestMenuId", async ctx => {
   ctx.body = R.map(R.pick(fields), pubs);
 });
 
-router.put("/:id", async ctx => {
+router.put('/:id', async ctx => {
   const { id } = ctx.params;
   const pubValues = R.pick(fields, ctx.request.body);
   const pub = await models.Publication.findOne({
@@ -33,12 +33,11 @@ router.put("/:id", async ctx => {
       id
     }
   });
-
   await pub.update(pubValues);
-  ctx.body = R.pick('fields', pub);
+  ctx.body = R.pick(fields, pub);
 });
 
-router.post("/:contestMenuId", async ctx => {
+router.post('/:contestMenuId', async ctx => {
   const { contestMenuId } = ctx.params;
   const pubValues = R.pick(fields, ctx.request.body);
   delete pubValues.id;
@@ -47,10 +46,10 @@ router.post("/:contestMenuId", async ctx => {
   ctx.body = await R.pick(fields, pub);
 });
 
-router.delete("/:id", async ctx => {
+router.delete('/:id', async ctx => {
   const { id } = ctx.params;
 
-  await models.Salone.destroy({
+  await models.Publication.destroy({
     where: {
       id
     }
@@ -58,36 +57,5 @@ router.delete("/:id", async ctx => {
 
   ctx.body = {};
 });
-
-async function getSalone(record) {
-  const query = `
-    select organizers.name as organizer, spr_salone_types.name as saloneType, spr_salone_type_id, organizer_id,
-    salones.name, regular, private, domain, design_code, salones.row_state, salones.id
-    from salones, organizers, spr_salone_types
-    where
-    salones.spr_salone_type_id=spr_salone_types.id and salones.organizer_id=organizers.id and salones.id=:id
-  `;
-  const [[salone]] = await models.sequelize.query(query, {
-    replacements: {
-      id: record.id
-    }
-  });
-
-  return {
-    id: salone.id,
-    organizer: salone.organizer,
-    saloneType: salone.salonetype,
-    sprSaloneTypeId: salone.spr_salone_type_id,
-    organizerId: salone.organizer_id,
-    name: salone.name,
-    regular: salone.regular,
-    private: salone.private,
-    domain: salone.domain,
-    designCode: salone.design_code,
-    rowState: salone.row_state
-  }
-}
-
-
 
 module.exports = router;
