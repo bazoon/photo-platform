@@ -14,6 +14,7 @@ import { ContestPhotoworksComponent } from './contest-photoworks/contest-photowo
 import { ContestJuriesComponent } from './contest-juries/contest-juries.component';
 import { ContestResultsComponent } from './contest-results/contest-results.component';
 import { AwardTypesComponent } from 'src/app/features/admin/award-types/award-types.component';
+import {ContestSectionsComponent} from 'src/app/features/admin/contest-sections/contest-sections.component';
 
 const routes: Routes = [
   {
@@ -54,6 +55,10 @@ const routes: Routes = [
       {
         path: 'contests/:id/results',
         component: ContestResultsComponent
+      },
+      {
+        path: 'contests/:id/sections',
+        component: ContestSectionsComponent
       },
       {
         path: 'contests/:menuId/pubs',

@@ -80,6 +80,14 @@
             nzTheme="outline"
             [routerLink]="data.id + '/results'"
           ></i>
+          <i
+            *rbacShow="['superAdmin', 'admin']"
+            class="icon"
+            nz-icon
+            nzType="database"
+            nzTheme="outline"
+            [routerLink]="data.id + '/sections'"
+          ></i>
         </td>
         <td nzWidth="200px">{{data.salone}}</td>
         <td nzWidth="200px">{{data.subname}}</td>
@@ -100,15 +108,10 @@
     </tbody>
   </nz-table>
 
-  <app-contest-about
-    *rbacShow="['superAdmin', 'admin', 'moder']"
-    [contestId]="currentContest && currentContest.id"
-  ></app-contest-about>
-
-  <app-contest-sections
-    *rbacShow="['superAdmin', 'admin']"
-    [contestId]="currentContest && currentContest.id"
-  ></app-contest-sections>
+  <!-- <app-contest-sections -->
+  <!--   *rbacShow="['superAdmin', 'admin']" -->
+  <!--   [contestId]="currentContest && currentContest.id" -->
+  <!-- ></app-contest-sections> -->
 
   <app-contest-award-stack
     *rbacShow="['superAdmin', 'admin']"
