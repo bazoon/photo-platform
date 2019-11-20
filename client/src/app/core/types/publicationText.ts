@@ -10,6 +10,7 @@ export interface PublicationText {
 export const emptyPublicationText: PublicationText = {
   id: undefined,
   languageId: undefined,
+  language: '',
   name: '',
   content: '',
   digest: ''
