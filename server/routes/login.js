@@ -111,7 +111,10 @@ router.post('/login', async ctx => {
     }
   );
 
-  ctx.cookies.set('token', token, { httpOnly: false });
+  ctx.cookies.set('token', token, {
+    httpOnly: false,
+    maxAge: 10 * 24 * 60 * 1000
+  });
 
   ctx.body = {
     email: user.email,
