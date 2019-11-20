@@ -3,6 +3,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { Contest } from '../../../core/types/contest';
 import { ContestSection } from '../../../core/types/contestSection';
 import { Photowork } from '../../../core/types/photowork';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-jury',
@@ -11,8 +12,8 @@ import { Photowork } from '../../../core/types/photowork';
 })
 export class JuryComponent implements OnInit {
   contests: Array<Contest> = [];
-  currentContestId: number = -1;
-  currentSection: number = -1;
+  currentContestId = -1;
+  currentSection = -1;
   currentContest?: Contest;
   sections: Array<ContestSection> = [];
   files: Array<Photowork> = [];
@@ -20,11 +21,21 @@ export class JuryComponent implements OnInit {
   isImageVisible = false;
   currentImage = '';
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private translate: TranslateService) {}
 
   ngOnInit() {
     this.api.get<Array<Contest>>('/api/contests').subscribe(contests => {
       this.contests = contests;
+    });
+
+    this.translate.onLangChange.subscribe((t: any) => {
+      this.api
+        .get<Array<ContestSection>>(
+          `api/contestSections/all/${this.currentContestId}/${this.translate.currentLang}`
+        )
+        .subscribe(sections => {
+          this.sections = sections;
+        });
     });
   }
 
@@ -34,7 +45,7 @@ export class JuryComponent implements OnInit {
     );
     this.api
       .get<Array<ContestSection>>(
-        `/api/contestSections/all/${this.currentContestId}`
+        `/api/contestSections/all/${this.currentContestId}/${this.translate.currentLang}`
       )
       .subscribe(sections => {
         this.sections = sections;
