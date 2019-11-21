@@ -108,10 +108,10 @@
     </tbody>
   </nz-table>
 
-  <!-- <app-contest-sections -->
-  <!--   *rbacShow="['superAdmin', 'admin']" -->
-  <!--   [contestId]="currentContest && currentContest.id" -->
-  <!-- ></app-contest-sections> -->
+  <app-contest-about
+    *rbacShow="['superAdmin', 'admin']"
+    [contestId]="currentContest && currentContest.id"
+  ></app-contest-about>
 
   <app-contest-award-stack
     *rbacShow="['superAdmin', 'admin']"
