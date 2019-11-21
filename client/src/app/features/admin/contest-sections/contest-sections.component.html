@@ -18,7 +18,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of entities" (click)="selectSection(data)">
+      <tr
+        *ngFor="let data of entities"
+        (click)="selectSection(data)"
+        [class.selectedRow]="currentSection && currentSection.id===data.id"
+      >
         <td style="cursor:pointer" nzLeft="0px">
           <i
             *rbacShow="['superAdmin', 'admin']"
@@ -129,7 +133,7 @@
   <nz-modal
     nzWidth="1000"
     [(nzVisible)]="isTranslationEditVisible"
-    nzTitle="Редактирование"
+    [nzTitle]="currentSection && currentSection.name"
     (nzOnCancel)="handleCancelTranslation()"
     (nzOnOk)="handleOkTranslation()"
   >
