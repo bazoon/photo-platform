@@ -17,8 +17,7 @@ router.post('/register', koaBody({ multipart: true }), async ctx => {
     lastName,
     password,
     nickName,
-    phone,
-    agree
+    phone
   } = ctx.request.body;
 
   const { avatar } = ctx.request.files;
@@ -52,7 +51,7 @@ router.post('/register', koaBody({ multipart: true }), async ctx => {
 
   ctx.cookies.set('token', token, {
     httpOnly: false,
-    maxAge: 10 * 24 * 60 * 1000
+    maxAge: expiresIn * 1000
   });
 
   ctx.body = {
@@ -69,26 +68,14 @@ router.post('/register', koaBody({ multipart: true }), async ctx => {
   };
 });
 
-router.get('/', async (ctx, next) => {
-  ctx.body = {
-    id: 1,
-    firstName: 'John'
-  };
-});
-
 router.post('/login', async ctx => {
-  const { nickName, password } = ctx.request.body;
+  const { nickName, password, remember } = ctx.request.body;
 
   const user = await models.User.findOne({
     where: {
       nickName
     }
   });
-
-  const { host } = ctx.request.header;
-  const [domain] = host.split(':');
-
-  // mailer.sendFromCurrentOrganizer({ domain, to: 'vith@yandex.ru', subject: 'Suject', text: '<h1>Hello!</h1>' });
 
   const isValidUser = await bcrypt.compare(password, user.psw);
 
@@ -113,7 +100,7 @@ router.post('/login', async ctx => {
 
   ctx.cookies.set('token', token, {
     httpOnly: false,
-    maxAge: 10 * 24 * 60 * 1000
+    maxAge: remember && expiresIn * 1000
   });
 
   ctx.body = {
@@ -183,7 +170,7 @@ router.post('/login-fb', async ctx => {
     lastName: user.lastName,
     nickName: user.nickName,
     phone: user.phone,
-    avatar: getUploadFilePath(user.avatar),
+    avatar: geAtUploadFilePath(user.avatar),
     userType: user.userType,
     emailState: user.emailState,
     rowState: user.rowState,
@@ -208,12 +195,11 @@ router.post('/login-vk', async ctx => {
   });
 
   if (!user) {
-    const user = await models.User.create({
+    user = await models.User.create({
       email,
       firstName: first_name,
       lastName: last_name,
-      nickName,
-      phone,
+      nickName: first_name,
       avatar: 'none',
       salt,
       psw: hashedPassword,
