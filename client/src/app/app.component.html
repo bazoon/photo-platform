@@ -15,7 +15,7 @@
             <li
               *ngFor="let s of m.children"
               nz-menu-item
-              [routerLink]="s.id ? '/sections/'+s.id : s.url"
+              [routerLink]="'/sections/'+s.id"
             >
               {{s.title | translate}}
             </li>
