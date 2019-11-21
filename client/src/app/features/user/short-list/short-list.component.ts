@@ -4,6 +4,7 @@ import { Contest } from '../../../core/types/contest';
 import { ContestSection } from '../../../core/types/contestSection';
 import { Photowork } from '../../../core/types/photowork';
 import { AwardStack } from '../../../core/types/awardStack';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-short-list',
@@ -21,11 +22,21 @@ export class ShortListComponent implements OnInit {
   currentImage = '';
   awardsStacks: Array<AwardStack> = [];
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private translate: TranslateService) {}
 
   ngOnInit() {
     this.api.get<Array<Contest>>('/api/contests').subscribe(contests => {
       this.contests = contests;
+    });
+
+    this.translate.onLangChange.subscribe(() => {
+      this.api
+        .get<Array<ContestSection>>(
+          `api/contestSections/all/${this.currentContestId}/${this.translate.currentLang}`
+        )
+        .subscribe(sections => {
+          this.sections = sections;
+        });
     });
   }
 
@@ -36,7 +47,7 @@ export class ShortListComponent implements OnInit {
 
     this.api
       .get<Array<ContestSection>>(
-        `/api/contestSections/all/${this.currentContestId}`
+        `/api/contestSections/all/${this.currentContestId}/${this.translate.currentLang}`
       )
       .subscribe(sections => {
         this.sections = sections;
