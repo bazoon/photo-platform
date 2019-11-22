@@ -1,7 +1,7 @@
 const Router = require('koa-router');
 const router = new Router();
-const models = require('../../models');
-const getUploadPath = require('../utils/getUploadPath');
+const models = require('../../../models');
+const getUploadPath = require('../../utils/getUploadPath');
 
 router.get('/', async ctx => {
   const { host } = ctx.request.header;

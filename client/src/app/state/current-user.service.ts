@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { SignupUser } from '../core/types/signupUser';
-import { ApiService } from '../core/services/api.service';
 import { User } from '../core/types/user';
 import { Login } from '../core/types/login';
 import { of, Observable, BehaviorSubject } from 'rxjs';
+import { CookieService } from 'src/app/core/services/cookie.service';
+import { HttpClient } from '@angular/common/http';
 
 const emptyUser: User = {
   id: -1,
@@ -33,12 +34,20 @@ export class CurrentUserService {
   _roles: BehaviorSubject<Array<string>> = new BehaviorSubject(['']);
   roles: Observable<Array<string>> = this._roles.asObservable();
 
-  constructor(private api: ApiService, private router: Router) {
-    this.load();
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private cookie: CookieService
+  ) {
+    if (!cookie.checkCookie()) {
+      //this.logout();
+    } else {
+      this.load();
+    }
   }
 
   login(loginData: Login) {
-    this.api.post<User>('api/login', loginData).subscribe(
+    this.http.post<User>('api/login', loginData).subscribe(
       u => {
         this.user = u;
         this.isLoggedIn = true;
@@ -53,7 +62,7 @@ export class CurrentUserService {
   }
 
   loginFb(payload: any) {
-    this.api.post<User>(`api/login-fb`, payload).subscribe(user => {
+    this.http.post<User>(`api/login-fb`, payload).subscribe(user => {
       this.user = user;
       this.isLoggedIn = true;
       this.save();
@@ -63,7 +72,7 @@ export class CurrentUserService {
   }
 
   loginVk(payload: any) {
-    this.api.post<User>(`api/login-vk`, payload).subscribe(user => {
+    this.http.post<User>(`api/login-vk`, payload).subscribe(user => {
       this.user = user;
       this.isLoggedIn = true;
       this.save();
@@ -74,7 +83,7 @@ export class CurrentUserService {
 
   loginGoogle(payload: any) {
     console.log(payload);
-    this.api.post<User>(`api/login-google`, payload).subscribe(user => {
+    this.http.post<User>(`api/login-google`, payload).subscribe(user => {
       this.user = user;
       this.isLoggedIn = true;
       this.save();
@@ -89,7 +98,7 @@ export class CurrentUserService {
       formData.append(f, user[f]);
     }
 
-    this.api.post<User>('api/register', formData).subscribe(u => {
+    this.http.post<User>('api/register', formData).subscribe(u => {
       this.user = u;
       this.isLoggedIn = true;
       this.save();
@@ -116,17 +125,17 @@ export class CurrentUserService {
   }
 
   logout() {
-    this.api.postEmpty('api/logout').subscribe(() => {
+    return this.http.post('api/logout', {}).subscribe(() => {
       this.remove();
       this.isLoggedIn = false;
       this.user = undefined;
       this.updateRoles();
-      this.router.navigate(['/']);
+      this.router.navigate(['/login']);
     });
   }
 
   updateRoles() {
-    this.api.get<any>('api/roles').subscribe(
+    this.http.get<any>('api/roles').subscribe(
       role => {
         this._roles.next([role.role]);
       },

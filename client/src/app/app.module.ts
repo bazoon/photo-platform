@@ -4,7 +4,7 @@ import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { registerLocaleData } from '@angular/common';
 
@@ -35,7 +35,8 @@ import { AboutComponent } from './features/about/about.component';
 import { ThesisComponent } from './features/thesis/thesis.component';
 import { RulesComponent } from './features/rules/rules.component';
 import { ContactsComponent } from './features/contacts/contacts.component';
-
+import { AuthService } from 'src/app/core/interceptor/auth.service';
+import { CurrentUserService } from 'src/app/state/current-user.service';
 registerLocaleData(ru);
 
 @NgModule({
@@ -75,6 +76,13 @@ registerLocaleData(ru);
     })
   ],
   exports: [SharedModule],
+  /* providers: [ */
+  /*   { */
+  /*     provide: HTTP_INTERCEPTORS, */
+  /*     useClass: AuthService, */
+  /*     multi: true */
+  /*   } */
+  /* ], */
   bootstrap: [AppComponent]
 })
 export class AppModule {}

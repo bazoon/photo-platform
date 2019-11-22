@@ -64,7 +64,7 @@ export class ContestApplicationComponent implements OnInit {
 
     const keys = Object.keys(this.fileNames);
     formData.append('names', JSON.stringify(this.fileNames));
-
+    console.log(9991);
     this.api
       .post<any>(`api/contestSections/${this.currentSection}/uploads`, formData)
       .subscribe(() => {

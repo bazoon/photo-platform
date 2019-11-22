@@ -1,8 +1,8 @@
 const Router = require('koa-router');
 const router = new Router();
-const models = require('../../models');
+const models = require('../../../models');
 const R = require('ramda');
-const getUploadFilePath = require('../utils/getUploadPath');
+const getUploadFilePath = require('../../utils/getUploadPath');
 
 router.get('/sections/:lang', async ctx => {
   const { lang } = ctx.params;

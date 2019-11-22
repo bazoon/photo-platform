@@ -1,12 +1,12 @@
-const Router = require("koa-router");
-const koaBody = require("koa-body");
+const Router = require('koa-router');
+const koaBody = require('koa-body');
 const router = new Router();
-const models = require("../../models");
+const models = require('../../../models');
 
 const expiresIn = 24 * 60 * 60 * 30;
 
 
-router.get("/:locale", koaBody({ multipart: true }), async ctx => {
+router.get('/:locale', koaBody({ multipart: true }), async ctx => {
   const { locale } = ctx.params;
   const query = `
     select code, phrases.name from lexicons, languages, phrases
@@ -24,7 +24,7 @@ router.get("/:locale", koaBody({ multipart: true }), async ctx => {
 
 
   translations.forEach(t => {
-    let keys = t.code.split(".");
+    let keys = t.code.split('.');
     insertValueAtKey(dict, keys, t.name)
   });
 

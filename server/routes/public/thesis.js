@@ -1,6 +1,6 @@
 const Router = require('koa-router');
 const router = new Router();
-const models = require('../../models');
+const models = require('../../../models');
 
 router.get('/:lang', async ctx => {
   const { lang } = ctx.params;

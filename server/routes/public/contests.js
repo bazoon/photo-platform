@@ -1,9 +1,9 @@
 const Router = require('koa-router');
 const router = new Router();
-const models = require('../../models');
+const models = require('../../../models');
 const R = require('ramda');
-const getUploadFilePath = require('../utils/getUploadPath');
-const camelizeObject = require('../utils/camelizeObject');
+const getUploadFilePath = require('../../utils/getUploadPath');
+const camelizeObject = require('../../utils/camelizeObject');
 
 router.get('/', async ctx => {
   const userId = ctx.user.id;
