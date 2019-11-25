@@ -33,11 +33,16 @@ export class ApiService {
     let result;
 
     if (data instanceof FormData) {
-      result = this.http.post<T>(url, data);
+      // Используем share чтобы subscribe можно было вызывать дважды
+      result = this.http.post<T>(url, data).pipe(share());
     } else if (typeof data === 'object') {
-      result = this.http.post<T>(url, JSON.stringify(data), httpOptions);
+      result = this.http
+        .post<T>(url, JSON.stringify(data), httpOptions)
+        .pipe(share());
     } else {
-      result = this.http.post<T>(url, JSON.stringify(data), httpOptions);
+      result = this.http
+        .post<T>(url, JSON.stringify(data), httpOptions)
+        .pipe(share());
     }
 
     result.subscribe(() => {}, e => this.errorHandler(e));
@@ -45,7 +50,7 @@ export class ApiService {
   }
 
   postEmpty(url: string) {
-    const result = this.http.post(url, '', httpOptions);
+    const result = this.http.post(url, '', httpOptions).pipe(share());
     result.subscribe(() => {}, e => this.errorHandler(e));
     return result;
   }
@@ -61,9 +66,13 @@ export class ApiService {
     if (data instanceof FormData) {
       result = this.http.put<T>(url, data);
     } else if (typeof data === 'object') {
-      result = this.http.put<T>(url, JSON.stringify(data), httpOptions);
+      result = this.http
+        .put<T>(url, JSON.stringify(data), httpOptions)
+        .pipe(share());
     } else {
-      result = this.http.put<T>(url, JSON.stringify(data), httpOptions);
+      result = this.http
+        .put<T>(url, JSON.stringify(data), httpOptions)
+        .pipe(share());
     }
 
     result.subscribe(() => {}, e => this.errorHandler(e));
@@ -71,7 +80,7 @@ export class ApiService {
   }
 
   delete<T>(url: string) {
-    const result = this.http.delete(url);
+    const result = this.http.delete(url).pipe(share());
     result.subscribe(() => {}, e => this.errorHandler(e));
     return result;
   }
