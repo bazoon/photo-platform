@@ -22,7 +22,6 @@ const awardTypes = require('./routes/admin/awardTypes');
 const awardStacks = require('./routes/admin/awardStacks');
 
 const upload = require('./routes/upload');
-const pubs = require('./routes/publications');
 const contestApplications = require('./routes/contestApplications');
 const contestSections = require('./routes/contestSections');
 const userMenu = require('./routes/userMenu');
@@ -63,7 +62,6 @@ router.use('/api/admin/contestJuries', contestJuries.routes());
 router.use('/api/admin/awardTypes', awardTypes.routes());
 router.use('/api/admin/awardStacks', awardStacks.routes());
 
-router.use('/api/publications', pubs.routes());
 router.use('/api/contestApplications', contestApplications.routes());
 router.use('/api/contestSections', contestSections.routes());
 router.use('/api/userMenu', userMenu.routes());

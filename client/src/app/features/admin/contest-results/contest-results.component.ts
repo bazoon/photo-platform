@@ -26,7 +26,7 @@ export class ContestResultsComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
-      this.api.get<Array<ContestSection>>(`api/contestSections/all/${p.get('id')}`).subscribe(sections => {
+      this.api.get<Array<ContestSection>>(`api/admin/contestSections/all/${p.get('id')}`).subscribe(sections => {
         this.sections = sections;
       });
     });

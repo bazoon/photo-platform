@@ -1,21 +1,24 @@
 const Router = require('koa-router');
 const router = new Router();
 const models = require('../../../models');
+const startOfDay = require('date-fns/startOfDay');
 
 router.get('/', async ctx => {
   const { host } = ctx.request.header;
   const [domain] = host.split(':');
-
-  const query = `select contest_menus.id, lexicon_id, position, parent_id, code, domain from
-    contests, salones, contest_menus, lexicons where
+  const now = startOfDay(new Date());
+  const query = `select distinct contest_menus.id, lexicon_id, position, parent_id, code, domain from
+    contests, salones, contest_menus, lexicons, publications where
     contest_menus.lexicon_id=lexicons.id and
-    contest_menus.contest_id=contests.id and contests.salone_id=salones.id and
-    domain=:domain
+    contest_menus.contest_id=contests.id and contests.salone_id=salones.id and 
+    contest_menus.id=publications.contest_menu_id and domain=:domain and
+    publications.date_show <= :now
   `;
 
   let [contestMenus] = await models.sequelize.query(query, {
     replacements: {
-      domain
+      domain,
+      now
     }
   });
 

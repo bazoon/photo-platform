@@ -1,4 +1,12 @@
 <div class="content-container">
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a routerLink="/">{{'main' | translate}}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      {{'rules' | translate}}
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
   <h1>{{'rules' | translate}}</h1>
   <div [innerHTML]="rules && rules.rules"></div>
 </div>

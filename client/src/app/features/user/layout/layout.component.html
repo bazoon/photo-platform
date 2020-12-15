@@ -1,15 +1,14 @@
 <nz-layout>
-  <nz-sider nzWidth="200px">
+  <nz-sider nzWidth="200px" nzTheme="light">
     <div class="logo"></div>
-    <ul nz-menu nzTheme="dark" nzMode="inline">
+    <ul nz-menu nzTheme="light" nzMode="inline">
       <ul>
-        <li nz-menu-item>
+        <li nz-menu-item [nzMatchRouter]="true">
           <a routerLink="/user/applications">Заявки</a>
         </li>
-        <li nz-menu-item *ngFor="let item of menu">
+        <li nz-menu-item *ngFor="let item of menu" [nzMatchRouter]="true">
           <a [routerLink]="item.url">{{item.name}}</a>
         </li>
-
       </ul>
     </ul>
   </nz-sider>

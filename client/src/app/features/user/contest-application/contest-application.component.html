@@ -1,24 +1,54 @@
 <app-user-layout>
-  <h1>Секции</h1>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a routerLink="/">{{'main' | translate}}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="'/user/applications'">{{'applications' | translate}}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      {{'photoworks' | translate}}
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <h1>Номинации</h1>
   <div class="sections-wrapper">
-    <nz-select class="sections" [(ngModel)]="currentSection" nzPlaceHolder="Секция" (ngModelChange)="handleChangeSection()">
-      <nz-option *ngFor="let section of sections" [nzValue]="section.id" [nzLabel]="section.name"></nz-option>
+    <nz-select
+      class="sections"
+      [(ngModel)]="currentSection"
+      nzPlaceHolder="Секция"
+      (ngModelChange)="handleChangeSection()"
+    >
+      <nz-option
+        *ngFor="let section of sections"
+        [nzValue]="section.id"
+        [nzLabel]="section.name"
+      ></nz-option>
     </nz-select>
   </div>
 
   <div class="images">
     <div *ngFor="let file of files" class="thumb-wrap">
       <span class="file-name">{{file.name}}</span>
-      <img class="thumb" [src]="file.filename">
+      <img class="thumb" [src]="file.filename" />
       <div class="thumb-controls">
-        <i nz-icon nzType="delete" nzTheme="outline" (click)="removeImage(file.id)"></i>
+        <i
+          nz-icon
+          nzType="delete"
+          nzTheme="outline"
+          (click)="removeImage(file.id)"
+        ></i>
       </div>
     </div>
   </div>
 
   <div *ngIf="currentSection">
     <div class="upload-wrapper">
-      <nz-upload [(nzFileList)]="fileList" nzMultiple="true" [nzBeforeUpload]="beforeUpload" [nzShowUploadList]="false">
+      <nz-upload
+        [(nzFileList)]="fileList"
+        nzMultiple="true"
+        [nzBeforeUpload]="beforeUpload"
+        [nzShowUploadList]="false"
+      >
         <button nz-button>
           <i nz-icon nzType="upload"></i>
           <span>Select File</span>
@@ -31,7 +61,12 @@
         <div class="file-item">
           <input nz-input [(ngModel)]="fileNames[file.name]" />
           <span>{{file.name}}</span>
-          <i nz-icon nzType="delete" nzTheme="outline" (click)="removeFile(file.name)"></i>
+          <i
+            nz-icon
+            nzType="delete"
+            nzTheme="outline"
+            (click)="removeFile(file.name)"
+          ></i>
         </div>
       </div>
     </div>
@@ -39,10 +74,5 @@
     <button nz-button (click)="upload()" [disabled]="fileList.length===0">
       Upload
     </button>
-
   </div>
-
-
-
-
 </app-user-layout>

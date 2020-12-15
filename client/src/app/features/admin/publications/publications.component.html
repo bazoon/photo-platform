@@ -42,11 +42,13 @@
           (nzOnConfirm)="remove(data.id)"
         ></i>
       </td>
-      <td>{{data.dateCreate | date: 'd.M.yyyy'}}</td>
-      <td>{{data.dateShow | date: 'd.M.yyyy' }}</td>
-      <td>{{data.visible}}</td>
-      <td>{{data.pubtype}}</td>
-      <td>{{data.archive}}</td>
+      <td>{{data.dateCreate | date: 'dd.M.yyyy'}}</td>
+      <td>{{data.dateShow | date: 'dd.M.yyyy' }}</td>
+      <td>{{data.visible ? ('yes' | translate) : ('no' | translate) }}</td>
+      <td>
+        {{data.pubtype ? ('article' | translate) : ('news' | translate) }}
+      </td>
+      <td>{{data.archive ? ('yes' | translate) : ('no' | translate) }}</td>
     </tr>
   </tbody>
 </nz-table>
@@ -114,18 +116,16 @@
     <nz-form-item>
       <nz-form-label [nzSpan]="6" nzFor="visible">Visible</nz-form-label>
       <nz-form-control [nzSpan]="14">
-        <input
-          nz-input
-          name="visible"
-          type="visible"
-          id="visible"
-          formControlName="visible"
-        />
+        <nz-switch formControlName="visible"></nz-switch>
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSpan]="6" nzFor="pubtype">Type</nz-form-label>
+      <nz-form-label [nzSpan]="6" nzFor="pubtype">Статья</nz-form-label>
       <nz-form-control [nzSpan]="14">
+        <nz-switch
+          formControlName="pubtype"
+          [nzDisabled]="(this.entities && this.entities.length > 1) || (!this.currentPubId && this.entities && this.entities.length > 0)"
+        ></nz-switch>
         <input
           nz-input
           name="pubtype"
@@ -136,15 +136,9 @@
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSpan]="6" nzFor="archive">Archive</nz-form-label>
+      <nz-form-label [nzSpan]="6" nzFor="archive">Архив</nz-form-label>
       <nz-form-control [nzSpan]="14">
-        <input
-          nz-input
-          name="archive"
-          type="archive"
-          id="archive"
-          formControlName="archive"
-        />
+        <nz-switch formControlName="archive"></nz-switch>
       </nz-form-control>
     </nz-form-item>
   </form>

@@ -29,7 +29,7 @@ const routes: Routes = [
   { path: 'admin', loadChildren: './features/admin/admin.module#AdminModule' },
   { path: 'user', loadChildren: './features/user/user.module#UserModule' },
   {
-    path: 'publications/:id',
+    path: 'publications/:parentId/:id',
     component: PublicationComponent
   },
   {

@@ -1,9 +1,17 @@
 <div class="content-container">
   <div class="publications-wrapper">
+    <nz-breadcrumb>
+      <nz-breadcrumb-item>
+        <a routerLink="/">{{'main' | translate}}</a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item>
+        {{'publications' | translate}}
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
     <ul class="publications">
       <li *ngFor="let pub of pubs">
         <div class="publication-name">
-          <a [routerLink]="'/publications/'+pub.id">{{pub.name}}</a>
+          <a [routerLink]="'/publications/' + parentId+ '/'  +pub.id">{{pub.name}}</a>
         </div>
         <div class="publication-digest" [innerHTML]="pub.digest"></div>
       </li>

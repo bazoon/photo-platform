@@ -8,6 +8,10 @@ import { ContestApplicationsComponent } from './contest-applications/contest-app
 import { ContestApplicationComponent } from './contest-application/contest-application.component';
 import { JuryComponent } from './jury/jury.component';
 import { ShortListComponent } from './short-list/short-list.component';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
+import { HttpLoaderFactory } from 'src/app/core/misc/translationLoader';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,14 @@ import { ShortListComponent } from './short-list/short-list.component';
   imports: [
     SharedModule,
     CommonModule,
-    UserRoutingModule
+    UserRoutingModule,
+    TranslateModule.forChild({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ]
 })
-export class UserModule { }
+export class UserModule {}

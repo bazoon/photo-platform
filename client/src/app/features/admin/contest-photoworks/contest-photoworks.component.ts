@@ -17,14 +17,17 @@ export class ContestPhotoworksComponent implements OnInit {
   mapOfCheckedId: { [key: string]: boolean } = {};
   isAllDisplayDataChecked = false;
 
-
-  constructor(private api: ApiService, private route: ActivatedRoute) { }
+  constructor(private api: ApiService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
-      this.api.get<Array<ContestSection>>(`api/contestSections/all/${p.get('id')}`).subscribe(sections => {
-        this.sections = sections;
-      });
+      this.api
+        .get<Array<ContestSection>>(
+          `api/admin/contestSections/all/${p.get('id')}`
+        )
+        .subscribe(sections => {
+          this.sections = sections;
+        });
     });
   }
 
@@ -33,9 +36,11 @@ export class ContestPhotoworksComponent implements OnInit {
   }
 
   loadImages() {
-    this.api.get<any>(`api/contestSections/${this.currentSection}/files`).subscribe(files => {
-      this.works = files;
-    });
+    this.api
+      .get<any>(`api/contestSections/${this.currentSection}/files`)
+      .subscribe(files => {
+        this.works = files;
+      });
   }
 
   currentPageDataChange($event: Photowork[]): void {
@@ -44,11 +49,15 @@ export class ContestPhotoworksComponent implements OnInit {
   }
 
   refreshStatus(): void {
-    this.isAllDisplayDataChecked = this.listOfDisplayData.every(item => this.mapOfCheckedId[item.id]);
+    this.isAllDisplayDataChecked = this.listOfDisplayData.every(
+      item => this.mapOfCheckedId[item.id]
+    );
   }
 
   checkAll(value: boolean): void {
-    this.listOfDisplayData.forEach(item => (this.mapOfCheckedId[item.id] = value));
+    this.listOfDisplayData.forEach(
+      item => (this.mapOfCheckedId[item.id] = value)
+    );
     this.refreshStatus();
   }
 
@@ -64,28 +73,33 @@ export class ContestPhotoworksComponent implements OnInit {
 
   approve() {
     const ids = this.getSelectedIds();
-    this.api.post<any>(`api/admin/contestSections/${this.currentSection}/approves`, { ids }).subscribe(() => {
-      this.listOfDisplayData = this.listOfDisplayData.map(item => {
-        if (this.mapOfCheckedId[item.id]) {
-          item.moder = 1;
-        }
-        return item;
+    this.api
+      .post<any>(`api/admin/contestSections/${this.currentSection}/approves`, {
+        ids
+      })
+      .subscribe(() => {
+        this.listOfDisplayData = this.listOfDisplayData.map(item => {
+          if (this.mapOfCheckedId[item.id]) {
+            item.moder = 1;
+          }
+          return item;
+        });
       });
-    });
   }
 
   decline() {
     const ids = this.getSelectedIds();
-    this.api.post<any>(`api/admin/contestSections/${this.currentSection}/declines`, { ids }).subscribe(() => {
-      this.listOfDisplayData = this.listOfDisplayData.map(item => {
-        if (this.mapOfCheckedId[item.id]) {
-          item.moder = 2;
-        }
-        return item;
+    this.api
+      .post<any>(`api/admin/contestSections/${this.currentSection}/declines`, {
+        ids
+      })
+      .subscribe(() => {
+        this.listOfDisplayData = this.listOfDisplayData.map(item => {
+          if (this.mapOfCheckedId[item.id]) {
+            item.moder = 2;
+          }
+          return item;
+        });
       });
-    });
-
   }
-
-
 }

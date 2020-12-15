@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../core/services/api.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { PublicPublication, emptyPublicPublication } from '../../core/types/publicPublication';
+import {
+  PublicPublication,
+  emptyPublicPublication
+} from '../../core/types/publicPublication';
 
 @Component({
   selector: 'app-publication',
@@ -10,18 +13,18 @@ import { PublicPublication, emptyPublicPublication } from '../../core/types/publ
 })
 export class PublicationComponent implements OnInit {
   pub?: PublicPublication = emptyPublicPublication;
+  parentId = '';
 
-  constructor(private api: ApiService, private route: ActivatedRoute) {
-
-  }
+  constructor(private api: ApiService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
-      this.api.get<PublicPublication>(`api/publications/single/${p.get('id')}`).subscribe(pub => {
-        this.pub = pub;
-      });
-    })
+      this.parentId = p.get('parentId') || '';
+      this.api
+        .get<PublicPublication>(`api/publications/single/${p.get('id')}`)
+        .subscribe(pub => {
+          this.pub = pub;
+        });
+    });
   }
-
-
 }

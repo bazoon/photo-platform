@@ -11,6 +11,7 @@ const contests = require('./routes/public/contests');
 const roles = require('./routes/public/roles');
 const contestPhotos = require('./routes/public/contestPhotos');
 const contestSections = require('./routes/public/contestSections');
+const pubs = require('./routes/public/publications');
 
 router.use('/api/translation', translation.routes());
 router.use('/api/organizers', organizers.routes());
@@ -22,5 +23,6 @@ router.use('/api/contests', contests.routes());
 router.use('/api/roles', roles.routes());
 router.use('/api/contestPhotos', contestPhotos.routes());
 router.use('/api/contestSections', contestSections.routes());
+router.use('/api/publications', pubs.routes());
 
 module.exports = router;

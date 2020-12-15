@@ -1,6 +1,25 @@
 <app-admin-layout>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a routerLink="/">{{'main' | translate}}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="'/admin/contests/'">{{'contests' | translate}}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      {{'photoworks' | translate}}
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
   <h1>Жюри</h1>
-  <button *rbacShow="['superAdmin', 'admin']" class="margin-top-small margin-bottom-small" nz-button nzType="primary" (click)="append()">Добавить</button>
+  <button
+    *rbacShow="['superAdmin', 'admin']"
+    class="margin-top-small margin-bottom-small"
+    nz-button
+    nzType="primary"
+    (click)="append()"
+  >
+    Добавить
+  </button>
   <nz-table [nzData]="entities" [nzScroll]="{ x: '1000', y: '240px' }">
     <thead>
       <tr>
@@ -12,9 +31,24 @@
     <tbody>
       <tr *ngFor="let data of entities">
         <td style="cursor:pointer">
-          <i *rbacShow="['superAdmin', 'admin']" (click)="edit(data.id)" nz-icon nzType="edit" nzTheme="outline" style="margin-right: 10px"></i>
-          <i *rbacShow="['superAdmin', 'admin']" nz-icon nzType="delete" nzTheme="outline" nz-popconfirm nzPopconfirmTitle="Удалить?"
-            nzPopconfirmPlacement="top" (nzOnConfirm)="remove(data.id)"></i>
+          <i
+            *rbacShow="['superAdmin', 'admin']"
+            (click)="edit(data.id)"
+            nz-icon
+            nzType="edit"
+            nzTheme="outline"
+            style="margin-right: 10px"
+          ></i>
+          <i
+            *rbacShow="['superAdmin', 'admin']"
+            nz-icon
+            nzType="delete"
+            nzTheme="outline"
+            nz-popconfirm
+            nzPopconfirmTitle="Удалить?"
+            nzPopconfirmPlacement="top"
+            (nzOnConfirm)="remove(data.id)"
+          ></i>
         </td>
         <td>{{data.user}}</td>
         <td>{{data.rank}}</td>
@@ -22,20 +56,35 @@
     </tbody>
   </nz-table>
 
-  <nz-modal [(nzVisible)]="isEditVisible" nzTitle="Редактирование" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <nz-modal
+    [(nzVisible)]="isEditVisible"
+    nzTitle="Выбор пользователя в жюри"
+    (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()"
+  >
     <form nz-form [formGroup]="form">
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="userId">User</nz-form-label>
         <nz-form-control [nzSpan]="14">
           <nz-select formControlName="userId" nzAllowClear>
-            <nz-option *ngFor="let user of users" [nzValue]="user.id" [nzLabel]="user.firstName + ' ' + user.lastName"></nz-option>
+            <nz-option
+              *ngFor="let user of users"
+              [nzValue]="user.id"
+              [nzLabel]="user.firstName + ' ' + user.lastName"
+            ></nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="rank">Rank</nz-form-label>
         <nz-form-control [nzSpan]="14">
-          <input nz-input name="rank" type="rank" id="rank" formControlName="rank">
+          <input
+            nz-input
+            name="rank"
+            type="rank"
+            id="rank"
+            formControlName="rank"
+          />
         </nz-form-control>
       </nz-form-item>
     </form>

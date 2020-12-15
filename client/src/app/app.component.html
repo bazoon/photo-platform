@@ -4,23 +4,34 @@
       <a routerLink="/" class="logo">
         <i nz-icon [nzType]="'home'"></i>
       </a>
-      <ul nz-menu nzTheme="dark" nzMode="horizontal">
-        <li
-          *ngFor="let m of staticMenu"
-          [routerLink]="m.url"
-          nz-submenu
-          [nzTitle]="m.title | translate"
-        >
-          <ul>
-            <li
-              *ngFor="let s of m.children"
-              nz-menu-item
-              [routerLink]="'/sections/'+s.id"
-            >
-              {{s.title | translate}}
-            </li>
-          </ul>
-        </li>
+      <ul nz-menu nzTheme="light" nzMode="horizontal">
+        <ng-container *ngFor="let m of staticMenu">
+          <li
+            *ngIf="m.children && m.children.length > 0"
+            [routerLink]="m.id ? '/sections/' + m.id : m.url"
+            nz-submenu
+            [nzTitle]="m.title | translate"
+          >
+            <ul>
+              <li
+                *ngFor="let s of m.children"
+                nz-menu-item
+                [nzMatchRouter]="true"
+                [routerLink]="s.id ? '/sections/'+s.id : s.url"
+              >
+                {{s.title | translate}}
+              </li>
+            </ul>
+          </li>
+          <li
+            *ngIf="!m.children || m.children && m.children.length===0"
+            [routerLink]="m.id ? '/sections/' + m.id : m.url"
+            nz-menu-item
+            [nzMatchRouter]="true"
+          >
+            {{m.title | translate}}
+          </li>
+        </ng-container>
       </ul>
     </div>
 

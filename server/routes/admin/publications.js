@@ -33,6 +33,9 @@ router.put('/:id', async ctx => {
       id
     }
   });
+  pubValues.visible = +pubValues.visible;
+  pubValues.archive = +pubValues.archive;
+  pubValues.pubtype = +pubValues.pubtype;
   await pub.update(pubValues);
   ctx.body = R.pick(fields, pub);
 });
@@ -40,10 +43,23 @@ router.put('/:id', async ctx => {
 router.post('/:contestMenuId', async ctx => {
   const { contestMenuId } = ctx.params;
   const pubValues = R.pick(fields, ctx.request.body);
-  delete pubValues.id;
+  
+  pubValues.visible = +pubValues.visible;
+  pubValues.archive = +pubValues.archive;
+  pubValues.pubtype = +pubValues.pubtype;
+  pubValues.dateShow = pubValues.dateShow || new Date();
   pubValues.contestMenuId = contestMenuId;
+  delete pubValues.id;
+
+  const isSameType = await checkPubType(contestMenuId, pubValues.pubtype);
+  if (!isSameType) {
+    ctx.response.status = 409;
+    ctx.body = {};
+    return;
+  }
+
   let pub = await models.Publication.create(pubValues);
-  ctx.body = await R.pick(fields, pub);
+  ctx.body = R.pick(fields, pub);
 });
 
 router.delete('/:id', async ctx => {
@@ -57,5 +73,15 @@ router.delete('/:id', async ctx => {
 
   ctx.body = {};
 });
+
+async function checkPubType(contestMenuId, pubType) {
+  const pub = await models.Publication.findOne({
+    where: {
+      contestMenuId
+    }
+  });
+
+  return !pub || pub.pubtype === pubType;
+}
 
 module.exports = router;

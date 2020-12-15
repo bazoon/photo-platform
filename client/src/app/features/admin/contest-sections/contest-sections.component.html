@@ -1,5 +1,16 @@
 <app-admin-layout>
-  <h2>Секции</h2>
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a routerLink="/">{{'main' | translate}}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      <a [routerLink]="'/admin/contests/'">{{'contests' | translate}}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      {{'sections' | translate}}
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+  <h2>Номинации</h2>
   <button
     [disabled]="!contestId"
     class="margin-top-small margin-bottom-small"
@@ -98,7 +109,7 @@
   <nz-modal
     nzWidth="1000"
     [(nzVisible)]="isEditVisible"
-    nzTitle="Редактирование"
+    nzTitle="Редактирование номинации"
     (nzOnCancel)="handleCancel()"
     (nzOnOk)="handleOk()"
   >

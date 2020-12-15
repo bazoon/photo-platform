@@ -42,6 +42,7 @@ export class PublicationsComponent implements OnInit {
   Editor = ClassicEditor;
   ckconfig = editorConfig;
   selectedText?: PublicationText;
+  pubType?: number;
 
   constructor(private api: ApiService, protected fb: FormBuilder) {
     this.form = this.getForm();
@@ -55,6 +56,7 @@ export class PublicationsComponent implements OnInit {
     this.isEditVisible = true;
     this.currentPubId = undefined;
     this.form.reset();
+    this.applyCommonPubType();
   }
 
   edit(id: number) {
@@ -72,6 +74,7 @@ export class PublicationsComponent implements OnInit {
     this.isEditVisible = false;
     if (this.currentPubId) {
       this.putEntity(this.currentPubId, this.form.value).subscribe(pub => {
+        this.pubType = pub.pubtype;
         this.entities = this.entities.map(p => {
           if (p.id === pub.id) {
             return pub;
@@ -81,6 +84,7 @@ export class PublicationsComponent implements OnInit {
       });
     } else {
       this.postEntity(this.form.value).subscribe(pub => {
+        this.pubType = pub.pubtype;
         this.entities = this.entities.concat([pub]);
       });
     }
@@ -95,7 +99,16 @@ export class PublicationsComponent implements OnInit {
       .get<Array<Publication>>(`api/admin/publications/${this.contestMenuId}`)
       .subscribe(pubs => {
         this.entities = pubs;
+        this.pubType = pubs && pubs[0] && pubs[0].pubtype;
       });
+  }
+
+  applyCommonPubType() {
+    if (this.pubType) {
+      this.form.patchValue({
+        pubtype: this.pubType
+      });
+    }
   }
 
   putEntity(id: number, data: any) {

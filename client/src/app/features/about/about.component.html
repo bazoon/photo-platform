@@ -1,7 +1,14 @@
 <div class="content-container">
+  <nz-breadcrumb>
+    <nz-breadcrumb-item>
+      <a routerLink="/">{{'main' | translate}}</a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item>
+      {{'about-us' | translate}}
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
   <h1>
     {{about && about.name}}
   </h1>
-
   <div [innerHTML]="about && about.content"></div>
 </div>
