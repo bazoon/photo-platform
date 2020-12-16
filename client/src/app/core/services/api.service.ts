@@ -80,8 +80,8 @@ export class ApiService {
   }
 
   delete<T>(url: string) {
-    return this.http.delete(url).pipe(share());
-    // result.subscribe(() => {}, e => this.errorHandler(e));
+    return this.http.delete(url);
+    //result.subscribe(() => {}, e => this.errorHandler(e));
     // return result;
   }
 

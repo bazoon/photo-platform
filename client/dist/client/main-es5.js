@@ -887,8 +887,8 @@ var ApiService = /** @class */ (function () {
         return result;
     };
     ApiService.prototype.delete = function (url) {
-        return this.http.delete(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["share"])());
-        // result.subscribe(() => {}, e => this.errorHandler(e));
+        return this.http.delete(url);
+        //result.subscribe(() => {}, e => this.errorHandler(e));
         // return result;
     };
     ApiService.prototype.errorHandler = function (e) {

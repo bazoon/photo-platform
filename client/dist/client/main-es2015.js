@@ -861,8 +861,8 @@ let ApiService = class ApiService {
         return result;
     }
     delete(url) {
-        return this.http.delete(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["share"])());
-        // result.subscribe(() => {}, e => this.errorHandler(e));
+        return this.http.delete(url);
+        //result.subscribe(() => {}, e => this.errorHandler(e));
         // return result;
     }
     errorHandler(e) {
