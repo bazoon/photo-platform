@@ -102,15 +102,3 @@ app.use(koaJwt({ secret: process.env.API_TOKEN, cookie: 'token' }));
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods());
 
 http.listen(port, () => console.log(`Server is running on ${port}`));
-
-https
-  .createServer(
-    {
-      key: fs.readFileSync('./ssl/private.key'),
-      cert: fs.readFileSync('./ssl/certificate.crt')
-    },
-    app.callback()
-  )
-  .listen(5443, () => {
-    console.log('Listening at :5443...');
-  });
