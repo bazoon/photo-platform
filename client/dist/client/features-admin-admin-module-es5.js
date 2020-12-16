@@ -2842,7 +2842,7 @@ var LanguagesComponent = /** @class */ (function (_super) {
         return this.api.post("/api/admin/languages", data);
     };
     LanguagesComponent.prototype.deleteEntity = function (id) {
-        debugger;
+        console.log('deleteEntity');
         return this.api.delete("/api/admin/languages/" + id);
     };
     LanguagesComponent.prototype.getForm = function () {
@@ -3792,6 +3792,7 @@ var CrudComponent = /** @class */ (function () {
     };
     CrudComponent.prototype.remove = function (id) {
         var _this = this;
+        console.log('crud.remove');
         var entity = this.find(id);
         this.deleteEntity(id).subscribe(function () {
             _this.entities = _this.entities.filter(function (e) { return e !== entity; });

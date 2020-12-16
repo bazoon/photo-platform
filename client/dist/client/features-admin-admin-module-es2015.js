@@ -2692,7 +2692,7 @@ let LanguagesComponent = class LanguagesComponent extends _shared_crud__WEBPACK_
         return this.api.post(`/api/admin/languages`, data);
     }
     deleteEntity(id) {
-        debugger;
+        console.log('deleteEntity');
         return this.api.delete(`/api/admin/languages/${id}`);
     }
     getForm() {
@@ -3601,6 +3601,7 @@ class CrudComponent {
         this.editState = 2;
     }
     remove(id) {
+        console.log('crud.remove');
         const entity = this.find(id);
         this.deleteEntity(id).subscribe(() => {
             this.entities = this.entities.filter(e => e !== entity);

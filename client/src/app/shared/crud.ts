@@ -70,6 +70,7 @@ export class CrudComponent<T> {
   }
 
   remove(id: string) {
+    console.log('crud.remove');
     const entity = this.find(id);
     this.deleteEntity(id).subscribe(() => {
       this.entities = this.entities.filter(e => e !== entity);

@@ -28,7 +28,7 @@ export class LanguagesComponent extends CrudComponent<Language>{
   }
 
   deleteEntity(id: string) {
-    debugger
+    console.log('deleteEntity');
     return this.api.delete<Language>(`/api/admin/languages/${id}`);
   }
 
