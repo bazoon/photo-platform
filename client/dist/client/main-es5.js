@@ -887,10 +887,9 @@ var ApiService = /** @class */ (function () {
         return result;
     };
     ApiService.prototype.delete = function (url) {
-        var _this = this;
-        var result = this.http.delete(url);
-        result.subscribe(function () { }, function (e) { return _this.errorHandler(e); });
-        return result;
+        return this.http.delete(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["share"])());
+        // result.subscribe(() => {}, e => this.errorHandler(e));
+        // return result;
     };
     ApiService.prototype.errorHandler = function (e) {
         if (e.status === 401 || !this.cookie.checkCookie()) {
