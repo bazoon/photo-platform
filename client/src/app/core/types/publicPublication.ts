@@ -5,7 +5,8 @@ export interface PublicPublication {
   visible?: number,
   digest: string,
   content: string,
-  name: string
+  name: string,
+  pubtype?: number
 };
 
 export const emptyPublicPublication: PublicPublication = {
@@ -15,5 +16,5 @@ export const emptyPublicPublication: PublicPublication = {
   visible: undefined,
   digest: '',
   content: '',
-  name: ''
+  name: '',
 };
