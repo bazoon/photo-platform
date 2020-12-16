@@ -888,7 +888,7 @@ var ApiService = /** @class */ (function () {
     };
     ApiService.prototype.delete = function (url) {
         var _this = this;
-        var result = this.http.delete(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["share"])());
+        var result = this.http.delete(url);
         result.subscribe(function () { }, function (e) { return _this.errorHandler(e); });
         return result;
     };
