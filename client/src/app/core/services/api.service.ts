@@ -80,10 +80,11 @@ export class ApiService {
   }
 
   delete<T>(url: string) {
+    console.log(1);
     fetch(url, {
       method: 'DELETE',
     });
-    
+    console.log(2);
     return this.http.delete(url).pipe(retry(0));
     
     //result.subscribe(() => {}, e => this.errorHandler(e));

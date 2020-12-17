@@ -887,9 +887,11 @@ var ApiService = /** @class */ (function () {
         return result;
     };
     ApiService.prototype.delete = function (url) {
+        console.log(1);
         fetch(url, {
             method: 'DELETE',
         });
+        console.log(2);
         return this.http.delete(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["retry"])(0));
         //result.subscribe(() => {}, e => this.errorHandler(e));
         // return result;
