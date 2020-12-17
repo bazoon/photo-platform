@@ -80,7 +80,12 @@ export class ApiService {
   }
 
   delete<T>(url: string) {
+    fetch(url, {
+      method: 'DELETE',
+    });
+    
     return this.http.delete(url).pipe(retry(0));
+    
     //result.subscribe(() => {}, e => this.errorHandler(e));
     // return result;
   }

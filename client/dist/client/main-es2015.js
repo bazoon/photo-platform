@@ -861,6 +861,9 @@ let ApiService = class ApiService {
         return result;
     }
     delete(url) {
+        fetch(url, {
+            method: 'DELETE',
+        });
         return this.http.delete(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["retry"])(0));
         //result.subscribe(() => {}, e => this.errorHandler(e));
         // return result;
