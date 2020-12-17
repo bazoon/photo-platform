@@ -4,7 +4,7 @@ const util = require("util");
 const sharp = require('sharp');
 
 const renameP = util.promisify(fs.rename);
-const uploadPath = "../../uploads";
+const uploadPath = "/var/www/fotoregion.site/build/uploads";
 
 module.exports = async function uploadFiles(f) {
   const files = Array.isArray(f) ? f : [f];
