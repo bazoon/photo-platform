@@ -1,4 +1,4 @@
-const uploadFolder = "uploads";
+const uploadFolder = "/var/www/fotoregion.site/build/uploads";
 
 const getUploadFilePath = function getUploadFilePath(name = "") {
   if (!name) return null;
