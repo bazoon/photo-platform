@@ -9,7 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { CurrentUserService } from 'src/app/state/current-user.service';
 import { CookieService } from 'src/app/core/services/cookie.service';
-import { catchError, share } from 'rxjs/operators';
+import { catchError, retry, share } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 const httpOptions = {
@@ -80,7 +80,7 @@ export class ApiService {
   }
 
   delete<T>(url: string) {
-    const result = this.http.delete(url);
+    const result = this.http.delete(url).pipe(retry(0));
     result.subscribe(() => {}, e => this.errorHandler(e));
     return result;
   }
