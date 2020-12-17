@@ -9,8 +9,8 @@ const uploadPath = "../../uploads";
 module.exports = async function uploadFiles(f) {
   const files = Array.isArray(f) ? f : [f];
   files.forEach(async f => {
-    const targetPath = path.join(__dirname, `${uploadPath}/${f.name}`);
-    const thumbTargetPath = path.join(__dirname, `${uploadPath}/thumb-${f.name}`);
+    const targetPath = `${uploadPath}/${f.name}`;
+    const thumbTargetPath = `${uploadPath}/thumb-${f.name}`;
     await renameP(f.path, targetPath);
     await sharp(targetPath).resize(200, 200).toFile(thumbTargetPath);
   });
