@@ -14,7 +14,7 @@ reset:
 reload:
 	git pull
 	make restart
-ng-reloadd:
+ng-reload:
 	sudo systemctl restart nginx
 
 
