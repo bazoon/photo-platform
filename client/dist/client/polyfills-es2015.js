@@ -6140,9 +6140,7 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./src/polyfills/setImmediate.js ***!
   \***************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
+/***/ (function(module, exports) {
 
 (function (global, undefined) {
     "use strict";

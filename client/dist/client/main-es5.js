@@ -178,7 +178,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"main\">\n  <div class=\"competition-header\">\n    <div class=\"salone-name\">\n      {{about && about.saloneName}}\n    </div>\n    <div class=\"contest-name\">\n      {{about && about.contestName}}\n      <span>{{about && about.years}}</span>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"main\">\n  <div class=\"competition-header\">\n    <div class=\"salone-name\">\n      {{about && about.saloneName}}\n    </div>\n    <div class=\"contest-name\">\n      {{about && about.contestName}}\n      <span>{{about && about.years}}</span>\n    </div>\n  </div>\n\t<div [innerHTML]=\"about && about.content\"></div>\n</div>\n"
 
 /***/ }),
 
@@ -887,13 +887,10 @@ var ApiService = /** @class */ (function () {
         return result;
     };
     ApiService.prototype.delete = function (url) {
-        console.log(1);
-        fetch(url, {
-            method: 'DELETE',
-        });
-        console.log(2);
-        return this.http.delete(url).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_6__["retry"])(0));
-        //result.subscribe(() => {}, e => this.errorHandler(e));
+        // const result = this.http.delete(url).pipe(retry(0));
+        // result.subscribe(() => {}, e => this.errorHandler(e));
+        return this.http.delete(url);
+        // result.subscribe(() => {}, e => this.errorHandler(e));
         // return result;
     };
     ApiService.prototype.errorHandler = function (e) {
