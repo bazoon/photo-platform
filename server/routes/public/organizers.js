@@ -20,13 +20,13 @@ router.get('/', async ctx => {
   });
 
   ctx.body = {
-    name: organizer.name,
-    emailPub: organizer.email_pub,
-    www: organizer.www,
-    phone: organizer.phone,
-    addressLine1: organizer.address_line1,
-    officer: organizer.officer,
-    logo: getUploadPath(organizer.logo)
+    name: organizer && organizer.name,
+    emailPub: organizer && organizer.email_pub,
+    www: organizer && organizer.www,
+    phone: organizer && organizer.phone,
+    addressLine1: organizer && organizer.address_line1,
+    officer: organizer && organizer.officer,
+    logo: organizer && getUploadPath(organizer.logo)
   };
 });
 

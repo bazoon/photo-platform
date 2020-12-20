@@ -8,13 +8,18 @@ const camelizeObject = require('../../utils/camelizeObject');
 router.get('/all/:id/:lang', async ctx => {
   const { id, lang } = ctx.params;
 
-  const query = `select section_names.name, sections.id, max_count_img
-                from section_names, languages, sections
-                where section_names.language_id=languages.id and sections.contest_id=:id and section_names.section_id=sections.id and languages.short=:lang
+  const query = `select section_names.name, sections.id, max_count_img, max_weight, date_stop > :now as can_change
+                from section_names, languages, sections, contests
+                where section_names.language_id=languages.id and
+                sections.contest_id=:id and
+                section_names.section_id=sections.id and
+                languages.short=:lang and
+                sections.contest_id=contests.id
+
   `;
 
   const [translations] = await models.sequelize.query(query, {
-    replacements: { id, lang }
+    replacements: { id, lang, now: new Date()}
   });
 
   ctx.body = R.map(camelizeObject, translations);

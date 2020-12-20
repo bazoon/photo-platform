@@ -23,6 +23,25 @@ router.post('/:id/uploads', koaBody({ multipart: true }), async ctx => {
   const names = JSON.parse(ctx.request.body.names);
   const files = file ? (Array.isArray(file) ? file : [file]) : [];
 
+
+  //search for contest image props
+  const query = `
+    select c.maxsize, c.max_weight, s.max_count_img
+    from 
+      sections s, contests c
+    where
+      s.contest_id = c.id and
+      s.id = :sectionId
+  `;
+
+  const data = await models.sequelize.query(query, {
+    replacements: {
+      sectionId: id
+    }
+  });
+
+  const {maxsize, max_weight, max_count_img} = data[0][0];
+
   await uploadFiles(files);
 
   const section = await models.Section.findOne({

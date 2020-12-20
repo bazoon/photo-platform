@@ -20,6 +20,7 @@ router.get('/', async ctx => {
   });
 
   ctx.body = contests.map(c => {
+
     return {
       id: c.id,
       subname: c.subname,
@@ -88,7 +89,7 @@ router.get('/about/:lang', async ctx => {
   const { host } = ctx.request.header;
   const [domain] = host.split(':');
   const query = `
-    select contest_abouts.name as contest_name, salone_abouts.name as salone_name, contests.years
+    select contest_abouts.name as contest_name, salone_abouts.name as salone_name, salone_abouts.content as content, contests.years
     from salones, contests, contest_abouts, salone_abouts, languages
     where contests.salone_id=salones.id and salones.domain=:domain and contest_abouts.contest_id=contests.id  and salone_abouts.salone_id=salones.id and
     contest_abouts.language_id=languages.id and salone_abouts.language_id=languages.id and languages.short=:lang

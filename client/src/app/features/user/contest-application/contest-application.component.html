@@ -33,6 +33,7 @@
       <div class="thumb-controls">
         <i
           nz-icon
+		  [style.display]="section && section.canChange ? 'inline' : 'none'"
           nzType="delete"
           nzTheme="outline"
           (click)="removeImage(file.id)"
@@ -49,12 +50,16 @@
         [nzBeforeUpload]="beforeUpload"
         [nzShowUploadList]="false"
       >
-        <button nz-button>
+	  <button nz-button [disabled]="!canUpload">
           <i nz-icon nzType="upload"></i>
           <span>Select File</span>
         </button>
       </nz-upload>
     </div>
+
+	<div class="upload-error">
+		{{errorMessage}}
+	</div>
 
     <div class="file-list">
       <div *ngFor="let file of fileList">

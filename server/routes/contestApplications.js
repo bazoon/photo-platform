@@ -1,9 +1,9 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const models = require("../../models");
-const R = require("ramda");
+const models = require('../../models');
+const R = require('ramda');
 
-router.get("/", async ctx => {
+router.get('/', async ctx => {
   const { id } = ctx.user;
   const [pub] = await models.sequelize.query(`
     select salones.name, contests.subname as contest, contest_id, date_reg, contests.section_count, reg_state, rejection_reason, payment 
@@ -30,7 +30,7 @@ router.get("/", async ctx => {
   }, pub)[0];
 });
 
-router.post("/", async ctx => {
+router.post('/', async ctx => {
   const { id } = ctx.user;
   const { contestId, sectionCount } = ctx.request.body;
 
@@ -56,10 +56,11 @@ router.post("/", async ctx => {
     });
   }
 
+
   ctx.body = {
     id: contestId,
     canApply: false,
-    canPostPhotos: application.reg_state === 1,
+    canPostPhotos: application.reg_state === 1 && contest.date_stop < new Date(),
     regState: application.regState
   };
 

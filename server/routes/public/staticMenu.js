@@ -12,7 +12,8 @@ router.get('/', async ctx => {
     contest_menus.lexicon_id=lexicons.id and
     contest_menus.contest_id=contests.id and contests.salone_id=salones.id and 
     contest_menus.id=publications.contest_menu_id and domain=:domain and
-    publications.date_show <= :now
+    publications.date_show <= :now and
+    contests.date_start = (select max(c1.date_start) from contests c1 where c1.salone_id=salones.id)
   `;
 
   let [contestMenus] = await models.sequelize.query(query, {

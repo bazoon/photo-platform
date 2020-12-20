@@ -15,8 +15,11 @@ export class ContestApplicationComponent implements OnInit {
   sections: Array<ContestSection> = [];
   fileList: Array<UploadFile> = [];
   currentSection?: ContestSection;
+  section?: ContestSection;
   fileNames: { [index: string]: string } = {};
   files: Array<Photowork> = [];
+  errorMessage?: String
+  canUpload = false
 
   constructor(
     private api: ApiService,
@@ -52,19 +55,34 @@ export class ContestApplicationComponent implements OnInit {
 
   beforeUpload = (file: UploadFile): boolean => {
     this.fileList = this.fileList.concat(file);
-
     return false;
   };
 
+  getCurrentSection() {
+    return this.sections.find(s => s.id === this.currentSection);
+  }
+
   upload() {
     const formData = new FormData();
+
     this.fileList.forEach((file: any) => {
       formData.append('file', file);
     });
+  
+    const section = this.getCurrentSection();
+    const maxWeight = section.maxWeight;
+    const hasOversize = this.fileList.some(f => f.size > maxWeight * 1024);
 
-    const keys = Object.keys(this.fileNames);
+    if (hasOversize) {
+      this.errorMessage = `Размер файлов не может превышать ${maxWeight} килобайт`;
+      return;
+    } else {
+      this.errorMessage = '';
+    }
+
     formData.append('names', JSON.stringify(this.fileNames));
-    console.log(9991);
+ 
+
     this.api
       .post<any>(`api/contestSections/${this.currentSection}/uploads`, formData)
       .subscribe(() => {
@@ -78,7 +96,14 @@ export class ContestApplicationComponent implements OnInit {
   }
 
   handleChangeSection() {
+    this.section = this.getCurrentSection();
     this.loadImages();
+  }
+
+  updateUploadPossibility() {
+    const section = this.getCurrentSection();
+    const {maxCountImg} = section;
+    this.canUpload = this.files.length < maxCountImg;
   }
 
   loadImages() {
@@ -86,12 +111,14 @@ export class ContestApplicationComponent implements OnInit {
       .get<any>(`api/contestSections/${this.currentSection}/files`)
       .subscribe(files => {
         this.files = files;
+        this.updateUploadPossibility()
       });
   }
 
   removeImage(id: number) {
     this.api.delete<any>(`api/contestSections/files/${id}`).subscribe(() => {
       this.files = this.files.filter(f => f.id !== id);
+      this.updateUploadPossibility();
     });
   }
 }
