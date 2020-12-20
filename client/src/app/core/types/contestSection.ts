@@ -3,7 +3,8 @@ export interface ContestSection {
   contestId?: number;
   maxCountImg?: number;
   name: string;
-  canChange: boolean
+  canChange: boolean,
+  maxWeight?: number
 }
 
 export const emptyContestSection: ContestSection = {
@@ -11,5 +12,6 @@ export const emptyContestSection: ContestSection = {
   contestId: undefined,
   maxCountImg: undefined,
   name: '',
-  canChange: false
+  canChange: false,
+  maxWeight: 0
 };
