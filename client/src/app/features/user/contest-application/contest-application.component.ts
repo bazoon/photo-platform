@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class ContestApplicationComponent implements OnInit {
   sections: Array<ContestSection> = [];
   fileList: Array<UploadFile> = [];
-  currentSection?: ContestSection;
+  currentSection?: number;
   section?: ContestSection;
   fileNames: { [index: string]: string } = {};
   files: Array<Photowork> = [];
@@ -103,7 +103,7 @@ export class ContestApplicationComponent implements OnInit {
   updateUploadPossibility() {
     const section = this.getCurrentSection();
     const maxCountImg = section && section.maxCountImg;
-    this.canUpload = this.files.length < maxCountImg;
+    this.canUpload = this.files && this.files.length < maxCountImg;
   }
 
   loadImages() {
