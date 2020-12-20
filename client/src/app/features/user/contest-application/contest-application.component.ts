@@ -70,7 +70,7 @@ export class ContestApplicationComponent implements OnInit {
     });
   
     const section = this.getCurrentSection();
-    const maxWeight = section.maxWeight;
+    const maxWeight = section && section.maxWeight;
     const hasOversize = this.fileList.some(f => f.size > maxWeight * 1024);
 
     if (hasOversize) {
@@ -102,7 +102,7 @@ export class ContestApplicationComponent implements OnInit {
 
   updateUploadPossibility() {
     const section = this.getCurrentSection();
-    const {maxCountImg} = section;
+    const maxCountImg = section && section.maxCountImg;
     this.canUpload = this.files.length < maxCountImg;
   }
 
