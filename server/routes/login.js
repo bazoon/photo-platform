@@ -186,7 +186,9 @@ router.post('/login-vk', async ctx => {
   const { data } = await axios.get(
     `https://api.vk.com/method/users.get?user_ids=${user_id}&access_token=${access_token}&v=5.102`
   );
+  console.log(data);
   const { first_name, last_name } = data.response[0];
+
 
   let user = await models.User.findOne({
     where: {
