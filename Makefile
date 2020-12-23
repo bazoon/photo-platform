@@ -22,6 +22,11 @@ build:
 copy:
 	find /var/www/fotoregion.site/build  -maxdepth 1 -type f -delete; cp -R /var/www/fotoregion.site/photo-platform/client/dist/client/. /var/www/fotoregion.site/build
 
+all:
+	git pull
+	make build
+	make copy
+	make restart
 
 .PHONY: lint lintAll build
 
