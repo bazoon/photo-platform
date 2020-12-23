@@ -1,4 +1,4 @@
-<div class="main">
+<div class="main ck-content">
   <div class="competition-header">
     <div class="salone-name">
       {{about && about.saloneName}}
@@ -8,5 +8,5 @@
       <span>{{about && about.years}}</span>
     </div>
   </div>
-  <div class="ck-content" [innerHTML]="about && about.content"></div>
+  <div [innerHTML]="about && about.content"></div>
 </div>
