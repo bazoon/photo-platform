@@ -59,10 +59,10 @@ router.get('/', async ctx => {
       title: 'photos',
       url: '/photos/sections'
     },
-    {
-      title: 'about-us',
-      url: '/about-us'
-    },
+    // {
+    //   title: 'about-us',
+    //   url: '/about-us'
+    // },
     {
       title: 'about-contest',
       children: [

@@ -23,7 +23,6 @@ export class VkComponent implements OnInit {
         acc[key] = e[1];
         return acc;
       }, {});
-      debugger
       this.currentUser.loginVk(payload);
     });
   }
