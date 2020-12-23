@@ -3,12 +3,12 @@ import {
   ContestAbout,
   emptyContestAbout
 } from '../../../core/types/contestAbout';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import editorConfig from '../../../core/config/editorConfig';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import {ApiService} from 'src/app/core/services/api.service';
 import {LanguagesService} from 'src/app/core/services/languages.service';
 
+import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 
 @Component({
   selector: 'app-contest-about',
@@ -17,7 +17,7 @@ import {LanguagesService} from 'src/app/core/services/languages.service';
 })
 export class ContestAboutComponent implements OnChanges {
   @Input() contestId = -1;
-  Editor = ClassicEditor;
+//   Editor = ClassicEditor;
   ckconfig = editorConfig;
   isAboutVisible = false;
   isAboutsLoading = false;
@@ -109,6 +109,13 @@ export class ContestAboutComponent implements OnChanges {
               });
           });
       }
+  }
+
+
+  onReady(editor) {
+    editor.ui.getEditableElement().parentElement.insertBefore(
+            editor.ui.view.toolbar.element,
+            editor.ui.getEditableElement())
   }
 
   removeAbout(id: number) {

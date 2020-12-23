@@ -179,6 +179,7 @@
         formControlName="content"
         [editor]="Editor"
         [config]="ckconfig"
+		(ready)="onReady($event)"
       ></ckeditor>
     </nz-form-item>
     <nz-form-item>
@@ -187,6 +188,7 @@
         formControlName="digest"
         [editor]="Editor"
         [config]="ckconfig"
+		(ready)="onReady($event)"
       ></ckeditor>
     </nz-form-item>
   </form>

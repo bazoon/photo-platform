@@ -13,14 +13,17 @@ import { Organizer } from '../../../core/types/organizer';
 import { SaloneType } from '../../../core/types/saloneType';
 import { SaloneAbout, emptySaloneAbout } from '../../../core/types/saloneAbout';
 import { Language } from '../../../core/types/language';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { RegularTypes } from '../../../core/services/regularTypes';
 import { PrivateTypes } from '../../../core/services/privateTypes';
 import {
   UploadAdapter,
   TheUploadAdapterPlugin
 } from '../../../core/misc/uploadAdapter';
+
+
+import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 import editorConfig from '../../../core/config/editorConfig';
+
 
 @Component({
   selector: 'app-salone',
@@ -28,6 +31,7 @@ import editorConfig from '../../../core/config/editorConfig';
   styleUrls: ['./salone.component.less']
 })
 export class SaloneComponent extends CrudComponent<Salone> {
+  isEditorInitialized = false
   organizers: Array<Organizer> = [];
   saloneTypes: Array<SaloneType> = [];
   regularTypes: Array<any>;
@@ -46,8 +50,8 @@ export class SaloneComponent extends CrudComponent<Salone> {
   isEditingAbout = 0;
   editingAbout = emptySaloneAbout;
   isAboutsLoading = false;
-  Editor = ClassicEditor;
-  ckconfig = editorConfig;
+  ckconfig = editorConfig
+  Editor = DecoupledEditor
 
   constructor(
     protected fb: FormBuilder,
@@ -148,6 +152,15 @@ export class SaloneComponent extends CrudComponent<Salone> {
         this.editingAbout = about;
         this.aboutForm.patchValue(this.editingAbout);
       });
+  }
+
+  onReady(editor) {
+    editor.ui.getEditableElement().parentElement.insertBefore(
+            editor.ui.view.toolbar.element,
+            editor.ui.getEditableElement())
+  }
+
+  onOpenAbout() {
   }
 
   handleCancelAbout() {
