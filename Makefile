@@ -16,11 +16,13 @@ reload:
 	make restart
 ng-reload:
 	sudo systemctl restart nginx
+build:
+	cd client;ng build;cd /var/www/fotoregion.site/photo-platform
+
 copy:
-	rm -rf /var/www/fotoregion.site/build
 	cp -R /var/www/fotoregion.site/photo-platform/client/dist/client /var/www/fotoregion.site/build
 
 
-.PHONY: lint lintAll
+.PHONY: lint lintAll build
 
 
