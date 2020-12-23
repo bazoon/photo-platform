@@ -267,7 +267,7 @@ router.post('/login-google', async ctx => {
       email,
       firstName: given_name,
       lastName: family_name,
-      nickName,
+      nickName: given_name,
       avatar: 'none',
       salt,
       psw: hashedPassword,
