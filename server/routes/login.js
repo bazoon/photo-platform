@@ -183,12 +183,10 @@ router.post('/login-vk', async ctx => {
 
   var salt = bcrypt.genSaltSync(10);
   var hashedPassword = bcrypt.hashSync(Math.random() + '', salt);
-  const { data } = await axios.get(
-    `https://api.vk.com/method/users.get?user_ids=${user_id}&access_token=${access_token}&v=5.102`
-  );
-  console.log(data);
-  const { first_name, last_name } = data.response[0];
-
+  // const { data } = await axios.get(
+  //   `https://api.vk.com/method/users.get?user_ids=${user_id}&access_token=${access_token}&v=5.102`
+  // );
+  // const { first_name, last_name } = data.response[0];
 
   let user = await models.User.findOne({
     where: {
@@ -199,9 +197,9 @@ router.post('/login-vk', async ctx => {
   if (!user) {
     user = await models.User.create({
       email,
-      firstName: first_name,
-      lastName: last_name,
-      nickName: first_name,
+      firstName: email,
+      lastName: '',
+      nickName: email,
       avatar: 'none',
       salt,
       psw: hashedPassword,
