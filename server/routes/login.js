@@ -170,7 +170,7 @@ router.post('/login-fb', async ctx => {
     lastName: user.lastName,
     nickName: user.nickName,
     phone: user.phone,
-    avatar: geAtUploadFilePath(user.avatar),
+    avatar: getUploadFilePath(user.avatar),
     userType: user.userType,
     emailState: user.emailState,
     rowState: user.rowState,
