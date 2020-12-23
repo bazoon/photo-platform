@@ -5,7 +5,7 @@ import { CurrentUserService } from '../../state/current-user.service';
 const googleId =
   '1051258655371-avvqdidjqst2lr3j9fl5b5mtib5v8e9i.apps.googleusercontent.com';
 
-const fbLink = `https://www.facebook.com/v4.0/dialog/oauth?scope=email&client_id=521960325035333&redirect_uri=${location.origin}/oauth/fb&state=somestate&response_type=token`;
+const fbLink = `https://www.facebook.com/v4.0/dialog/oauth?scope=email&client_id=3530004347107670&redirect_uri=${location.origin}/oauth/fb&state=somestate&response_type=token`;
 
 const vkLink = `https://oauth.vk.com/authorize?scope=email&client_id=7176269&display=page&redirect_uri=${location.origin}/oauth/vk?scope=email&response_type=token&v=5.59`;
 
