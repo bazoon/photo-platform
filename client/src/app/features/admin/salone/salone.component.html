@@ -136,7 +136,7 @@
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
-        <ckeditor formControlName="content" [editor]="Editor" [config]="ckconfig"></ckeditor>
+        <ckeditor formControlName="content" [editor]="Editor" [config]="ckconfig" (ready)="onReady($event)"></ckeditor>
       </nz-form-item>
     </form>
 

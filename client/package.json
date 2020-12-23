@@ -21,6 +21,7 @@
     "@angular/router": "^8.2.9",
     "@ckeditor/ckeditor5-angular": "^1.1.0",
     "@ckeditor/ckeditor5-build-classic": "^12.4.0",
+    "@ckeditor/ckeditor5-build-decoupled-document": "^24.0.0",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
     "g": "^2.0.1",

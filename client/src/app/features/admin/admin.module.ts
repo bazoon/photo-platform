@@ -12,7 +12,6 @@ import { SaloneTypeComponent } from './salone-type/salone-type.component';
 import { SaloneComponent } from './salone/salone.component';
 
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { ContestComponent } from './contest/contest.component';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';

@@ -63,11 +63,16 @@
       </nz-form-item>
       <nz-form-item>
         <nz-form-label nzFor="thesis">Thesis</nz-form-label>
-        <ckeditor formControlName="thesis" [editor]="Editor" [config]="ckconfig"></ckeditor>
+        <ckeditor 
+			formControlName="thesis"
+			[editor]="Editor"
+			[config]="ckconfig"
+			(ready)="onReady($event)"
+		></ckeditor>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label nzFor="rules">Rules</nz-form-label>
-        <ckeditor formControlName="rules" [editor]="Editor" [config]="ckconfig"></ckeditor>
+        <ckeditor formControlName="rules" [editor]="Editor" [config]="ckconfig" (ready)="onReady($event)" ></ckeditor>
       </nz-form-item>
     </form>
   </nz-modal>

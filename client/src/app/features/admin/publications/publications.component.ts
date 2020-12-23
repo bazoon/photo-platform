@@ -14,8 +14,11 @@ import {
   PublicationText,
   emptyPublicationText
 } from '../../../core/types/publicationText';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 import editorConfig from '../../../core/config/editorConfig';
+
+import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
+
 
 @Component({
   selector: 'app-publications',
@@ -39,7 +42,8 @@ export class PublicationsComponent implements OnInit {
     content: [],
     digest: []
   });
-  Editor = ClassicEditor;
+  
+  Editor = DecoupledEditor;
   ckconfig = editorConfig;
   selectedText?: PublicationText;
   pubType?: number;
@@ -50,6 +54,12 @@ export class PublicationsComponent implements OnInit {
 
   ngOnInit() {
     this.getEntities();
+  }
+
+  onReady(editor) {
+    editor.ui.getEditableElement().parentElement.insertBefore(
+            editor.ui.view.toolbar.element,
+            editor.ui.getEditableElement())
   }
 
   append() {
