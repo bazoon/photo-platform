@@ -11,7 +11,7 @@ router.get('/sections/:lang', async ctx => {
   const query = `
         select sections.id,(select photoworks.filename from photoworks where photoworks.section_id=sections.id limit 1), section_names.name 
         from sections, contests, salones, section_names, languages
-        where sections.contest_id=contests.id and contests.salone_id=salones.id and salones.domain='fotoregion.ru' and
+        where sections.contest_id=contests.id and contests.salone_id=salones.id and salones.domain=:domain and
         section_names.section_id=sections.id and languages.short=:lang and section_names.language_id=languages.id
   `;
 
