@@ -2,7 +2,7 @@ const Router = require('koa-router');
 const router = new Router();
 const mail = require('../../services/mail');
 
-router.get('/:test', async ctx => {
+router.get('/', async ctx => {
   const config = {
     host: process.env.MAIL_HOST,
     user: process.env.MAIL_USER,
