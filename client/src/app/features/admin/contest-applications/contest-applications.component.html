@@ -1,26 +1,28 @@
 <h2>Заявки</h2>
-<nz-table [nzData]="applications" [nzScroll]="{ x: '700px', y: '240px' }">
+<nz-table [nzData]="applications" [nzScroll]="{ x: '700px', y: '540px' }">
   <thead>
     <tr>
-      <th nzWidth="100px"></th>
-      <th nzWidth="200px">User</th>
-      <th nzWidth="200px">Date</th>
-      <th nzWidth="200px">Sections</th>
-      <th nzWidth="200px">Payment</th>
-      <th nzWidth="200px">State</th>
+      <th width="100px" nzWidth="100px"></th>
+      <th width="100px" nzWidth="200px">User</th>
+      <th width="100px" nzWidth="200px">Email</th>
+      <th width="100px" nzWidth="200px">Date</th>
+      <th width="100px" nzWidth="200px">Sections</th>
+      <th width="100px" nzWidth="200px">Payment</th>
+      <th width="100px" nzWidth="200px">State</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let data of applications">
-      <td style="cursor:pointer">
+		<td width="100px" nzWidth="100px" style="cursor:pointer">
         <i *rbacShow="['superAdmin', 'admin', 'moder']" (click)="approve(data.id)" nz-icon nzType="check" nzTheme="outline" style="margin-right: 10px"></i>
         <i *rbacShow="['superAdmin', 'admin', 'moder']" nz-icon nzType="stop" nzTheme="outline" (click)="decline(data.id)"></i>
       </td>
-      <td nzWidth="200px">{{data.user}}</td>
-      <td nzWidth="200px">{{data.dateReg}}</td>
-      <td nzWidth="200px">{{data.sectionCount}}</td>
-      <td nzWidth="200px">{{data.payment}}</td>
-      <td nzWidth="200px">{{data.regState | regState}}</td>
+      <td width="100px" nzWidth="200px">{{data.name}}</td>
+      <td width="100px" nzWidth="200px">{{data.email}}</td>
+      <td width="100px" nzWidth="200px">{{data.dateReg}}</td>
+      <td width="100px" nzWidth="200px">{{data.sectionCount}}</td>
+      <td width="100px" nzWidth="200px">{{data.payment}}</td>
+      <td width="100px" nzWidth="200px">{{data.regState | regState}}</td>
     </tr>
   </tbody>
 </nz-table>

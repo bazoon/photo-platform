@@ -1,9 +1,9 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const models = require("../../../models");
-const R = require("ramda");
+const models = require('../../../models');
+const R = require('ramda');
 
-router.post("/approves/:id", async ctx => {
+router.post('/approves/:id', async ctx => {
   const { id } = ctx.params;
   console.log(id)
   const application = await models.RegistrationContest.findOne({
@@ -22,7 +22,7 @@ router.post("/approves/:id", async ctx => {
   };
 });
 
-router.post("/declines/:id", async ctx => {
+router.post('/declines/:id', async ctx => {
   const { id } = ctx.params;
   const application = await models.RegistrationContest.findOne({
     where: {
@@ -41,15 +41,16 @@ router.post("/declines/:id", async ctx => {
 });
 
 
-router.get("/:contestId", async ctx => {
+router.get('/:contestId', async ctx => {
   const { contestId } = ctx.params;
 
   const [applications] = await models.sequelize.query(`
     select registration_contests.id, salones.name, contests.subname as contest, contest_id, date_reg, 
-    contests.section_count, reg_state, rejection_reason, payment, contests.pay_type 
-    from registration_contests, contests, salones
+    contests.section_count, reg_state, rejection_reason, payment, contests.pay_type, users.first_name, users.last_name, users.email 
+    from registration_contests, contests, salones, users
     where registration_contests.contest_id=contests.id and registration_contests.contest_id=:contestId and
-    contests.salone_id=salones.id
+    contests.salone_id=salones.id and registration_contests.user_id=users.id
+
     `, {
       replacements: {
         contestId
@@ -67,14 +68,16 @@ router.get("/:contestId", async ctx => {
       rejectionReason: a.rejection_reason,
       payment: a.payment,
       regState: a.reg_state,
-      payType: a.pay_type
+      payType: a.pay_type,
+      name: a.first_name + ' ' + a.last_name,
+      email: a.email
     };
   });
 });
 
 
 
-router.post("/", async ctx => {
+router.post('/', async ctx => {
   const { id } = ctx.user;
   const { contestId, sectionCount } = ctx.request.body;
 
