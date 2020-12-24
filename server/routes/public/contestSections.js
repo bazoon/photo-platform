@@ -27,11 +27,18 @@ router.get('/all/:id/:lang', async ctx => {
 
 router.get('/:sectionId/files', async ctx => {
   const { sectionId } = ctx.params;
-  const files = await models.Photowork.findAll({
-    where: {
-      sectionId
-    }
+  const userId = ctx.user.id;
+
+
+  const query = `
+    SELECT photoworks.id, photoworks.name, photoworks.filename, photoworks.moder, registration_contests.user_id from photoworks, registration_contests WHERE photoworks."section_id" = :sectionId and registration_contests.id = photoworks.registration_contest_id and
+    user_id=:userId
+  `;
+
+  const [files] = await models.sequelize.query(query, {
+    replacements: { userId, sectionId }
   });
+  
 
   ctx.body = files.map(f => {
     return {
