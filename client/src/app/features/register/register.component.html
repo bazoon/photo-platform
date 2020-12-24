@@ -73,10 +73,30 @@
           </button>
         </nz-upload>
       </nz-form-control>
-    </nz-form-item>
+	</nz-form-item>
+
+    <div style="padding-left: 25%">
+	  <nz-form-control>	
+		  <label nz-checkbox formControlName="iReadAboutPersonal">
+          <span>{{'iReadAboutPersonal' | translate }}</span>
+        </label>
+	  </nz-form-control>
+	  <nz-form-control>	
+		  <label nz-checkbox formControlName="iConfirmAgreement">
+          <span>{{'iConfirmAgreement' | translate }}</span>
+        </label>
+	  </nz-form-control>
+	  <nz-form-control>	
+		  <label nz-checkbox formControlName="iKnowAboutCookies">
+          <span>{{'iKnowAboutCookies' | translate }}</span>
+        </label>
+	  </nz-form-control>
+    </div>
+
     <nz-form-item nz-row class="register-area">
       <nz-form-control [nzSpan]="14" [nzOffset]="6">
-        <button nz-button nzType="primary">{{'register' | translate}}</button>
+        <button nz-button nzType="primary" [disabled] = "!validateForm.value.iReadAboutPersonal ||
+			!validateForm.value.iConfirmAgreement || !validateForm.value.iKnowAboutCookies">{{'register' | translate}}</button>
       </nz-form-control>
     </nz-form-item>
   </form>

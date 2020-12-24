@@ -34,13 +34,32 @@
         <label nz-checkbox formControlName="remember">
           <span>{{'rememberMe' | translate }}</span>
         </label>
+	  </nz-form-control>
+	  <nz-form-control>	
+		  <label nz-checkbox formControlName="iReadAboutPersonal">
+          <span>{{'iReadAboutPersonal' | translate }}</span>
+        </label>
+	  </nz-form-control>
+	  <nz-form-control>	
+		  <label nz-checkbox formControlName="iConfirmAgreement">
+          <span>{{'iConfirmAgreement' | translate }}</span>
+        </label>
+	  </nz-form-control>
+	  <nz-form-control>	
+		  <label nz-checkbox formControlName="iKnowAboutCookies">
+          <span>{{'iKnowAboutCookies' | translate }}</span>
+        </label>
+	  </nz-form-control>
         <div class="login-error" *ngIf="currentUser.hasLoginError">
           Неправильный логин или пароль
         </div>
         <a class="login-form-forgot" class="login-form-forgot"
           >{{'forgotPassword' | translate}}</a
         >
-        <button nz-button class="login-form-button" [nzType]="'primary'">
+		{{iReadAboutPersonal}}
+		<button nz-button class="login-form-button" [nzType]="'primary'" 
+			[disabled] = "!validateForm.value.iReadAboutPersonal ||
+			!validateForm.value.iConfirmAgreement || !validateForm.value.iKnowAboutCookies" >
           {{'logIn' | translate}}
         </button>
 
@@ -48,6 +67,7 @@
           >{{'register' | translate}}</a
         >
         <br />
+		<div class="login-social">
         <!-- <a (click)="vkLogin($event)"> -->
         <!--   <i nz-icon style="width: 32px;margin-right: 5px;"> -->
         <!--     <vk-icon></vk-icon> -->
@@ -58,12 +78,13 @@
         <!--     <fb-icon></fb-icon> -->
         <!--   </i> -->
         <!-- </a> -->
-        <a (click)="googleLogin($event)" href="#">
+        <a (click)="googleLogin($event)" href="#" [hidden] = "!validateForm.value.iReadAboutPersonal ||
+			!validateForm.value.iConfirmAgreement || !validateForm.value.iKnowAboutCookies"  >
           <i nz-icon style="width: 32px;">
             <google-icon></google-icon>
           </i>
         </a>
-      </nz-form-control>
+		</div>
     </nz-form-item>
   </form>
 </div>

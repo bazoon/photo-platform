@@ -22,7 +22,10 @@ export class RegisterComponent {
       checkPassword: [null, [Validators.required, this.confirmationValidator]],
       nickName: [null, [Validators.required]],
       phone: [null, [Validators.required]],
-      agree: [false]
+      agree: [false],
+      iReadAboutPersonal: [true],
+      iConfirmAgreement: [true],
+      iKnowAboutCookies: [true],
     });
   }
 

@@ -32,7 +32,10 @@ export class LoginComponent {
     this.validateForm = this.fb.group({
       nickName: [null, [Validators.required]],
       password: [null, [Validators.required]],
-      remember: [true]
+      remember: [true],
+      iReadAboutPersonal: [true],
+      iConfirmAgreement: [true],
+      iKnowAboutCookies: [true],
     });
   }
 
