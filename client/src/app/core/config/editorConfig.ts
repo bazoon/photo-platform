@@ -8,7 +8,22 @@ const editorConfig = {
     viewportTopOffset: 30,
     shouldNotGroupWhenFull: true
   },
-  extraPlugins: [TheUploadAdapterPlugin]
+  extraPlugins: [TheUploadAdapterPlugin],
+	image: {
+			resizeUnit: "%",
+			resizeOptions: [ {
+				name: 'imageResize:original',
+				value: null
+			},
+			{
+				name: 'imageResize:50',
+				value: '50'
+			},
+			{
+				name: 'imageResize:75',
+				value: '75'
+			} ]
+	}
 };
 
 export default editorConfig;

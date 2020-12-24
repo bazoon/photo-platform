@@ -3,12 +3,12 @@ import {
   ContestAbout,
   emptyContestAbout
 } from '../../../core/types/contestAbout';
-import editorConfig from '../../../core/config/editorConfig';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import {ApiService} from 'src/app/core/services/api.service';
 import {LanguagesService} from 'src/app/core/services/languages.service';
 
 import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
+import editorConfig from '../../../core/config/editorConfig';
 
 @Component({
   selector: 'app-contest-about',
@@ -17,7 +17,7 @@ import * as DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 })
 export class ContestAboutComponent implements OnChanges {
   @Input() contestId = -1;
-//   Editor = ClassicEditor;
+  Editor = DecoupledEditor;
   ckconfig = editorConfig;
   isAboutVisible = false;
   isAboutsLoading = false;
