@@ -103,7 +103,7 @@ export class ContestApplicationComponent implements OnInit {
   updateUploadPossibility() {
     const section = this.getCurrentSection();
     const maxCountImg = section && section.maxCountImg;
-    this.canUpload = this.files && this.files.length < maxCountImg;
+    this.canUpload = this.files && this.files.length < maxCountImg && section.canChange;
   }
 
   loadImages() {
