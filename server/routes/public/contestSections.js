@@ -8,7 +8,7 @@ const camelizeObject = require('../../utils/camelizeObject');
 router.get('/all/:id/:lang', async ctx => {
   const { id, lang } = ctx.params;
 
-  const query = `select section_names.name, sections.id, max_count_img, max_weight, date_stop > :now as can_change
+  const query = `select section_names.name, sections.id, max_count_img, max_weight, date_stop >= :now as can_change
                 from section_names, languages, sections, contests
                 where section_names.language_id=languages.id and
                 sections.contest_id=:id and
