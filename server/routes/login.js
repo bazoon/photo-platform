@@ -71,18 +71,19 @@ router.post('/register', koaBody({ multipart: true }), async ctx => {
 router.post('/login', async ctx => {
   const { nickName, password, remember } = ctx.request.body;
 
-  const user = await models.User.findOne({
-    where: {
-      $or: [
-        {
-          nickName: { $eq: nickName }
-        },
-        {
-          email: { $eq: nickName }
-        }
-      ]
+  const query = `
+      select first_name, last_name, nick_name, phone, avatar, user_type, email_state, row_state from users
+      where nick_name=:nickName or email=:nickName
+  `;
+
+  const [users] = await models.sequelize.query(query, {
+    replacements: {
+      nickName
     }
   });
+  
+  const user = users[0];
+  console.log(users);
 
   const isValidUser = await bcrypt.compare(password, user.psw);
 
@@ -94,8 +95,8 @@ router.post('/login', async ctx => {
 
   const token = jwt.sign(
     {
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstName: user.first_name,
+      lastName: user.last_name,
       id: user.id,
       userType: user.type
     },
@@ -112,14 +113,14 @@ router.post('/login', async ctx => {
 
   ctx.body = {
     email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    nickName: user.nickName,
+    firstName: user.first_name,
+    lastName: user.last_name,
+    nickName: user.nick_name,
     phone: user.phone,
     avatar: getUploadFilePath(user.avatar),
-    userType: user.userType,
-    emailState: user.emailState,
-    rowState: user.rowState,
+    userType: user.user_type,
+    emailState: user.email_state,
+    rowState: user.row_state,
     token
   };
 });
