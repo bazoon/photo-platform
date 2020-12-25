@@ -73,7 +73,14 @@ router.post('/login', async ctx => {
 
   const user = await models.User.findOne({
     where: {
-      nickName
+      $or: [
+        {
+          nickName: { $eq: nickName }
+        },
+        {
+          email: { $eq: nickName }
+        }
+      ]
     }
   });
 
