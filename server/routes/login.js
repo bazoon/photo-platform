@@ -7,6 +7,8 @@ const models = require('../../models');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
+const mail = require('../services/mail');
+
 
 const expiresIn = 24 * 60 * 60 * 30;
 
@@ -318,5 +320,39 @@ router.post('/logout', async ctx => {
   ctx.cookies.set('token', null, { httpOnly: false });
   ctx.body = {};
 });
+
+router.post('/restorePassword', async ctx => {
+  const { email } = ctx.request.body;
+  const { host } = ctx.request.header;
+  const [domain] = host.split(':');
+ 
+  const user = await models.User.findOne({
+    where: {
+      email
+    }
+  });
+
+  const link = `${host}/change-password/${user.id}/${user.salt}`;
+
+  const config = {
+    host: process.env.MAIL_HOST,
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+    from: 'admin@fotoregion.site',
+    to: email,
+    subject: 'Ссылка для смены пароля',
+    text: `для смены пароля нажмите на <a href="${link}"}>ссылку</a>`
+  };
+
+  mail.send(config);
+
+
+
+  ctx.body = {
+  };
+});
+
+
+
 
 module.exports = router;

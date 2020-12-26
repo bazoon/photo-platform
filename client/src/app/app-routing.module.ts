@@ -14,6 +14,8 @@ import { AboutComponent } from 'src/app/features/about/about.component';
 import { ThesisComponent } from 'src/app/features/thesis/thesis.component';
 import { RulesComponent } from 'src/app/features/rules/rules.component';
 import { ContactsComponent } from 'src/app/features/contacts/contacts.component';
+import { RestoreFormComponent } from 'src/app/features/restore-form/restore-form.component';
+
 
 const routes: Routes = [
   { path: '', component: MainComponent },
@@ -27,6 +29,7 @@ const routes: Routes = [
   { path: 'oauth/google', component: GoogleComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'admin', loadChildren: './features/admin/admin.module#AdminModule' },
+  { path: 'restore', component: RestoreFormComponent },
   { path: 'user', loadChildren: './features/user/user.module#UserModule' },
   {
     path: 'publications/:parentId/:id',
