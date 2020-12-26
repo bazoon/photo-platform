@@ -390,7 +390,7 @@ router.post('/changePassword', async ctx => {
   const { password, token } = ctx.request.body;
 
   try {
-    const id = jwt.verify(token, process.env.API_TOKEN);
+    const {id} = jwt.verify(token, process.env.API_TOKEN);
 
     const user = await models.User.findOne({
       where: {
