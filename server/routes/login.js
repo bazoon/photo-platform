@@ -409,9 +409,10 @@ router.post('/changePassword', async ctx => {
       ok: true
     };
 
-  } catch(_) {
+  } catch(e) {
     ctx.body = {
-      ok: false
+      ok: false,
+      message: e.message
     };
   }
 
