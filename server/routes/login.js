@@ -72,7 +72,7 @@ router.post('/login', async ctx => {
   const { nickName, password, remember } = ctx.request.body;
 
   const query = `
-      select first_name, last_name, nick_name, phone, avatar, user_type, email_state, row_state, psw from users
+      select id, first_name, last_name, nick_name, phone, avatar, user_type, email_state, row_state, psw from users
       where nick_name=:nickName or email=:nickName
   `;
 
