@@ -53,7 +53,7 @@
         <div class="login-error" *ngIf="currentUser.hasLoginError">
           Неправильный логин или пароль
         </div>
-        <a class="login-form-forgot" class="login-form-forgot"
+        <a routerLink="/restore" class="login-form-forgot" class="login-form-forgot"
           >{{'forgotPassword' | translate}}</a
         >
 		{{iReadAboutPersonal}}
@@ -66,7 +66,6 @@
         <a routerLink="/register" class="user-login"
           >{{'register' | translate}}</a
         >
-		<a routerLink="/restore">Восстановить пароль</a>
         <br/>
 		<div class="login-social">
         <!-- <a (click)="vkLogin($event)"> -->
