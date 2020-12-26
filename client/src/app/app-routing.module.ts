@@ -33,8 +33,8 @@ const routes: Routes = [
   { path: 'restore', component: RestoreFormComponent },
   { path: 'user', loadChildren: './features/user/user.module#UserModule' },
   {
-    path: 'change-passwords/:id/:hash',
-    component: PublicationsComponent
+    path: 'change-password/:id/:hash',
+    component: ChangePasswordComponent
   },
   {
     path: 'publications/:parentId/:id',
