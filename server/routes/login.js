@@ -403,7 +403,7 @@ router.post('/changePassword', async ctx => {
 
     user.password = hashedPassword;
     user.salt = salt;
-    user.save();
+    await user.save();
 
     ctx.body = {
       ok: true
