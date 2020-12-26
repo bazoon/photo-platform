@@ -349,11 +349,13 @@ router.post('/restorePassword', async ctx => {
           <title>Fotoregion</title>
         </head>
         <body>
+          <p style="color: blue">Good day</p>
+          <strong>teext</strong>
           для смены пароля нажмите на <a href="${link}}">ссылку</a>
         </body>
       </html>
     `,
-    text: `
+    text:`
       <!doctype html>
       <html lang="en">
         <head>
@@ -361,6 +363,8 @@ router.post('/restorePassword', async ctx => {
           <title>Fotoregion</title>
         </head>
         <body>
+          <p style="color: blue">Good day</p>
+          <strong>teext</strong>
           для смены пароля нажмите на <a href="${link}}">ссылку</a>
           ${link}
         </body>
