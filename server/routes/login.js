@@ -352,7 +352,7 @@ router.post('/restorePassword', async ctx => {
           для смены пароля нажмите на <a href="${link}}">ссылку</a>
         </body>
       </html>
-    `
+    `,
     text: `
       <!doctype html>
       <html lang="en">
