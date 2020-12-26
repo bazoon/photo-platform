@@ -332,7 +332,17 @@ router.post('/restorePassword', async ctx => {
     }
   });
 
-  const link = `https://${domain}/change-password/${user.id}/${user.salt}`;
+  const token = jwt.sign(
+    {
+      id: user.id,
+    },
+    process.env.API_TOKEN,
+    {
+      expiresIn: expiresIn
+    }
+  );
+
+  const link = `https://${domain}/change-password/${token}`;
 
   const config = {
     host: process.env.MAIL_HOST,

@@ -17,7 +17,6 @@ import { ContactsComponent } from 'src/app/features/contacts/contacts.component'
 import { RestoreFormComponent } from 'src/app/features/restore-form/restore-form.component';
 import { ChangePasswordComponent } from 'src/app/features/change-password/change-password.component';
 
-
 const routes: Routes = [
   { path: '', component: MainComponent },
   { path: 'about-us', component: AboutComponent },
@@ -33,7 +32,7 @@ const routes: Routes = [
   { path: 'restore', component: RestoreFormComponent },
   { path: 'user', loadChildren: './features/user/user.module#UserModule' },
   {
-    path: 'change-password/:id/:hash',
+    path: 'change-password/:token',
     component: ChangePasswordComponent
   },
   {

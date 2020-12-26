@@ -8,8 +8,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./change-password.component.less']
 })
 export class ChangePasswordComponent implements OnInit {
-  id: string;
-  hash: string
+  token: string;
 
   constructor(
     private api: ApiService,
@@ -18,13 +17,12 @@ export class ChangePasswordComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
-      this.id = p.get('id');
-      this.hash = p.get('hash');
+      this.token = p.get('token');
     });
   }
 
   send() {
-    console.log('send');
+    console.log(this.token);
   }
 
 }
