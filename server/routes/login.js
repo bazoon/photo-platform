@@ -332,7 +332,7 @@ router.post('/restorePassword', async ctx => {
     }
   });
 
-  const link = `${host}/change-password/${user.id}/${user.salt}`;
+  const link = `https://${domain}/change-password/${user.id}/${user.salt}`;
 
   const config = {
     host: process.env.MAIL_HOST,
@@ -349,9 +349,7 @@ router.post('/restorePassword', async ctx => {
           <title>Fotoregion</title>
         </head>
         <body>
-          <p style="color: blue">Good day</p>
-          <strong>teext</strong>
-          для смены пароля нажмите на <a href="${link}}">ссылку</a>
+          для смены пароля нажмите на <a href="${link}">ссылку</a>
         </body>
       </html>
     `,
@@ -363,9 +361,7 @@ router.post('/restorePassword', async ctx => {
           <title>Fotoregion</title>
         </head>
         <body>
-          <p style="color: blue">Good day</p>
-          <strong>teext</strong>
-          для смены пароля нажмите на <a href="${link}}">ссылку</a>
+          для смены пароля нажмите на <a href="${link}">ссылку</a>
           ${link}
         </body>
       </html>
