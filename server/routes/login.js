@@ -341,7 +341,6 @@ router.post('/restorePassword', async ctx => {
     from: 'admin@fotoregion.site',
     to: email,
     subject: 'Ссылка для смены пароля',
-    text: 'hello',
     html: `
       <!doctype html>
       <html lang="en">
@@ -354,6 +353,19 @@ router.post('/restorePassword', async ctx => {
         </body>
       </html>
     `
+    text: `
+      <!doctype html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Fotoregion</title>
+        </head>
+        <body>
+          для смены пароля нажмите на <a href="${link}}">ссылку</a>
+          ${link}
+        </body>
+      </html>
+    `,
   };
 
   mail.send(config);
