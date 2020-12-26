@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ChangePasswordComponent implements OnInit {
   token: string;
+  password: string;
 
   constructor(
     private api: ApiService,
@@ -21,8 +22,12 @@ export class ChangePasswordComponent implements OnInit {
     });
   }
 
-  send() {
-    console.log(this.token);
+  submitForm() {
+    this.api
+      .post(
+        `api/changePassword`, { password: this.password, token: this.token }
+      )
+      .subscribe(() => {});
   }
 
 }

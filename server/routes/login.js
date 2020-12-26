@@ -386,7 +386,35 @@ router.post('/restorePassword', async ctx => {
   };
 });
 
+router.post('/changePassword', async ctx => {
+  const { password, token } = ctx.request.body;
 
+  try {
+    const id = jwt.verify(token, process.env.API_TOKEN);
 
+    const user = await models.User.findOne({
+      where: {
+        id
+      }
+    });
+
+    var salt = bcrypt.genSaltSync(10);
+    var hashedPassword = bcrypt.hashSync(password, salt);
+
+    user.password = hashedPassword;
+    user.salt = salt;
+    user.save();
+
+    ctx.body = {
+      ok: true
+    };
+
+  } catch(_) {
+    ctx.body = {
+      ok: false
+    };
+  }
+
+});
 
 module.exports = router;
