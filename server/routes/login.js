@@ -401,7 +401,7 @@ router.post('/changePassword', async ctx => {
     var salt = bcrypt.genSaltSync(10);
     var hashedPassword = bcrypt.hashSync(password, salt);
 
-    user.password = hashedPassword;
+    user.psw = hashedPassword;
     user.salt = salt;
     await user.save();
 
