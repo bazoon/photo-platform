@@ -38,6 +38,7 @@ import { ContactsComponent } from './features/contacts/contacts.component';
 import { AuthService } from 'src/app/core/interceptor/auth.service';
 import { CurrentUserService } from 'src/app/state/current-user.service';
 import { RestoreFormComponent } from './features/restore-form/restore-form.component';
+import { ChangePasswordComponent } from './features/change-password/change-password.component';
 registerLocaleData(ru);
 
 @NgModule({
@@ -60,7 +61,8 @@ registerLocaleData(ru);
     ThesisComponent,
     RulesComponent,
     ContactsComponent,
-    RestoreFormComponent
+    RestoreFormComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,

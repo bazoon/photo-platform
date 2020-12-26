@@ -15,6 +15,7 @@ import { ThesisComponent } from 'src/app/features/thesis/thesis.component';
 import { RulesComponent } from 'src/app/features/rules/rules.component';
 import { ContactsComponent } from 'src/app/features/contacts/contacts.component';
 import { RestoreFormComponent } from 'src/app/features/restore-form/restore-form.component';
+import { ChangePasswordComponent } from 'src/app/features/change-password/change-password.component';
 
 
 const routes: Routes = [
@@ -31,6 +32,10 @@ const routes: Routes = [
   { path: 'admin', loadChildren: './features/admin/admin.module#AdminModule' },
   { path: 'restore', component: RestoreFormComponent },
   { path: 'user', loadChildren: './features/user/user.module#UserModule' },
+  {
+    path: 'change-passwords/:id/:hash',
+    component: PublicationsComponent
+  },
   {
     path: 'publications/:parentId/:id',
     component: PublicationComponent
