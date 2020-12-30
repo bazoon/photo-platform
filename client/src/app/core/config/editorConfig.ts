@@ -9,6 +9,9 @@ const editorConfig = {
     shouldNotGroupWhenFull: true
   },
   extraPlugins: [TheUploadAdapterPlugin],
+  mediaEmbed: {
+    previewsInData: true
+  },
 	image: {
 			resizeUnit: "%",
 			resizeOptions: [ {
