@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const {Sequelize, DataTypes} = require('sequelize');
+const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const db = {};
@@ -16,7 +16,7 @@ const db_config = {
   define: {
     underscored: true
   },
-  logging: () => console.log.bind(console)
+  logging: true
 };
 
 let sequelize = new Sequelize(
@@ -26,6 +26,9 @@ let sequelize = new Sequelize(
   db_config
 );
 
+console.log(sequelize.require,11)
+const definitions = require('./definitions');
+console.log(definitions)
 fs.readdirSync(__dirname)
   .filter(file => {
     return (
@@ -33,8 +36,8 @@ fs.readdirSync(__dirname)
     );
   })
   .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, DataTypes);
-    db[model.name] = model;
+    // const model = sequelize.require(path.join(__dirname, file));
+    // db[model.name] = model;
   });
 
 Object.keys(db).forEach(modelName => {
@@ -42,19 +45,6 @@ Object.keys(db).forEach(modelName => {
     db[modelName].associate(db);
   }
 });
-
-
-async function foo() {
-  try {
-    await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-}
-
-foo()
-
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

@@ -1,7 +1,5 @@
 require('dotenv').config();
 const path = require('path');
-const querystring = require('querystring');
-const fs = require('fs');
 const Koa = require('koa');
 const cors = require('@koa/cors');
 const koaJwt = require('koa-jwt');
@@ -10,9 +8,7 @@ const serve = require('koa-static');
 const send = require('koa-send');
 const mount = require('koa-mount');
 const koaBody = require('koa-body');
-const models = require('./models');
 const app = new Koa();
-const https = require('https');
 
 app.use(cors());
 
@@ -102,3 +98,13 @@ app.use(koaJwt({ secret: process.env.API_TOKEN, cookie: 'token' }));
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods());
 
 http.listen(port, () => console.log(`Server is running on ${port}`));
+
+// const Koa = require('koa');
+// const app = new Koa();
+
+// // response
+// app.use(ctx => {
+//   ctx.body = 'Hello Koa';
+// });
+
+// app.listen(7000);

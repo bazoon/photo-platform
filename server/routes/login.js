@@ -71,7 +71,7 @@ router.post('/register', koaBody({ multipart: true }), async ctx => {
 });
 
 router.post('/login', async ctx => {
-  const { nickName, password, remember } = ctx.request.body;
+  const { nickName, password, remember } = typeof ctx.request.body === 'string' ? JSON.parse(ctx.request.body) : ctx.request.body;
 
   const query = `
       select id, first_name, last_name, nick_name, phone, avatar, user_type, email_state, row_state, psw from users
