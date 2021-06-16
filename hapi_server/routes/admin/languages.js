@@ -1,72 +1,116 @@
-const Router = require("koa-router");
-const router = new Router();
-const models = require("../../../models");
-
-const expiresIn = 24 * 60 * 60 * 30;
-
-
-router.get("/", async ctx => {
-  const langs = await models.Language.findAll();
-
-  ctx.body = langs.map(lang => {
-    return {
-      id: lang.id,
-      name: lang.name,
-      nameDialect: lang.nameDialect,
-      short: lang.short,
-    };
-  });
-
-});
-
-router.put("/:id", async ctx => {
-  const {
-    name,
-    nameDialect,
-    short,
-  } = ctx.request.body;
-
-  const { id } = ctx.params;
-  const language = await models.Language.findOne({
-    where: {
-      id
+module.exports = [
+  {
+    method: 'GET',
+    path: '/api/admin/languages',
+    handler: async function (request, h) {
+      return await h.models.Language.findAll();
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
     }
-  });
+  },
+  {
+    method: 'POST',
+    path: '/api/admin/languages',
+    handler: async function (request, h) {
+      const {
+        name,
+        nameDialect,
+        short,
+      } = request.payload;
 
-  await language.update({
-    name,
-    nameDialect,
-    short,
-  });
+      const language = await h.models.Language.create({
+        name,
+        nameDialect,
+        short,
+      });
 
-  ctx.body = {
-    id: language.id,
-    name: language.name,
-    nameDialect: language.nameDialect,
-    short: language.short,
-  }
-});
+      return {
+        id: language.id,
+        name: language.name,
+        nameDialect: language.nameDialect,
+        short: language.short,
+      }
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
 
-router.post("/", async ctx => {
-  const {
-    name,
-    nameDialect,
-    short,
-  } = ctx.request.body;
+  {
+    method: 'DELETE',
+    path: '/api/admin/languages/{id}',
+    handler: async function (request, h) {
+      const { id } = request.params;
 
-  const language = await models.Language.create({
-    name,
-    nameDialect,
-    short,
-  });
+      await h.models.Language.destroy({
+        where: {
+          id
+        }
+      });
 
-  ctx.body = {
-    id: language.id,
-    name: language.name,
-    nameDialect: language.nameDialect,
-    short: language.short,
-  }
-});
+      return {
+        id
+      }
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/api/admin/languages/{id}',
+    handler: async function (request, h) {
+      const { id } = request.params;
+      const {
+        name,
+        nameDialect,
+        short,
+      } = request.payload;
+
+      const language = await h.models.Language.findOne({
+        where: {
+          id
+        }
+      });
+
+      await language.update({
+        name,
+        nameDialect,
+        short,
+      });
+
+      return {
+        id: language.id,
+        name: language.name,
+        nameDialect: language.nameDialect,
+        short: language.short,
+      }
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'GET',
+    path: '/api/admin/languages/{id}',
+    handler: async function (request, h) {
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
 
 
-module.exports = router;
+];
+

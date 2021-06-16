@@ -23,22 +23,16 @@ const translations = {
   method: 'GET',
   path: '/api/translation/{locale}',
   handler: async function (request, h) {
-  
-    const { host } = request.info;
     const { locale } = request.params;
-    const query = `
+    const q = h.sql`
     select code, phrases.name from lexicons, languages, phrases
     where 
     phrases.language_id=languages.id and
     phrases.lexicon_id=lexicons.id and
-    languages.short=:locale
+    languages.short=${locale}
   `;
     let dict = {};
-
-    const [translations] = await models.sequelize.query(query, {
-      replacements: { locale }
-    });
-
+    const translations = (await h.pool.query(q)).rows;
 
     translations.forEach(t => {
       let keys = t.code.split('.');

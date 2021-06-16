@@ -2,8 +2,8 @@
 // const getUploadFilePath = require('../../utils/getUploadPath');
 const models = require('../../../models');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const R = require('ramda');
+const L = require('lodash/fp');
 
 const publicFields = [
   'id',
@@ -24,33 +24,13 @@ const postFields = [
   'psw'
 ];
 
-
-const translations = [
+const users = [
   {
     method: 'GET',
     path: '/api/admin/users',
     handler: async function (request, h) {
-      const users = await models.User.findAll();
-
-      return users.map(user => {
-        return {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          nickName: user.nickName,
-          avatar: user.avatar,
-          email: user.email,
-          phone: user.phone,
-          userType: user.userType,
-          emailState: user.emailState,
-          emailCode: user.emailCode,
-          biography: user.biography,
-          awards: user.awards,
-          createdAt: user.createdAt,
-          rowState: user.rowState
-        };
-      });
-
+      const u = await h.query('select * from users order by id');
+      return R.map(R.omit(['psw', 'salt']), u);
     },
     options: {
       auth: {
@@ -70,8 +50,6 @@ const translations = [
           id
         }
       });
-
-      console.log('updating...', request.payload.email);
 
       await user.update({
         email,
@@ -138,9 +116,4 @@ const translations = [
   }
 ];
 
-
-module.exports = [translations];
-
-
-
-
+module.exports = [users];

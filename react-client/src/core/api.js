@@ -10,6 +10,10 @@ export const responseIsJson = (response) => {
 };
 
 function processResponse(r, resolve, reject) {
+  if (r.status === 401) {
+    window.location = "/login";
+  }
+
   if (!r.ok && responseIsJson(r)) {
     r.json().then(x => {
       if (!x.success && (x.message || x.errorMessage)) {
@@ -22,6 +26,8 @@ function processResponse(r, resolve, reject) {
     resolve({});
   } else if (!r.ok) {
     reject(r);
+  } else if (r.status === 500) {
+    reject(r);
   } else {
     r.json().then(resolve).catch(reject);
   }
@@ -32,26 +38,32 @@ export const asyncGet = (url, params) => Async((reject, resolve) => {
 });
 
 export const asyncPost = (url, params, json = true) => Async((reject, resolve) => {
+  const headers = {};
+  if (json) {
+    headers["Content-Type"] = "application/json";
+  }
+
   fetch(makeUrl(url), {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers,
     body: params instanceof FormData ? params: JSON.stringify(params),
   }, json).then(r => processResponse(r, resolve, reject)).catch(reject);
 });
 
 export const asyncPut = (url, params, json = true) => Async((reject, resolve) => {
+  const headers = {};
+  if (json) {
+    headers["Content-Type"] = "application/json";
+  }
+
   fetch(makeUrl(url), {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers,
     body: params instanceof FormData ? params: JSON.stringify(params),
   }, json).then(r => processResponse(r, resolve, reject)).catch(reject);
 });
 
-export const asyncDel = (url, params, json = true) => Async((reject, resolve) => {
-  fetch(url, params, json).then(r => processResponse(r, resolve, reject)).catch(reject);
+export const asyncDel = (url) => Async((reject, resolve) => {
+  fetch(makeUrl(url), {method: "DELETE"}).then(r => processResponse(r, resolve, reject)).catch(reject);
 });
 

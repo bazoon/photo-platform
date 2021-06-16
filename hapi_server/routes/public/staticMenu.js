@@ -1,5 +1,6 @@
-const models = require('../../../models');
 const startOfDay = require('date-fns/startOfDay');
+var dayjs = require('dayjs');
+const L = require('lodash/fp');
 
 const staticMenu = {
   method: 'GET',
@@ -8,33 +9,16 @@ const staticMenu = {
     const { host } = request.info;
     const [domain] = host.split(':');
     const now = startOfDay(new Date());
-    const query = `select distinct contest_menus.id, lexicon_id, position, parent_id, code, domain from
+    const t = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
+    const q = `select distinct contest_menus.id, contest_menus.id as key, lexicon_id, position, parent_id, code as title,  domain from
     contests, salones, contest_menus, lexicons, publications where
     contest_menus.lexicon_id=lexicons.id and
     contest_menus.contest_id=contests.id and contests.salone_id=salones.id and 
     contest_menus.id=publications.contest_menu_id and domain=:domain and
     publications.date_show <= :now and
-    contests.date_start = (select max(c1.date_start) from contests c1 where c1.salone_id=salones.id)
-  `;
+    contests.date_start = (select max(c1.date_start) from contests c1 where c1.salone_id=salones.id)`;
 
-    let [contestMenus] = await models.sequelize.query(query, {
-      replacements: {
-        domain,
-        now
-      }
-    });
-
-    contestMenus = contestMenus.map(m => {
-      return {
-        id: m.id,
-        key: m.id,
-        parentId: m.parent_id,
-        position: m.position,
-        title: m.code,
-        lexiconId: m.lexicon_id
-      };
-    });
-
+    const contestMenus = await h.query(q, {replacements: { domain, now}});
     const lookup = {};
 
     contestMenus.forEach(menu => {
@@ -42,13 +26,13 @@ const staticMenu = {
     });
 
     const menu = contestMenus.reduce((acc, menu) => {
-      menu.children = menu.children || [];
+      menu.items = menu.items || [];
 
       if (menu.parentId && menu.parentId !== -1) {
         const parentMenu = lookup[menu.parentId];
         if (parentMenu) {
-          parentMenu.children = parentMenu.children || [];
-          parentMenu.children.push(menu);
+          parentMenu.items = parentMenu.items || [];
+          parentMenu.items.push(menu);
         }
         return acc;
       }
@@ -57,25 +41,25 @@ const staticMenu = {
 
     return [
       {
-        title: 'photos',
-        url: '/photos/sections'
+        name: 'photos',
+        to: '/photos/sections'
       },
       {
-        title: 'about-contest',
-        children: [
+        name: 'about-contest',
+        items: [
           {
-            title: 'thesis',
-            url: '/thesis'
+            name: 'thesis',
+            to: '/thesis'
           },
           {
-            title: 'rules',
-            url: '/rules'
+            name: 'rules',
+            to: '/rules'
           }
         ]
       },
       {
-        title: 'contacts',
-        url: '/contacts'
+        name: 'contacts',
+        to: '/contacts'
       }
     ];
 

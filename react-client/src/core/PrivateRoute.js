@@ -8,7 +8,7 @@ function PrivateRoute({ children, ...rest }) {
     <Route
       {...rest}
       render={({ location }) =>
-        store.user && store.user.nick_name ? (
+        store.user && store.user.nickName ? (
           children
         ) : (
           <Link to="/login">Login</Link>

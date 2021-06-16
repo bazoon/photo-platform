@@ -5,10 +5,13 @@ module.exports = (sequelize, DataTypes) => {
     languageId: DataTypes.NUMBER,
     name: DataTypes.STRING
   }, {
-      timestamps: false
-    });
+    timestamps: false
+  });
   Phrase.associate = function (models) {
-    // associations can be defined here
+    Phrase.belongsTo(models.Language, {
+      foreignKey: 'language_id'
+    });
+    models.Language.hasMany(Phrase);
   };
   return Phrase;
 };

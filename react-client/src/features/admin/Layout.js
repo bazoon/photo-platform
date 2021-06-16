@@ -19,35 +19,67 @@ import SubMenu from "antd/lib/menu/SubMenu";
 import {Link} from "react-router-dom";
 import Users from "./Users/Users";
 import Admins from "./Admins/Admins";
+import Languages from "./Languages/Languages";
+import Lexicons from "./Lexicons/Lexicons";
+import AwardTypes from "./AwardTypes/AwardTypes";
+import Words from "./Words/Words";
+import { TieredMenu } from "primereact/tieredmenu";
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import AdminMenu from "./AdminMenu";
 
-function App() {
+
+
+
+function App({history}) {
   const { t } = useTranslation("namespace1");
   useEffect(() => {
   }, []);
 
+
+  const routes = [
+    {
+      path: "/admin/users",
+      Component: Users
+    },
+    {
+      path: "/admin/admins",
+      Component: Admins
+    },
+    {
+      path: "/admin/languages",
+      Component: Languages
+    },
+    {
+      path: "/admin/lexicons",
+      Component: Lexicons
+    },
+    {
+      path: "/admin/awardTypes",
+      Component: AwardTypes
+    },
+    {
+      path: "/admin/words",
+      Component: Words
+    },
+  ];
+
+
   return (
     <Router>
       <div className="container flex h-screen">
-        <div className="w-1/5 h-full">
-          <Menu mode="inline" className="h-full" defaultOpenKeys={["users"]}>
-            <SubMenu key="users" title={t("users")} defaultOpenKeys={["1"]}>
-              <Menu.Item key="1"><Link to="/admin/users">{t("users")}</Link></Menu.Item>
-              <Menu.Item key="2"><Link to="/admin/admins">{t("admins")}</Link></Menu.Item>
-            </SubMenu>
-            <SubMenu key="settings" title={t("settings")} >
-              <Menu.Item key="1"><Link to="/admin/users">{t("users")}</Link></Menu.Item>
-              <Menu.Item key="2">Option 2</Menu.Item>
-            </SubMenu>
-          </Menu>
-        </div>
+        <AdminMenu/>
         <main className="w-4/5 p-5 overflow-auto bg-yellow-50">
           <Switch>
-            <Route path="/admin/users">
-              <Users/>
-            </Route>
-            <Route path="/admin/admins">
-              <Admins/>
-            </Route>
+            {
+              routes.map(({path, Component}) => {
+                return (
+                  <Route key={path} path={path}>
+                    <Component/>
+                  </Route>
+                );
+              })
+            }
           </Switch>
         </main>
       </div>

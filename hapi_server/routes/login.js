@@ -439,11 +439,6 @@ const expiresIn = 24 * 60 * 60 * 30;
 // });
 
 
-function run(query, config) {
-  return Async((reject, resolve) => {
-    models.sequelize.query(query, config).then(resolve).catch(reject);
-  })
-}
 
 function signToken(user) {
   return jwt.sign(
@@ -464,27 +459,25 @@ const login2 = {
   method: 'GET',
   path: '/api/login2',
   handler: async function(request, h) {
-  
-    // var salt = bcrypt.genSaltSync(10);
-    // var hashedPassword = bcrypt.hashSync('111', salt);
+    var salt = bcrypt.genSaltSync(10);
+    var hashedPassword = bcrypt.hashSync('111', salt);
 
-    // const user = await models.User.findOne({
-    //   where: {
-    //     id: 1
-    //   }
-    // });
+    const user = await models.User.findOne({
+      where: {
+        id: 1
+      }
+    });
 
-    // user.psw = hashedPassword;
-    // user.salt = salt;
+    user.psw = hashedPassword;
+    user.salt = salt;
+    console.log(user);
 
-    // await user.save();
-    // return user;
-    return {}
-    
+    await user.save();
+    return user;
   },
   options: {
     auth: {
-      mode: 'required'
+      mode: 'optional'
     },
     plugins: {
       role: 'ADMIN'
@@ -492,30 +485,25 @@ const login2 = {
   }
 }
 
-
 const login = {
   method: 'POST',
   path: '/api/login',
   handler: async function (request, h) {
-    const query = `
-      select id, first_name, last_name, nick_name, phone, avatar, user_type, email_state, row_state, psw from users
-      where nick_name=:nickName or email=:nickName
-    `;
-      
+    const runn = Async.fromPromise(nickName => h.query('select * from users where nick_name=:nickName', {replacements: {nickName}}));
+
     const r = compose(
       joinM,
       map(map(user => ({user, token: signToken(user) }))),
       map(({user, r}) => r ? Async.Resolved(user) : Async.Rejected(401)),
-      chain(({user, p}) => Async((rej, res) => bcrypt.compare(p.password, user.psw).then(r => res({user, r})))),
+      chain(({user, p}) => Async((_, res) => bcrypt.compare(p.password, user.psw).then(r => res({user, r})))),
       joinM,
-      map(p => run(query, {replacements: { nickName: p.nickName }}).chain(o => Async.Resolved({user: o[0][0], p}))),
+      map(p => runn(p.nickName).chain(o => Async.Resolved({user: o[0], p}))),
       Async.Resolved 
     )(request.payload)
 
-
     return new Promise((res) => {
-      r.fork(e => {
-        res(h.response('NotAuthorized').code(401));
+      r.fork((e) => {
+        res(h.response(e + 'NotAuthorized').code(401));
       }, ({user, token}) => {
         request.cookieAuth.set({ tok: token });
         res(user);

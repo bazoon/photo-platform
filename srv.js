@@ -1,28 +1,37 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const flatten = require('ramda/src/flatten');
 const Hapi = require('@hapi/hapi');
 const roles = ['SUPERADMIN', 'ADMIN', 'MODER', 'USER', 'ANON'];
 const models = require('./models');
-const get = require('lodash/fp/get');
+const {get, curry} = require('lodash/fp');
+const {compose, tryCatch, Async} = require('crocks');
+const R = require('ramda');
+const L = require('lodash/fp');
+const routes = require('./routes');
 
 const can = (userRole, routeRole) => !routeRole || roles.indexOf(userRole) < roles.indexOf(routeRole);
 
-const routes = flatten([
-  require('./hapi_server/routes/public/translation'),
-  require('./hapi_server/routes/login'),
-  require('./hapi_server/routes/public/staticMenu'),
-  require('./hapi_server/routes/public/thesis'),
-  require('./hapi_server/routes/admin/users'),
-  require('./hapi_server/routes/public/roles'),
-  require('./hapi_server/routes/admin/admins'),
-  require('./hapi_server/routes/admin/organizers'),
-]);
+
+
+const toCamel = (s) => {
+  return s.replace(/([-_][a-z])/ig, ($1) => {
+    return $1.toUpperCase()
+      .replace('-', '')
+      .replace('_', '');
+  });
+};
+
+const pool = require('./models_objection');
+const {sql} = require('slonik');
+const query = async (sql, options) => {
+  const [rows] = await models.sequelize.query(sql, options);
+  return L.map(L.mapKeys(toCamel), rows);
+}
 
 const init = async () => {
 
   const server = Hapi.server({
-    port: 7000,
+    port: 7001,
     host: 'localhost',
     routes: {
       cors: {
@@ -32,8 +41,31 @@ const init = async () => {
     }
   });
 
+
+  await server.register(require('@hapi/inert'));
+
+  server.decorate('toolkit', 'pool', pool);
+  server.decorate('toolkit', 'sql', sql);
+  server.decorate('toolkit', 'query', query);
+  server.decorate('toolkit', 'models', models);
+
   await server.register(require('@hapi/cookie'));
-  
+
+  const preResponse = function (request, h) {
+    const {response} = request;
+    if (!response.isBoom) {
+      return h.continue;
+    }
+
+    response.output.payload.message = response.errors || response.message;
+    return h.continue
+  };
+
+  server.ext('onPreResponse', preResponse);
+
+
+
+
   server.auth.strategy('session', 'cookie', {
     cookie: {
       name: 'tok',
@@ -51,8 +83,6 @@ const init = async () => {
 
         const userRole = ['SUPERADMIN', 'ADMIN', 'MODER', 'USER'][u.userType] || 'ANON';
         routeRole = get('route.settings.plugins.role', request) || 'ANON';
-        
-        console.log(userRole, routeRole);
 
         return { valid: can(userRole, routeRole), credentials: { user }, role: userRole };
       }

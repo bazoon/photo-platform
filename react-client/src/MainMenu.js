@@ -1,59 +1,75 @@
 import React, {useEffect, useState} from "react";
 import {asyncGet} from "./core/api";
-import {Link} from "react-router-dom";
-import "antd/dist/antd.css"; 
-import Menu from "antd/lib/menu";
 import { useTranslation } from "react-i18next";
-import SubMenu from "antd/lib/menu/SubMenu";
 import { collect } from "react-recollect";
+import { Menubar } from "primereact/menubar";
+import { withRouter } from "react-router";
 
-function Main({store}) {
+const setTemplateForItems = (items = [], history, t) => {
+  console.log("setTemplateForItems");
+  items.forEach(item => {
+    item.command = item.command || (() => history.push(item.to));
+    item.label = t(item.name) || item.name;
+    if (item.items) {
+      setTemplateForItems(item.items, history, t);
+    }
+  });
+  return [...items];
+};
+
+function Main({store, history}) {
   const [items, setItems] = useState([]);
   const { t, i18n } = useTranslation("namespace1");
-  
+ 
+  const links = [
+    { 
+      className: "flex-1",
+      template: <div></div>
+    },
+    {
+      label: "admin",
+      command: () => history.push("/admin"),
+    },
+    {
+      label: i18n.language,
+      items: [
+        {
+          name: "ru",
+          label: "ru",
+          command: () => i18n.changeLanguage("ru")
+        },
+        {
+          label: "en",
+          name: "en",
+          command: () => i18n.changeLanguage("en")
+        }
+
+      ]
+    }
+  ];
+
   function menuLoaded(menu) {
-    setItems(menu);
-  }
-
-  function renderItem(item) {
-    return (
-      item.children ?
-        <Menu.SubMenu key={item.title} title={t(item.title)}>
-          {item.children.map(renderItem)}
-        </Menu.SubMenu>
-        :
-        <Menu.Item key={item.title}>
-          <Link to={item.url}>{t(item.title)}</Link>
-        </Menu.Item>
-
-    );
-  }
-
-  function renderMenu(menu) {
-    return (
-      <Menu mode="horizontal">
-        {menu.map(renderItem)}
-      </Menu>
-    );
+    setItems(setTemplateForItems(menu, history, t));
   }
 
   useEffect(() => {
     asyncGet("api/staticMenu").fork(() => {}, menuLoaded);
   }, []);
 
+
+  useEffect(() => {
+    setItems(setTemplateForItems(items, history, t));
+  }, [i18n.language]);
+
   return (
     <div className="flex">
-      {renderMenu(items)}
-      <Menu mode="horizontal">
-        <SubMenu title={i18n.language}>
-          <Menu.Item onClick={() => i18n.changeLanguage("ru")}>ru</Menu.Item>
-          <Menu.Item onClick={() => i18n.changeLanguage("en")}>en</Menu.Item>
-        </SubMenu>
-        <Menu.Item><Link to="/admin">admin</Link></Menu.Item>
-        <Menu.Item>{store.user.nick_name}</Menu.Item>
-      </Menu>
+      <Menubar
+        className="w-full"
+        model={items.concat(links)}
+      />
     </div>
   );
 }
 
-export default(collect(Main));
+export default(withRouter(collect(Main)));
+
