@@ -1,9 +1,8 @@
 module.exports = [
   {
     method: 'GET',
-    path: '/api/admin/awardTypes/meta',
+    path: '/api/admin/contestPhotos/meta',
     handler: async function (request, h) {
-
       const columns = [
         {
           title: 'name',
@@ -15,13 +14,17 @@ module.exports = [
           title: 'image',
           dataIndex: 'img',
           key: 'image',
-          type: 'file',
-          width: 100
+          width: 100,
+          type: 'file'
         },
       ];
+
+      const fields = [];
+
+
       return {
         columns,
-        fields: columns
+        fields: fields
       }
     },
     options: {
@@ -30,4 +33,5 @@ module.exports = [
       }
     }
   },
+
 ];

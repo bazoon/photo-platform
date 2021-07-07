@@ -503,8 +503,10 @@ const login = {
 
     return new Promise((res) => {
       r.fork((e) => {
+        console.log(1)
         res(h.response(e + 'NotAuthorized').code(401));
       }, ({user, token}) => {
+        console.log(user);
         request.cookieAuth.set({ tok: token });
         res(user);
       })

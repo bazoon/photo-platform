@@ -1,4 +1,3 @@
-import i18n from "i18next";
 import React, {useEffect} from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -8,29 +7,41 @@ import { useTranslation } from "react-i18next";
 import { useMachine } from "@xstate/react";
 import Machine from "../../features/machines/CrudMachine";
 import useCrud from "../../core/hooks/useCrud";
-import useColumns from "../../core/hooks/useColumns";
-import identity from "crocks/combinators/identity";
 import { confirmPopup } from "primereact/confirmpopup"; 
 
 const imageBodyTemplate = (record) => {
   return <img className="object-cover w-36 h-36" src={record.img}/>;
 };
 
-
-export default ({api, customOperations = [], width = "100%", apiParams = {}}) => {
-  return function Main() {
+export default ({
+  api,
+  customOperations = [],
+  apiParams = {},
+  canEdit = true,
+  canDelete = true,
+  canAdd = true,
+  setRefresh = () => {},
+  title,
+  rowExpansionTemplate = undefined,
+  onRowToggle = () => {},
+}) => {
+  return function Main({expandedRows}) {
     const [current, send] = useMachine(Machine({api, apiParams}));
     const {context} = current;
     const {records, record, error, isOpen, meta} = context;
     const { t } = useTranslation("namespace1");
     const {onCancel, onOk, onChange, handleEdit, handleAdd, handleDelete} = useCrud(send, record);
+    const canExpand = !! rowExpansionTemplate;
+
+
+    setRefresh(() => send("refresh"));
+
     const addRender = column => {
       if (column.type === "file") {
         column.body = imageBodyTemplate;
       }
       return column;
     };
-
 
     const onDelete = (event, data) => {
       confirmPopup({
@@ -46,8 +57,12 @@ export default ({api, customOperations = [], width = "100%", apiParams = {}}) =>
     const actionBodyTemplate = (rowData) => {
       return (
         <React.Fragment>
-          <Button icon="pi pi-pencil" className="p-button-rounded p-button-success" style={{marginRight: 5}}  onClick={() => handleEdit(rowData)} />
-          <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" style={{marginRight: 5}} onClick={e => onDelete(e, rowData)} />
+          {
+            canEdit && <Button icon="pi pi-pencil" className="p-button-rounded p-button-success" style={{marginRight: 5}}  onClick={() => handleEdit(rowData)} />
+          }
+          {
+            canDelete && <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" style={{marginRight: 5}} onClick={e => onDelete(e, rowData)} />
+          }
           {customOperations.map(operation => operation(rowData))}
         </React.Fragment>
       );
@@ -57,20 +72,37 @@ export default ({api, customOperations = [], width = "100%", apiParams = {}}) =>
       send("load");
     }, []);
 
+
     return (
       <>
-        <div className="mb-4">
-          <Button onClick={handleAdd}>{t("add")}</Button>
-        </div>
-        <DataTable value={records} scrollable style={{width}}>
-          <Column body={actionBodyTemplate}></Column>
+        <div className="mb-10 text-lg text-3xl">{title}</div>
+        {
+          canAdd && (
+            <div className="mb-4">
+              <Button onClick={handleAdd}>{t("add")}</Button>
+            </div>
+          )
+        }
+        <DataTable 
+          value={records} 
+          scrollable 
+          scrollHeight="1000px" 
+          style={{width: "100%"}} 
+          rowExpansionTemplate={rowExpansionTemplate}
+          onRowToggle={e => { onRowToggle(e.data); }}
+          expandedRows={expandedRows}
+        >
+          {
+            canExpand && <Column expander style={{ width: "3em" }} />
+          }
+          <Column key="actionBodyTemplate" headerStyle={{width: "30px"}} body={actionBodyTemplate}></Column>
           {
             columns.map(({dataIndex, title, width, body = record => record[dataIndex]}) => 
-              <Column width={width} key={dataIndex} field={dataIndex} header={title} body={body}></Column>)
+              <Column headerStyle={{width}} key={dataIndex} field={dataIndex} header={title} body={body}></Column>)
           }
         </DataTable>
         {
-          isOpen && <Form fields={meta.fields} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
+          isOpen && <Form title={title} fields={meta.fields} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
         }
       </>
     );

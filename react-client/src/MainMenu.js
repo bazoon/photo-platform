@@ -6,7 +6,6 @@ import { Menubar } from "primereact/menubar";
 import { withRouter } from "react-router";
 
 const setTemplateForItems = (items = [], history, t) => {
-  console.log("setTemplateForItems");
   items.forEach(item => {
     item.command = item.command || (() => history.push(item.to));
     item.label = t(item.name) || item.name;

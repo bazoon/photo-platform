@@ -1,24 +1,23 @@
 module.exports = [
   {
     method: 'GET',
-    path: '/api/admin/awardTypes/meta',
+    path: '/api/admin/nominations/meta',
     handler: async function (request, h) {
-
       const columns = [
+        {
+          title: 'maxCountImg',
+          dataIndex: 'maxCountImg',
+          key: 'maxCountImg',
+          width: 100
+        },
         {
           title: 'name',
           dataIndex: 'name',
           key: 'name',
           width: 100
         },
-        {
-          title: 'image',
-          dataIndex: 'img',
-          key: 'image',
-          type: 'file',
-          width: 100
-        },
       ];
+
       return {
         columns,
         fields: columns

@@ -7,17 +7,20 @@ module.exports = [
         {
           title: 'name',
           dataIndex: 'name',
-          key: 'name'
+          key: 'name',
+          width: 100
         },
         {
           title: 'dialect',
           dataIndex: 'nameDialect',
-          key: 'nameDialect'
+          key: 'nameDialect',
+          width: 100
         },
         {
           title: 'short',
           dataIndex: 'short',
-          key: 'short'
+          key: 'short',
+          width: 100
         }
       ];
       return {

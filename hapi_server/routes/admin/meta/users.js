@@ -12,26 +12,32 @@ module.exports = [
           title: 'firstName',
           dataIndex: 'firstName',
           key: 'firstName',
+          width: 200
+
         },
         {
           title: 'lastName',
           dataIndex: 'lastName',
           key: 'lastName',
+          width: 200
         },
         {
           title: 'nickName',
           dataIndex: 'nickName',
           key: 'nickName',
+          width: 200
         },
         {
           title: 'email',
           dataIndex: 'email',
           key: 'email',
+          width: 200
         },
         {
           title: 'phone',
           dataIndex: 'phone',
           key: 'phone',
+          width: 200
         },
         {
           title: 'userType',
@@ -48,32 +54,38 @@ module.exports = [
               dataIndex: 1,
               label: 'user'
             }
-          ]
+          ],
+          width: 200
         },
         {
           title: 'emailState',
           dataIndex: 'emailState',
           key: 'emailState',
+          width: 200
         },
         {
           title: 'emailCode',
           dataIndex: 'emailCode',
           key: 'emailCode',
+          width: 200
         },
         {
           title: 'biography',
           dataIndex: 'biography',
           key: 'biography',
+          width: 200
         },
         {
           title: 'awards',
           dataIndex: 'awards',
           key: 'awards',
+          width: 200
         },
         {
           title: 'rowState',
           dataIndex: 'rowState',
-          key: 'rowState'
+          key: 'rowState',
+          width: 200
         },
       ];
 

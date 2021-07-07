@@ -1,20 +1,13 @@
 import {Machine, assign} from "xstate";
-import uniqBy from "lodash/fp/uniqBy";
-import identity from "crocks/combinators/identity";
-import pickBy from "lodash/fp/pickBy";
 import compose from "lodash/fp/compose";
 import keys from "lodash/fp/keys";
 import join from "lodash/fp/join";
-import reduce from "lodash/fp/reduce";
 import {asyncGet, asyncPost, asyncPut, asyncDel} from "../../core/api";
 import Async from "crocks/Async";
 import values from "lodash/fp/values";
 import {ifElse} from "crocks";
-import concat from "lodash/fp/concat";
 import {option, map} from "crocks/pointfree";
 import {Just, Nothing} from "crocks/Maybe";
-
-
 
 const safe = pred =>
   ifElse(pred, Just, Nothing);
@@ -31,7 +24,6 @@ const log = x => { x.inspect ? console.log(x.inspect()) : console.log(x); return
 
 const combineApiWithParams = api => (params = {}) => compose(
   option(api),
-  log,
   map(s => api + "/" + s),
   map(join("/")),
   map(values),
@@ -71,10 +63,17 @@ export default ({api, idField = "id", apiParams}) => {
           },
           edit: {
             target: "opened.edit",
-            actions: assign({ isOpen: true, record: (_, record) => { console.log(record);return record;} })
+            actions: assign({ isOpen: true, record: (_, record) => { return record;} })
           },
           remove: {
             target: "remove"
+          },
+          refresh: {
+            actions: assign({
+              records: ({records}) => {
+                return [...records];
+              }
+            }),
           }
         },
       },
@@ -138,6 +137,13 @@ export default ({api, idField = "id", apiParams}) => {
                 target: "#crud.idle",
               },
               save: {
+                actions: assign({
+                  error: "",
+                  record: (_, record) => {
+                    // console.log(record);
+
+                  }
+                }),
                 target: "post"
               }
             }
@@ -155,7 +161,7 @@ export default ({api, idField = "id", apiParams}) => {
           post: {
             invoke: {
               id: "post",
-              src: (_, {record}) => (callback) => {
+              src: (_, {data: record}) => (callback) => {
                 const hasFile = values(record).some(v => v instanceof File);
                 const payload = hasFile ? toFormData(record) : record;
                 const isJson = !hasFile;
@@ -168,11 +174,11 @@ export default ({api, idField = "id", apiParams}) => {
           update: {
             invoke: {
               id: "update",
-              src: (_, {record}) => (callback) => {
-                const hasFile = values(record).some(v => v instanceof File);
-                const payload = hasFile ? toFormData(record) : record;
+              src: (_, {data}) => (callback) => {
+                const hasFile = values(data).some(v => v instanceof File);
+                const payload = hasFile ? toFormData(data) : data;
                 const isJson = !hasFile;
-                asyncPut(api + "/" + record[idField], payload, isJson).fork(e => callback({type: "saveFailed", e}), data => {
+                asyncPut(api + "/" + data[idField], payload, isJson).fork(e => callback({type: "saveFailed", e}), data => {
                   callback({type: "updateOk", data});
                 });
               }
@@ -214,7 +220,8 @@ export default ({api, idField = "id", apiParams}) => {
             target: "idle",
             actions: assign({
               records: ({records}, {data}) => {
-                return records.map(r => r[idField] === data[idField] ? data : r);
+                // тут бывают строковые id поэтому ==
+                return records.map(r => r[idField] == data[idField] ? data : r);
               }
             })
           },

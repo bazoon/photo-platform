@@ -6,8 +6,8 @@ export default function(send, record) {
     send("close");
   };
 
-  const onOk = (record) => {
-    send("save", {record});
+  const onOk = (data) => {
+    send("save", {data});
   };
 
   const handleEdit = (record) => {
@@ -23,6 +23,7 @@ export default function(send, record) {
   }; 
 
   const onChange = (changed, all) => {
+    console.log(changed);
     send("updateRecord", {record: {...record, ...changed}});
   };
 

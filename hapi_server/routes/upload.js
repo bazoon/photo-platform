@@ -1,42 +1,92 @@
-const Router = require("koa-router");
-const koaBody = require("koa-body");
-const router = new Router();
-const uploadFiles = require("../utils/uploadFiles");
-const getUploadFilePath = require("../utils/getUploadPath");
-
-router.post("/", koaBody({ multipart: true }), async ctx => {
-  const { file } = ctx.request.files;
-  const files = file ? (Array.isArray(file) ? file : [file]) : [];
-  await uploadFiles(files);
+const uploadFiles = require("./utils/uploadFiles");
+const getUploadFilePath = require("./utils/getUploadPath");
 
 
-  // const user = await models.User.create({
-  //   email,
-  //   firstName,
-  //   lastName,
-  //   nickName,
-  //   phone,
-  //   avatar: avatar.name,
-  //   salt,
-  //   psw: hashedPassword,
-  //   userType: 1,
-  //   emailState: 0,
-  //   rowState: 0,
-  // });
+// router.put('/:id', koaBody({ multipart: true }), async ctx => {
+//   const { id } = ctx.params;
+//   const { name } = ctx.request.body;
+//   const img = ctx.request.files && ctx.request.files.img;
 
-  // const token = jwt.sign(
-  //   { firstName, lastName, id: user.id, userType: user.type },
-  //   process.env.API_TOKEN,
-  //   {
-  //     expiresIn: expiresIn
-  //   }
-  // );
+//   if (img) {
+//     const files = img ? (Array.isArray(img) ? img : [img]) : [];
+//     await uploadFiles(files);
+//   }
 
+//   const awardType = await models.AwardType.findOne({
+//     where: {
+//       id
+//     }
+//   });
 
-  ctx.body = {
-    file: getUploadFilePath(file.name),
-  }
-});
+//   await awardType.update({
+//     name
+//   });
 
+//   if (img) {
+//     await awardType.update({
+//       img: img.name
+//     });
+//   }
 
-module.exports = router;
+//   ctx.body = {
+//     id: awardType.id,
+//     name: awardType.name,
+//     img: getUploadFilePath(awardType.img)
+//   };
+// });
+
+// router.get('/', async ctx => {
+// });
+
+// router.get('/:id', async ctx => {
+//   const { id } = ctx.params;
+
+//   const awardType = await models.AwardType.findOne({
+//     where: {
+//       id
+//     }
+//   });
+
+//   ctx.body = {
+//     id: awardType.id,
+//     name: awardType.name,
+//     img: getUploadFilePath(awardType.img)
+//   };
+// });
+
+// router.delete('/:id', async ctx => {
+//   const { id } = ctx.params;
+
+//   await models.AwardType.destroy({
+//     where: {
+//       id
+//     }
+//   });
+
+//   ctx.body = {};
+// });
+
+module.exports = [
+  {
+    method: 'POST',
+    path: `/api/upload`,
+    handler: async function (request, h) {
+      const { file } = request.payload;
+      await uploadFiles(file);
+      return {
+        file: getUploadFilePath(file.filename)
+      };
+
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      },
+      payload: {
+        parse: true,
+        output: 'file',
+        multipart: true
+      }
+    }
+  },
+];

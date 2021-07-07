@@ -45,6 +45,24 @@ function App({history}) {
           command: () => history.push("/admin/words")
         }
       ]
+    },
+    {
+      label: t("organization"),
+      items: [
+        {
+          label: t("organizers"),
+          command: () => history.push("/admin/organizers")
+        },
+        {
+          label: t("salones"),
+          command: () => history.push("/admin/salones")
+
+        },
+        {
+          label: t("contests"),
+          command: () => history.push("/admin/contests")
+        }
+      ]
     }
   ];
 

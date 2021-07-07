@@ -23,6 +23,8 @@ const MainMenu = lazy(() => import("./MainMenu"));
 function Main({store}) {
   function loadTranslations(lang, t) {
     i18n.addResourceBundle(lang, "namespace1", t);
+    const lan = window.navigator.language.slice(0, 2);
+    i18n.changeLanguage(lan);
   }
 
 

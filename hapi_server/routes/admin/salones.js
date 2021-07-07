@@ -27,7 +27,7 @@ router.get("/", async ctx => {
   `;
   const [salones] = await models.sequelize.query(query);
 
-  ctx.body = salones.map(salone => {
+  return salones.map(salone => {
     return {
       id: salone.id,
       organizer: salone.organizer,
@@ -105,6 +105,59 @@ async function getSalone(record) {
   }
 }
 
+module.exports = [
+  {
+    method: 'GET',
+    path: '/api/admin/salones',
+    handler: async function (request, h) {
+      const query = `
+      select organizers.name as organizer, spr_salone_types.name as salone_type, spr_salone_type_id, organizer_id, 
+        salones.name, regular, private, domain, design_code, salones.row_state, salones.id
+      from salones, organizers, spr_salone_types
+      where
+      salones.spr_salone_type_id=spr_salone_types.id and salones.organizer_id=organizers.id
+      `;
+      return await h.query(query);
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'POST',
+    path: '/api/admin/salones',
+    handler: async function (request, h) {
+      const saloneValues = R.pick(fields, request.payload);
+      delete saloneValues.id;
+      let salone = await h.models.Salone.create(saloneValues);
+      return await getSalone(salone);
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'DELETE',
+    path: '/api/admin/salones/{id}',
+    handler: async function (request, h) {
+      const { id } = request.params;
+      await h.models.Salone.destroy({
+        where: {
+          id
+        }
+      });
+      return {};
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  }
+];
 
 
-module.exports = router;

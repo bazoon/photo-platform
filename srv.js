@@ -29,7 +29,7 @@ const query = async (sql, options) => {
 }
 
 const init = async () => {
-
+  console.log(1)
   const server = Hapi.server({
     port: 7001,
     host: 'localhost',
@@ -108,8 +108,7 @@ const init = async () => {
 };
 
 process.on('unhandledRejection', (err) => {
-
-  console.log(err,2);
+  console.log(err)
   process.exit(1);
 });
 

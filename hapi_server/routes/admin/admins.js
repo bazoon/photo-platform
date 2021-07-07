@@ -3,22 +3,11 @@ const router = new Router();
 const models = require('../../../models');
 const R = require('ramda');
 const compose = require('crocks/helpers/compose');
-const tryCatch = require('crocks/Result/tryCatch');
 const Async = require('crocks/Async');
-const Reader = require('crocks/Reader');
-const Maybe = require('crocks/Maybe');
 const toPromise = require('crocks/Async/asyncToPromise');
-const Pair = require('crocks/Pair');
-const fst = require('crocks/Pair/fst');
-const snd = require('crocks/Pair/snd');
 const map = require('crocks/pointfree/map')
-const resultToMaybe = require('crocks/Maybe/resultToMaybe');
-const { pathLens, lens, view } = require('lodash-lens');
-const resultToAsync = require('crocks/Async/resultToAsync');
 const chain = require('crocks/pointfree/chain');
 const identity = require('crocks/combinators/identity');
-const joinM = chain(identity);
-const ifElse = require('crocks/logic/ifElse');
 const get = require('lodash/fp/get');
 
 const fields = [
@@ -119,7 +108,7 @@ module.exports =  [
   {
     method: 'GET',
     path: '/api/admin/admins/{id}',
-    handler: async function (request, h) {
+    handler: async function (request) {
       const { id } = request.params;
       const query = `select first_name, last_name, admins.user_id, adm_type, organizers.name, organizers.id as organizer_id, adm_type
     from users, organizers, admins where admins.user_id=users.id and admins.organizer_id=organizers.id and admins.user_id=:id

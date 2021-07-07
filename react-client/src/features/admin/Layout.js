@@ -21,12 +21,15 @@ import Users from "./Users/Users";
 import Admins from "./Admins/Admins";
 import Languages from "./Languages/Languages";
 import Lexicons from "./Lexicons/Lexicons";
+import Organizers from "./Organizers/Organizers";
 import AwardTypes from "./AwardTypes/AwardTypes";
 import Words from "./Words/Words";
 import { TieredMenu } from "primereact/tieredmenu";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import AdminMenu from "./AdminMenu";
+import Salones from "./Salones/Salones";
+import Contests from "./Contests/Contests";
 
 
 
@@ -61,6 +64,18 @@ function App({history}) {
     {
       path: "/admin/words",
       Component: Words
+    },
+    {
+      path: "/admin/organizers",
+      Component: Organizers
+    },
+    {
+      path: "/admin/salones",
+      Component: Salones
+    },
+    {
+      path: "/admin/contests",
+      Component: Contests
     },
   ];
 
