@@ -8,6 +8,7 @@ import values from "lodash/fp/values";
 import {ifElse} from "crocks";
 import {option, map} from "crocks/pointfree";
 import {Just, Nothing} from "crocks/Maybe";
+import identity from "crocks/combinators/identity";
 
 const safe = pred =>
   ifElse(pred, Just, Nothing);
@@ -32,6 +33,7 @@ const combineApiWithParams = api => (params = {}) => compose(
 
 const getInitialContext = () => {
   return {
+    dialogTitle: "",
     isOpen: false,
     error: "",
     changed: false,
@@ -44,7 +46,7 @@ const getInitialContext = () => {
   };
 };
 
-export default ({api, idField = "id", apiParams}) => {
+export default ({api, idField = "id", apiParams, t = identity}) => {
   return Machine({
     id: "crud",
     context: getInitialContext(),
@@ -59,11 +61,11 @@ export default ({api, idField = "id", apiParams}) => {
           },
           add: {
             target: "opened.add",
-            actions: assign({ isOpen: true})
+            actions: assign({ isOpen: true, dialogTitle: t("add") })
           },
           edit: {
             target: "opened.edit",
-            actions: assign({ isOpen: true, record: (_, record) => { return record;} })
+            actions: assign({ isOpen: true, record: (_, record) => { return record;}, dialogTitle: t("edit") })
           },
           remove: {
             target: "remove"

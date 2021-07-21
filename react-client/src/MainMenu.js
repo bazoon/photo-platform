@@ -63,7 +63,7 @@ function Main({store, history}) {
   return (
     <div className="flex">
       <Menubar
-        className="w-full"
+        className="w-full h-"
         model={items.concat(links)}
       />
     </div>

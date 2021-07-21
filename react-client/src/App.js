@@ -1,4 +1,5 @@
 import React, {useEffect, Suspense, lazy} from "react";
+import "./fonts/fonts.css";
 import "./App.css";
 import "./tails.css";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -16,6 +17,7 @@ import Thesis from "./features/Thesis";
 import Admin from "./features/admin/Layout";
 import PrivateRoute from "./core/PrivateRoute";
 import Init from "./core/Init";
+import MainPage from "./MainPage";
 
 import { collect } from "react-recollect";
 const MainMenu = lazy(() => import("./MainMenu"));
@@ -27,24 +29,29 @@ function Main({store}) {
     i18n.changeLanguage(lan);
   }
 
+  const sidebars = () => {
+    return store.sidebars.map(sidebar => {
+      const {Component} = sidebar;
+      return <Component key={sidebar.key} {...sidebar.props}/>;
+    });
+  };
 
   useEffect(() => {
-    let i = 0;
     asyncGet("api/translation/ru").fork(e => e, data => loadTranslations("ru", data));
     asyncGet("api/translation/en").fork(e => e, data => loadTranslations("en", data));
   }, []);
 
-
+  //TODO: подумать как сделать ширину чтобы было 2 ширины 1440px общая и 
   return (
     <>
       <Router>
         <Init/>
         <Suspense fallback="loading">
           <div className="container flex flex-col h-screen">
-            <header className="bg-blue-200 h-50">
+            <header className="bg-brown-medium h-66">
               <MainMenu/>
             </header>
-            <main className="flex-1 bg-yellow-50">
+            <main className="flex-1 bg-darkgreen">
               <Switch>
                 <Route path="/login">
                   <Login />
@@ -59,8 +66,10 @@ function Main({store}) {
                   </Suspense>
                 </PrivateRoute>
                 <Route path="/">
+                  <MainPage/>
                 </Route>
               </Switch>
+
             </main>
 
             <footer className="h-10 bg-red-100">
@@ -68,6 +77,8 @@ function Main({store}) {
           </div>
         </Suspense>
       </Router>
+
+      {sidebars()}
     </>
   );
 }

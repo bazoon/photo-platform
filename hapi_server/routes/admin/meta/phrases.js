@@ -6,7 +6,6 @@ module.exports = [
     path: '/api/admin/phrases/meta',
     handler: async function (request, h) {
       const languages = await h.models.Language.findAll();
-      
 
       const columns = [
         {

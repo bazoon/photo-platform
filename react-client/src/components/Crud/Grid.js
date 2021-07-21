@@ -24,12 +24,13 @@ export default ({
   title,
   rowExpansionTemplate = undefined,
   onRowToggle = () => {},
+  dialogConfig = {},
 }) => {
   return function Main({expandedRows}) {
-    const [current, send] = useMachine(Machine({api, apiParams}));
-    const {context} = current;
-    const {records, record, error, isOpen, meta} = context;
     const { t } = useTranslation("namespace1");
+    const [current, send] = useMachine(Machine({api, apiParams, t}));
+    const {context} = current;
+    const {records, record, error, isOpen, meta, dialogTitle} = context;
     const {onCancel, onOk, onChange, handleEdit, handleAdd, handleDelete} = useCrud(send, record);
     const canExpand = !! rowExpansionTemplate;
 
@@ -71,8 +72,7 @@ export default ({
     useEffect(() => {
       send("load");
     }, []);
-
-
+    
     return (
       <>
         <div className="mb-10 text-lg text-3xl">{title}</div>
@@ -102,7 +102,7 @@ export default ({
           }
         </DataTable>
         {
-          isOpen && <Form title={title} fields={meta.fields} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
+          isOpen && <Form title={dialogTitle} dialogConfig={dialogConfig} fields={meta.fields} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
         }
       </>
     );

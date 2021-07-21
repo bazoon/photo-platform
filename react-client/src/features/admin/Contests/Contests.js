@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from "react";
-import Modal from "antd/lib/modal/Modal";
 import {Button} from "primereact/button";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -7,30 +6,26 @@ import { useTranslation } from "react-i18next";
 import Form from "../../../components/Crud/Form";
 import Machine from "../../../features/machines/CrudMachine";
 import useCrud from "../../../core/hooks/useCrud";
-import G from "../../../components/Crud/Grid";
 import {useMachine} from "@xstate/react";
-import { TabView, TabPanel } from "primereact/tabview";
-import {range} from "lodash/fp";
 import Jury from "./Jury";
 import { Sidebar } from "primereact/sidebar";
 import About from "./About";
 import Results from "./Results";
 import Photos from "./Photos";
 import Nominations from "./Nominations";
+import {collect} from "react-recollect";
+import {Dialog} from "primereact/dialog";
 
-export default function LexiconsGrid() {
+const Grid = ({store}) => {
   const { t } = useTranslation("namespace1");
   const [expandedRows, setExpandedRows] = useState([]);
-  const [currentRecord, setRecord] = useState(null);
-  const [api, setApi] = useState("");
-  const [expandedId, setExpandedId] = useState(null);
-  const [section, showSection] = useState(-1);
+  const [section, setSection] = useState(-1);
   
 
   const [current, send] = useMachine(Machine({api: "api/admin/contests"}));
   const {context} = current;
   const {records, record, error, isOpen, meta} = context;
-  const {onCancel, onOk, onChange, handleEdit, handleAdd, handleDelete} = useCrud(send, record);
+  const {onCancel, onOk, onChange, handleAdd} = useCrud(send, record);
  
 
   const contestSections = [ 
@@ -64,36 +59,48 @@ export default function LexiconsGrid() {
     },
   ];
 
-  const renderSidebar = id => {
-    const Component = contestSections[section] && contestSections[section].Component;
+  const showSection = ({id, index}) => {
+    const props = {
+      id,
+      sectionId: index,
+      key: index,
+      baseZIndex: 0,
+      dialogId: "Section"
+    };
+    store.sidebars.push({Component: renderSidebar, props});
+  };
+
+  const hideSection = (dialogId) => {
+    store.sidebars = store.sidebars.filter(s => s.props.dialogId !== dialogId);
+  };
+
+  const renderSidebar = ({id, baseZIndex, sectionId, dialogId}) => {
+    const section = contestSections[sectionId];
+    const Component = section && section.Component;
     return (
-      <Sidebar visible={section >= 0} dismissable modal position="right" style={{width: "80%"}}  onHide={() => showSection(-1) }>
+      <Dialog visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "40vw"}}  onHide={() => hideSection(dialogId) }>
         {Component && <Component id={id}/>}
-      </Sidebar>
+      </Dialog>
     );
   };
+
+
+
+
 
   useEffect(() => {
     send("load");
   },[]);
 
-  const onRowExpand = ({data, id}) => {
-    // const api = "api/admin/phrases/";   
-    // setApi(api);
-    // setExpandedId(id);
+  const onRowExpand = () => {
   };
 
   const rowExpansionTemplate = ({id}) => {
-    // const Grid = G({api: "api/admin/phrases", apiParams: {id}});
-    // return <Grid/>;
     
     return (
       <div style={{width: "100%", overflowX: "auto"}}>
         {
-          contestSections.map(({title, render}, i) => <div className="inline mr-5"  key={i}><Button className="p-button-outlined p-button-sm p-button-text"  label={title} onClick={() => showSection(i)}/></div>)
-        }
-        {
-          renderSidebar(id)
+          contestSections.map(({title}, i) => <div className="inline mr-5"  key={i}><Button className="p-button-outlined p-button-sm p-button-text"  label={title} onClick={() => showSection({id, index: i})}/></div>)
         }
       </div>
     );
@@ -125,5 +132,6 @@ export default function LexiconsGrid() {
       }
     </>
   );
-}
+};
 
+export default collect(Grid);

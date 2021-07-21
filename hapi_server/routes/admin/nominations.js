@@ -3,21 +3,22 @@ const R = require('ramda');
 module.exports = [
   {
     method: 'POST',
-    path: '/api/admin/nominations',
+    path: '/api/admin/nominations/{id}',
     handler: async function (request, h) {
+      const { id } = request.params;
       const {
-        category,
-        code,
-        commentPhrase,
+        maxCountImg,
+        name
       } = request.payload;
 
-      const lexicon = await h.models.Lexicon.create({
-        category,
-        code,
-        commentPhrase,
+      const nomination = await h.models.Section.create({
+        maxCountImg,
+        name,
+        contestId: id
       });
+      
+      return nomination;
 
-      return lexicon.toJSON();
     },
     options: {
       auth: {

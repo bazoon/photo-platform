@@ -1,57 +1,50 @@
-// import React from "react";
-// import Grid from "../../../components/Crud/Grid";
-// export default ({id}) => {
-//   const G = Grid({api: "api/admin/nominations", apiParams: {contestId: id}});
-//   return <G/>;
-// };
-
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {Button} from "primereact/button";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { useTranslation } from "react-i18next";
-import Form from "../../../components/Crud/Form";
-import Machine from "../../../features/machines/CrudMachine";
-import useCrud from "../../../core/hooks/useCrud";
 import G from "../../../components/Crud/Grid";
-import {useMachine} from "@xstate/react";
+import {Dialog} from "primereact/dialog";
+import {collect} from "react-recollect";
 
-export default function NominationsGrid({id}) {
-  const { t } = useTranslation("namespace1");
-  const [expandedRows, setExpandedRows] = useState([]);
-  const [current, send] = useMachine(Machine({api: "api/admin/nominations", apiParams: {id}}));
-  const {context} = current;
-  const {records, record, error, isOpen, meta} = context;
-  const {onCancel, onOk, onChange, handleEdit, handleAdd} = useCrud(send, record);
- 
+const Grid= function NominationsGrid({id, store}) {
 
+  const hideSideBar = (key) => {
+    store.sidebars = store.sidebars.filter(s => s.props.dialogId !== key);
+  };
 
-
-  useEffect(() => {
-    send("load");
-  },[]);
-
-
-  const rowExpansionTemplate = ({id}) => {
-    const Grid = G({api: "api/admin/nominationSections", apiParams: {id}});
-    return <Grid/>;
+  const renderSidebar = ({baseZIndex, dialogId, nominationId}) => {
+    const NominationsNamesGrid = G({api: "api/admin/nominationSections", dialogConfig: {style: {width: "20vw"}}, apiParams: {nominationId}});
+    return (
+      <Dialog header="Перевод номинаций" visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "40%"}}  onHide={() => hideSideBar(dialogId)}>
+        <NominationsNamesGrid/>
+      </Dialog>
+    );
   };
 
   const loadSections = ({id}) => {
-    console.log(id);
+    const props = {
+      id,
+      section: id,
+      key: id,
+      baseZIndex: 2,
+      dialogId: "NominationsNames",
+      nominationId: id
+    };
+
+    store.sidebars.push({Component: renderSidebar, props});
   };
 
 
   const customOperations = [
     record => <Button icon="pi pi-link" onClick={_ => loadSections(record) } className="p-button-rounded" />
   ];
+    
+  // select * from section_names
 
-  const Grid = G({api: "api/admin/nominations", customOperations,  width: "100%", apiParams: {id}});
-
+  const Grid = G({api: "api/admin/nominations", title: "Номинации", customOperations,  width: "100%", apiParams: {id}});
   return (
     <>
       <Grid/>
     </>
   );
-}
+};
 
+export default(collect(Grid));

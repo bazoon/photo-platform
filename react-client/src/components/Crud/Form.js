@@ -6,7 +6,17 @@ import { Button } from "primereact/button";
 import { Form } from "react-final-form";
 import { Message } from "primereact/message";
 
-export default function FForm({record, visible, onCancel, onOk, onChange, saveError, fields, title}) {
+export default function FForm({
+  record, 
+  visible, 
+  onCancel, 
+  onOk, 
+  onChange, 
+  saveError, 
+  fields, 
+  title,
+  dialogConfig = {}
+}) {
   const ref =useRef(null);
   const {message, errors} = saveError;
 
@@ -39,7 +49,7 @@ export default function FForm({record, visible, onCancel, onOk, onChange, saveEr
     }
   }, [saveError]);
 
-
+  console.log(dialogConfig);
   return (
     <div>
       <Form
@@ -54,6 +64,7 @@ export default function FForm({record, visible, onCancel, onOk, onChange, saveEr
             style={{ width: "50vw" }}
             onHide={cancel}
             footer={renderFooter(handleSubmit)}
+            {...dialogConfig}
           >
             {message && <Message severity="error" text={message} />}
             <form onSubmit={handleSubmit} className="p-10 p-fluid">

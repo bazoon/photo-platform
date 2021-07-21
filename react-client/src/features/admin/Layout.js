@@ -4,19 +4,7 @@ import {
   Switch,
   Route,
 } from "react-router-dom";
-import {asyncGet} from "../../core/api";
-import i18n from "../../core/i18n";
-import { store, collect } from "react-recollect";
-import compose from "crocks/helpers/compose";
-import map from "crocks/pointfree/map";
-import identity from "crocks/combinators/identity";
-import ifElse from "crocks/logic/ifElse";
-import Maybe from "crocks/Maybe";
-import tryCatch from "crocks/Result/tryCatch";
 import { useTranslation } from "react-i18next";
-import Menu from "antd/lib/menu";
-import SubMenu from "antd/lib/menu/SubMenu";
-import {Link} from "react-router-dom";
 import Users from "./Users/Users";
 import Admins from "./Admins/Admins";
 import Languages from "./Languages/Languages";
@@ -24,18 +12,17 @@ import Lexicons from "./Lexicons/Lexicons";
 import Organizers from "./Organizers/Organizers";
 import AwardTypes from "./AwardTypes/AwardTypes";
 import Words from "./Words/Words";
-import { TieredMenu } from "primereact/tieredmenu";
 import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import AdminMenu from "./AdminMenu";
 import Salones from "./Salones/Salones";
 import Contests from "./Contests/Contests";
+import { collect } from "react-recollect";
+import { initStore } from "react-recollect";
+initStore({sidebars: []});
 
+function App({store}) {
 
-
-
-function App({history}) {
-  const { t } = useTranslation("namespace1");
   useEffect(() => {
   }, []);
 
@@ -96,10 +83,11 @@ function App({history}) {
               })
             }
           </Switch>
+          bar
         </main>
       </div>
     </Router>
   );
 }
 
-export default App;
+export default collect(App);
