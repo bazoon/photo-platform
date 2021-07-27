@@ -40,7 +40,7 @@ function Main() {
             <header className="bg-blue-200 h-50">
               <MainMenu/>
             </header>
-            <main className="flex-1 bg-yellow-50">
+            <main className="flex-1 h-full bg-yellow-50">
               <Switch>
                 <Route path="/login">
                   <Login />

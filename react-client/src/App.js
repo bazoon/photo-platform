@@ -18,8 +18,12 @@ import Admin from "./features/admin/Layout";
 import PrivateRoute from "./core/PrivateRoute";
 import Init from "./core/Init";
 import MainPage from "./MainPage";
+import Vk from "./icons/Vk";
+import Signup from "./features/Signup";
+
 
 import { collect } from "react-recollect";
+import JuryGallery from "./components/JuryGallery";
 const MainMenu = lazy(() => import("./MainMenu"));
 
 function Main({store}) {
@@ -41,40 +45,84 @@ function Main({store}) {
     asyncGet("api/translation/en").fork(e => e, data => loadTranslations("en", data));
   }, []);
 
-  //TODO: подумать как сделать ширину чтобы было 2 ширины 1440px общая и 
   return (
     <>
       <Router>
         <Init/>
         <Suspense fallback="loading">
-          <div className="container flex flex-col h-screen">
-            <header className="bg-brown-medium h-66">
+          
+          <header className="flex justify-center h-24">
+            <div className="container flex justify-center bg-brown-medium">
               <MainMenu/>
-            </header>
-            <main className="flex-1 bg-darkgreen">
-              <Switch>
-                <Route path="/login">
-                  <Login />
-                </Route>
-                <Route path="/thesis">
-                  <Thesis/>
-                </Route>
+            </div>
+          </header>
 
-                <PrivateRoute path="/admin">
-                  <Suspense fallback="loading">
-                    <Admin/>
-                  </Suspense>
-                </PrivateRoute>
-                <Route path="/">
-                  <MainPage/>
-                </Route>
-              </Switch>
+          <main className="flex flex-col justify-center flex-1">
+            <Switch>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <Route path="/signup">
+                <Signup />
+              </Route>
+              <Route path="/thesis">
+                <Thesis/>
+              </Route>
+              <Route path="/jgallery">
+                <JuryGallery/>
+              </Route>
+              <PrivateRoute path="/admin">
+                <Suspense fallback="loading">
+                  <Admin/>
+                </Suspense>
+              </PrivateRoute>
+              <Route path="/">
+                <MainPage/>
+              </Route>
+            </Switch>
+          </main>
 
-            </main>
+          <footer className="flex justify-center">
 
-            <footer className="h-10 bg-red-100">
-            </footer>
-          </div>
+            <div className="container flex justify-center bg-brown-medium">
+              <div className="pt-20 pb-48 wrap">
+                <div className="justify-between grid grid-cols-4">
+                  <div className="w-32 h-16">
+                    <img className="mb-4" src="https://via.placeholder.com/93"/>
+                  </div>
+
+                  <div className="grid gap-2 grid-cols-2 grid-rows-3">
+                    <a className="text-gray2" href="#">About</a>
+                    <a className="text-gray2" href="#">Partners</a>
+                    <a className="text-gray2" href="#">Gallery</a>
+                    <a className="text-gray2" href="#">Jury</a>
+                    <a className="text-gray2" href="#">Rules</a>
+                    <a className="text-gray2" href="#">Politics</a>
+                  </div>
+                  
+                  <div className="max-w-max gap-8 grid grid-cols-2 grid-rows-2">
+                    <Vk/>
+                    <Vk/>
+                    <Vk/>
+                    <Vk/>
+                  </div>
+
+
+                  <div className="grid grid-rows-2 text-gray2">
+                    <div>
+                    8 (800) 255-42-12
+                    </div>
+                    <div>
+                    photoproject@gmail.com
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </footer>
+
+
         </Suspense>
       </Router>
 

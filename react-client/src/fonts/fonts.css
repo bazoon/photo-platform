@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'FuturaPTBook';
+    src: url('./FuturaPT-Book.eot'),
+         url('./FuturaPT-Book.woff'),
+         url('./FuturaPT-Book.ttf');
+}
+
+@font-face {
+    font-family: 'BebasNeueRegular';
+    src: url('./BebasNeueRegular.eot'),
+         url('./BebasNeueRegular.ttf'),
+         url('./BebasNeueRegular.woff');
+}

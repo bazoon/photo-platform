@@ -2,6 +2,22 @@
   font-family: FuturaPTBook;
 }
 
+html {
+  font-size: 12px;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body {
+  background-color: #e5e5f7;
+  background-image: radial-gradient(#0a0b0b 0.5px, #e5e5f7 0.5px);
+  background-size: 10px 10px;
+}
+
 .p-menubar-root-list {
   width: 100%;
 }
@@ -18,7 +34,7 @@
 
 .p-menubar {
   background: var(--menu-bg) !important;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: none;
   border: none !important;
 }
 
@@ -74,4 +90,10 @@
   color: rgba(255, 255, 255, 0.8) !important;
 }
 
-
+.wrap {
+  max-width: 1170px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}

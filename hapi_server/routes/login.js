@@ -25,68 +25,10 @@ const identity = require('crocks/combinators/identity');
 const joinM = chain(identity);
 const ifElse = require('crocks/logic/ifElse');
 
-// const mail = require('../services/mail');
+const mail = require('./services/mail.js');
 
 
 const expiresIn = 24 * 60 * 60 * 30;
-
-// router.post('/register', koaBody({ multipart: true }), async ctx => {
-//   const {
-//     email,
-//     firstName,
-//     lastName,
-//     password,
-//     nickName,
-//     phone
-//   } = ctx.request.body;
-
-//   const { avatar } = ctx.request.files;
-//   const files = avatar ? (Array.isArray(avatar) ? avatar : [avatar]) : [];
-//   await uploadFiles(files);
-
-//   var salt = bcrypt.genSaltSync(10);
-//   var hashedPassword = bcrypt.hashSync(password, salt);
-
-//   const user = await models.User.create({
-//     email,
-//     firstName,
-//     lastName,
-//     nickName,
-//     phone,
-//     avatar: avatar && avatar.name,
-//     salt,
-//     psw: hashedPassword,
-//     userType: 1,
-//     emailState: 0,
-//     rowState: 0
-//   });
-
-//   const token = jwt.sign(
-//     { firstName, lastName, id: user.id, userType: user.type },
-//     process.env.API_TOKEN,
-//     {
-//       expiresIn: expiresIn
-//     }
-//   );
-
-//   ctx.cookies.set('token', token, {
-//     httpOnly: false,
-//     maxAge: expiresIn * 1000
-//   });
-
-//   ctx.body = {
-//     email: user.email,
-//     firstName: user.firstName,
-//     lastName: user.lastName,
-//     nickName: user.nickName,
-//     phone: user.phone,
-//     avatar: getUploadFilePath(user.avatar),
-//     userType: user.userType,
-//     emailState: user.emailState,
-//     rowState: user.rowState,
-//     token
-//   };
-// });
 
 
 
@@ -506,7 +448,6 @@ const login = {
         console.log(1)
         res(h.response(e + 'NotAuthorized').code(401));
       }, ({user, token}) => {
-        console.log(user);
         request.cookieAuth.set({ tok: token });
         res(user);
       })
@@ -521,4 +462,117 @@ const login = {
 };
 
 
-module.exports = [login, login2];
+const signup = {
+  method: 'POST',
+  path: '/api/signup',
+  handler: async function (request, h) {
+    const {
+      email,
+      firstName,
+      lastName,
+      password,
+      nickName,
+      phone
+    } = request.payload;
+
+  
+    // const [domain] = request.info.hostname.split(':');
+
+    const domain = 'foto.ru'
+
+    // const { avatar } = ctx.request.files;
+    // const files = avatar ? (Array.isArray(avatar) ? avatar : [avatar]) : [];
+    // await uploadFiles(files);
+
+    var salt = bcrypt.genSaltSync(10);
+    var hashedPassword = bcrypt.hashSync(password, salt);
+
+    // const user = await models.User.create({
+    //   email,
+    //   firstName,
+    //   lastName,
+    //   nickName,
+    //   phone,
+    //   // avatar: avatar && avatar.name,
+    //   salt,
+    //   psw: hashedPassword,
+    //   userType: 1,
+    //   emailState: 0,
+    //   rowState: 0
+    // });
+
+    // const token = signToken(user);
+    // request.cookieAuth.set({ tok: token });
+
+
+    const token =2;
+    const link = `https://${domain}/change-password/${token}`;
+
+    console.log(process.env)
+    const config = {
+      host: process.env.MAIL_HOST,
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASS,
+      from: 'admin@fotoregion.site',
+      to: email,
+      subject: 'Ссылка для смены пароля',
+      html: `
+      <!doctype html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Fotoregion</title>
+        </head>
+        <body>
+          для смены пароля нажмите на <a href="${link}">ссылку</a>
+        </body>
+      </html>
+    `,
+      text:`
+      <!doctype html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Fotoregion</title>
+        </head>
+        <body>
+          для смены пароля нажмите на <a href="${link}">ссылку</a>
+          ${link}
+        </body>
+      </html>
+    `,
+    };
+
+    // select *from users where email like 'vith77%'
+
+    // delete from users where email='vith77@mail.ru'
+    console.log(config);
+    mail.send(config);
+
+    return {}
+
+    return {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      nickName: user.nickName,
+      phone: user.phone,
+      // avatar: user.avatar && getUploadFilePath(user.avatar),
+      // userType: user.userType,
+      emailState: user.emailState,
+      rowState: user.rowState,
+      token
+    };
+  
+
+  },
+  options: {
+    auth: {
+      mode: 'optional'
+    },
+    plugins: {'hapiAuthorization': false},
+  }
+};
+
+
+module.exports = [login, login2, signup];

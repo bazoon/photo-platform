@@ -1,4 +1,7 @@
-
+run:
+	cd ./react-client; HTTPS=true npm run start
+srv:
+	nodemon srv.js
 start:
 	pm2 start ./server.js
 stop:

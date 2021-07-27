@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const models = require("../../models");
+const models = require('../../../models');
 
 const m = {
   send: async function ({ host, user, pass, from, to, subject, text }) {
@@ -32,6 +32,7 @@ const m = {
         domain
       }
     });
+    return 0
 
     const { smtp, smtp_psw, name } = organizer;
     return m.send({ host: smtp, user: 'domfoto72', pass: smtp_psw, from: name, to, subject, text });
