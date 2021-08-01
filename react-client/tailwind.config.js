@@ -6,6 +6,7 @@ module.exports = {
       sortTailwindClasses: false
     }
   },
+  mode: "jit",
   theme: {
     screens: {
       "sm": "300px",
@@ -31,6 +32,7 @@ module.exports = {
     },
     fontFamily: {
       header: ["BebasNeueRegular"],
+      text: ["FuturaPTBook"]
     },
     fontSize: {
       "xs": "6px",
@@ -51,17 +53,37 @@ module.exports = {
       "10xl": "90px",
       "11xl": "96px",
     },
+    borderRadius: {
+      round: "50%"
+    },
     container: {
       center: true,
       
 
     },
     extend: {
-
-    },
+      gridTemplateRows: {
+        "g": "repeat(8, 5vw)"
+      },
+      minHeight: {
+        "400": "400px"
+      },
+      minWidth: {
+        "300": "200px"
+      },
+      height: {
+        "10vh": "10vh",
+        "15vh": "15vh",
+        "20vh": "20vh",
+        "25vh": "25vh",
+        "30vh": "30vh",
+        "40vh": "40vh"
+      }
+    }
   },
   variants: {
-    extend: {},
+    extend: {
+    },
   },
   plugins: [],
   corePlugins: {

@@ -29,7 +29,6 @@ const query = async (sql, options) => {
 }
 
 const init = async () => {
-  console.log(1)
   const server = Hapi.server({
     port: 7001,
     host: 'localhost',
@@ -64,8 +63,6 @@ const init = async () => {
   server.ext('onPreResponse', preResponse);
 
 
-
-
   server.auth.strategy('session', 'cookie', {
     cookie: {
       name: 'tok',
@@ -80,11 +77,9 @@ const init = async () => {
           where: {
             id: user.id
           }});
-
-        const userRole = ['SUPERADMIN', 'ADMIN', 'MODER', 'USER'][u.userType] || 'ANON';
+        const userRole = ['SUPERADMIN', 'ADMIN', 'MODER', 'USER'][u && u.userType] || 'ANON';
         routeRole = get('route.settings.plugins.role', request) || 'ANON';
-
-        return { valid: can(userRole, routeRole), credentials: { user }, role: userRole };
+        return { valid: can(userRole, routeRole), credentials: user, role: userRole };
       }
       return { valid: routeRole === '' };
     }
@@ -108,7 +103,7 @@ const init = async () => {
 };
 
 process.on('unhandledRejection', (err) => {
-  console.log(err)
+  console.log(err, 'unhandledRejection')
   process.exit(1);
 });
 

@@ -35,19 +35,10 @@ export default function Main({store}) {
       history.push("/login");
     }, data => {
       localStorage.setItem("user", JSON.stringify(data));
-      asyncGet("api/roles").fork(() => {}, ({role}) => {
-        store.role = role;
-      });
       store.user = data;
       history.push("/");
     });
   }
-
-  function onCaptcha(a,b) {
-    debugger;
-
-  }
-  
 
 
   return (

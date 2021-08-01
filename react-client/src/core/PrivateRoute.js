@@ -3,15 +3,16 @@ import {Route, Redirect} from "react-router-dom";
 import { store, collect } from "react-recollect";
 import {Link} from "react-router-dom";
 
-function PrivateRoute({ children, ...rest }) {
+
+function PrivateRoute({ children, path, can, ...rest }) {
   return (
     <Route
       {...rest}
-      render={({ location }) =>
-        store.user && store.user.nickName ? (
+      render={() =>
+        can() ? (
           children
         ) : (
-          <Link to="/login">Login</Link>
+          <Redirect to={`/login?from=${path}`}/>
         )
       }
     />

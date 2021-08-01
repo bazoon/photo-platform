@@ -9,6 +9,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  withRouter,
 } from "react-router-dom";
 import Login from "./features/Login";
 import {asyncGet} from "./core/api";
@@ -20,13 +21,14 @@ import Init from "./core/Init";
 import MainPage from "./MainPage";
 import Vk from "./icons/Vk";
 import Signup from "./features/Signup";
-
-
 import { collect } from "react-recollect";
 import JuryGallery from "./components/JuryGallery";
+import ConfirmEmail from "./features/ConfirmEmail";
+import useAuth from "./core/hooks/useAuth";
 const MainMenu = lazy(() => import("./MainMenu"));
 
 function Main({store}) {
+  const {canAdmin} = useAuth();
   function loadTranslations(lang, t) {
     i18n.addResourceBundle(lang, "namespace1", t);
     const lan = window.navigator.language.slice(0, 2);
@@ -43,6 +45,9 @@ function Main({store}) {
   useEffect(() => {
     asyncGet("api/translation/ru").fork(e => e, data => loadTranslations("ru", data));
     asyncGet("api/translation/en").fork(e => e, data => loadTranslations("en", data));
+    asyncGet("api/roles").fork(() => {}, ({role}) => {
+      store.role = role;
+    });
   }, []);
 
   return (
@@ -65,13 +70,16 @@ function Main({store}) {
               <Route path="/signup">
                 <Signup />
               </Route>
+              <Route path="/confirm-email">
+                <ConfirmEmail />
+              </Route>
               <Route path="/thesis">
                 <Thesis/>
               </Route>
               <Route path="/jgallery">
                 <JuryGallery/>
               </Route>
-              <PrivateRoute path="/admin">
+              <PrivateRoute path="/admin" can={canAdmin}>
                 <Suspense fallback="loading">
                   <Admin/>
                 </Suspense>
@@ -85,7 +93,7 @@ function Main({store}) {
           <footer className="flex justify-center">
 
             <div className="container flex justify-center bg-brown-medium">
-              <div className="pt-20 pb-48 wrap">
+              <div className="pt-20 pb-36 wrap">
                 <div className="justify-between grid grid-cols-4">
                   <div className="w-32 h-16">
                     <img className="mb-4" src="https://via.placeholder.com/93"/>

@@ -6,6 +6,10 @@ html {
   font-size: 12px;
 }
 
+ul {
+  padding: 0;
+}
+
 #root {
   display: flex;
   flex-direction: column;
@@ -94,6 +98,5 @@ body {
   max-width: 1170px;
   width: 100%;
   display: flex;
-  justify-content: center;
   flex-direction: column;
 }

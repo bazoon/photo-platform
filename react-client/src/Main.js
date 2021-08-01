@@ -20,8 +20,8 @@ import Admin from "./features/admin/Layout";
 import PrivateRoute from "./core/PrivateRoute";
 import { collect } from "react-recollect";
 
-
 function Main() {
+
   function loadTranslations(lang, t) {
     i18n.addResourceBundle(lang, "namespace1", t);
   }
@@ -57,6 +57,7 @@ function Main() {
                 <Route path="/">
                 </Route>
               </Switch>
+
             </main>
 
             <footer className="h-10 bg-red-100">

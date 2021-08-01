@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import compose from "crocks/helpers/compose";
 import map from "crocks/pointfree/map";
 import identity from "crocks/combinators/identity";
@@ -7,7 +7,7 @@ import Result from "crocks/Result";
 import tryCatch from "crocks/Result/tryCatch";
 import chain from "crocks/pointfree/chain";
 import { collect, afterChange} from "react-recollect";
-
+import { Toast } from "primereact/toast";
 
 const safe = pred =>
   ifElse(pred, Result.Ok, Result.Err);
@@ -15,10 +15,12 @@ const safe = pred =>
 
 
 function Init({store}) {
-  
+  const toast = useRef();
+
   useEffect(() => {
-    store.user = {};
+    store.user = null;
     store.role = "";
+    store.toast = toast;
 
     compose(
       map(user => { store.user = user; }),
@@ -30,7 +32,13 @@ function Init({store}) {
       }
     )("user");
   }, []);
-  return null;
+  
+  return (
+    <>
+      <Toast ref={toast} />
+    </>
+
+  );
 }
 
 export default collect(Init);

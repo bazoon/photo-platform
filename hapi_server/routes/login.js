@@ -26,6 +26,7 @@ const joinM = chain(identity);
 const ifElse = require('crocks/logic/ifElse');
 
 const mail = require('./services/mail.js');
+const {isEmpty} = require('lodash/fp');
 
 
 const expiresIn = 24 * 60 * 60 * 30;
@@ -427,26 +428,29 @@ const login2 = {
   }
 }
 
+const log = (a) => {
+  console.log(a.inspect && a.inspect());
+  return a;
+}
+
 const login = {
   method: 'POST',
   path: '/api/login',
   handler: async function (request, h) {
     const runn = Async.fromPromise(nickName => h.query('select * from users where nick_name=:nickName', {replacements: {nickName}}));
-
     const r = compose(
       joinM,
       map(map(user => ({user, token: signToken(user) }))),
       map(({user, r}) => r ? Async.Resolved(user) : Async.Rejected(401)),
       chain(({user, p}) => Async((_, res) => bcrypt.compare(p.password, user.psw).then(r => res({user, r})))),
       joinM,
-      map(p => runn(p.nickName).chain(o => Async.Resolved({user: o[0], p}))),
+      map(p => runn(p.nickName).chain(o => o[0] ? Async.Resolved({user: o[0], p}) : Async.Rejected('Неправильный логин или пароль!'))),
       Async.Resolved 
     )(request.payload)
 
     return new Promise((res) => {
       r.fork((e) => {
-        console.log(1)
-        res(h.response(e + 'NotAuthorized').code(401));
+        res(h.response({error: e}).code(401));
       }, ({user, token}) => {
         request.cookieAuth.set({ tok: token });
         res(user);
@@ -478,7 +482,7 @@ const signup = {
   
     // const [domain] = request.info.hostname.split(':');
 
-    const domain = 'foto.ru'
+    const domain = 'foto.ru:3000'
 
     // const { avatar } = ctx.request.files;
     // const files = avatar ? (Array.isArray(avatar) ? avatar : [avatar]) : [];
@@ -487,26 +491,22 @@ const signup = {
     var salt = bcrypt.genSaltSync(10);
     var hashedPassword = bcrypt.hashSync(password, salt);
 
-    // const user = await models.User.create({
-    //   email,
-    //   firstName,
-    //   lastName,
-    //   nickName,
-    //   phone,
-    //   // avatar: avatar && avatar.name,
-    //   salt,
-    //   psw: hashedPassword,
-    //   userType: 1,
-    //   emailState: 0,
-    //   rowState: 0
-    // });
+    const user = await models.User.create({
+      email,
+      firstName,
+      lastName,
+      nickName,
+      phone,
+      // avatar: avatar && avatar.name,
+      salt,
+      psw: hashedPassword,
+      userType: 1,
+      emailState: 0,
+      rowState: 0
+    });
 
-    // const token = signToken(user);
-    // request.cookieAuth.set({ tok: token });
-
-
-    const token =2;
-    const link = `https://${domain}/change-password/${token}`;
+    const token = signToken(user);
+    const link = `https://${domain}/confirm-email/${token}`;
 
     console.log(process.env)
     const config = {
@@ -515,7 +515,7 @@ const signup = {
       pass: process.env.MAIL_PASS,
       from: 'admin@fotoregion.site',
       to: email,
-      subject: 'Ссылка для смены пароля',
+      subject: 'Ссылка для регистрации',
       html: `
       <!doctype html>
       <html lang="en">
@@ -524,7 +524,7 @@ const signup = {
           <title>Fotoregion</title>
         </head>
         <body>
-          для смены пароля нажмите на <a href="${link}">ссылку</a>
+          для подтверждения регистрации нажмите на <a href="${link}">ссылку</a>
         </body>
       </html>
     `,
@@ -536,21 +536,20 @@ const signup = {
           <title>Fotoregion</title>
         </head>
         <body>
-          для смены пароля нажмите на <a href="${link}">ссылку</a>
+          для подтверждения регистрации нажмите на <a href="${link}">ссылку</a>
           ${link}
         </body>
       </html>
     `,
     };
+    
 
-    // select *from users where email like 'vith77%'
+    // select *from users order by id desc;
 
-    // delete from users where email='vith77@mail.ru'
-    console.log(config);
+    // delete from users where id=2;
+    
     mail.send(config);
-
-    return {}
-
+    
     return {
       email: user.email,
       firstName: user.firstName,
@@ -574,5 +573,69 @@ const signup = {
   }
 };
 
+const confirm = {
+  method: 'POST',
+  path: '/api/confirm-email',
+  handler: async function (request, h) {
+    const {
+      token
+    } = request.payload;
 
-module.exports = [login, login2, signup];
+    try {
+      const {id} = jwt.verify(token, process.env.API_TOKEN);
+
+      console.log(id);
+
+      const user = await models.User.findOne({
+        where: {
+          id
+        }
+      });
+      
+      user.emailState = 1;
+
+      await user.save();
+      request.cookieAuth.set({ tok: token });
+      return {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        nickName: user.nickName,
+        phone: user.phone,
+        emailState: user.emailState,
+        rowState: user.rowState,
+      };
+    } catch(e) {
+      return {
+        ok: false,
+        message: e.message
+      };
+    }
+  },
+  options: {
+    auth: {
+      mode: 'optional'
+    },
+    plugins: {'hapiAuthorization': false},
+  }
+};
+
+
+const logout = {
+  method: 'POST',
+  path: '/api/logout',
+  handler: async function (request) {
+    request.cookieAuth.clear();
+    return {ok: true};
+  },
+  options: {
+    auth: {
+      mode: 'optional'
+    },
+    plugins: {'hapiAuthorization': false},
+  }
+};
+
+
+
+module.exports = [login, login2, signup, confirm, logout];

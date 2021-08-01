@@ -24,11 +24,14 @@ module.exports = {
       return '';
     }
 
+    console.log(3, u)
     const user = await models.User.findOne({
       where: {
         id: u.id
       }
     });
+    console.log(4, user)
+
 
 
     if (user.userType === 0) {
@@ -38,8 +41,6 @@ module.exports = {
     if (user.userType === 2) {
       return 'moder';
     }
-
-
 
     const query = `
       select admins.adm_type 

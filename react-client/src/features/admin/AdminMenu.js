@@ -5,8 +5,6 @@ import { TieredMenu } from "primereact/tieredmenu";
 import { withRouter } from "react-router";
 
 
-
-
 function App({history}) {
   const { t } = useTranslation("namespace1");
 

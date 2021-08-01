@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { collect } from "react-recollect";
 import { Menubar } from "primereact/menubar";
 import { withRouter } from "react-router";
+import useAuth from "./core/hooks/useAuth";
+import useLogout from "./core/hooks/useLogout";
 
 const setTemplateForItems = (items = [], history, t) => {
   items.forEach(item => {
@@ -19,16 +21,18 @@ const setTemplateForItems = (items = [], history, t) => {
 function Main({store, history}) {
   const [items, setItems] = useState([]);
   const { t, i18n } = useTranslation("namespace1");
+  const {canAdmin} = useAuth();
+  const logout = useLogout(store);
  
   const links = [
     { 
       className: "flex-1",
       template: <div></div>
     },
-    {
+    canAdmin() ? {
       label: "admin",
       command: () => history.push("/admin"),
-    },
+    }: {},
     {
       label: i18n.language,
       items: [
@@ -44,7 +48,22 @@ function Main({store, history}) {
         }
 
       ]
-    }
+    },
+    !store.user && {
+      label: "login",
+      command: () => history.push("/login")
+    } || {},
+    !store.user && {
+      label: "signup",
+      command: () => history.push("/signup")
+    } || {},
+    store.user && {
+      label: "logout",
+      command: () => {
+        logout();
+        history.push("/");
+      } 
+    } || {}
   ];
 
   function menuLoaded(menu) {
