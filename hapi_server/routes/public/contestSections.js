@@ -63,3 +63,31 @@ router.get('/:id', async ctx => {
 });
 
 module.exports = router;
+
+
+// [? Платный конкурс]
+// 	[? Оплачено]
+// 		Одобрить
+// 	Нельзя подать
+// [? Заявка ок]
+// 	Одобрить
+// 	Отказать
+		
+
+
+// Do work
+// 	Check the weather
+// 	[? Rain] OR:
+// 		Get coat
+// 		Get umbrella
+// 	Dress for temp
+// 	Get chain
+// 	Call the dog
+// 	OR:
+// 		Min 15 mins: Go woods
+// 	AND:
+// 		ok
+
+
+
+

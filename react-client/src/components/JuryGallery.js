@@ -121,13 +121,14 @@ export default function JuryGallery() {
 
   const renderRates = (id) => {
     return (
-      <div className="flex justify-between relative before:content-['hello'] before:absolute before:w-full before:h-full filter blur-100">
+      <div className="flex justify-between background:bg-brown-dark p-4 items-center before:backdrop-blur-md">
+        <div className="absolute left-0 right-0 top-0 bottom-0 opacity-40 bg-black"></div>
         {
-          range(1, 10).map(i => {
+          range(1, 11).map(i => {
             const hasRate = rates[id] === i;
-            const className = cn("font-text w-8 h-8 flex rounded-bl text-base cursor-pointer mr-8 last:mr-0 justify-center rounded-round items-center", {
+            const className = cn("z-10 font-text w-8 h-8 flex rounded-bl text-base cursor-pointer mr-8 last:mr-0 justify-center rounded-round items-center", {
               "bg-brown-light text-dark": hasRate,
-              "mix-blend-difference text-bright": !hasRate
+              "text-bright": !hasRate
             });
 
             return (

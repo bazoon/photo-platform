@@ -1,12 +1,15 @@
 module.exports = {
-  purge: [],
+  purge: [
+    "./src/**/*.html",
+    "./src/**/*.js",
+    "./src/**/*.css",
+  ],
   darkMode: false, // or 'media' or 'class'
   tailwindCSS: {
     headwind: {
       sortTailwindClasses: false
     }
   },
-  mode: "jit",
   theme: {
     screens: {
       "sm": "300px",
@@ -28,7 +31,8 @@ module.exports = {
       white: {
         80: "rgb(255, 255, 255, 0.8)"
       },
-      bright: "#fff"
+      bright: "#fff",
+      black: "#000"
     },
     fontFamily: {
       header: ["BebasNeueRegular"],

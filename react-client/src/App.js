@@ -24,6 +24,9 @@ import Signup from "./features/Signup";
 import { collect } from "react-recollect";
 import JuryGallery from "./components/JuryGallery";
 import ConfirmEmail from "./features/ConfirmEmail";
+import Profile from "./features/Profile";
+
+
 import useAuth from "./core/hooks/useAuth";
 const MainMenu = lazy(() => import("./MainMenu"));
 
@@ -78,6 +81,9 @@ function Main({store}) {
               </Route>
               <Route path="/jgallery">
                 <JuryGallery/>
+              </Route>
+              <Route path="/profile">
+                <Profile/>
               </Route>
               <PrivateRoute path="/admin" can={canAdmin}>
                 <Suspense fallback="loading">
