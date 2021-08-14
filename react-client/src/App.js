@@ -16,7 +16,6 @@ import {asyncGet} from "./core/api";
 import i18n from "./core/i18n";
 import Thesis from "./features/Thesis";
 import Admin from "./features/admin/Layout";
-import PrivateRoute from "./core/PrivateRoute";
 import Init from "./core/Init";
 import MainPage from "./MainPage";
 import Vk from "./icons/Vk";
@@ -45,12 +44,27 @@ function Main({store}) {
     });
   };
 
+
+  const checkRole = role => {
+    const isAdminArea = location.href.includes("/admin");
+    if (isAdminArea && !canAdmin(role)) {
+      location.href = "/login";
+    }
+  };
+
+  const loadRoles = () => {
+    asyncGet("api/roles").fork(() => {}, ({role}) => {
+      store.role = role;
+      checkRole(role);
+    });
+  };
+
+
   useEffect(() => {
     asyncGet("api/translation/ru").fork(e => e, data => loadTranslations("ru", data));
     asyncGet("api/translation/en").fork(e => e, data => loadTranslations("en", data));
-    asyncGet("api/roles").fork(() => {}, ({role}) => {
-      store.role = role;
-    });
+    store.loadRoles = loadRoles;
+    loadRoles();
   }, []);
 
   return (
@@ -85,11 +99,11 @@ function Main({store}) {
               <Route path="/profile">
                 <Profile/>
               </Route>
-              <PrivateRoute path="/admin" can={canAdmin}>
+              <Route path="/admin">
                 <Suspense fallback="loading">
                   <Admin/>
                 </Suspense>
-              </PrivateRoute>
+              </Route>
               <Route path="/">
                 <MainPage/>
               </Route>

@@ -20,51 +20,57 @@ const setTemplateForItems = (items = [], history, t) => {
 
 function Main({store, history}) {
   const [items, setItems] = useState([]);
+  const [links, setLinks] = useState([]);
   const { t, i18n } = useTranslation("namespace1");
   const {canAdmin} = useAuth();
   const logout = useLogout(store);
  
-  const links = [
-    { 
-      className: "flex-1",
-      template: <div></div>
-    },
-    canAdmin() ? {
-      label: "admin",
-      command: () => history.push("/admin"),
-    }: {},
-    {
-      label: i18n.language,
-      items: [
-        {
-          name: "ru",
-          label: "ru",
-          command: () => i18n.changeLanguage("ru")
-        },
-        {
-          label: "en",
-          name: "en",
-          command: () => i18n.changeLanguage("en")
-        }
+  useEffect(() => {
 
-      ]
-    },
-    !store.user && {
-      label: "login",
-      command: () => history.push("/login")
-    } || {},
-    !store.user && {
-      label: "signup",
-      command: () => history.push("/signup")
-    } || {},
-    store.user && {
-      label: "logout",
-      command: () => {
-        logout();
-        history.push("/");
-      } 
-    } || {}
-  ];
+    const l = [
+      { 
+        className: "flex-1",
+        template: <div></div>
+      },
+      canAdmin(store.role) ? {
+        label: "admin",
+        command: () => history.push("/admin"),
+      }: {},
+      {
+        label: i18n.language,
+        items: [
+          {
+            name: "ru",
+            label: "ru",
+            command: () => i18n.changeLanguage("ru")
+          },
+          {
+            label: "en",
+            name: "en",
+            command: () => i18n.changeLanguage("en")
+          }
+
+        ]
+      },
+      !store.user && {
+        label: "login",
+        command: () => history.push("/login")
+      } || {},
+      !store.user && {
+        label: "signup",
+        command: () => history.push("/signup")
+      } || {},
+      store.user && {
+        label: "logout",
+        command: () => {
+          logout();
+          history.push("/");
+        } 
+      } || {}
+    ];
+    console.log(canAdmin(store.role), store.role, l);
+    setLinks(l);
+  }, [store.role, store.user]);
 
   function menuLoaded(menu) {
     setItems(setTemplateForItems(menu, history, t));

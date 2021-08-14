@@ -20,27 +20,23 @@ function Main({store}) {
   const history = useHistory();
   const { t } = useTranslation("namespace1");
 
-  const [data, isLoading, {post}, error] = useAsync(); 
+  const loginFailed = error => {
+    store.toast.current.show({severity: "error", summary: error && error.error});
+  };
 
-  useEffect(() => {
+  const loginOk = data => {
     localStorage.setItem("user", JSON.stringify(data));
     store.user = data;
-    if (data)
+    store.loadRoles();
+    
+    if (data) {
       history.push("/");
-  }, [data]);
-
-  useEffect(() => {
-    if (error)
-      store.toast.current.show({severity: "error", summary: error && error.error});
-  }, [error]);
-
+    }
+  };
 
   function handleLogin(e) {
     e.preventDefault();
-    post("api/login", { password, nickName, remember, iConfirmAgreement, iKnowAboutCookies, iReadAboutPersonal});
-    asyncGet("api/roles").fork(() => {}, ({role}) => {
-      store.role = role;
-    });
+    asyncPost("api/login", { password, nickName, remember, iConfirmAgreement, iKnowAboutCookies, iReadAboutPersonal}).fork(loginFailed, loginOk);
   }
 
   
@@ -58,7 +54,7 @@ function Main({store}) {
             <label className="col-span-4 mr-8 text-tiny">Согласен на обработку личных данных</label>
             <div className="col-span-2"> </div>
             <div className="col-span-4">
-              <Button loading={isLoading} disabled={!agreed} onClick={handleLogin} className="uppercase text-center">Войти</Button>
+              <Button disabled={!agreed} onClick={handleLogin} className="uppercase text-center">Войти</Button>
             </div>
           </div>
         </form>
