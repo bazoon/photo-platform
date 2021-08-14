@@ -6,5 +6,4 @@ const useAuth = () => {
     isLogged: role => role === "user"
   };
 };
-
 export default useAuth;

@@ -5,12 +5,13 @@ import Checkbox from "antd/lib/checkbox/Checkbox";
 import { collect } from "react-recollect";
 import {useHistory} from "react-router-dom";
 import {Button} from "primereact/button";
-import { Captcha } from "primereact/captcha";
+import { store } from "react-recollect";
+
 
 const handleChange = setfn => e => setfn(e.target.value);
 const handleChangeCheckbox = setfn => e => setfn(e.target.checked);
 
-export default function Main({store}) {
+export default function Main() {
   // const [remember, setRemember] = useState(true);
   // const [iConfirmAgreement, setIConfirmAgreement] = useState(true);
   // const [iKnowAboutCookies, setIKnowAboutCookies] = useState(true);
@@ -31,7 +32,6 @@ export default function Main({store}) {
     e.preventDefault();
     
     asyncPost("api/signup", { password, nickName, firstName, lastName, email, agreed}).fork(e => {
-      history.push("/login");
     }, data => {
       localStorage.setItem("user", JSON.stringify(data));
       store.user = data;

@@ -19,9 +19,10 @@ import Salones from "./Salones/Salones";
 import Contests from "./Contests/Contests";
 import { collect } from "react-recollect";
 import { initStore } from "react-recollect";
+import { store } from "react-recollect";
 initStore({sidebars: []});
 
-function App({store}) {
+function App() {
 
   useEffect(() => {
   }, []);
