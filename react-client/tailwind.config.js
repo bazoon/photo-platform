@@ -32,7 +32,8 @@ module.exports = {
         80: "rgb(255, 255, 255, 0.8)"
       },
       bright: "#fff",
-      black: "#000"
+      black: "#000",
+      orange: "rgba(239, 188, 130, 1)"
     },
     fontFamily: {
       header: ["BebasNeueRegular"],

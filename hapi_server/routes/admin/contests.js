@@ -1,7 +1,7 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const models = require("../../../models");
-const R = require("ramda");
+const models = require('../../../models');
+const R = require('ramda');
 
 const fields = [
   'id',
@@ -22,9 +22,9 @@ const fields = [
   'maxWeight'
 ];
 
-router.get("/", async ctx => {
+router.get('/', async ctx => {
   const { host } = ctx.request.header;
-  const [domain] = host.split(":");
+  const [domain] = host.split(':');
 
   const user = await models.User.findOne({
     where: {
@@ -92,14 +92,14 @@ router.get("/", async ctx => {
   });
 });
 
-router.post("/", async ctx => {
+router.post('/', async ctx => {
   const contestValues = R.pick(fields, ctx.request.body);
   delete contestValues.id;
   let contest = await models.Contest.create(contestValues);
   ctx.body = await getContest(contest);
 });
 
-router.put("/:id", async ctx => {
+router.put('/:id', async ctx => {
   const { id } = ctx.params;
   const contestValues = R.pick(fields, ctx.request.body);
   const contest = await models.Contest.findOne({
@@ -113,7 +113,7 @@ router.put("/:id", async ctx => {
 });
 
 
-router.delete("/:id", async ctx => {
+router.delete('/:id', async ctx => {
   const { id } = ctx.params;
 
   await models.Salone.destroy({
@@ -190,9 +190,11 @@ module.exports = [
     path: '/api/admin/contests',
     handler: async function (request, h) {
       const {referer: host } = request.headers;
-      const [domain] = host.split(":");
+      const [domain] = host.split(':');
 
-      const {id} = h.request.auth.credentials.user;
+      console.log(h.request.auth);
+
+      const {id} = h.request.auth.credentials;
 
       const user = await models.User.findOne({
         where: {

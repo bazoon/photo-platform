@@ -22,6 +22,11 @@ import { initStore } from "react-recollect";
 import { store } from "react-recollect";
 initStore({sidebars: []});
 
+
+const Empty = function Empty () {
+  return <div></div>;
+};
+
 function App() {
 
   useEffect(() => {
@@ -65,12 +70,16 @@ function App() {
       path: "/admin/contests",
       Component: Contests
     },
+    {
+      path: "/admin",
+      Component: Empty
+    }
   ];
 
 
   return (
     <Router>
-      <div className="container flex h-screen">
+      <div className="container flex">
         <AdminMenu/>
         <main className="w-4/5 p-5 overflow-auto bg-yellow-50">
           <Switch>
@@ -84,7 +93,6 @@ function App() {
               })
             }
           </Switch>
-          bar
         </main>
       </div>
     </Router>

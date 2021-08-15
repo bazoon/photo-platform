@@ -36,7 +36,7 @@ function Main() {
     <>
       <Router>
         <Suspense fallback="loading">
-          <div className="container flex flex-col h-screen">
+          <div className="container flex flex-col">
             <header className="bg-blue-200 h-50">
               <MainMenu/>
             </header>

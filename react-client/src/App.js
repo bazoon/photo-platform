@@ -73,13 +73,13 @@ function Main({store}) {
         <Init/>
         <Suspense fallback="loading">
           
-          <header className="flex justify-center h-24">
-            <div className="container flex justify-center bg-brown-medium">
+          <header className="flex justify-center h-24 bg-brown-medium">
+            <div className="container flex justify-center">
               <MainMenu/>
             </div>
           </header>
 
-          <main className="flex flex-col justify-center flex-1">
+          <main className="flex flex-col flex-1">
             <Switch>
               <Route path="/login">
                 <Login />
@@ -110,8 +110,7 @@ function Main({store}) {
             </Switch>
           </main>
 
-          <footer className="flex justify-center">
-
+          <footer className="flex justify-center bg-brown-medium">
             <div className="container flex justify-center bg-brown-medium">
               <div className="pt-20 pb-36 wrap">
                 <div className="justify-between grid grid-cols-4">

@@ -13,6 +13,7 @@ const imageBodyTemplate = (record) => {
   return <img className="object-cover w-36 h-36" src={record.img}/>;
 };
 
+
 export default ({
   api,
   customOperations = [],
@@ -57,15 +58,15 @@ export default ({
     const columns = meta.columns.map(addRender);
     const actionBodyTemplate = (rowData) => {
       return (
-        <React.Fragment>
+        <div className="flex justify-between">
           {
-            canEdit && <Button icon="pi pi-pencil" className="p-button-rounded p-button-success" style={{marginRight: 5}}  onClick={() => handleEdit(rowData)} />
+            canEdit && <Button icon="pi pi-pencil" className="p-button-rounded p-button-success" onClick={() => handleEdit(rowData)} />
           }
           {
-            canDelete && <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" style={{marginRight: 5}} onClick={e => onDelete(e, rowData)} />
+            canDelete && <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={e => onDelete(e, rowData)} />
           }
           {customOperations.map(operation => operation(rowData))}
-        </React.Fragment>
+        </div>
       );
     }; 
 
@@ -85,8 +86,6 @@ export default ({
         }
         <DataTable 
           value={records} 
-          scrollable 
-          scrollHeight="1000px" 
           style={{width: "100%"}} 
           rowExpansionTemplate={rowExpansionTemplate}
           onRowToggle={e => { onRowToggle(e.data); }}
@@ -95,7 +94,7 @@ export default ({
           {
             canExpand && <Column expander style={{ width: "3em" }} />
           }
-          <Column key="actionBodyTemplate" headerStyle={{width: "30px"}} body={actionBodyTemplate}></Column>
+          <Column key="actionBodyTemplate" headerStyle={{minWidth: "60px"}} body={actionBodyTemplate}></Column>
           {
             columns.map(({dataIndex, title, width, body = record => record[dataIndex]}) => 
               <Column headerStyle={{width}} key={dataIndex} field={dataIndex} header={title} body={body}></Column>)

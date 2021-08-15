@@ -21,6 +21,7 @@ const toFormData = (obj) => {
   return formData;
 };
 
+const fake = recs => recs.reduce((a, e) => [...a, e, {...e, id: e.id + Math.random()}] , []);
 const log = x => { x.inspect ? console.log(x.inspect()) : console.log(x); return x; };
 
 const combineApiWithParams = api => (params = {}) => compose(
@@ -112,7 +113,7 @@ export default ({api, idField = "id", apiParams, t = identity}) => {
         on: {
           loadOk: {
             actions: assign({
-              records: (_, {data}) => data[0],
+              records: (_, {data}) => fake(data[0]),
               meta: (_, {data}) => data[1]
             }),
             target: "idle"

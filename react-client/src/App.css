@@ -17,9 +17,10 @@ ul {
 }
 
 body {
-  background-color: #e5e5f7;
-  background-image: radial-gradient(#0a0b0b 0.5px, #e5e5f7 0.5px);
-  background-size: 10px 10px;
+  background-color: #fff;
+  /* background-color: #e5e5f7; */
+  /* background-image: radial-gradient(#0a0b0b 0.5px, #e5e5f7 0.5px); */
+  /* background-size: 10px 10px; */
 }
 
 .p-menubar-root-list {
@@ -82,10 +83,10 @@ body {
 .p-button {
   background-color: #EFBC82 !important;
   border-color: #EFBC82 !important;
-  border-radius: 6px !important;
+  /* border-radius: 6px !important; */
   color: rgba(53, 53, 53, 1) !important;
   font-size: 12px !important;
-  padding: 12px 48px !important;
+  /* padding: 12px 48px !important; */
 }
 
 .p-button-secondary {
@@ -100,3 +101,8 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.p-datatable table {
+  table-layout: auto !important;
+}
+

@@ -23,6 +23,7 @@ export default function Main() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [agreed, setAgreed] = useState(true);
+  const [success, setSuccess] = useState(true);
 
   const history = useHistory();
   const { t } = useTranslation("namespace1");
@@ -35,41 +36,54 @@ export default function Main() {
     }, data => {
       localStorage.setItem("user", JSON.stringify(data));
       store.user = data;
-      history.push("/");
+      setSuccess(true);
     });
   }
 
-
-  return (
-    <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
-      <div className="relative flex justify-center w-4/5 wrap">
-        <div className="uppercase text-lg text-bright font-header text-center mt-24">Регистрация</div>
+  const signupForm = () => {
+    return (
+      <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
+        <div className="relative flex justify-center w-4/5 wrap">
+          <div className="uppercase text-lg text-bright font-header text-center mt-24">Регистрация</div>
     
-        <form className="w-full p-10 border rounded bg-brown-dark2">
-          <div className="grid grid-cols-6 grid-rows-5 gap-12">
-            <label className="col-span-2 text-tiny uppercase place-self-end">Имя</label>
-            <input value={firstName} onChange={handleChange(setFirstName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny uppercase place-self-end">Фамилия</label>
-            <input value={lastName} onChange={handleChange(setLastName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny uppercase">Логин (минимум 6 символов)</label>
-            <input value={nickName} onChange={handleChange(setNickName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny uppercase">Пароль (минимум 6 символов)</label>
-            <input type="password" value={password} onChange={handleChange(setPassword)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny uppercase">Email</label>
-            <input value={email} onChange={handleChange(setEmail)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <input checked={agreed} onChange={handleChangeCheckbox(setAgreed)} className="col-span-2 place-self-end" type="checkbox"/>
-            <label className="col-span-4 mr-8 text-tiny">Согласен на обработку личных данных</label>
-            <div className="col-span-2"></div>
-            <div className="col-span-4">
-              <Button disabled={!agreed} onClick={handleLogin} className="uppercase text-center">Регистрация</Button>
+          <form className="w-full p-10 border rounded bg-brown-dark2">
+            <div className="grid grid-cols-6 grid-rows-5 gap-12">
+              <label className="col-span-2 text-tiny uppercase place-self-end">Имя</label>
+              <input value={firstName} onChange={handleChange(setFirstName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+              <label className="col-span-2 place-self-end text-tiny uppercase place-self-end">Фамилия</label>
+              <input value={lastName} onChange={handleChange(setLastName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+              <label className="col-span-2 place-self-end text-tiny uppercase">Логин (минимум 6 символов)</label>
+              <input value={nickName} onChange={handleChange(setNickName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+              <label className="col-span-2 place-self-end text-tiny uppercase">Пароль (минимум 6 символов)</label>
+              <input type="password" value={password} onChange={handleChange(setPassword)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+              <label className="col-span-2 place-self-end text-tiny uppercase">Email</label>
+              <input value={email} onChange={handleChange(setEmail)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+              <input checked={agreed} onChange={handleChangeCheckbox(setAgreed)} className="col-span-2 place-self-end" type="checkbox"/>
+              <label className="col-span-4 mr-8 text-tiny">Согласен на обработку личных данных</label>
+              <div className="col-span-2"></div>
+              <div className="col-span-4">
+                <Button disabled={!agreed} onClick={handleLogin} className="uppercase text-center">Регистрация</Button>
+              </div>
             </div>
-          </div>
-        </form>
-
-
-
+          </form>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
+  const successMessage = () => {
+    return (
+      <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
+        <div className="relative flex justify-center w-4/5 wrap">
+          <div className="uppercase text-lg text-bright font-header text-center mt-24">Регистрация прошла успешно</div>
+          <div className="text-center text-orange text-base">На почту {email} отправлено письмо с ссылкой для подтверждения регистрации.</div>
+        </div>
+      </div>
+    );
+  };
+
+
+
+
+  return success ? successMessage() : signupForm();
 }
