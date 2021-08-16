@@ -15,7 +15,6 @@ const fields = [
 
 
 router.get('/', async ctx => {
-  console.log(ctx.user);
   const { id } = ctx.user;
   const menu = [];
 

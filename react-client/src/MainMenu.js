@@ -6,6 +6,7 @@ import { Menubar } from "primereact/menubar";
 import { withRouter } from "react-router";
 import useAuth from "./core/hooks/useAuth";
 import useLogout from "./core/hooks/useLogout";
+import { locale } from "primereact/api";
 
 const setTemplateForItems = (items = [], history, t) => {
   items.forEach(item => {
@@ -25,8 +26,12 @@ function Main({store, history}) {
   const {canAdmin} = useAuth();
   const logout = useLogout(store);
  
-  useEffect(() => {
+  const changeLanguage = lang => {
+    i18n.changeLanguage(lang);
+    locale(lang);
+  };
 
+  useEffect(() => {
     const l = [
       { 
         className: "flex-1",
@@ -42,14 +47,13 @@ function Main({store, history}) {
           {
             name: "ru",
             label: "ru",
-            command: () => i18n.changeLanguage("ru")
+            command: () => changeLanguage("ru")
           },
           {
             label: "en",
             name: "en",
-            command: () => i18n.changeLanguage("en")
+            command: () => changeLanguage("en")
           }
-
         ]
       },
       !store.user && {

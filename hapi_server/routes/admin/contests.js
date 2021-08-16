@@ -165,19 +165,9 @@ module.exports = [
     method: 'POST',
     path: '/api/admin/contests',
     handler: async function (request, h) {
-      const {
-        category,
-        code,
-        commentPhrase,
-      } = request.payload;
-
-      const lexicon = await h.models.Lexicon.create({
-        category,
-        code,
-        commentPhrase,
-      });
-
-      return lexicon.toJSON();
+      console.log(request.payload)
+      const contest = await h.models.Contest.create(request.payload);
+      return contest.toJSON();
     },
     options: {
       auth: {

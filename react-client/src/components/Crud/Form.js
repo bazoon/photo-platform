@@ -5,6 +5,9 @@ import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { Form } from "react-final-form";
 import { Message } from "primereact/message";
+import {values} from "lodash/fp";
+import {isNil} from "crocks/predicates";
+import isEmpty from "crocks/predicates/isEmpty";
 
 export default function FForm({
   record, 
@@ -19,11 +22,6 @@ export default function FForm({
 }) {
   const ref =useRef(null);
   const {message, errors} = saveError;
-
-  const validate = (data) => {
-    let errors = {};
-    return errors;
-  };
 
   const onSubmit = (data, form) => {
     form.restart();
@@ -44,18 +42,25 @@ export default function FForm({
   };
   
   useEffect(() => {
+    console.log(fields);
     if (saveError) {
       // ref.current.show();
     }
-  }, [saveError]);
+  }, [saveError, fields]);
+  
+  const validateForm = values => {
+    let r = fields.reduce((a, {dataIndex, required}) => required && isNil(values[dataIndex]) ? ({...a, [dataIndex]: "required"}) : a, {});
+    let d = isEmpty(r) ? true : r;
+    console.log(d);
+    return d;
+  };
 
-  console.log(dialogConfig);
   return (
     <div>
       <Form
+        validate={validateForm}
         initialValues={record}
         className="overflow-y-auto max-h-96"
-        validate={validate}
         onSubmit={onSubmit}
         render={({ handleSubmit }) => (
           <Dialog
@@ -68,7 +73,10 @@ export default function FForm({
           >
             {message && <Message severity="error" text={message} />}
             <form onSubmit={handleSubmit} className="p-10 p-fluid">
-              {fields.map(f => <div className="mb-4" key={f.dataIndex}><FormControl {...f} onChange={onChange}  /></div>)}
+              {
+                fields.map(f => <div className="mb-4" key={f.dataIndex}>
+                  <FormControl title={f.title} type={f.type}  dataIndex={f.dataIndex} options={f.options} width={f.width} onChange={onChange}  /></div>)
+              }
             </form>
           </Dialog>
         )}>

@@ -24,10 +24,23 @@ import { collect } from "react-recollect";
 import JuryGallery from "./components/JuryGallery";
 import ConfirmEmail from "./features/ConfirmEmail";
 import Profile from "./features/Profile";
-
-
 import useAuth from "./core/hooks/useAuth";
+import {locale, addLocale} from "primereact/api";
+
 const MainMenu = lazy(() => import("./MainMenu"));
+
+
+addLocale("ru", {
+  firstDayOfWeek: 1,
+  dayNames: ["Восресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+  dayNamesShort: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+  dayNamesMin: ["В", "П", "В", "С", "Ч", "П", "С"],
+  monthNames: ["январь", "февраль", "март", "апрель", "май", "июнь", "июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"],
+  monthNamesShort: ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"],
+  today: "Сегодня",
+  clear: "Очистить",
+  dateFormat: "dd.mm.yy"
+});
 
 function Main({store}) {
   const {canAdmin} = useAuth();
@@ -59,12 +72,17 @@ function Main({store}) {
     });
   };
 
+  const setDefaultLocale = lang => {
+    i18n.changeLanguage(lang);
+    locale(lang);
+  };
 
   useEffect(() => {
     asyncGet("api/translation/ru").fork(e => e, data => loadTranslations("ru", data));
     asyncGet("api/translation/en").fork(e => e, data => loadTranslations("en", data));
     store.loadRoles = loadRoles;
     loadRoles();
+    setDefaultLocale("ru");
   }, []);
 
   return (

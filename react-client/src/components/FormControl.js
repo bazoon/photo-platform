@@ -1,12 +1,14 @@
-import React, {} from "react";
+import React, {useEffect} from "react";
 import { Dropdown } from "primereact/dropdown";
 import { Field } from "react-final-form";
 import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
+import { Calendar } from "primereact/calendar";
 import { FileUpload } from "primereact/fileupload";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
 import {TheUploadAdapterPlugin} from "./UploadAdapter";
+import {useTranslation} from "react-i18next";
 
 const editorConfig = {
   alignment: {
@@ -54,10 +56,11 @@ const getFormErrorMessage = (meta) => {
 
 
 export default function FormControl({title, dataIndex, options, key, type}) {
+  const { t, i18n } = useTranslation("namespace1");
   switch(true) {
   case (!!options):
     return (
-      <Field name={dataIndex} render={({ input, meta }) => (
+      <Field name={dataIndex}  render={({ input, meta }) => (
         <div className="p-field">
           <span>
             <label htmlFor={dataIndex} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
@@ -104,7 +107,19 @@ export default function FormControl({title, dataIndex, options, key, type}) {
         </>
       )}/>
     );
+  case type === "date":
+    return (
+      <Field name={dataIndex} render={({ input, meta }) => (
+        <div className="p-field">
+          <span className="p-input-icon-right">
+            <label htmlFor={key} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <Calendar id="basic" {...input} />
+          </span>
+          {getFormErrorMessage(meta)}
+        </div>
+      )} />
 
+    );
   default:
     return (
       <Field name={dataIndex} render={({ input, meta }) => (

@@ -5,7 +5,6 @@ const R = require('ramda');
 
 router.post('/approves/:id', async ctx => {
   const { id } = ctx.params;
-  console.log(id)
   const application = await models.RegistrationContest.findOne({
     where: {
       id
@@ -52,10 +51,10 @@ router.get('/:contestId', async ctx => {
     contests.salone_id=salones.id and registration_contests.user_id=users.id
 
     `, {
-      replacements: {
-        contestId
-      }
+    replacements: {
+      contestId
     }
+  }
   );
 
   ctx.body = applications.map(a => {

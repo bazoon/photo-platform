@@ -114,7 +114,6 @@ module.exports =  [
     from users, organizers, admins where admins.user_id=users.id and admins.organizer_id=organizers.id and admins.user_id=:id
   `;
 
-      console.log(139139)
       const run = () => models.sequelize.query(query, {
         replacements: {
           id  

@@ -16,13 +16,20 @@ import Nominations from "./Nominations";
 import {collect} from "react-recollect";
 import {Dialog} from "primereact/dialog";
 
+
+import { inspect } from "@xstate/inspect";
+inspect({
+  url: "https://statecharts.io/inspect",
+  iframe: false
+});
+
 const Grid = ({store}) => {
   const { t } = useTranslation("namespace1");
   const [expandedRows, setExpandedRows] = useState([]);
   const [section, setSection] = useState(-1);
   
 
-  const [current, send] = useMachine(Machine({api: "api/admin/contests"}));
+  const [current, send] = useMachine(Machine({api: "api/admin/contests"}), { devTools: true });
   const {context} = current;
   const {records, record, error, isOpen, meta} = context;
   const {onCancel, onOk, onChange, handleAdd} = useCrud(send, record);

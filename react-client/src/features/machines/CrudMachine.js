@@ -113,7 +113,7 @@ export default ({api, idField = "id", apiParams, t = identity}) => {
         on: {
           loadOk: {
             actions: assign({
-              records: (_, {data}) => fake(data[0]),
+              records: (_, {data}) => data[0],
               meta: (_, {data}) => data[1]
             }),
             target: "idle"
@@ -142,10 +142,7 @@ export default ({api, idField = "id", apiParams, t = identity}) => {
               save: {
                 actions: assign({
                   error: "",
-                  record: (_, record) => {
-                    // console.log(record);
-
-                  }
+                  record: (_, {data}) => data
                 }),
                 target: "post"
               }
@@ -168,7 +165,7 @@ export default ({api, idField = "id", apiParams, t = identity}) => {
                 const hasFile = values(record).some(v => v instanceof File);
                 const payload = hasFile ? toFormData(record) : record;
                 const isJson = !hasFile;
-                asyncPost(combineApiWithParams(api)(apiParams), payload, isJson).fork(() => callback("postFailed"), data => {
+                asyncPost(combineApiWithParams(api)(apiParams), payload, isJson).fork(e => callback("postFailed", {error: e}), data => {
                   callback({type: "saveOk", data});
                 });
               }
@@ -207,7 +204,7 @@ export default ({api, idField = "id", apiParams, t = identity}) => {
           },
           postFailed: {
             actions: assign({
-              error: (_, data) => ({message: "Ошибка сохранения", data})
+              error: (_, {error}) => ({message: "Ошибка сохранения", error})
             }),
             target: "opened.add"
           },
