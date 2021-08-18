@@ -96,9 +96,9 @@ function Main({store}) {
         <Suspense fallback="loading">
           
           <header className="flex justify-center h-24 bg-brown-medium">
-            <div className="container flex justify-center items-center cursor-pointer" onClick={handleHome}>
+            <div className="container flex justify-center items-center cursor-pointer">
               <i className="pi pi-home text-2xl text-bright"/>
-              <MainMenu/>
+              <MainMenu onClick={handleHome}/>
             </div>
           </header>
 
