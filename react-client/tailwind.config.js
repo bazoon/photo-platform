@@ -10,6 +10,7 @@ module.exports = {
       sortTailwindClasses: false
     }
   },
+  important: true,
   theme: {
     screens: {
       "sm": "300px",

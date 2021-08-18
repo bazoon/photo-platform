@@ -1,46 +1,27 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Button } from "primereact/button";
+import {asyncGet} from "./core/api";
+import {dateFormat} from "./core/utils";
+import { store } from "react-recollect";
+import {withRouter} from "react-router-dom";
 
-export default function MainPage() {
+function MainPage({history}) {
+  const [info, setInfo] = useState({});
 
-  let h = "Природа России";
-  let a = <>Кубок победителей.<br/> Детско-юношеский конкурс природной фотографии</>;
-  let s = "прием работ: 20.07.2021 - 27.07.2021";
-  let d = "7 дней до конца приема работ";
+  const loadFailed = () => {
 
-  return (
-    <>
-      <div className="container flex justify-center bg-darkgreen"> 
-        <div className="pb-40 wrap">
-          <div className="mt-20 text-center uppercase text-11xl text-white-80 font-header">
-            {h}
-          </div>
-          <div className="mt-10 text-center uppercase text-tiny text-white-80">
-            {a}
-          </div>
-          <div className="mt-24 text-center uppercase text-tiny text-white-80">
-            {s}
-            <br/>
-            {d}
-          </div>
-          <div className="flex justify-center mt-12 uppercase text-white-80">
-            <div className="p-10">
-              <div className="text-lg">2762</div>
-              <div className="text-sm">УЧАСТНИКОВ</div>
-            </div>
-            <div className="p-10">
-              <div className="text-lg">8212</div>
-              <div className="text-sm">фотографий</div>
-            </div>
-          </div>
-          <div className="flex justify-center">
-            <Button className="uppercase">отправить фото</Button>
-            <div className="mr-12"></div>
-            <Button className="uppercase p-button-secondary">проголосовать</Button>
-          </div>
-        </div>
-      </div>
+  };
 
+  const loadOk = inf => {
+    setInfo(inf);
+  };
+
+  useEffect(() => {
+    asyncGet("api/mainPage").fork(loadFailed, loadOk);
+  }, []);
+
+  const renderNews = () => {
+    return (
       <div className="container flex justify-center bg-gray">
         <div className="pt-20 pb-48 wrap">
           <div className="mb-12 text-2xl text-center uppercase text-color-dark">новости</div>
@@ -72,8 +53,11 @@ export default function MainPage() {
           </div>
         </div>
       </div>
+    );
+  };
 
-
+  const renderPartners = () => {
+    return (
       <div className="container flex justify-center bg-bright">
         <div className="pt-20 pb-48 wrap">
           <div className="mb-16 text-2xl text-center uppercase">Наши партнеры</div>
@@ -86,14 +70,64 @@ export default function MainPage() {
             <img className="w-full mb-4" src="https://picsum.photos/seed/6/400/350"/>
             <img className="w-full mb-4" src="https://picsum.photos/seed/7/400/350"/>
             <img className="w-full mb-4" src="https://picsum.photos/seed/8/400/350"/>
-
           </div>
-
         </div>
-
       </div>
+    );
+  };
 
+  const handleSendPhoto = () => {
+    if (!store.user) {
+      history.push("/signup");
+    }
+  };
+
+  const renderStats = () => {
+    return null;
+    // return (
+    //   <div className="flex justify-center mt-12 uppercase text-white-80">
+    //     <div className="p-10">
+    //       <div className="text-lg">2762</div>
+    //       <div className="text-sm">УЧАСТНИКОВ</div>
+    //     </div>
+    //     <div className="p-10">
+    //       <div className="text-lg">8212</div>
+    //       <div className="text-sm">фотографий</div>
+    //     </div>
+    //   </div>
+    // );
+  };
+
+
+  return (
+    <>
+      <div className="container flex justify-center bg-darkgreen"> 
+        <div className="pb-40 wrap">
+          <h1 style={{fontSize: 40, color: "#F87171"}}>
+Сайт на технологическом тестировании. По вопросам конкурса до 25.08 можно обращаться Тф 79058231904 мейл manulovsv@mail.ru
+          </h1>
+          <div className="mt-20 text-center uppercase text-11xl text-white-80 font-header">
+            {info.name}
+          </div>
+          <div className="mt-10 text-center uppercase text-tiny text-white-80">
+            {info.subname}
+          </div>
+          <div className="mt-24 text-center uppercase text-tiny text-white-80">
+            прием работ {dateFormat(info.dateStart)} - {dateFormat(info.dateStop)} 
+            <br/>
+          </div>
+          <br/><br/>
+          {renderStats()}
+          <div className="flex justify-center">
+            <Button className="uppercase" onClick={handleSendPhoto}>отправить фото</Button>
+            <div className="mr-12"></div>
+            <Button className="uppercase p-button-secondary">проголосовать</Button>
+          </div>
+        </div>
+      </div>
     </>
   );
-
 }
+
+
+export default(withRouter(MainPage));

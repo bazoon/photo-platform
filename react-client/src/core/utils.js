@@ -14,3 +14,7 @@ export const cancel = ({form, onCancel}) => {
   form.resetFields();
   onCancel();
 };
+
+export const dateFormat = (date = new Date, locale = "ru-RU") => {
+  return new Intl.DateTimeFormat(locale).format(new Date(date));
+};

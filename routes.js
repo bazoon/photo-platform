@@ -56,4 +56,7 @@ module.exports = flatten([
   require('./hapi_server/routes/admin/nominations'),
   require('./hapi_server/routes/admin/meta/nominationSections'),
   require('./hapi_server/routes/admin/nominationSections'),
+
+
+  require('./hapi_server/routes/public/mainPage'),
 ]);

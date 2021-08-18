@@ -23,7 +23,7 @@ export default function Main() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [agreed, setAgreed] = useState(true);
-  const [success, setSuccess] = useState(true);
+  const [success, setSuccess] = useState(false);
 
   const history = useHistory();
   const { t } = useTranslation("namespace1");

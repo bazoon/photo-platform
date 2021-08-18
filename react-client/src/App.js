@@ -85,6 +85,10 @@ function Main({store}) {
     setDefaultLocale("ru");
   }, []);
 
+  const handleHome = () => {
+    location.replace("/");
+  };
+
   return (
     <>
       <Router>
@@ -92,7 +96,8 @@ function Main({store}) {
         <Suspense fallback="loading">
           
           <header className="flex justify-center h-24 bg-brown-medium">
-            <div className="container flex justify-center">
+            <div className="container flex justify-center items-center cursor-pointer" onClick={handleHome}>
+              <i className="pi pi-home text-2xl text-bright"/>
               <MainMenu/>
             </div>
           </header>

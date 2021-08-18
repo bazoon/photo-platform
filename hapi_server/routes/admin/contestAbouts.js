@@ -1,7 +1,7 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const models = require("../../../models");
-const R = require("ramda");
+const models = require('../../../models');
+const R = require('ramda');
 
 const fields = [
   'id',
@@ -14,7 +14,7 @@ const fields = [
 
 const fullFields = fields.concat(['language']);
 
-router.post("/:id", async ctx => {
+router.post('/:id', async ctx => {
   const {
     languageId,
     name,
@@ -39,7 +39,7 @@ router.post("/:id", async ctx => {
   };
 });
 
-router.put("/:id", async ctx => {
+router.put('/:id', async ctx => {
   const { id } = ctx.params;
 
   let contestAbout = await models.ContestAbout.findOne({
@@ -62,7 +62,7 @@ router.put("/:id", async ctx => {
   }
 });
 
-router.get("/all/:id", async ctx => {
+router.get('/all/:id', async ctx => {
   const {
     id
   } = ctx.params;
@@ -80,7 +80,7 @@ router.get("/all/:id", async ctx => {
   ctx.body = R.map(R.pick(fullFields), contestAbouts);
 });
 
-router.get("/:id", async ctx => {
+router.get('/:id', async ctx => {
   const {
     id
   } = ctx.params;
@@ -99,7 +99,7 @@ router.get("/:id", async ctx => {
   ctx.body = contestAbout || {};
 });
 
-router.delete("/:id", async ctx => {
+router.delete('/:id', async ctx => {
   const { id } = ctx.params;
 
   await models.ContestAbout.destroy({
@@ -125,10 +125,10 @@ module.exports = [
         from contest_abouts, languages
         where contest_abouts.language_id=languages.id and contest_abouts.contest_id=:id
     `, {
-      replacements: {
-        id
-      }
-    });
+        replacements: {
+          id
+        }
+      });
 
       return abouts;
     },
@@ -140,26 +140,33 @@ module.exports = [
   },
   {
     method: 'POST',
-    path: '/api/admin/contestsAbout',
+    path: '/api/admin/contestsAbout/{id}',
     handler: async function (request, h) {
       const {
+        id
+      } = request.params;
+      const {
         name,
-        nameDialect,
-        short,
+        languageId,
+        rules,
+        thesis,
       } = request.payload;
 
-      const language = await h.models.Language.create({
-        name,
-        nameDialect,
-        short,
+      const language = await h.models.Language.findOne({
+        where: {
+          id: languageId
+        }
       });
 
-      return {
-        id: language.id,
-        name: language.name,
-        nameDialect: language.nameDialect,
-        short: language.short,
-      }
+      const {dataValues} = await h.models.ContestAbout.create({
+        contestId: id,
+        name,
+        languageId,
+        rules,
+        thesis,
+      });
+
+      return {...dataValues, language: language.name};
     },
     options: {
       auth: {
@@ -174,7 +181,7 @@ module.exports = [
     handler: async function (request, h) {
       const { id } = request.params;
 
-      await h.models.Language.destroy({
+      await h.models.ContestAbout.destroy({
         where: {
           id
         }
@@ -220,10 +227,10 @@ module.exports = [
         from contest_abouts, languages
         where contest_abouts.language_id=languages.id and contest_abouts.id=:id
     `, {
-      replacements: {
-        id
-      }
-    });
+        replacements: {
+          id
+        }
+      });
 
 
       return about;
