@@ -30,7 +30,7 @@ const query = async (sql, options) => {
 
 const init = async () => {
   const server = Hapi.server({
-    port: 7001,
+    port: 7000,
     host: 'localhost',
     routes: {
       cors: {
