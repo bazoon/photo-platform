@@ -24,7 +24,7 @@ module.exports = [
     method: 'GET',
     path: '/api/mainPage',
     handler: async function (request, h) {
-      const domain = get(compose(nth(2), split('/')), request.info.referrer);
+      const domain = compose(nth(2), split('/'))(request.info.referrer);
 
       if (!domain) {
         return {};
