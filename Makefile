@@ -14,14 +14,14 @@ kill5000:
 undo:
 	git reset --soft HEAD~1
 reset:
-	git reset --hard
+	git reset --hard HEAD
 reload:
 	git pull
 	make restart
 ng-reload:
 	sudo systemctl restart nginx
 build:
-	cd client;ng build --prod;cd /var/www/fotoregion.site/photo-platform
+	cd react-client;npm run build
 
 copy:
 	find /var/www/fotoregion.site/build  -maxdepth 1 -type f -delete; cp -R /var/www/fotoregion.site/photo-platform/client/dist/client/. /var/www/fotoregion.site/build

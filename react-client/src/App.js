@@ -86,7 +86,6 @@ function Main({store}) {
   }, []);
 
   const handleHome = () => {
-    debugger;
     location.replace("/");
   };
 
