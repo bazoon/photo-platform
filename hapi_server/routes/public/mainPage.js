@@ -1,3 +1,5 @@
+const {get, split, nth, compose} = require('lodash/fp');
+
 const fields = [
   'id',
   'saloneId',
@@ -22,8 +24,7 @@ module.exports = [
     method: 'GET',
     path: '/api/mainPage',
     handler: async function (request, h) {
-      // const domain = request.info.host;
-      const domain = 'foto.ru';
+      const domain = get(compose(nth(2), split('/')), request.info.referrer);
 
       if (!domain) {
         return {};

@@ -121,7 +121,7 @@ function MainPage({history}) {
           <div className="flex justify-center">
             <Button className="uppercase" onClick={handleSendPhoto}>отправить фото</Button>
             <div className="mr-12"></div>
-            <Button className="uppercase p-button-secondary">проголосовать</Button>
+            {null && <Button className="uppercase p-button-secondary">проголосовать</Button>}
           </div>
         </div>
       </div>

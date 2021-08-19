@@ -86,6 +86,7 @@ function Main({store}) {
   }, []);
 
   const handleHome = () => {
+    debugger;
     location.replace("/");
   };
 
@@ -97,8 +98,8 @@ function Main({store}) {
           
           <header className="flex justify-center h-24 bg-brown-medium">
             <div className="container flex justify-center items-center cursor-pointer">
-              <i className="pi pi-home text-2xl text-bright"/>
-              <MainMenu onClick={handleHome}/>
+              <i className="pi pi-home text-2xl text-bright" onClick={handleHome}/>
+              <MainMenu />
             </div>
           </header>
 
