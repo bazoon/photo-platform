@@ -52,6 +52,7 @@
     "virgen-acl": "0.0.22"
   },
   "devDependencies": {
-    "sequelize-cli": "^5.5.1"
+    "sequelize-cli": "^5.5.1",
+    "telegraf": "^4.4.1"
   }
 }
