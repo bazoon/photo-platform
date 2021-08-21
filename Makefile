@@ -2,13 +2,14 @@ run:
 	cd ./react-client; HTTPS=true npm run start
 srv:
 	nodemon srv.js
-r: run srv
+r: 
+	run srv
 start:
-	pm2 start ./server.js
+	pm2 start ./srv.js
 stop:
-	pm2 stop ./server.js
+	pm2 stop ./srv.js
 restart:
-	pm2 restart ./server.js
+	pm2 restart ./srv.js --watch
 kill5000:
 	kill -9 "$(lsof -t -i:5000)"
 undo:
@@ -29,7 +30,6 @@ copy:
 all:
 	git pull
 	make build
-	make copy
 	make restart
 
 .PHONY: lint lintAll build
