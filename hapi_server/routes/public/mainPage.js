@@ -22,22 +22,28 @@ const fields = [
 module.exports = [
   {
     method: 'GET',
-    path: '/api/mainPage',
+    path: '/api/mainPage/{lang}',
     handler: async function (request, h) {
-      const domain = compose(nth(2), split('/'))(request.info.referrer);
+      const domain = request.info.referrer.includes('3000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const lang = request.params.lang || 'ru';
 
       if (!domain) {
         return {};
       }
 
       const query = `
-        select contests.subname, date_start, date_stop, salones.name from contests, salones where 
-        contests.salone_id = salones.id and salones."domain" = '${domain}'
+        select contest_abouts."name" , date_start, date_stop, salones.name from contests, salones, contest_abouts, languages 
+        where contests.salone_id = salones.id and salones."domain" = 'foto.ru' and
+        contests.id = contest_abouts.contest_id and contest_abouts.language_id=languages.id and languages.short = :lang
         order by date_start desc
         limit 1
      `;
 
-      const info = await h.query(query);
+      const info = await h.query(query, {
+        replacements: {
+          lang
+        }
+      });
       return info[0];
     },
     options: {

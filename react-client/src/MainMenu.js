@@ -70,15 +70,34 @@ function Main({store, history}) {
           logout();
           history.push("/");
         } 
-      } || {}
+      } || {},
+      store.user && {
+        label: store.user.firstName,
+        items: [
+          {
+            name: "profile",
+            label: t("profile"),
+            command: () => history.push("/profile")
+          },
+          {
+            label: "applications",
+            name: t("appplications"),
+            command: () => history.push("/applications")
+          }
+        ]
+      } || {},
     ];
-    console.log(canAdmin(store.role), store.role, l);
+    
     setLinks(l);
   }, [store.role, store.user]);
 
   function menuLoaded(menu) {
     setItems(setTemplateForItems(menu, history, t));
   }
+
+  useEffect(() => {
+    console.log(store.user);
+  }, [store.user]);
 
   useEffect(() => {
     asyncGet("api/staticMenu").fork(() => {}, menuLoaded);
