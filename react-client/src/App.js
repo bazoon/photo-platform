@@ -26,6 +26,7 @@ import ConfirmEmail from "./features/ConfirmEmail";
 import Profile from "./features/Profile";
 import useAuth from "./core/hooks/useAuth";
 import {locale, addLocale} from "primereact/api";
+import Applications from "./features/Applications/Applications";
 
 const MainMenu = lazy(() => import("./MainMenu"));
 
@@ -44,6 +45,7 @@ addLocale("ru", {
 
 function Main({store}) {
   const {canAdmin} = useAuth();
+
   function loadTranslations(lang, t) {
     i18n.addResourceBundle(lang, "namespace1", t);
     const lan = window.navigator.language.slice(0, 2);
@@ -102,7 +104,7 @@ function Main({store}) {
             </div>
           </header>
 
-          <main className="flex flex-col flex-1">
+          <main style={{minHeight: "calc(100vh - 21rem)"}}>
             <Switch>
               <Route path="/login">
                 <Login />
@@ -122,6 +124,9 @@ function Main({store}) {
               <Route path="/profile">
                 <Profile/>
               </Route>
+              <Route path="/applications">
+                <Applications/>
+              </Route>
               <Route path="/admin">
                 <Suspense fallback="loading">
                   <Admin/>
@@ -133,7 +138,7 @@ function Main({store}) {
             </Switch>
           </main>
 
-          <footer className="flex justify-center bg-brown-medium">
+          <footer className="flex justify-center bg-brown-medium h-60">
             <div className="container flex justify-center bg-brown-medium">
               <div className="pt-20 pb-36 wrap">
                 <div className="justify-between grid grid-cols-4">

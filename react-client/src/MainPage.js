@@ -4,10 +4,11 @@ import {asyncGet} from "./core/api";
 import {dateFormat} from "./core/utils";
 import { store } from "react-recollect";
 import {withRouter} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 function MainPage({history}) {
   const [info, setInfo] = useState({});
-
+  const { t, i18n } = useTranslation("namespace1");
   const loadFailed = () => {
 
   };
@@ -17,7 +18,7 @@ function MainPage({history}) {
   };
 
   useEffect(() => {
-    asyncGet("api/mainPage").fork(loadFailed, loadOk);
+    asyncGet(`api/mainPage/${i18n.language}`).fork(loadFailed, loadOk);
   }, []);
 
   const renderNews = () => {

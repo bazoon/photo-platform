@@ -142,7 +142,7 @@ export default function JuryGallery() {
 
 
   return (
-    <div className="container flex justify-center flex-1 bg-brown-dark"> 
+    <div className="container flex justify-center flex-1 bg-brown-dark" style={{minHeight: "calc(100vh - 21rem)"}}> 
       <div className="wrap pt-8 pb-8">
         {
           mode === 0 ? renderSingle() : renderMultiple()
