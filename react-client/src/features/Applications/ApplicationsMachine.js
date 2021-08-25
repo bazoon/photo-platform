@@ -1,12 +1,11 @@
 import { createMachine, assign } from "xstate";
 import {asyncGet, asyncPost} from "../../core/api";
 import {over, view, pathLens} from "lodash-lens";
+import {keys} from "lodash/fp";
 
 const sendFiles = files => {
 
-
 };
-
 
 const failed = (state, callback) => data => {
   callback({type: state, ...data});
@@ -22,10 +21,21 @@ const ok = ({state, callback, failedState, params = {}}) => data => {
 
 const prepareFiles = files => {
   const formData = new FormData();
-  return files.reduce((a, file) => (a.append("files[]", file), a) , formData);
+  return files.reduce((a, file) => (a.append("files", file), a) , formData);
 };
 
-export default function createUploadFiles({ context = {}, services = {}, api } = {}) {
+
+const preparePayload = data => {
+  const d = keys(data).reduce((form, field) => {
+    const value = data[field];
+    return Array.isArray(value) ? (value.forEach(f => form.append(field, f)), form) : (form.append(field, data[field]), form);
+  }, new FormData());
+  return d;
+};
+
+
+
+export default function applicationsMachine({ context = {}, api } = {}) {
   return createMachine({
     initial: "initial",
     context,
@@ -46,6 +56,8 @@ export default function createUploadFiles({ context = {}, services = {}, api } =
           id: "loading",
           src: () => callback => asyncGet(`api/${api}`)
             .fork(failed("loadingFailed", callback), ok({state: "loadingOk", callback, failedState: "loadingFailed"})),
+
+
         },
         on: {
           loadingFailed: {
@@ -54,7 +66,7 @@ export default function createUploadFiles({ context = {}, services = {}, api } =
           },
           loadingOk: [
             {
-              cond: (_, {data}) => { console.log(data); return view(pathLens("[0].regState"), data) === 1; },
+              cond: (_, {data}) => { return view(pathLens("[0].regState"), data) === 1; },
               target: "initial",
               actions: ["approve"],
             },
@@ -83,6 +95,9 @@ export default function createUploadFiles({ context = {}, services = {}, api } =
           submit: {
             target: "sending",
             actions: ["sendFiles"]
+          },
+          selectSection: {
+            actions: ["selectSection"]
           }
         }
       },
@@ -131,10 +146,13 @@ export default function createUploadFiles({ context = {}, services = {}, api } =
       decline: assign({
         isApproved: false,
         applicationMessage: "Заявка отклонена"
+      }),
+      selectSection: assign({
+        sectionId: (_, {sectionId}) => sectionId
       })
     },
     services: {
-      sendFiles: ({files}) =>callback => asyncPost(`api/${api}`, prepareFiles(files), false)
+      sendFiles: ({files, sectionId}) =>callback => asyncPost(`api/${api}`, preparePayload({files, sectionId}), false)
         .fork(failed("sendingFailed", callback), ok({state: "sendingOk", callback, failedState: "sendingFailed"})),
     }
   });

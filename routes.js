@@ -16,8 +16,26 @@ const imgRoute = {
   }
 };
 
+
+const publicRoute = {
+  method: 'GET',
+  path: '/images/{param*}',
+  handler: {
+    directory: {
+      path: './react-client/public'
+    }
+  },
+  options: {
+    auth: {
+      mode: 'optional'
+    }
+  }
+};
+
+
 module.exports = flatten([
   imgRoute,
+  publicRoute,
   require('./hapi_server/routes/public/translation'),
   require('./hapi_server/routes/login'),
   require('./hapi_server/routes/public/staticMenu'),
@@ -57,6 +75,8 @@ module.exports = flatten([
   require('./hapi_server/routes/admin/meta/nominationSections'),
   require('./hapi_server/routes/admin/nominationSections'),
   require('./hapi_server/routes/public/applications'),
+  require('./hapi_server/routes/public/sections'),
+  require('./hapi_server/routes/admin/config'),
 
 
   require('./hapi_server/routes/public/mainPage'),

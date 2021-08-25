@@ -17,6 +17,7 @@ import "primereact/resources/primereact.min.css";
 import AdminMenu from "./AdminMenu";
 import Salones from "./Salones/Salones";
 import Contests from "./Contests/Contests";
+import Config from "./Config/Config";
 import { collect } from "react-recollect";
 import { initStore } from "react-recollect";
 import { store } from "react-recollect";
@@ -71,9 +72,13 @@ function App() {
       Component: Contests
     },
     {
+      path: "/admin/config",
+      Component: Config
+    },
+    {
       path: "/admin",
       Component: Empty
-    }
+    },
   ];
 
 

@@ -8,11 +8,9 @@ export default function Main() {
   const [thesis, setThesis] = useState("");
   
   useEffect(() => {
-    asyncGet("api/thesis/ru").fork(() => {}, data => { debugger;setThesis(data.thesis); });
+    asyncGet("api/thesis/ru").fork(() => {}, data => { setThesis(data.thesis); });
   }, []);
   
-  console.log(thesis);
-
   return (
     <div>
       <div dangerouslySetInnerHTML={{__html: thesis}}></div>

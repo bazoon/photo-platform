@@ -23,7 +23,6 @@ export default function(send, record) {
   }; 
 
   const onChange = (changed, all) => {
-    console.log(changed);
     send("updateRecord", {record: {...record, ...changed}});
   };
 

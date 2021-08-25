@@ -9,9 +9,19 @@ import {useTranslation} from "react-i18next";
 function MainPage({history}) {
   const [info, setInfo] = useState({});
   const { t, i18n } = useTranslation("namespace1");
+  const [config, setConfig] = useState({});
   const loadFailed = () => {
 
   };
+
+  const loadConfigFailed = () => {
+
+  };
+
+  const loadConfig = () => {
+    asyncGet("api/admin/config").fork(loadConfigFailed, setConfig);
+  };
+  
 
   const loadOk = inf => {
     setInfo(inf);
@@ -19,6 +29,7 @@ function MainPage({history}) {
 
   useEffect(() => {
     asyncGet(`api/mainPage/${i18n.language}`).fork(loadFailed, loadOk);
+    loadConfig();
   }, []);
 
   const renderNews = () => {
@@ -83,6 +94,8 @@ function MainPage({history}) {
     }
   };
 
+  const tempNote = () => <img src="inwork.jpg"/>;
+
   const renderStats = () => {
     return null;
     // return (
@@ -99,31 +112,41 @@ function MainPage({history}) {
     // );
   };
 
+  console.log(config, typeof config);
+
+  const renderContent = () => {
+    return (
+      <div>
+        <div className="mt-20 text-center uppercase text-11xl text-white-80 font-header">
+          {info.name}
+        </div>
+        <div className="mt-10 text-center uppercase text-tiny text-white-80">
+          {info.subname}
+        </div>
+        <div className="mt-24 text-center uppercase text-tiny text-white-80">
+            прием работ {dateFormat(info.dateStart)} - {dateFormat(info.dateStop)} 
+          <br/>
+        </div>
+        <br/><br/>
+        {renderStats()}
+        <div className="flex justify-center">
+          <Button className="uppercase" onClick={handleSendPhoto}>отправить фото</Button>
+          <div className="mr-12"></div>
+          {null && <Button className="uppercase p-button-secondary">проголосовать</Button>}
+        </div>
+      </div>
+    );
+  };
+
 
   return (
     <>
       <div className="container flex justify-center bg-darkgreen"> 
         <div className="pb-40 wrap">
-          <h1 style={{fontSize: 40, color: "#F87171"}}>
-Сайт на технологическом тестировании. По вопросам конкурса до 25.08 можно обращаться Тф 79058231904 мейл manulovsv@mail.ru
-          </h1>
-          <div className="mt-20 text-center uppercase text-11xl text-white-80 font-header">
-            {info.name}
-          </div>
-          <div className="mt-10 text-center uppercase text-tiny text-white-80">
-            {info.subname}
-          </div>
-          <div className="mt-24 text-center uppercase text-tiny text-white-80">
-            прием работ {dateFormat(info.dateStart)} - {dateFormat(info.dateStop)} 
-            <br/>
-          </div>
-          <br/><br/>
-          {renderStats()}
-          <div className="flex justify-center">
-            <Button className="uppercase" onClick={handleSendPhoto}>отправить фото</Button>
-            <div className="mr-12"></div>
-            {null && <Button className="uppercase p-button-secondary">проголосовать</Button>}
-          </div>
+          {
+            config.isOnService ? tempNote() : renderContent()
+          }
+
         </div>
       </div>
     </>

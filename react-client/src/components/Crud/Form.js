@@ -42,7 +42,6 @@ export default function FForm({
   };
   
   useEffect(() => {
-    console.log(fields);
     if (saveError) {
       // ref.current.show();
     }
@@ -51,7 +50,6 @@ export default function FForm({
   const validateForm = values => {
     let r = fields.reduce((a, {dataIndex, required}) => required && isNil(values[dataIndex]) ? ({...a, [dataIndex]: "required"}) : a, {});
     let d = isEmpty(r) ? true : r;
-    console.log(d);
     return d;
   };
 

@@ -96,7 +96,6 @@ function Main({store, history}) {
   }
 
   useEffect(() => {
-    console.log(store.user);
   }, [store.user]);
 
   useEffect(() => {

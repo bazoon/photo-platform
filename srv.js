@@ -11,8 +11,6 @@ const routes = require('./routes');
 
 const can = (userRole, routeRole) => !routeRole || roles.indexOf(userRole) < roles.indexOf(routeRole);
 
-
-
 const toCamel = (s) => {
   return s.replace(/([-_][a-z])/ig, ($1) => {
     return $1.toUpperCase()

@@ -1,3 +1,7 @@
+const uploadFiles = require('../utils/uploadFiles');
+const getUploadFilePath = require('../utils/getUploadPath');
+const getHash = require('../utils/getHash');
+
 const {get, split, nth, compose, keys} = require('lodash/fp');
 
 const fields = [
@@ -24,7 +28,9 @@ module.exports = [
     method: 'GET',
     path: '/api/applications',
     handler: async function (request, h) {
-      const userId = h.request.auth.credentials.id;
+      const userId = get('request.auth.credentials.id', h);
+      if (!userId) return [];
+
       const domain = request.info.referrer.includes('3000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
       if (!domain) {
@@ -33,7 +39,6 @@ module.exports = [
 
       const applicationQuery = `
         SELECT
-          contests.id,
           registration_contests.reg_state,
           registration_contests.id,
           registration_contests.date_reg,
@@ -45,7 +50,7 @@ module.exports = [
           registration_contests
         WHERE
           contests.salone_id = salones.id
-          AND salones. "domain" = 'foto.ru'
+          AND salones. "domain" = :domain
           AND registration_contests.contest_id = contests.id
           AND registration_contests.user_id=:userId
       `;
@@ -53,6 +58,7 @@ module.exports = [
       const applications = await h.query(applicationQuery, {
         replacements: {
           userId,
+          domain
         }
       });
 
@@ -70,16 +76,52 @@ module.exports = [
     handler: async function (request, h) {
       const userId = h.request.auth.credentials.id;
       const domain = request.info.referrer.includes('3000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      let {files, sectionId} = request.payload;
+      files = Array.isArray(files) ? files : [files];
 
+      await uploadFiles(files);
+      
       if (!domain) {
         return {};
       }
 
-      console.log(request.payload)
-
       const applicationQuery = `
+        SELECT
+          registration_contests.id
+        FROM
+          contests,
+          salones,
+          registration_contests
+        WHERE
+          contests.salone_id = salones.id
+          AND salones."domain" = :domain
+          AND registration_contests.contest_id = contests.id
+          AND registration_contests.user_id=:userId
       `;
-      return {};
+      
+
+      const application = nth(0, await h.query(applicationQuery, {
+        replacements: {
+          userId,
+          domain
+        }
+      }));
+
+
+      await h.models.Photowork.bulkCreate(
+        files.map(f => {
+          return {
+            registrationContestId: application.id,
+            sectionId,
+            name: f.filename,
+            filename: f.filename,
+            moder: 0
+          };
+        })
+      );
+
+
+      return application;
       // const applications = await h.query(applicationQuery, {
       //   replacements: {
       //     userId,
@@ -92,6 +134,7 @@ module.exports = [
       payload: {
         parse: true,
         output: 'file',
+        allow: 'multipart/form-data',
         multipart: true
       },
       auth: {

@@ -10,6 +10,8 @@ import {Dialog} from "primereact/dialog";
 import {Message} from "primereact/message";
 import Machine from "./ApplicationsMachine";
 import { useMachine } from "@xstate/react";
+import SectionsMachine from "./SectionsMachine";
+import { Dropdown } from "primereact/dropdown";
 
 const initialContext = {
   isOpen: false,
@@ -19,26 +21,61 @@ const initialContext = {
   applicationMessage: ""
 };
 
+
+//TODO here!
+const UploadModal = ({visible, footer, onHide, children, header}) => {
+  return (
+    <Dialog
+      header={header}
+      visible={visible}
+      style={{ width: "50vw" }}
+      onHide={onHide}
+      footer={footer}
+    >
+      {children}
+    </Dialog>
+  );
+};
+
+
+
+const failed = (state, callback) => data => {
+  callback({type: state, ...data});
+};
+
+const ok = ({state, callback, failedState, params = {}}) => data => {
+  if (data.success === false) {
+    callback({type: failedState, ...data, ...params});
+  } else {
+    callback({type: state, data});
+  }
+};
+
 const api = "applications";
 const apiParams = "";
+const sectionsService = {
+  getSections: () => callback => asyncGet("api/sections")
+    .fork(failed("loadingFailed", callback), ok({state: "loadingOk", callback, failedState: "loadingFailed"}))
+};
+
+const mapForDropdown = (idField, nameField) => items => items.map(item => ({value: item[idField], label: item[nameField] }));
+const mapSections = mapForDropdown("id", "name");
 
 export default function Main() {
   const history = useHistory();
   const { t } = useTranslation("namespace1");
   const [current, send] = useMachine(Machine({api, context: initialContext, apiParams, t}), {devTools: true});
+  const [sectionsCurrent, sendToSection]= useMachine(SectionsMachine({context: { data: []}, services: sectionsService}), {devTools: true});
   const {context} = current;
-  const {isApproved, files, message, applicationMessage} = context;
-
-  console.log(message);
+  const sections = sectionsCurrent.context.data;
+  const {isApproved, files, message, applicationMessage, sectionId} = context;
 
   useEffect(() => {
     send("load", {});
+    sendToSection("load");
   }, []);
-  
 
-
-
-  const renderFooter = (submit) => {
+  const renderFooter = () => {
     return (
       <div>
         <Button label="cancel" icon="pi pi-times" onClick={() => send("close")} className="p-button-text" />
@@ -50,28 +87,6 @@ export default function Main() {
   const renderFile = file => {
     return <img key={file.name} className="w-40" src={URL.createObjectURL(file)}/>;
   };
-
-  const UploadModal = () => {
-    return (
-      <Dialog
-        header={t("load_photo")}
-        visible={current.value === "opened"}
-        style={{ width: "50vw" }}
-        onHide={() => send("close")}
-        footer={renderFooter()}
-      >
-        {message && <Message text={message} />}
-        <form className="p-10 p-fluid">
-          <input type="file" multiple onChange={({target}) => send("choose", {files: target.files})}/>
-        </form>
-        <div>
-          {files.map(renderFile)}
-        </div>
-
-      </Dialog>
-    );
-  };
-
 
   return (
     <div className="container bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
@@ -97,7 +112,28 @@ export default function Main() {
         <div>3</div>
       </div>
 
-      <UploadModal/>
+      <UploadModal
+        header={t("load_photo")}
+        visible={current.value === "opened"}
+        onHide={() => send("close")}
+        message={message}
+        sectionId={sectionId}
+        footer={renderFooter()}
+        options={mapSections(sections)}
+      >
+
+        {message && <Message text={message} />}
+        <div>
+          <form className="p-10 p-fluid">
+            <div>{t("sectionName")}</div>
+            <Dropdown className="mb-5"  value={sectionId} onChange={({value}) => send("selectSection", {sectionId: value}) }  options={mapSections(sections)}/>
+            <input type="file" multiple onChange={({target}) => send("choose", {files: target.files})}/>
+          </form>
+          <div>
+            {files.map(renderFile)}
+          </div>
+        </div>
+      </UploadModal>
 
     </div>
   );

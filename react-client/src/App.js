@@ -31,6 +31,9 @@ import Applications from "./features/Applications/Applications";
 const MainMenu = lazy(() => import("./MainMenu"));
 
 
+
+
+
 addLocale("ru", {
   firstDayOfWeek: 1,
   dayNames: ["Восресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],

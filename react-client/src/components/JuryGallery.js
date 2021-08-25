@@ -33,9 +33,6 @@ export default function JuryGallery() {
   const [mode, setMode] = useState(0);
   const [rates, setRates] = useState({});
 
-  console.clear();
-  console.log(photo);
-
   useEffect(() => {
     const p = photos.slice(left, left + 7);
     setVisiblePhotos(p);
