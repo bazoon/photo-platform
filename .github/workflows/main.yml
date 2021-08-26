@@ -1,0 +1,19 @@
+- name: ssh deploy
+  uses: easingthemes/ssh-deploy@v2.2.11
+  with:
+    # Private Key
+    SSH_PRIVATE_KEY:  ${{ secrets.SSH_KEY }}
+    # Remote host
+    REMOTE_HOST: ${{ secrets.HOST }}
+    # Remote user
+    REMOTE_USER: ${{ secrets.USERNAME }}
+    # Remote port
+    REMOTE_PORT: ${{ secrets.PORT }}
+    # Source directory
+    SOURCE: # optional, default is 
+    # Target directory
+    TARGET: ${{ secrets.TARGET }}
+    # Arguments to pass to rsync
+    ARGS: # optional, default is -rltgoDzvO
+    # An array of folder to exclude
+    EXCLUDE: # optional, default is
