@@ -11,3 +11,11 @@
          url('./BebasNeueRegular.ttf'),
          url('./BebasNeueRegular.woff');
 }
+
+
+@font-face {
+    font-family: 'BebasNeueBold';
+    src: url('./BebasNeueBold.eot'),
+         url('./BebasNeueBold.ttf'),
+         url('./BebasNeueBold.woff');
+}

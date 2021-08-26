@@ -99,10 +99,12 @@ function Main({store}) {
       <Router>
         <Init/>
         <Suspense fallback="loading">
-          
           <header className="flex justify-center h-24 bg-brown-medium">
             <div className="container flex justify-center items-center cursor-pointer">
-              <i className="pi pi-home text-2xl text-bright" onClick={handleHome}/>
+              <div className="relative">
+                <div className="uppercase font-bold text-lg text-brown-light">Photo</div>
+                <div className="absolute top-8 right-0 font-text text-sm text-brown-light">конкурсы</div>
+              </div>
               <MainMenu />
             </div>
           </header>

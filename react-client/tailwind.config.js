@@ -38,7 +38,8 @@ module.exports = {
     },
     fontFamily: {
       header: ["BebasNeueRegular"],
-      text: ["FuturaPTBook"]
+      text: ["FuturaPTBook"],
+      bold: ["BebasNeueBold"]
     },
     fontSize: {
       "xs": "6px",
