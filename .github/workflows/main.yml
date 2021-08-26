@@ -38,11 +38,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
-        script: |
-          cd /var/www/photo-platform
-          npm install
-          cd /var/www/photo-platform/react-client
-          npm install
-          npm run build
-          cd /var/www/photo-platform
-          pm2 restart srv.js
+        script: /bin/sh /var/www/photo-platform/go.sh
