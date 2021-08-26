@@ -13,10 +13,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '14.x'
-    - name: Install npm dependencies
-      run: npm install
-    - name: Run build task
-      run: npm run build --if-present
     - name: Deploy to Server
       uses: easingthemes/ssh-deploy@main
       env:
@@ -34,4 +30,16 @@ jobs:
         # Arguments to pass to rsync
         ARGS: # optional, default is -rltgoDzvO
         # An array of folder to exclude
-        EXCLUDE: # optional, default is
+        EXCLUDE: "/react-client/build/, /node_modules/"
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /var/www/photo-platform
+          npm install
+          make build
+          make restart
