@@ -31,6 +31,8 @@ all:
 	git pull
 	make build
 	make restart
+install:
+	cd /var/www/phot-platform/react-client;npm install
 
 .PHONY: lint lintAll build
 

@@ -40,6 +40,6 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd /var/www/photo-platform
-          npm install
+          make install
           make build
           make restart
