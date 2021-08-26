@@ -32,7 +32,7 @@ all:
 	make build
 	make restart
 install:
-	cd /var/www/phot-platform/react-client;npm install
+	cd /var/www/photo-platform/react-client;npm install
 
 .PHONY: lint lintAll build
 
