@@ -22,7 +22,7 @@ reload:
 ng-reload:
 	sudo systemctl restart nginx
 build:
-	cd react-client;npm run build
+	cd /var/www/photo-platform react-client;npm run build
 
 copy:
 	find /var/www/fotoregion.site/build  -maxdepth 1 -type f -delete; cp -R /var/www/fotoregion.site/photo-platform/client/dist/client/. /var/www/fotoregion.site/build

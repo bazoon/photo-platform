@@ -39,7 +39,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          cd /var/www/photo-platform
-          make install
-          make build
+          cd /var/www/photo-platform/react-client
+          npm install
+          npm run build
+          cd /var/www/phot-platform
           make restart
