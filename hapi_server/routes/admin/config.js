@@ -1,5 +1,4 @@
 const JSONdb = require('simple-json-db');
-const db = new JSONdb('/path/to/your/database.json');
 const path = require('path');
 
 
@@ -9,8 +8,10 @@ module.exports = [
     path: '/api/admin/config',
     handler: async function (request, h) {
       var db = new JSONdb(path.resolve(__dirname, '../../../config/site_config.json'));
-      const foo = db.get('options');
-      return foo;
+      const schemeDb = new JSONdb(path.resolve(__dirname, '../../../config/site_config_scheme.json'))
+      const options = db.get('options');
+      const scheme = schemeDb.get('properties');
+      return {scheme, options};
     },
     options: {
       auth: {
@@ -23,7 +24,6 @@ module.exports = [
     path: '/api/admin/config',
     handler: async function (request, h) {
       var db = new JSONdb(path.resolve(__dirname, '../../../config/site_config.json'));
-      console.log(request.payload, 222)
 
       if (request.payload) {
         db.set('options', request.payload);

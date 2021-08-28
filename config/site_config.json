@@ -1,6 +1,6 @@
 {
     "options": {
         "serviceText": "OnService! Cool",
-        "isOnService": "true"
+        "isOnService": false
     }
 }

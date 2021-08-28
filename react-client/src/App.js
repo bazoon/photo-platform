@@ -10,6 +10,7 @@ import {
   Switch,
   Route,
   withRouter,
+  Link,
 } from "react-router-dom";
 import Login from "./features/Login";
 import {asyncGet} from "./core/api";
@@ -102,8 +103,8 @@ function Main({store}) {
           <header className="flex justify-center h-24 bg-brown-medium">
             <div className="container flex justify-center items-center cursor-pointer">
               <div className="relative">
-                <div className="uppercase font-bold text-lg text-brown-light">Photo</div>
-                <div className="absolute top-8 right-0 font-text text-sm text-brown-light">конкурсы</div>
+                <div><Link className="uppercase font-bold text-lg text-brown-light no-underline" to="/">Photo</Link></div>
+                <div><Link to="/" className="absolute top-8 right-0 font-text text-sm no-underline text-brown-light">конкурсы</Link></div>
               </div>
               <MainMenu />
             </div>

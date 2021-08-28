@@ -27,6 +27,9 @@ build:
 copy:
 	find /var/www/fotoregion.site/build  -maxdepth 1 -type f -delete; cp -R /var/www/fotoregion.site/photo-platform/client/dist/client/. /var/www/fotoregion.site/build
 
+to-test:
+	sh ./deploy_test.sh
+
 all:
 	git pull
 	make build

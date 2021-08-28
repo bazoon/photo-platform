@@ -9,6 +9,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
 import {TheUploadAdapterPlugin} from "./UploadAdapter";
 import {useTranslation} from "react-i18next";
+import { Checkbox } from "primereact/checkbox";
 
 const editorConfig = {
   alignment: {
@@ -70,7 +71,16 @@ export default function FormControl({title, dataIndex, options, key, type}) {
         </div>
       )} />
     );
-    
+  case(type === "boolean"):
+    return (
+      <Field name={dataIndex} render={({ input, meta }) => (
+        <div className="p-field-checkbox">
+          <Checkbox inputId={dataIndex} checked={input.value} onChange={input.onChange} />
+          &nbsp;&nbsp;
+          <label htmlFor={dataIndex}>{title}</label>
+        </div>
+      )} />
+    );
   case (type === "file"):
     return (
       <Field name={dataIndex} render={({ input }) => (
@@ -131,7 +141,6 @@ export default function FormControl({title, dataIndex, options, key, type}) {
           {getFormErrorMessage(meta)}
         </div>
       )} />
-
     );
   }
 }

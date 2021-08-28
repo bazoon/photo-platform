@@ -9,17 +9,25 @@ import identity from "crocks/combinators/identity";
 
 const Config = () => {
   const [config, setConfig] = useState({});
-
+  const [scheme, setScheme] = useState();
 
   const loadFailed = () => {
 
   };
 
+  const loadOk = ({scheme, options}) => {
+    setScheme(scheme);
+    setConfig(options);
+  };
+
+  console.log(config);
+  console.log(scheme);
+
+
   const load = () => {
-    asyncGet("api/admin/config").fork(loadFailed, setConfig);
+    asyncGet("api/admin/config").fork(loadFailed, loadOk);
   };
   
-  console.log(config);
 
   useEffect(() => {
     load();
@@ -36,7 +44,11 @@ const Config = () => {
   const submit = v => {
     asyncPut("api/admin/config", v).fork(submitFailed, submitOk);
   };
-  
+
+  const buildField = fieldName => {
+    return <div className="mb-4"><FormControl title={scheme[fieldName].title} type={scheme[fieldName].type} dataIndex={fieldName}/></div>;
+  };
+
   return (
     <Form
       initialValues={config}
@@ -45,8 +57,7 @@ const Config = () => {
       render={({ handleSubmit }) => (
         <form onSubmit={handleSubmit} className="p-10 p-fluid">
           {
-            keys(config).map(f => <div className="mb-4" key={f}>
-              <FormControl title={f} type="text"  dataIndex={f} onChange={identity}  /></div>)
+            keys(config).map(f => buildField(f))
           }
           <Button type="submit" label="Submit" className="p-mt-2" />
         </form>
