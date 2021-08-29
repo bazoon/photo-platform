@@ -8,10 +8,16 @@ import useAuth from "./core/hooks/useAuth";
 import useLogout from "./core/hooks/useLogout";
 import { locale } from "primereact/api";
 
+
+const isActiveMenuItem = item => {
+  return location.href.includes(item.to) || (item.items && item.items.some(isActiveMenuItem));
+};
+
 const setTemplateForItems = (items = [], history, t) => {
   items.forEach(item => {
     item.command = item.command || (() => history.push(item.to));
     item.label = t(item.name) || item.name;
+    item.className = isActiveMenuItem(item) ? "p-menuitem--active" : "";
     if (item.items) {
       setTemplateForItems(item.items, history, t);
     }
@@ -26,42 +32,50 @@ function Main({store, history}) {
   const {canAdmin} = useAuth();
   const logout = useLogout(store);
  
+  
+
   const changeLanguage = lang => {
     i18n.changeLanguage(lang);
     locale(lang);
   };
 
   useEffect(() => {
-    const l = [
+    const links = [
       { 
         className: "flex-1",
         template: <div></div>
       },
       canAdmin(store.role) ? {
         label: "admin",
+        className: isActiveMenuItem({to: "/admin"}) ? "p-menuitem--active" : "",
         command: () => history.push("/admin"),
       }: {},
       {
-        label: i18n.language,
-        items: [
-          {
-            name: "ru",
-            label: "ru",
-            command: () => changeLanguage("ru")
-          },
-          {
-            label: "en",
-            name: "en",
-            command: () => changeLanguage("en")
-          }
-        ]
+        name: "ru",
+        label: "ru",
+        className: i18n.language === "ru" ? "p-menuitem--active" : "",
+        command: () => changeLanguage("ru")
+      },
+      {
+        className: "p-menuitem__slash",
+        label: "/"
+      },
+      {
+        name: "en",
+        label: "en",
+        className: i18n.language === "en" ? "p-menuitem--active" : "",
+        command: () => changeLanguage("en")
       },
       !store.user && {
-        label: "login",
+        label: t("login"),
         command: () => history.push("/login")
       } || {},
       !store.user && {
-        label: "signup",
+        label: "/",
+        className: "p-menuitem__slash",
+      },
+      !store.user && {
+        label: t("signup"),
         command: () => history.push("/signup")
       } || {},
       store.user && {
@@ -88,15 +102,12 @@ function Main({store, history}) {
       } || {},
     ];
     
-    setLinks(l);
-  }, [store.role, store.user]);
+    setLinks(links);
+  }, [store.role, store.user, location.href, i18n.language]);
 
   function menuLoaded(menu) {
     setItems(setTemplateForItems(menu, history, t));
   }
-
-  useEffect(() => {
-  }, [store.user]);
 
   useEffect(() => {
     asyncGet("api/staticMenu").fork(() => {}, menuLoaded);
@@ -105,7 +116,7 @@ function Main({store, history}) {
 
   useEffect(() => {
     setItems(setTemplateForItems(items, history, t));
-  }, [i18n.language]);
+  }, [i18n.language, location.href]);
 
   return (
     <div className="flex wrap">

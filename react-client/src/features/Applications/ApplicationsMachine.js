@@ -74,7 +74,7 @@ export default function applicationsMachine({ context = {}, api } = {}) {
             },
             {
               target: "noApplication",
-              actions: ["warnNoApplication"]
+              actions: ["noApplication"]
             },
           ]
         }
