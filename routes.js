@@ -80,6 +80,7 @@ module.exports = flatten([
   require('./hapi_server/routes/public/mainPage'),
   require('./hapi_server/routes/public/profile'),
   require('./hapi_server/routes/public/meta/profile'),
+  require('./hapi_server/routes/public/apply'),
   imgRoute,
   publicRoute,
 ]);

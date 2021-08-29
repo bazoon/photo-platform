@@ -42,7 +42,8 @@ export default function Main({store}) {
   const [profile, setProfile] = useState({});
   const [agreed, setAgreed] = useState(true);
   const [fields, setFields] = useState([]);
-  const fileRef = useRef({});
+  const fileRef = useRef(null);
+  const [file, setFile] = useState(null);
 
   const history = useHistory();
   const { t } = useTranslation("namespace1");
@@ -106,6 +107,12 @@ export default function Main({store}) {
     asyncPost("api/profile", toFormData(data), false).fork(submitFailed, submitOk);
   };
 
+
+  const handleChooseFile = (file, onChange) => {
+    setFile(URL.createObjectURL(file));
+    onChange(file);
+  };
+
   const handleUploadAvatar = e => {
     e.preventDefault();
     fileRef.current.click();
@@ -126,12 +133,13 @@ export default function Main({store}) {
               <div className="grid grid-cols-6 grid-rows-10 gap-12">
                 <Field name="avatar" key={name} render={({ input, meta }) => (
                   <div className="col-span-2 text-tiny place-self-end w-48 h-48 bg-brown-dark">
-                    <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => input.onChange(target.files[0])}/> 
+                    {(file || profile.avatar) && <img className="square" src={file || profile.avatar}/>}
+                    <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => handleChooseFile(target.files[0], input.onChange)}/> 
                   </div>   
                 )}/>
                 <div className="col-span-4 text-bright text-sm-2 flex flex-col justify-between">
-                  <span>FIO</span>  
-                  <span>6 заявок</span>
+                  <span>{profile.firstName} {profile.lastName}</span>  
+                  <span></span>
                   <Button disabled={!agreed} onClick={handleUploadAvatar} className="uppercase text-sm text-center w-72 uppercase">Загрузить фото</Button>
                 </div>
                   
@@ -144,6 +152,7 @@ export default function Main({store}) {
                 {renderField("password", "Текущий пароль")}
                 {renderField("newPassword", "Новый пароль")}
                 {renderField("newPasswordAgain", "Повторить новый пароль")}
+                <div className="col-span-2"></div>
                 <div className="col-span-4">
                   <Button disabled={!agreed} onClick={handleSubmit} className="uppercase text-center">Сохранить</Button>
                 </div>

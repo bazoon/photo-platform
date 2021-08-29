@@ -106,7 +106,6 @@ export default function Main() {
 
   const onSubmit = data => {
     console.log(data);
-    // send("submit");
   };
 
   const handleChooseFiles = (files, onChange) => {
@@ -114,6 +113,12 @@ export default function Main() {
     send("choose", {files: f});
     onChange(f);
   };
+
+  const apply = e => {
+    e.preventDefault();
+    send("apply");
+  };
+
 
 
   return (
@@ -126,7 +131,7 @@ export default function Main() {
       }
       <div className="flex justify-center mb-24">
         {
-          !(isApproved === true) && <Button disabled={isApproved === false} className="uppercase mr-5" onClick={() => send("apply") }>Подать заявку</Button>
+          !(isApproved === true) && <Button disabled={isApproved === false} className="uppercase mr-5" onClick={apply}>Подать заявку</Button>
         }
         {
           isApproved && <Button className="uppercase" onClick={() => send("open") }>Загрузить</Button>

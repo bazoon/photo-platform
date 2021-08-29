@@ -3,6 +3,8 @@ const router = new Router();
 const permissions = require('../services/permissions');
 const bcrypt = require('bcryptjs');
 const {get} = require('lodash/fp');
+const uploadFiles = require('../utils/uploadFiles');
+const getUploadPath = require('../utils/getUploadPath');
 
 module.exports = [
   {
@@ -19,7 +21,8 @@ module.exports = [
         last_name,
         avatar,
         email,
-        phone
+        phone,
+        avatar
       FROM
         users
       WHERE
@@ -27,7 +30,8 @@ module.exports = [
     `;
 
       const info = await h.query(query, {replacements: {userId: user.id}})
-      return info[0];
+
+      return {...info[0], avatar: getUploadPath(get('[0].avatar', info))};
     },
     options: {
       auth: {
@@ -42,6 +46,9 @@ module.exports = [
       const credentials = get('auth.credentials', request);
       const {payload} = request;
       const {password, newPassword} = payload;
+      const {avatar} = payload;
+      await uploadFiles(avatar);
+      payload.avatar = avatar && avatar.filename;
       delete payload.password;
 
       const user = await h.models.User.findOne({where: {id: credentials.id}});
@@ -51,7 +58,9 @@ module.exports = [
           var salt = bcrypt.genSaltSync(10);
           user.psw = bcrypt.hashSync(newPassword, salt);
         }
+
         await h.models.User.update(payload, {where: {id: credentials.id}})
+        user.avatar = getUploadPath(avatar);
 
         return user;
       } catch (e) {

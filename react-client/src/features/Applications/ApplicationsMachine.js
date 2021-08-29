@@ -80,7 +80,31 @@ export default function applicationsMachine({ context = {}, api } = {}) {
         }
       },
       noApplication: {
-        
+        on: {
+          apply: "apply"
+        } 
+      },
+      apply: {
+        invoke: {
+          id: "apply",
+          src: "apply",
+          onDone: {
+            target: "awaiting",
+            actions: assign({
+              success: true
+            })
+          },
+          onError: {
+            target: "noApplication",
+            actions: assign({
+              success: false
+            })
+          }
+        }
+      },
+      awaiting: {
+        isApproved: false,
+        applicationMessage: "Заявка ожидает рассмотрения"
       },
       loadingFailed: {
 
@@ -174,6 +198,7 @@ export default function applicationsMachine({ context = {}, api } = {}) {
         .fork(failed("sendingFailed", callback), ok({state: "sendingOk", callback, failedState: "sendingFailed"})),
       loadingPhotoworks: () => callback => asyncGet("api/photoworks")
         .fork(failed("loadingPhotoworksFailed", callback), ok({state: "loadingPhotoworksOk", callback, failedState: "loadingPhotoworksFailed"})),
+      apply: () => asyncPost("api/apply").toPromise(),
     }
   });
 }
