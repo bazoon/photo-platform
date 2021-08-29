@@ -1,11 +1,9 @@
-import i18n from "i18next";
-import React, {useEffect, useState, useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import FormControl from "../FormControl";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { Form } from "react-final-form";
 import { Message } from "primereact/message";
-import {values} from "lodash/fp";
 import {isNil} from "crocks/predicates";
 import isEmpty from "crocks/predicates/isEmpty";
 
@@ -20,8 +18,7 @@ export default function FForm({
   title,
   dialogConfig = {}
 }) {
-  const ref =useRef(null);
-  const {message, errors} = saveError;
+  const {message} = saveError;
 
   const onSubmit = (data, form) => {
     form.restart();

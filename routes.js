@@ -6,7 +6,8 @@ const imgRoute = {
   path: '/uploads/{param*}',
   handler: {
     directory: {
-      path: './uploads'
+      path: './uploads',
+      listing: true
     }
   },
   options: {
@@ -34,8 +35,6 @@ const publicRoute = {
 
 
 module.exports = flatten([
-  imgRoute,
-  publicRoute,
   require('./hapi_server/routes/public/translation'),
   require('./hapi_server/routes/login'),
   require('./hapi_server/routes/public/staticMenu'),
@@ -76,8 +75,9 @@ module.exports = flatten([
   require('./hapi_server/routes/admin/nominationSections'),
   require('./hapi_server/routes/public/applications'),
   require('./hapi_server/routes/public/sections'),
+  require('./hapi_server/routes/public/photoworks'),
   require('./hapi_server/routes/admin/config'),
-
-
   require('./hapi_server/routes/public/mainPage'),
+  imgRoute,
+  publicRoute,
 ]);

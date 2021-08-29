@@ -98,7 +98,6 @@ module.exports = [
           AND registration_contests.contest_id = contests.id
           AND registration_contests.user_id=:userId
       `;
-      
 
       const application = nth(0, await h.query(applicationQuery, {
         replacements: {
@@ -106,7 +105,6 @@ module.exports = [
           domain
         }
       }));
-
 
       await h.models.Photowork.bulkCreate(
         files.map(f => {
@@ -120,15 +118,7 @@ module.exports = [
         })
       );
 
-
       return application;
-      // const applications = await h.query(applicationQuery, {
-      //   replacements: {
-      //     userId,
-      //   }
-      // });
-
-      // return applications;
     },
     options: {
       payload: {

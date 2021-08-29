@@ -10,10 +10,11 @@ const uploadPath = process.env.UPLOAD_PATH;
 
 module.exports = async function uploadFiles(f) {
   // rename to hash name
-  const files = (Array.isArray(f) ? f : [f]).map(f => ({...f, oldName: f.filename, filename: getHash()}))
+  const files = (Array.isArray(f) ? f : [f]);//.map(f => ({...f, oldName: f.filename, filename: getHash()}))
 
   files.forEach(async f => {
     const targetPath = `${uploadPath}/${f.filename}`;
+    console.log(f)
     // const thumbTargetPath = `${uploadPath}/thumb-${f.filename}`;
     try {
       // const image = await Jimp.read(f.path);

@@ -18,11 +18,14 @@ function MainPage({history}) {
 
   };
 
+  const loadConfigOk = ({options}) => {
+    setConfig(options);
+  };
+
   const loadConfig = () => {
-    asyncGet("api/admin/config").fork(loadConfigFailed, setConfig);
+    asyncGet("api/admin/config").fork(loadConfigFailed, loadConfigOk);
   };
   
-
   const loadOk = inf => {
     setInfo(inf);
   };
@@ -111,8 +114,6 @@ function MainPage({history}) {
     //   </div>
     // );
   };
-
-  console.log(config, typeof config);
 
   const renderContent = () => {
     return (

@@ -1,24 +1,23 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect} from "react";
 import { useTranslation } from "react-i18next";
-import {asyncPost, asyncGet} from "../../core/api";
-import Checkbox from "antd/lib/checkbox/Checkbox";
-import { collect } from "react-recollect";
-import {useHistory} from "react-router-dom";
+import {asyncGet} from "../../core/api";
 import {Button} from "primereact/button";
-import { FileUpload } from "primereact/fileupload";
 import {Dialog} from "primereact/dialog";
 import {Message} from "primereact/message";
 import Machine from "./ApplicationsMachine";
 import { useMachine } from "@xstate/react";
 import SectionsMachine from "./SectionsMachine";
 import { Dropdown } from "primereact/dropdown";
+import {keys} from "lodash/fp";
+import { Form, Field } from "react-final-form";
 
 const initialContext = {
   isOpen: false,
   files: [],
   applications: [],
   message: "",
-  applicationMessage: ""
+  applicationMessage: "",
+  photoworks: {}
 };
 
 
@@ -37,6 +36,13 @@ const UploadModal = ({visible, footer, onHide, children, header}) => {
   );
 };
 
+
+const validateForm = data => {
+  const a = keys(data).reduce((a, e) => data[e] ? a : {...a, [e]: "Это поле обязательно для заполнения !"}, {});
+  console.log(keys(data));
+  console.log(a,111);
+  return a;
+};
 
 
 const failed = (state, callback) => data => {
@@ -62,24 +68,23 @@ const mapForDropdown = (idField, nameField) => items => items.map(item => ({valu
 const mapSections = mapForDropdown("id", "name");
 
 export default function Main() {
-  const history = useHistory();
   const { t } = useTranslation("namespace1");
   const [current, send] = useMachine(Machine({api, context: initialContext, apiParams, t}), {devTools: true});
   const [sectionsCurrent, sendToSection]= useMachine(SectionsMachine({context: { data: []}, services: sectionsService}), {devTools: true});
   const {context} = current;
   const sections = sectionsCurrent.context.data;
-  const {isApproved, files, message, applicationMessage, sectionId} = context;
-
+  const {isApproved, files, message, applicationMessage, sectionId, photoworks} = context;
+ 
   useEffect(() => {
     send("load", {});
     sendToSection("load");
   }, []);
 
-  const renderFooter = () => {
+  const renderFooter = (handleSubmit) => {
     return (
       <div>
         <Button label="cancel" icon="pi pi-times" onClick={() => send("close")} className="p-button-text" />
-        <Button label="Ok" type="submit" icon="pi pi-check" onClick={() => send("submit")} autoFocus />
+        <Button label="Ok" type="submit" icon="pi pi-check" onClick={handleSubmit} autoFocus />
       </div>
     );
   };
@@ -87,6 +92,29 @@ export default function Main() {
   const renderFile = file => {
     return <img key={file.name} className="w-40" src={URL.createObjectURL(file)}/>;
   };
+
+  const renderSection = (title, photos) => {
+    return (
+      <>
+        <div className="uppercase text-sm pt-24 mb-6 text-bright font-header text-center">{title}</div>
+        <div className="grid grid-flow-row auto-rows-max grid-cols-2 w-4/5 m-auto gap-10">
+          {photos.map(p => <img className="w-full" key={p.src} src={p.src}/>)}
+        </div>
+      </>
+    );  
+  };
+
+  const onSubmit = data => {
+    console.log(data);
+    // send("submit");
+  };
+
+  const handleChooseFiles = (files, onChange) => {
+    const f = Array.from(files);
+    send("choose", {files: f});
+    onChange(f);
+  };
+
 
   return (
     <div className="container bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
@@ -104,37 +132,49 @@ export default function Main() {
           isApproved && <Button className="uppercase" onClick={() => send("open") }>Загрузить</Button>
         }
       </div>
+      {
+        keys(photoworks).map(s => renderSection(s, photoworks[s]))
+      }
 
-      <div className="grid grid-flow-row auto-rows-max grid-cols-2 w-4/5 m-auto">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>3</div>
-      </div>
 
-      <UploadModal
-        header={t("load_photo")}
-        visible={current.value === "opened"}
-        onHide={() => send("close")}
-        message={message}
-        sectionId={sectionId}
-        footer={renderFooter()}
-        options={mapSections(sections)}
-      >
-
-        {message && <Message text={message} />}
-        <div>
-          <form className="p-10 p-fluid">
-            <div>{t("sectionName")}</div>
-            <Dropdown className="mb-5"  value={sectionId} onChange={({value}) => send("selectSection", {sectionId: value}) }  options={mapSections(sections)}/>
-            <input type="file" multiple onChange={({target}) => send("choose", {files: target.files})}/>
-          </form>
-          <div>
-            {files.map(renderFile)}
-          </div>
-        </div>
-      </UploadModal>
-
+      <Form
+        validate={validateForm}
+        className="overflow-y-auto max-h-96"
+        onSubmit={onSubmit}
+        initialValues={{files: [], sectionId: null}}
+        render={({ handleSubmit }) => (
+          <UploadModal
+            header={t("load_photo")}
+            visible={current.value === "opened"}
+            onHide={() => send("close")}
+            message={message}
+            sectionId={sectionId}
+            footer={renderFooter(handleSubmit)}
+            options={mapSections(sections)}
+          >
+            {message && <Message text={message} />}
+            <form className="p-10 p-fluid" onSubmit={handleSubmit}>
+              <div>{t("sectionName")}</div>
+              <Field name="sectionId">
+                {({ input, meta }) => (
+                  <div>
+                    <Dropdown className="mb-5"  value={input.value} onChange={({value}) => input.onChange(value) } options={mapSections(sections)}/>
+                    {input.value}
+                    {meta.error && meta.touched && <span>{meta.error}</span>}
+                  </div>
+                )} 
+              </Field>
+              <Field name="files">
+                {({ input, meta }) => (
+                  <input type="file" multiple onChange={({target}) => handleChooseFiles(target.files, files => input.onChange(files)) }/>
+                )}
+              </Field>
+            </form>
+            <div>
+              {files.map(renderFile)}
+            </div>
+          </UploadModal>
+        )}/>
     </div>
   );
 

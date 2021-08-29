@@ -96,6 +96,20 @@ const init = async () => {
   });
 
   server.route(routes);
+
+
+  // server.route({
+  //   method: 'GET',
+  //   path: '/uploads/{param*}',
+  //   handler: {
+  //     directory: {
+  //       path: './uploads',
+  //       index: true,
+  //     }
+  //   }
+  // });
+
+
   await server.start();
   console.log('Server running on %s', server.info.uri);
 };

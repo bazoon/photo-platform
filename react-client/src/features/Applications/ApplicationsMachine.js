@@ -33,8 +33,6 @@ const preparePayload = data => {
   return d;
 };
 
-
-
 export default function applicationsMachine({ context = {}, api } = {}) {
   return createMachine({
     initial: "initial",
@@ -42,6 +40,7 @@ export default function applicationsMachine({ context = {}, api } = {}) {
     states: {
       initial: {
         on: {
+          loadPhotoworks: "loadingPhotoworks",
           open: {
             target: "opened",
             actions: ["openWindow"]
@@ -56,8 +55,6 @@ export default function applicationsMachine({ context = {}, api } = {}) {
           id: "loading",
           src: () => callback => asyncGet(`api/${api}`)
             .fork(failed("loadingFailed", callback), ok({state: "loadingOk", callback, failedState: "loadingFailed"})),
-
-
         },
         on: {
           loadingFailed: {
@@ -67,7 +64,7 @@ export default function applicationsMachine({ context = {}, api } = {}) {
           loadingOk: [
             {
               cond: (_, {data}) => { return view(pathLens("[0].regState"), data) === 1; },
-              target: "initial",
+              target: "loadingPhotoworks",
               actions: ["approve"],
             },
             {
@@ -96,15 +93,12 @@ export default function applicationsMachine({ context = {}, api } = {}) {
             target: "sending",
             actions: ["sendFiles"]
           },
-          selectSection: {
-            actions: ["selectSection"]
-          }
         }
       },
       sending: {
         on: {
           sendingOk: {
-            target: "initial",
+            target: "loadingPhotoworks",
             actions: ["closeWindow", "clear"]
           },
           sendingFail: {
@@ -117,10 +111,26 @@ export default function applicationsMachine({ context = {}, api } = {}) {
           src: "sendFiles"
         },
       },
+      loadingPhotoworks: {
+        invoke: {
+          id: "loadingPhotoworks",
+          src: "loadingPhotoworks"
+        },
+        on: {
+          loadingPhotoworksOk: {
+            target: "initial",
+            actions: ["updatePhotoworks"]
+          }
+        }
+      },
+      loadingPhotoworksFailed: {},
     }
   }, 
   {
     actions: {
+      updatePhotoworks: assign({
+        photoworks: (_, {data}) => data
+      }),
       openWindow: assign({
         isOpen: true
       }),
@@ -147,13 +157,12 @@ export default function applicationsMachine({ context = {}, api } = {}) {
         isApproved: false,
         applicationMessage: "Заявка отклонена"
       }),
-      selectSection: assign({
-        sectionId: (_, {sectionId}) => sectionId
-      })
     },
     services: {
       sendFiles: ({files, sectionId}) =>callback => asyncPost(`api/${api}`, preparePayload({files, sectionId}), false)
         .fork(failed("sendingFailed", callback), ok({state: "sendingOk", callback, failedState: "sendingFailed"})),
+      loadingPhotoworks: () => callback => asyncGet("api/photoworks")
+        .fork(failed("loadingPhotoworksFailed", callback), ok({state: "loadingPhotoworksOk", callback, failedState: "loadingPhotoworksFailed"})),
     }
   });
 }
