@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { useTranslation } from "react-i18next";
 import {asyncPost, asyncGet} from "../core/api";
 import Checkbox from "antd/lib/checkbox/Checkbox";
@@ -6,9 +6,32 @@ import { collect } from "react-recollect";
 import {useHistory} from "react-router-dom";
 import {Button} from "primereact/button";
 import { Captcha } from "primereact/captcha";
+import {Field, Form} from "react-final-form";
+import {filter} from "lodash/fp";
 
 const handleChange = setfn => e => setfn(e.target.value);
 const handleChangeCheckbox = setfn => e => setfn(e.target.checked);
+
+
+const toFormData = (obj) => {
+  const formData = new FormData;
+  for (let key in obj) {
+    formData.append(key, obj[key]);
+  }
+  return formData;
+};
+
+const renderField = (name, title) => {
+  return (
+    <Field name={name} key={name} render={({ input, meta }) => (
+      <>
+        <label className="col-span-2 text-tiny place-self-end">{title}</label>
+        <input value={name} onChange={input.onChange} {...input} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+      </>
+    )}/>
+  );
+};
+
 
 export default function Main({store}) {
   // const [remember, setRemember] = useState(true);
@@ -16,12 +39,10 @@ export default function Main({store}) {
   // const [iKnowAboutCookies, setIKnowAboutCookies] = useState(true);
   // const [iReadAboutPersonal, setIReadAboutPersonal] = useState(true);
   
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [nickName, setNickName] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [profile, setProfile] = useState({});
   const [agreed, setAgreed] = useState(true);
+  const [fields, setFields] = useState([]);
+  const fileRef = useRef({});
 
   const history = useHistory();
   const { t } = useTranslation("namespace1");
@@ -30,7 +51,7 @@ export default function Main({store}) {
   function handleLogin(e) {
     e.preventDefault();
     
-    asyncPost("api/signup", { password, nickName, firstName, lastName, email, agreed}).fork(e => {
+    asyncPost("api/signup", {}).fork(e => {
       history.push("/login");
     }, data => {
       localStorage.setItem("user", JSON.stringify(data));
@@ -39,57 +60,96 @@ export default function Main({store}) {
     });
   }
 
+  const loadProfileFailed = () => {
+
+  };
+
+  const loadProfileOk = profile => {
+    setProfile(profile);
+  };
+
+  const loadProfile = () => {
+    asyncGet("api/profile").fork(loadProfileFailed, loadProfileOk);
+  };
+
+  const loadMetaFailed = () => {
+
+  };
+
+  const loadMetaOk = meta => {
+    setFields(filter(field => !field.hidden, meta.properties));
+  };
+
+  const loadMeta = () => {
+    asyncGet("api/profile/meta").fork(loadMetaFailed, loadMetaOk);
+  };
+
+  useEffect(() => {
+    loadMeta();
+    loadProfile();
+  }, []);
+
+  const validateForm = data => {
+
+  };
+
+
+  const submitFailed = () => {
+
+  };
+
+  const submitOk = d => {
+
+  };
+
+  const onSubmit = data => {
+    asyncPost("api/profile", toFormData(data), false).fork(submitFailed, submitOk);
+  };
+
+  const handleUploadAvatar = e => {
+    e.preventDefault();
+    fileRef.current.click();
+  };
 
   return (
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
       <div className="relative flex justify-center w-4/5 wrap">
         <div className="uppercase text-lg text-bright font-header text-center mt-24">Профиль</div>
     
-        <form className="w-full p-10 border rounded bg-brown-dark2">
-          <div className="grid grid-cols-6 grid-rows-10 gap-12">
-            <div className="col-span-2 text-tiny place-self-end w-48 h-48 bg-brown-dark">
-    
-            </div>   
-            <div className="col-span-4 text-bright text-sm-2 flex flex-col justify-between">
-              <span>FIO</span>  
-              <span>6 заявок</span>
-              <Button disabled={!agreed} onClick={handleLogin} className="uppercase text-sm text-center w-72 uppercase">Загрузить фото</Button>
-            </div>
-
-            <label className="col-span-2 text-tiny place-self-end">Имя</label>
-            <input value={firstName} onChange={handleChange(setFirstName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 text-tiny place-self-end">Имя</label>
-            <input value={firstName} onChange={handleChange(setFirstName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny  place-self-end">Фамилия</label>
-            <input value={lastName} onChange={handleChange(setLastName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny  place-self-end">Отчество</label>
-            <input value={lastName} onChange={handleChange(setLastName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny  place-self-end">Город</label>
-            <input value={lastName} onChange={handleChange(setLastName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny  place-self-end">Страна</label>
-            <input value={lastName} onChange={handleChange(setLastName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny ">Email</label>
-            <input value={email} onChange={handleChange(setEmail)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-          </div>
-        </form>
-        
-
-        <form className="w-full p-10 border rounded bg-brown-dark2">
-          <div className="uppercase text-lg text-bright font-header text-center mt-24">Смена пароля</div>
-          <div className="grid grid-cols-6 grid-rows-8 gap-12">
-            <label className="col-span-2 place-self-end text-tiny  place-self-end">Текущий пароль</label>
-            <input value={lastName} onChange={handleChange(setLastName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny  place-self-end">Новый пароль</label>
-            <input value={lastName} onChange={handleChange(setLastName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <label className="col-span-2 place-self-end text-tiny ">Повторить новый пароль</label>
-            <input value={email} onChange={handleChange(setEmail)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-            <div className="col-span-2"></div>
-            <div className="col-span-4">
-              <Button disabled={!agreed} onClick={handleLogin} className="uppercase text-center">Сохранить</Button>
-            </div>
-          </div>
-        </form>
-
+        <Form
+          validate={validateForm}
+          className="overflow-y-auto max-h-96"
+          onSubmit={onSubmit}
+          initialValues={profile}
+          render={({ handleSubmit }) => (
+            <form className="w-full p-10 border rounded bg-brown-dark2">
+              <div className="grid grid-cols-6 grid-rows-10 gap-12">
+                <Field name="avatar" key={name} render={({ input, meta }) => (
+                  <div className="col-span-2 text-tiny place-self-end w-48 h-48 bg-brown-dark">
+                    <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => input.onChange(target.files[0])}/> 
+                  </div>   
+                )}/>
+                <div className="col-span-4 text-bright text-sm-2 flex flex-col justify-between">
+                  <span>FIO</span>  
+                  <span>6 заявок</span>
+                  <Button disabled={!agreed} onClick={handleUploadAvatar} className="uppercase text-sm text-center w-72 uppercase">Загрузить фото</Button>
+                </div>
+                  
+                {
+                  fields.map(({name, title, type}) => renderField(name, title, type))
+                }
+              </div>
+              <div className="uppercase text-lg text-bright font-header text-center mt-24">Смена пароля</div>
+              <div className="grid grid-cols-6 grid-rows-8 gap-12">
+                {renderField("password", "Текущий пароль")}
+                {renderField("newPassword", "Новый пароль")}
+                {renderField("newPasswordAgain", "Повторить новый пароль")}
+                <div className="col-span-4">
+                  <Button disabled={!agreed} onClick={handleSubmit} className="uppercase text-center">Сохранить</Button>
+                </div>
+              </div>
+            </form>
+          )}/>
       </div>
     </div>
   );

@@ -508,7 +508,6 @@ const signup = {
     const token = signToken(user);
     const link = `https://${domain}/confirm-email/${token}`;
 
-    console.log(process.env)
     const config = {
       host: process.env.MAIL_HOST,
       user: process.env.MAIL_USER,
@@ -584,7 +583,14 @@ const confirm = {
     try {
       const {id} = jwt.verify(token, process.env.API_TOKEN);
 
-      console.log(id);
+      if (!id) {
+        return {
+          ok: false,
+          message: 'user not found'
+        };
+      }
+
+      request.cookieAuth.set({ tok: token });
 
       const user = await models.User.findOne({
         where: {
@@ -593,10 +599,11 @@ const confirm = {
       });
       
       user.emailState = 1;
-
       await user.save();
+
       request.cookieAuth.set({ tok: token });
       return {
+        ok: true,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,

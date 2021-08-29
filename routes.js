@@ -78,6 +78,8 @@ module.exports = flatten([
   require('./hapi_server/routes/public/photoworks'),
   require('./hapi_server/routes/admin/config'),
   require('./hapi_server/routes/public/mainPage'),
+  require('./hapi_server/routes/public/profile'),
+  require('./hapi_server/routes/public/meta/profile'),
   imgRoute,
   publicRoute,
 ]);

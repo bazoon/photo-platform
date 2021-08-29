@@ -4,7 +4,7 @@ import useAsync from "../core/hooks/useAsync";
 import {collect} from "react-recollect";
 import {withRouter} from "react-router-dom";
 
-const ConfirmEmail = ({store}) => {
+const ConfirmEmail = ({history, store}) => {
   const [data, isLoading, {post}] = useAsync(); 
 
 
@@ -16,7 +16,7 @@ const ConfirmEmail = ({store}) => {
 
 
   useEffect(() => {
-    if (data) {
+    if (data && data.ok) {
       localStorage.setItem("user", JSON.stringify(data));
       asyncGet("api/roles").fork(() => {}, ({role}) => {
         store.role = role;

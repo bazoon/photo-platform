@@ -110,7 +110,7 @@ function Main({store}) {
             </div>
           </header>
 
-          <main style={{minHeight: "calc(100vh - 21rem)"}}>
+          <main className="main-container">
             <Switch>
               <Route path="/login">
                 <Login />

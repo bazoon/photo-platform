@@ -23,6 +23,14 @@ body {
   /* background-size: 10px 10px; */
 }
 
+.main-container {
+  min-height: calc(100vh - 21rem);
+}
+
+.main-container > * {
+  min-height: calc(100vh - 21rem);
+}
+
 .p-menubar-root-list {
   width: 100%;
 }
