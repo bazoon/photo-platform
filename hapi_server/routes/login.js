@@ -26,7 +26,7 @@ const joinM = chain(identity);
 const ifElse = require('crocks/logic/ifElse');
 
 const mail = require('./services/mail.js');
-const {isEmpty} = require('lodash/fp');
+const {isEmpty, nth, split} = require('lodash/fp');
 
 
 const expiresIn = 24 * 60 * 60 * 30;
@@ -479,10 +479,7 @@ const signup = {
       phone
     } = request.payload;
 
-  
-    // const [domain] = request.info.hostname.split(':');
-
-    const domain = 'foto.ru:3000'
+    const domain = request.info.referrer.includes('3000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
     // const { avatar } = ctx.request.files;
     // const files = avatar ? (Array.isArray(avatar) ? avatar : [avatar]) : [];
