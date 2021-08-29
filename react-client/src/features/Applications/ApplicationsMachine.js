@@ -71,9 +71,16 @@ export default function applicationsMachine({ context = {}, api } = {}) {
               cond: (_, {applications}) => view(pathLens("[0].regState"), applications) === 3,
               target: "initial",
               actions: ["decline"],
-            }
+            },
+            {
+              target: "noApplication",
+              actions: ["warnNoApplication"]
+            },
           ]
         }
+      },
+      noApplication: {
+        
       },
       loadingFailed: {
 
@@ -156,6 +163,10 @@ export default function applicationsMachine({ context = {}, api } = {}) {
       decline: assign({
         isApproved: false,
         applicationMessage: "Заявка отклонена"
+      }),
+      noApplication: assign({
+        isApproved: undefined,
+        applicationMessage: "Подайте заявку"
       }),
     },
     services: {
