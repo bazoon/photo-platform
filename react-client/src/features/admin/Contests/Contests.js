@@ -25,13 +25,11 @@ if (location.href.includes("foto.ru")) {
   });
 }
 
-
 const Grid = ({store}) => {
   const { t } = useTranslation("namespace1");
   const [expandedRows, setExpandedRows] = useState([]);
   const [section, setSection] = useState(-1);
   
-
   const [current, send] = useMachine(Machine({api: "api/admin/contests"}), { devTools: true });
   const {context} = current;
   const {records, record, error, isOpen, meta} = context;

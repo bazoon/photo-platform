@@ -119,10 +119,10 @@ function MainPage({history}) {
     return (
       <div>
         <div className="mt-20 text-center uppercase text-11xl text-white-80 font-header">
-          {info.name}
+          {info.salone}
         </div>
         <div className="mt-10 text-center uppercase text-tiny text-white-80">
-          {info.subname}
+          {info.name}
         </div>
         <div className="mt-24 text-center uppercase text-tiny text-white-80">
             прием работ {dateFormat(info.dateStart)} - {dateFormat(info.dateStop)} 

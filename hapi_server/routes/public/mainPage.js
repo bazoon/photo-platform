@@ -32,7 +32,7 @@ module.exports = [
       }
 
       const query = `
-        select contest_abouts."name" , date_start, date_stop, salones.name from contests, salones, contest_abouts, languages 
+        select contest_abouts."name" , date_start, date_stop, salones.name as salone from contests, salones, contest_abouts, languages 
         where contests.salone_id = salones.id and salones."domain" = 'foto.ru' and
         contests.id = contest_abouts.contest_id and contest_abouts.language_id=languages.id and languages.short = :lang
         order by date_start desc
