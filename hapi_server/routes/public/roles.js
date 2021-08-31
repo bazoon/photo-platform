@@ -12,7 +12,9 @@ module.exports =  {
     const user = get('auth.credentials', request);
 
     const [domain] = host.split(':');
-    return { role: await permissions.getRole(user, domain) };
+    const r = { role: await permissions.getRole(user, domain) };
+    console.log(r)
+    return r
   },
   options: {
     auth: {

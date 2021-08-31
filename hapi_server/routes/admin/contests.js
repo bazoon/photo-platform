@@ -165,7 +165,6 @@ module.exports = [
     method: 'POST',
     path: '/api/admin/contests',
     handler: async function (request, h) {
-      console.log(request.payload)
       const contest = await h.models.Contest.create(request.payload);
       return contest.toJSON();
     },

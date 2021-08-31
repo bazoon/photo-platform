@@ -7,6 +7,7 @@ import { withRouter } from "react-router";
 import useAuth from "./core/hooks/useAuth";
 import useLogout from "./core/hooks/useLogout";
 import { locale } from "primereact/api";
+import {saveLanguage} from "./core/utils";
 
 
 const isActiveMenuItem = item => {
@@ -36,6 +37,7 @@ function Main({store, history}) {
 
   const changeLanguage = lang => {
     i18n.changeLanguage(lang);
+    saveLanguage(lang);
     locale(lang);
   };
 
@@ -79,7 +81,7 @@ function Main({store, history}) {
         command: () => history.push("/signup")
       } || {},
       store.user && {
-        label: "logout",
+        label: t("logout"),
         command: () => {
           logout();
           history.push("/");

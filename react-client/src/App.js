@@ -28,12 +28,9 @@ import Profile from "./features/Profile";
 import useAuth from "./core/hooks/useAuth";
 import {locale, addLocale} from "primereact/api";
 import Applications from "./features/Applications/Applications";
+import {loadLanguage} from "./core/utils";
 
 const MainMenu = lazy(() => import("./MainMenu"));
-
-
-
-
 
 addLocale("ru", {
   firstDayOfWeek: 1,
@@ -52,8 +49,6 @@ function Main({store}) {
 
   function loadTranslations(lang, t) {
     i18n.addResourceBundle(lang, "namespace1", t);
-    const lan = window.navigator.language.slice(0, 2);
-    i18n.changeLanguage(lan);
   }
 
   const sidebars = () => {
@@ -88,7 +83,7 @@ function Main({store}) {
     asyncGet("api/translation/en").fork(e => e, data => loadTranslations("en", data));
     store.loadRoles = loadRoles;
     loadRoles();
-    setDefaultLocale("ru");
+    setDefaultLocale(loadLanguage());
   }, []);
 
   const handleHome = () => {

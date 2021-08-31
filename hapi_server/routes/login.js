@@ -413,7 +413,6 @@ const login2 = {
 
     user.psw = hashedPassword;
     user.salt = salt;
-    console.log(user);
 
     await user.save();
     return user;

@@ -24,15 +24,13 @@ module.exports = {
       return '';
     }
 
-    console.log(3, u)
     const user = await models.User.findOne({
       where: {
         id: u.id
       }
     });
-    console.log(4, user)
 
-
+    console.log(user);
 
     if (user.userType === 0) {
       return 'superAdmin';
@@ -54,6 +52,8 @@ module.exports = {
         userId: user.id
       }
     });
+
+    console.log(roles);
 
 
     if (roles.length > 0) {
