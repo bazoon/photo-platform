@@ -17,13 +17,13 @@ import {collect} from "react-recollect";
 import {Dialog} from "primereact/dialog";
 
 
-import { inspect } from "@xstate/inspect";
-if (location.href.includes("foto.ru")) {
-  inspect({
-    url: "https://statecharts.io/inspect",
-    iframe: false
-  });
-}
+// import { inspect } from "@xstate/inspect";
+// if (location.href.includes("foto.ru")) {
+//   inspect({
+//     url: "https://statecharts.io/inspect",
+//     iframe: false
+//   });
+// }
 
 const Grid = ({store}) => {
   const { t } = useTranslation("namespace1");

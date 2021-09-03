@@ -30,7 +30,6 @@ module.exports = [
     `;
 
       const info = await h.query(query, {replacements: {userId: user.id}})
-
       return {...info[0], avatar: getUploadPath(get('[0].avatar', info))};
     },
     options: {

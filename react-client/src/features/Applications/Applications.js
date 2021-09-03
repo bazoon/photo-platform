@@ -38,10 +38,7 @@ const UploadModal = ({visible, footer, onHide, children, header}) => {
 
 
 const validateForm = data => {
-  const a = keys(data).reduce((a, e) => data[e] ? a : {...a, [e]: "Это поле обязательно для заполнения !"}, {});
-  console.log(keys(data));
-  console.log(a,111);
-  return a;
+  return keys(data).reduce((a, e) => data[e] ? a : {...a, [e]: "Это поле обязательно для заполнения !"}, {});
 };
 
 

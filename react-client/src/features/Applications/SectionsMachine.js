@@ -16,7 +16,7 @@ export default function({ context = {}, services } = {}) {
             target: "idle",
             actions: [
               assign({
-                data: (context, event) => { console.log(event.data); return event.data; }
+                data: (context, event) => event.data
               })
             ]
           },

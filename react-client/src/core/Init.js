@@ -8,22 +8,36 @@ import tryCatch from "crocks/Result/tryCatch";
 import chain from "crocks/pointfree/chain";
 import { collect, afterChange} from "react-recollect";
 import { Toast } from "primereact/toast";
+import useAuth from "./hooks/useAuth";
+import {asyncGet} from "./api";
+import Async from "crocks/Async";
+import option from "crocks/pointfree/option";
+import resultToMaybe from "crocks/Maybe/resultToMaybe";
+import {loadRoles, loadUser} from "./api_utils";
 
 const safe = pred =>
   ifElse(pred, Result.Ok, Result.Err);
 
-
-
 function Init({store}) {
   const toast = useRef();
+  const {canAdmin} = useAuth();
 
-  useEffect(() => {
+  const checkRole = role => {
+    const isAdminArea = location.href.includes("/admin");
+    if (isAdminArea && !canAdmin(role)) {
+      location.href = "/login";
+    }
+  };
+
+
+  const loadLocalUser = () => {
     store.user = null;
     store.role = "";
     store.toast = toast;
 
-    compose(
-      map(user => { store.user = user; }),
+    return compose(
+      option(undefined),
+      resultToMaybe,
       chain(identity),
       map(tryCatch(e => JSON.parse(e))),
       safe(e => e),
@@ -31,6 +45,23 @@ function Init({store}) {
         return localStorage.getItem(e);
       }
     )("user");
+  };
+
+  useEffect(() => {
+    const user = loadLocalUser();
+    store.user = user;
+    // loadRoles().fork(identity, ({role}) => {
+    //   checkRole(role);
+    //   store.role = role;
+
+    //   if (user && !role && !location.href.endsWith("login")) {
+    //     location.href = "/login";
+    //   }
+
+    //   if (role && !user) {
+    //     loadUser();
+    //   }
+    // });
   }, []);
   
   return (

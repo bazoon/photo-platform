@@ -45,7 +45,6 @@ addLocale("ru", {
 });
 
 function Main({store}) {
-  const {canAdmin} = useAuth();
 
   function loadTranslations(lang, t) {
     i18n.addResourceBundle(lang, "namespace1", t);
@@ -59,19 +58,6 @@ function Main({store}) {
   };
 
 
-  const checkRole = role => {
-    const isAdminArea = location.href.includes("/admin");
-    if (isAdminArea && !canAdmin(role)) {
-      location.href = "/login";
-    }
-  };
-
-  const loadRoles = () => {
-    asyncGet("api/roles").fork(() => {}, ({role}) => {
-      store.role = role;
-      checkRole(role);
-    });
-  };
 
   const setDefaultLocale = lang => {
     i18n.changeLanguage(lang);
@@ -81,8 +67,6 @@ function Main({store}) {
   useEffect(() => {
     asyncGet("api/translation/ru").fork(e => e, data => loadTranslations("ru", data));
     asyncGet("api/translation/en").fork(e => e, data => loadTranslations("en", data));
-    store.loadRoles = loadRoles;
-    loadRoles();
     setDefaultLocale(loadLanguage());
   }, []);
 
