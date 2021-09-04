@@ -27,12 +27,8 @@ const safe = pred =>
   ifElse(pred, Result.Ok, Result.Err);
 
 
-const loadLocalUser = (store, toast) => {
-  store.user = null;
-  store.role = "";
-  store.toast = toast;
-
-  return compose(
+const loadLocalUser = (store) => {
+  store.user = compose(
     option(undefined),
     resultToMaybe,
     chain(identity),
@@ -49,14 +45,13 @@ function Init({store}) {
   const history = useHistory();
   const toast = useRef();
   const {canAdmin} = useAuth();
-
   const guards = {
     isLoggedIn: () => !!localStorage.getItem("user"),
     hasAuth: (_, {data}) => canAdmin(data?.role)
   };
   
   const actions = {
-    loadLocalUser: () => loadLocalUser(store, toast),
+    loadLocalUser: () => loadLocalUser(store),
     visitMainPage: () => setTimeout(() => history.push("/"), 100),
     saveRole: (_, {data}) => { store.role = data?.role; }
   };
@@ -67,10 +62,9 @@ function Init({store}) {
 
   const [_, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
 
-
-
   useEffect(() => {
     send("checkLogin");
+    store.toast = toast;
   }, []);
   
   return (

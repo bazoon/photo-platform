@@ -50,22 +50,19 @@ export default function Main() {
 
   useEffect(() => {
     const links = [
-      store.user && {
-        label: store.user.firstName,
-        items: [
-          {
-            name: "profile",
-            label: t("profile"),
-            command: () => history.push("/profile")
-          },
-          {
-            label: "applications",
-            name: t("appplications"),
-            command: () => history.push("/applications")
-          }
-        ]
-      } || {},
+      {
+        name: "profile",
+        label: t("profile"),
+        command: () => history.push("/profile")
+      },
+      {
+        label: "applications",
+        name: t("appplications"),
+        command: () => history.push("/applications")
+      }
     ];
+      
+    
     
     setLinks(links);
   }, [store.role, store.user, location.href, i18n.language]);

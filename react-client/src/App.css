@@ -58,7 +58,7 @@ body {
 }
 
 
-.p-menubar {
+.p-menubar, p-slidemenu {
   background: var(--menu-bg) !important;
   box-shadow: none;
   border: none !important;
