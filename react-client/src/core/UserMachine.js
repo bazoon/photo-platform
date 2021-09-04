@@ -7,6 +7,11 @@ export default function({ context = {}, guards, services, actions } = {}) {
     states: {
       idle: {
         on: {
+          checkLogin: {
+            cond: "isLoggedIn",
+            target: "loggedIn",
+            actions: "loadLocalUser"
+          },
           login: "loginIn",
           signup: "signingUp",
           confirmEmail: "confirmingEmail"

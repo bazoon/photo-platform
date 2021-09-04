@@ -14,33 +14,63 @@ import Async from "crocks/Async";
 import option from "crocks/pointfree/option";
 import resultToMaybe from "crocks/Maybe/resultToMaybe";
 import {loadRoles, loadUser} from "./api_utils";
+import {useMachine} from "@xstate/react";
+import UserMachine from "./UserMachine";
+import {useHistory} from "react-router-dom";
+
+const initialContext = {
+  user: {},
+  role: undefined
+};
 
 const safe = pred =>
   ifElse(pred, Result.Ok, Result.Err);
 
+
+const loadLocalUser = (store, toast) => {
+  store.user = null;
+  store.role = "";
+  store.toast = toast;
+
+  return compose(
+    option(undefined),
+    resultToMaybe,
+    chain(identity),
+    map(tryCatch(e => JSON.parse(e))),
+    safe(e => e),
+    e => { 
+      return localStorage.getItem(e);
+    }
+  )("user");
+};
+
+
 function Init({store}) {
+  const history = useHistory();
   const toast = useRef();
+  const {canAdmin} = useAuth();
 
-  const loadLocalUser = () => {
-    store.user = null;
-    store.role = "";
-    store.toast = toast;
-
-    return compose(
-      option(undefined),
-      resultToMaybe,
-      chain(identity),
-      map(tryCatch(e => JSON.parse(e))),
-      safe(e => e),
-      e => { 
-        return localStorage.getItem(e);
-      }
-    )("user");
+  const guards = {
+    isLoggedIn: () => !!localStorage.getItem("user"),
+    hasAuth: (_, {data}) => canAdmin(data?.role)
+  };
+  
+  const actions = {
+    loadLocalUser: () => loadLocalUser(store, toast),
+    visitMainPage: () => setTimeout(() => history.push("/"), 100),
+    saveRole: (_, {data}) => { store.role = data?.role; }
   };
 
+  const services = {
+    loadRoles: () => asyncGet("api/roles").toPromise(),
+  };
+
+  const [_, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
+
+
+
   useEffect(() => {
-    const user = loadLocalUser();
-    store.user = user;
+    send("checkLogin");
   }, []);
   
   return (

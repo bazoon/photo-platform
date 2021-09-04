@@ -2,12 +2,14 @@ import React, {useState, useEffect, useRef} from "react";
 import { useTranslation } from "react-i18next";
 import {asyncPost, asyncGet} from "../core/api";
 import Checkbox from "antd/lib/checkbox/Checkbox";
-import { collect } from "react-recollect";
+import { collect, store } from "react-recollect";
 import {useHistory} from "react-router-dom";
 import {Button} from "primereact/button";
 import { Captcha } from "primereact/captcha";
 import {Field, Form} from "react-final-form";
 import {filter} from "lodash/fp";
+import { SlideMenu } from "primereact/slidemenu";
+
 
 const handleChange = setfn => e => setfn(e.target.value);
 const handleChangeCheckbox = setfn => e => setfn(e.target.checked);
@@ -32,34 +34,42 @@ const renderField = (name, title) => {
   );
 };
 
+const isActiveMenuItem = item => {
+  return location.href.includes(item.to) || (item.items && item.items.some(isActiveMenuItem));
+};
 
-export default function Main({store}) {
-  // const [remember, setRemember] = useState(true);
-  // const [iConfirmAgreement, setIConfirmAgreement] = useState(true);
-  // const [iKnowAboutCookies, setIKnowAboutCookies] = useState(true);
-  // const [iReadAboutPersonal, setIReadAboutPersonal] = useState(true);
-  
+export default function Main() {
   const [profile, setProfile] = useState({});
   const [agreed, setAgreed] = useState(true);
   const [fields, setFields] = useState([]);
   const fileRef = useRef(null);
   const [file, setFile] = useState(null);
-
+  const [links, setLinks] = useState([]);
+  const { t, i18n } = useTranslation("namespace1");
   const history = useHistory();
-  const { t } = useTranslation("namespace1");
 
-
-  function handleLogin(e) {
-    e.preventDefault();
+  useEffect(() => {
+    const links = [
+      store.user && {
+        label: store.user.firstName,
+        items: [
+          {
+            name: "profile",
+            label: t("profile"),
+            command: () => history.push("/profile")
+          },
+          {
+            label: "applications",
+            name: t("appplications"),
+            command: () => history.push("/applications")
+          }
+        ]
+      } || {},
+    ];
     
-    asyncPost("api/signup", {}).fork(e => {
-      history.push("/login");
-    }, data => {
-      localStorage.setItem("user", JSON.stringify(data));
-      store.user = data;
-      history.push("/");
-    });
-  }
+    setLinks(links);
+  }, [store.role, store.user, location.href, i18n.language]);
+
 
   const loadProfileFailed = () => {
 
@@ -118,11 +128,13 @@ export default function Main({store}) {
     fileRef.current.click();
   };
 
+
+
   return (
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
+ 
       <div className="relative flex justify-center w-4/5 wrap">
         <div className="uppercase text-lg text-bright font-header text-center mt-24">Профиль</div>
-    
         <Form
           validate={validateForm}
           className="overflow-y-auto max-h-96"
@@ -160,6 +172,7 @@ export default function Main({store}) {
             </form>
           )}/>
       </div>
+      <SlideMenu model={links} className="flex-1 bg-brown-medium border-0"/>
     </div>
   );
 
