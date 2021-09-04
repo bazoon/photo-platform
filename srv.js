@@ -65,7 +65,8 @@ const init = async () => {
     cookie: {
       name: 'tok',
       password: process.env.API_TOKEN,
-      isSecure: true
+      isSecure: true,
+      ttl: 1000 * 434200
     },
     validateFunc: async (request, {tok}) => {
       let routeRole = '';
