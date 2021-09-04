@@ -20,15 +20,6 @@ const safe = pred =>
 
 function Init({store}) {
   const toast = useRef();
-  const {canAdmin} = useAuth();
-
-  const checkRole = role => {
-    const isAdminArea = location.href.includes("/admin");
-    if (isAdminArea && !canAdmin(role)) {
-      location.href = "/login";
-    }
-  };
-
 
   const loadLocalUser = () => {
     store.user = null;
@@ -50,18 +41,6 @@ function Init({store}) {
   useEffect(() => {
     const user = loadLocalUser();
     store.user = user;
-    // loadRoles().fork(identity, ({role}) => {
-    //   checkRole(role);
-    //   store.role = role;
-
-    //   if (user && !role && !location.href.endsWith("login")) {
-    //     location.href = "/login";
-    //   }
-
-    //   if (role && !user) {
-    //     loadUser();
-    //   }
-    // });
   }, []);
   
   return (

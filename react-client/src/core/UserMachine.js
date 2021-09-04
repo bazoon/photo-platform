@@ -1,6 +1,6 @@
-import { createMachine, assign } from "xstate";
+import { createMachine, assign, actions } from "xstate";
 
-export default function({ context = {}, guards, services } = {}) {
+export default function({ context = {}, guards, services, actions } = {}) {
   return createMachine({
     initial: "idle",
     context,
@@ -8,12 +8,47 @@ export default function({ context = {}, guards, services } = {}) {
       idle: {
         on: {
           login: "loginIn",
-          signup: "watingConfirm"
+          signup: "signingUp",
+          confirmEmail: "confirmingEmail"
         }
       },
-      watingConfirm: {
+      waitingConfirm: {
         on: {
           confirm: "loggedIn"
+        }
+      },
+      confirmingEmail: {
+        invoke: {
+          src: "confirmEmail",
+          onDone: {
+            target: "loggedIn",
+            actions: "saveUser"
+          },
+          onError: {
+            target: "idle",
+            actions: [
+              assign({
+                error: (_, event) => event?.data
+              })
+            ]
+          }
+        }
+      },
+      signingUp: {
+        invoke: {
+          src: "signup",
+          onDone: {
+            target: "waitingConfirm",
+            actions: "successSignup"
+          },
+          onError: {
+            target: "idle",
+            actions: [
+              assign({
+                error: (_, event) => event?.data
+              })
+            ]
+          }
         }
       },
       loginIn: {
@@ -22,9 +57,7 @@ export default function({ context = {}, guards, services } = {}) {
           onDone: {
             target: "loggedIn",
             actions: [
-              assign({
-                user: (_, event) => event?.data
-              })
+              "saveUser"
             ]
           },
           onError: {
@@ -43,11 +76,9 @@ export default function({ context = {}, guards, services } = {}) {
           onDone: [
             {
               cond: "hasAuth",
-              target: "authorized",
+              target: "done",
               actions: [
-                assign({
-                  role: (_, {role}) => role
-                })
+                "saveRole"
               ]
             },
             {
@@ -59,22 +90,15 @@ export default function({ context = {}, guards, services } = {}) {
           },
         }
       },
-      authorized: {
-        always: "done"
-      },
       done: {
-
+        entry: ["visitMainPage"]    
       }
     }
   }, 
   {
-    guards: {
-      hasAuth: guards.hasAuth
-    },
-    services: {
-      login: services.login,
-      loadRoles: services.loadRoles
-    } 
+    actions,
+    guards,
+    services,
   });
 }
 

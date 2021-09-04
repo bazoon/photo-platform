@@ -1,43 +1,57 @@
 import React, {useState} from "react";
-import { useTranslation } from "react-i18next";
-import {asyncPost, asyncGet} from "../core/api";
-import Checkbox from "antd/lib/checkbox/Checkbox";
-import { collect } from "react-recollect";
-import {useHistory} from "react-router-dom";
+import {asyncPost} from "../core/api";
 import {Button} from "primereact/button";
-import { store } from "react-recollect";
+import UserMachine from "../core/UserMachine";
+import {useMachine} from "@xstate/react";
+import {assign} from "xstate";
 
 
 const handleChange = setfn => e => setfn(e.target.value);
 const handleChangeCheckbox = setfn => e => setfn(e.target.checked);
 
+const initialContext = {
+  user: {},
+  role: "",
+  success: undefined
+};
+
 export default function Main() {
-  // const [remember, setRemember] = useState(true);
-  // const [iConfirmAgreement, setIConfirmAgreement] = useState(true);
-  // const [iKnowAboutCookies, setIKnowAboutCookies] = useState(true);
-  // const [iReadAboutPersonal, setIReadAboutPersonal] = useState(true);
-  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [nickName, setNickName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [agreed, setAgreed] = useState(true);
-  const [success, setSuccess] = useState(false);
 
-  const history = useHistory();
-  const { t } = useTranslation("namespace1");
+
+
+  const actions = {
+    successSignup: assign({
+      success: true  
+    }),
+    failedSignup: assign({
+      success: false
+    })
+  };
+
+  const services = {
+    signup: (_, data) => asyncPost("api/signup", data).toPromise(),
+  };
+
+  const [current, send] = useMachine(UserMachine({context: initialContext, services, actions}), {devTools: true});
+  const {context} = current;
+  const {success} = context;
+
+  // const [remember, setRemember] = useState(true);
+  // const [iConfirmAgreement, setIConfirmAgreement] = useState(true);
+  // const [iKnowAboutCookies, setIKnowAboutCookies] = useState(true);
+  // const [iReadAboutPersonal, setIReadAboutPersonal] = useState(true);
+  
 
 
   function handleLogin(e) {
     e.preventDefault();
-    
-    asyncPost("api/signup", { password, nickName, firstName, lastName, email, agreed}).fork(e => {
-    }, data => {
-      localStorage.setItem("user", JSON.stringify(data));
-      store.user = data;
-      setSuccess(true);
-    });
+    send("signup", {password, nickName, firstName, lastName, email, agreed});
   }
 
   const signupForm = () => {

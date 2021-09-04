@@ -25,22 +25,33 @@ const handleChangeCheckbox = setfn => e => setfn(e.target.checked);
 const services = {
   login: (_, {data}) => asyncPost("api/login", data).toPromise(),
   loadRoles: () => asyncGet("api/roles").toPromise(),
-  // signup: params => asyncPost("api/login", params).toPromise(),
+  signup: params => asyncPost("api/login", params).toPromise(),
 };
 
 const {canAdmin} = useAuth();
 
 const guards = {
-  hasAuth: (_, data) => canAdmin(data?.role)
+  hasAuth: (_, {data}) => canAdmin(data?.role)
 };
 
 const initialContext = {
-  user: {}
+  user: {},
+  role: ""
 };
 
 function Main({store}) {
-  const [current, send] = useMachine(UserMachine({context: initialContext, services, guards}), {devTools: true});
-  const {context} = current;
+  const history = useHistory();
+  const actions = {
+    visitMainPage: () => setTimeout(() => history.push("/"), 100),
+    saveUser: (_, {data}) => { 
+      localStorage.setItem("user", JSON.stringify(data)); 
+      store.user = data;
+    },
+    saveRole: (_, {data}) => { store.role = data?.role; }
+  };
+
+  const [current, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
+  console.log(current.value);
   const [password, setPassword] = useState("");
   const [nickName, setNickName] = useState("");
   const [remember, setRemember] = useState(true);
@@ -48,27 +59,13 @@ function Main({store}) {
   const [iConfirmAgreement, setIConfirmAgreement] = useState(true);
   const [iKnowAboutCookies, setIKnowAboutCookies] = useState(true);
   const [iReadAboutPersonal, setIReadAboutPersonal] = useState(true);
-  const history = useHistory();
   const { t } = useTranslation("namespace1");
 
-
-
-  useEffect(() => {
-    store.user = context.user;
-    localStorage.setItem("user", JSON.stringify(context.user));
-    // send("auth");
-    
-    // if (context.user.id) {
-    //   history.push("/");
-    // }
-  }, [context.user]);
 
   // const loginFailed = error => {
   //   store.toast.current.show({severity: "error", summary: error && error.error});
   // };
 
-  // const loginOk = data => {
-  // };
 
   function handleLogin(e) {
     e.preventDefault();
@@ -83,7 +80,7 @@ function Main({store}) {
         <form className="w-full p-10 border rounded bg-brown-dark2">
           <div className="grid grid-cols-6 grid-rows-5 gap-12">
             <label className="col-span-2 text-tiny uppercase place-self-end">Имя</label>
-            <input value={nickName} onChange={handleChange(setNickName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+            <input autoFocus value={nickName} onChange={handleChange(setNickName)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
             <label className="col-span-2 place-self-end text-tiny uppercase">Пароль</label>
             <input type="password" value={password} onChange={handleChange(setPassword)} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
             <input checked={agreed} onChange={handleChangeCheckbox(setAgreed)} className="col-span-2 place-self-end" type="checkbox"/>

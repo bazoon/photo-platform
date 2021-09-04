@@ -32,8 +32,6 @@ function Main({store, history}) {
   const { t, i18n } = useTranslation("namespace1");
   const {canAdmin} = useAuth();
   const logout = useLogout(store);
- 
-  
 
   const changeLanguage = lang => {
     i18n.changeLanguage(lang);
