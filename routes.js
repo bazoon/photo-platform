@@ -81,6 +81,7 @@ module.exports = flatten([
   require('./hapi_server/routes/public/profile'),
   require('./hapi_server/routes/public/meta/profile'),
   require('./hapi_server/routes/public/apply'),
+  require('./hapi_server/routes/public/meta/signupForm'),
   imgRoute,
   publicRoute,
 ]);

@@ -13,7 +13,10 @@ export default function({ context = {}, guards, services, actions } = {}) {
             actions: "loadLocalUser"
           },
           login: "loginIn",
-          signup: "signingUp",
+          signup: {
+            target: "signingUp",
+            actions: "saveUser"
+          },
           confirmEmail: "confirmingEmail"
         }
       },
