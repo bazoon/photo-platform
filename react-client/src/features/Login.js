@@ -12,12 +12,12 @@ import useAuth from "../core/hooks/useAuth";
 
 
 import { inspect } from "@xstate/inspect";
-// if (location.href.includes("foto.ru")) {
-inspect({
-  url: "https://statecharts.io/inspect",
-  iframe: false
-});
-// }
+if (location.href.includes("foto.ru")) {
+  inspect({
+    url: "https://statecharts.io/inspect",
+    iframe: false
+  });
+}
 
 const handleChange = setfn => e => setfn(e.target.value);
 const handleChangeCheckbox = setfn => e => setfn(e.target.checked);
