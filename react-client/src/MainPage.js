@@ -7,12 +7,8 @@ import {withRouter} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
 function MainPage({history}) {
-  const [info, setInfo] = useState({});
-  const { t, i18n } = useTranslation("namespace1");
   const [config, setConfig] = useState({});
-  const loadFailed = () => {
-
-  };
+  const info = store.info || {};
 
   const loadConfigFailed = () => {
 
@@ -25,71 +21,10 @@ function MainPage({history}) {
   const loadConfig = () => {
     asyncGet("api/admin/config").fork(loadConfigFailed, loadConfigOk);
   };
-  
-  const loadOk = inf => {
-    setInfo(inf);
-  };
 
   useEffect(() => {
-    asyncGet(`api/mainPage/${i18n.language}`).fork(loadFailed, loadOk);
     loadConfig();
   }, []);
-
-  const renderNews = () => {
-    return (
-      <div className="container flex justify-center bg-gray">
-        <div className="pt-20 pb-48 wrap">
-          <div className="mb-12 text-2xl text-center uppercase text-color-dark">новости</div>
- 
-          <div className="justify-center grid gap-9 grid-cols-3">
-            <div className="flex flex-col"> 
-              <img className="mb-4" src="https://picsum.photos/400/350"/>
-              <div className="mb-4 text-base uppercase">Новость</div>
-              <div className="text-tiny">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer euismod ligula odio, at blandit orci facilisis in. Nam mollis odio a aliquam fringilla. Maecenas lacinia, ante quis facilisis tincidunt, libero felis laoreet est, a interdum magna justo sit amet libero. Sed purus justo, pellentesque eu lacus sit amet, iaculis dignissim felis. Curabitur euismod interdum turpis, id venenatis justo accumsan sit amet. Nulla scelerisque lectus vel justo venenatis, dictum pharetra tellus maximus. Praesent dui eros, rutrum in sapien non, luctus sollicitudin dolor. Morbi et ipsum lobortis, imperdiet orci maximus, fermentum turpis. Morbi dapibus convallis auctor. Aliquam dictum pretium varius. Cras est eros, mattis dapibus interdum quis, tempus quis odio. Praesent maximus lorem sed sem luctus porttitor at ac tellus. Mauris quis fermentum felis, lobortis placerat nibh. Sed pulvinar, quam auctor tempor commodo, turpis felis dictum neque, et gravida nunc diam eget turpis. Vestibulum et purus eget erat facilisis porta quis ut felis. Donec facilisis orci vel lectus consectetur, eget bibendum nisi suscipit.
-              </div>
-            </div>
-
-            <div className="flex flex-col"> 
-              <img className="mb-4" src="https://picsum.photos/400/350"/>
-              <div className="mb-4 text-base uppercase">Новость</div>
-              <div className="text-tiny">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer euismod ligula odio, at blandit orci facilisis in. Nam mollis odio a aliquam fringilla. Maecenas lacinia, ante quis facilisis tincidunt, libero felis laoreet est, a interdum magna justo sit amet libero. Sed purus justo, pellentesque eu lacus sit amet, iaculis dignissim felis. Curabitur euismod interdum turpis, id venenatis justo accumsan sit amet. Nulla scelerisque lectus vel justo venenatis, dictum pharetra tellus maximus. Praesent dui eros, rutrum in sapien non, luctus sollicitudin dolor. Morbi et ipsum lobortis, imperdiet orci maximus, fermentum turpis. Morbi dapibus convallis auctor. Aliquam dictum pretium varius. Cras est eros, mattis dapibus interdum quis, tempus quis odio. Praesent maximus lorem sed sem luctus porttitor at ac tellus. Mauris quis fermentum felis, lobortis placerat nibh. Sed pulvinar, quam auctor tempor commodo, turpis felis dictum neque, et gravida nunc diam eget turpis. Vestibulum et purus eget erat facilisis porta quis ut felis. Donec facilisis orci vel lectus consectetur, eget bibendum nisi suscipit.
-              </div>
-            </div>
-
-            <div className="flex flex-col"> 
-              <img className="mb-4" src="https://picsum.photos/400/350"/>
-              <div className="mb-4 text-base uppercase ">Новость</div>
-              <div className="text-tiny">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer euismod ligula odio, at blandit orci facilisis in. Nam mollis odio a aliquam fringilla. Maecenas lacinia, ante quis facilisis tincidunt, libero felis laoreet est, a interdum magna justo sit amet libero. Sed purus justo, pellentesque eu lacus sit amet, iaculis dignissim felis. Curabitur euismod interdum turpis, id venenatis justo accumsan sit amet. Nulla scelerisque lectus vel justo venenatis, dictum pharetra tellus maximus. Praesent dui eros, rutrum in sapien non, luctus sollicitudin dolor. Morbi et ipsum lobortis, imperdiet orci maximus, fermentum turpis. Morbi dapibus convallis auctor. Aliquam dictum pretium varius. Cras est eros, mattis dapibus interdum quis, tempus quis odio. Praesent maximus lorem sed sem luctus porttitor at ac tellus. Mauris quis fermentum felis, lobortis placerat nibh. Sed pulvinar, quam auctor tempor commodo, turpis felis dictum neque, et gravida nunc diam eget turpis. Vestibulum et purus eget erat facilisis porta quis ut felis. Donec facilisis orci vel lectus consectetur, eget bibendum nisi suscipit.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderPartners = () => {
-    return (
-      <div className="container flex justify-center bg-bright">
-        <div className="pt-20 pb-48 wrap">
-          <div className="mb-16 text-2xl text-center uppercase">Наши партнеры</div>
-          <div className="grid gap-9 grid-cols-4 grid-rows-2">
-            <img className="w-full mb-4" src="https://picsum.photos/seed/1/400/350"/>
-            <img className="w-full mb-4" src="https://picsum.photos/seed/2/400/350"/>
-            <img className="w-full mb-4" src="https://picsum.photos/seed/3/400/350"/>
-            <img className="w-full mb-4" src="https://picsum.photos/seed/4/400/350"/>
-            <img className="w-full mb-4" src="https://picsum.photos/seed/5/400/350"/>
-            <img className="w-full mb-4" src="https://picsum.photos/seed/6/400/350"/>
-            <img className="w-full mb-4" src="https://picsum.photos/seed/7/400/350"/>
-            <img className="w-full mb-4" src="https://picsum.photos/seed/8/400/350"/>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   const handleSendPhoto = () => {
     if (!store.user) {

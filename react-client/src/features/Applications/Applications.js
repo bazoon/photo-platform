@@ -10,6 +10,7 @@ import SectionsMachine from "./SectionsMachine";
 import { Dropdown } from "primereact/dropdown";
 import {keys} from "lodash/fp";
 import { Form, Field } from "react-final-form";
+import ProfileMenu from "../ProfileMenu";
 
 const initialContext = {
   isOpen: false,
@@ -119,64 +120,67 @@ export default function Main() {
 
 
   return (
-    <div className="container bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
-      <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">Мои заявки</div>
-      {
-        <div className="text-center mb-24">
-          { applicationMessage && <Message text={applicationMessage}/> }
+    <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
+      <div className="relative flex justify-center w-4/5 wrap">
+        <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">Мои заявки</div>
+        {
+          <div className="text-center mb-24">
+            { applicationMessage && <Message text={applicationMessage}/> }
+          </div>
+        }
+        <div className="flex justify-center mb-24">
+          {
+            !(isApproved === true) && <Button disabled={isApproved === false} className="uppercase mr-5" onClick={apply}>Подать заявку</Button>
+          }
+          {
+            isApproved && <Button className="uppercase" onClick={() => send("open") }>Загрузить</Button>
+          }
         </div>
-      }
-      <div className="flex justify-center mb-24">
         {
-          !(isApproved === true) && <Button disabled={isApproved === false} className="uppercase mr-5" onClick={apply}>Подать заявку</Button>
+          keys(photoworks).map(s => renderSection(s, photoworks[s]))
         }
-        {
-          isApproved && <Button className="uppercase" onClick={() => send("open") }>Загрузить</Button>
-        }
+
+
+        <Form
+          validate={validateForm}
+          className="overflow-y-auto max-h-96"
+          onSubmit={onSubmit}
+          initialValues={{files: [], sectionId: null}}
+          render={({ handleSubmit }) => (
+            <UploadModal
+              header={t("load_photo")}
+              visible={current.value === "opened"}
+              onHide={() => send("close")}
+              message={message}
+              sectionId={sectionId}
+              footer={renderFooter(handleSubmit)}
+              options={mapSections(sections)}
+            >
+              {message && <Message text={message} />}
+              <form className="p-10 p-fluid" onSubmit={handleSubmit}>
+                <div>{t("sectionName")}</div>
+                <Field name="sectionId">
+                  {({ input, meta }) => (
+                    <div>
+                      <Dropdown className="mb-5"  value={input.value} onChange={({value}) => input.onChange(value) } options={mapSections(sections)}/>
+                      {input.value}
+                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                    </div>
+                  )} 
+                </Field>
+                <Field name="files">
+                  {({ input, meta }) => (
+                    <input type="file" multiple onChange={({target}) => handleChooseFiles(target.files, files => input.onChange(files)) }/>
+                  )}
+                </Field>
+              </form>
+              <div>
+                {files.map(renderFile)}
+              </div>
+            </UploadModal>
+          )}/>
       </div>
-      {
-        keys(photoworks).map(s => renderSection(s, photoworks[s]))
-      }
-
-
-      <Form
-        validate={validateForm}
-        className="overflow-y-auto max-h-96"
-        onSubmit={onSubmit}
-        initialValues={{files: [], sectionId: null}}
-        render={({ handleSubmit }) => (
-          <UploadModal
-            header={t("load_photo")}
-            visible={current.value === "opened"}
-            onHide={() => send("close")}
-            message={message}
-            sectionId={sectionId}
-            footer={renderFooter(handleSubmit)}
-            options={mapSections(sections)}
-          >
-            {message && <Message text={message} />}
-            <form className="p-10 p-fluid" onSubmit={handleSubmit}>
-              <div>{t("sectionName")}</div>
-              <Field name="sectionId">
-                {({ input, meta }) => (
-                  <div>
-                    <Dropdown className="mb-5"  value={input.value} onChange={({value}) => input.onChange(value) } options={mapSections(sections)}/>
-                    {input.value}
-                    {meta.error && meta.touched && <span>{meta.error}</span>}
-                  </div>
-                )} 
-              </Field>
-              <Field name="files">
-                {({ input, meta }) => (
-                  <input type="file" multiple onChange={({target}) => handleChooseFiles(target.files, files => input.onChange(files)) }/>
-                )}
-              </Field>
-            </form>
-            <div>
-              {files.map(renderFile)}
-            </div>
-          </UploadModal>
-        )}/>
+      <ProfileMenu/>
     </div>
   );
 

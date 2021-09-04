@@ -6,7 +6,7 @@ import { Menubar } from "primereact/menubar";
 import { withRouter } from "react-router";
 import useAuth from "./core/hooks/useAuth";
 import useLogout from "./core/hooks/useLogout";
-import { locale } from "primereact/api";
+import { locale, PrimeIcons } from "primereact/api";
 import {saveLanguage} from "./core/utils";
 
 
@@ -79,26 +79,22 @@ function Main({store, history}) {
         command: () => history.push("/signup")
       } || {},
       store.user && {
-        label: t("logout"),
+        label: (
+          <div className="flex items-center">
+            <img className="rounded-full block w-16 h-16" src={store.user.avatar}/>
+            <div className="ml-5"> {store.user.firstName}</div>
+          </div>
+        ),
+        to: "profile",
+        command: () => history.push("/profile")
+      } || {},
+      store.user && {
+        icon: PrimeIcons.SIGN_OUT,
+        className: "hover:",
         command: () => {
           logout();
           history.push("/");
         } 
-      } || {},
-      store.user && {
-        label: store.user.firstName,
-        items: [
-          {
-            name: "profile",
-            label: t("profile"),
-            command: () => history.push("/profile")
-          },
-          {
-            label: "applications",
-            name: t("appplications"),
-            command: () => history.push("/applications")
-          }
-        ]
       } || {},
     ];
     

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import compose from "crocks/helpers/compose";
 import map from "crocks/pointfree/map";
 import identity from "crocks/combinators/identity";
@@ -17,6 +17,7 @@ import {loadRoles, loadUser} from "./api_utils";
 import {useMachine} from "@xstate/react";
 import UserMachine from "./UserMachine";
 import {useHistory} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const initialContext = {
   user: {},
@@ -52,7 +53,7 @@ function Init({store}) {
   
   const actions = {
     loadLocalUser: () => loadLocalUser(store),
-    visitMainPage: () => setTimeout(() => history.push("/"), 100),
+    visitMainPage: () => location.href.endsWith("/login") && setTimeout(() => history.push("/"), 100),
     saveRole: (_, {data}) => { store.role = data?.role; }
   };
 
@@ -61,6 +62,20 @@ function Init({store}) {
   };
 
   const [_, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
+  const { i18n } = useTranslation("namespace1");
+  const loadFailed = () => {
+
+  };
+
+  const loadOk = info => {
+    store.info = info;
+  };
+
+  useEffect(() => {
+    asyncGet(`api/mainPage/${i18n.language}`).fork(loadFailed, loadOk);
+  }, []);
+
+
 
   useEffect(() => {
     send("checkLogin");

@@ -61,13 +61,8 @@ module.exports = {
       "10xl": "90px",
       "11xl": "96px",
     },
-    borderRadius: {
-      round: "50%"
-    },
     container: {
       center: true,
-      
-
     },
     extend: {
       gridTemplateRows: {

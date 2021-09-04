@@ -1,18 +1,12 @@
 import React, {useState, useEffect, useRef} from "react";
 import { useTranslation } from "react-i18next";
 import {asyncPost, asyncGet} from "../core/api";
-import Checkbox from "antd/lib/checkbox/Checkbox";
-import { collect, store } from "react-recollect";
 import {useHistory} from "react-router-dom";
 import {Button} from "primereact/button";
-import { Captcha } from "primereact/captcha";
 import {Field, Form} from "react-final-form";
 import {filter} from "lodash/fp";
-import { SlideMenu } from "primereact/slidemenu";
+import ProfileMenu from "./ProfileMenu";
 
-
-const handleChange = setfn => e => setfn(e.target.value);
-const handleChangeCheckbox = setfn => e => setfn(e.target.checked);
 
 
 const toFormData = (obj) => {
@@ -25,7 +19,7 @@ const toFormData = (obj) => {
 
 const renderField = (name, title) => {
   return (
-    <Field name={name} key={name} render={({ input, meta }) => (
+    <Field name={name} key={name} render={({ input }) => (
       <>
         <label className="col-span-2 text-tiny place-self-end">{title}</label>
         <input value={name} onChange={input.onChange} {...input} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
@@ -38,35 +32,24 @@ const isActiveMenuItem = item => {
   return location.href.includes(item.to) || (item.items && item.items.some(isActiveMenuItem));
 };
 
+const setTemplateForItems = (items = [], history, t) => {
+  items.forEach(item => {
+    item.command = item.command || (() => history.push(item.to));
+    item.label = t(item.name) || item.name;
+    item.className = isActiveMenuItem(item) ? "p-menuitem--active" : "";
+    if (item.items) {
+      setTemplateForItems(item.items, history, t);
+    }
+  });
+  return [...items];
+};
+
 export default function Main() {
   const [profile, setProfile] = useState({});
-  const [agreed, setAgreed] = useState(true);
+  const [agreed] = useState(true);
   const [fields, setFields] = useState([]);
   const fileRef = useRef(null);
   const [file, setFile] = useState(null);
-  const [links, setLinks] = useState([]);
-  const { t, i18n } = useTranslation("namespace1");
-  const history = useHistory();
-
-  useEffect(() => {
-    const links = [
-      {
-        name: "profile",
-        label: t("profile"),
-        command: () => history.push("/profile")
-      },
-      {
-        label: "applications",
-        name: t("appplications"),
-        command: () => history.push("/applications")
-      }
-    ];
-      
-    
-    
-    setLinks(links);
-  }, [store.role, store.user, location.href, i18n.language]);
-
 
   const loadProfileFailed = () => {
 
@@ -92,12 +75,14 @@ export default function Main() {
     asyncGet("api/profile/meta").fork(loadMetaFailed, loadMetaOk);
   };
 
+
+
   useEffect(() => {
     loadMeta();
     loadProfile();
   }, []);
 
-  const validateForm = data => {
+  const validateForm = () => {
 
   };
 
@@ -106,7 +91,7 @@ export default function Main() {
 
   };
 
-  const submitOk = d => {
+  const submitOk = () => {
 
   };
 
@@ -129,7 +114,6 @@ export default function Main() {
 
   return (
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
- 
       <div className="relative flex justify-center w-4/5 wrap">
         <div className="uppercase text-lg text-bright font-header text-center mt-24">Профиль</div>
         <Form
@@ -140,7 +124,7 @@ export default function Main() {
           render={({ handleSubmit }) => (
             <form className="w-full p-10 border rounded bg-brown-dark2">
               <div className="grid grid-cols-6 grid-rows-10 gap-12">
-                <Field name="avatar" key={name} render={({ input, meta }) => (
+                <Field name="avatar" key={name} render={({ input }) => (
                   <div className="col-span-2 text-tiny place-self-end w-48 h-48 bg-brown-dark">
                     {(file || profile.avatar) && <img className="square" src={file || profile.avatar}/>}
                     <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => handleChooseFile(target.files[0], input.onChange)}/> 
@@ -169,7 +153,7 @@ export default function Main() {
             </form>
           )}/>
       </div>
-      <SlideMenu model={links} className="flex-1 bg-brown-medium border-0"/>
+      <ProfileMenu/>
     </div>
   );
 

@@ -77,8 +77,8 @@ function Main({store}) {
   return (
     <>
       <Router>
-        <Init/>
         <Suspense fallback="loading">
+          <Init/>
           <header className="flex justify-center h-24 bg-brown-medium">
             <div className="container flex justify-center items-center cursor-pointer">
               <div className="relative">
