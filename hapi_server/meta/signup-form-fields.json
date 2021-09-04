@@ -1,0 +1,41 @@
+{
+  "$id": "https://example.com/geographical-location.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Signup form config",
+  "description": "",
+  "type": "object",
+  "required": [
+    "firstName",
+    "lastName",
+    "nickName",
+    "password",
+    "email"
+  ],
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "title": "Имя"
+    },
+    "lastName": {
+      "type": "string",
+      "title": "Фамилия"
+    },
+    "nickName": {
+      "type": "string",
+      "title": "Логин"
+    },
+    "password": {
+      "type": "password",
+      "title": "Пароль"
+    },
+    "email": {
+      "type": "email",
+      "title": "Почта"
+    },
+    "agreed": {
+      "type": "boolean",
+      "title": "Согласен на обработку личных данных"
+    }
+  }
+}
+
