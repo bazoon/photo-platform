@@ -268,5 +268,28 @@ const logout = {
 };
 
 
+const checkEmail = {
+  method: 'GET',
+  path: '/api/checkEmail/{email}',
+  handler: async function(request, h) {
+    const { email } = request.params;
 
-module.exports = [login, login2, signup, confirm, logout];
+    const user = await h.models.User.findOne({
+      where: {
+        email
+      }
+    });
+
+    return user && {email: 'emailExists'};
+  },
+  options: {
+    auth: {
+      mode: 'optional'
+    },
+    plugins: {
+      role: 'ADMIN'
+    }
+  }
+};
+
+module.exports = [login, login2, signup, confirm, logout, checkEmail];

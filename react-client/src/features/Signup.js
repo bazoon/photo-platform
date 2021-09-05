@@ -113,8 +113,16 @@ export default function Main() {
 
   const validateForm = (data = {}) => {
     let r = fieldNames.reduce((a, fieldName) => required.has(fieldName) && isNil(data[fieldName]) ? ({...a, [fieldName]: "required"}) : a, {});
-    r.email = r.email || (!validateEmail(data.email) && t("invalidEmail"));
-    return r;
+    if (!validateEmail(data.email)) {
+      r.email = t("invalidEmail");
+    }
+    
+    if (!isEmpty(r)) {
+      return r;
+    } else {
+      return asyncGet(`api/checkEmail/${data.email}`).toPromise();
+    }
+
   };
 
   const signupForm = () => {
