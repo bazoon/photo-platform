@@ -9,7 +9,7 @@ module.exports = [
       const userId = get('request.auth.credentials.id', h);
       if (!userId) return [];
 
-      const domain = request.info.referrer.includes('3000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = request.info.referrer.includes('5000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
       if (!domain) {
         return {};
@@ -27,15 +27,13 @@ module.exports = [
         ORDER by contests.date_start desc
         limit 1
       `;
-
-      const contest = (await h.query(contestsQuery, {
+      const contest = await h.query(contestsQuery, {
         replacements: {
           domain
         }
-      }))[0];
+      });
 
-
-      // h.models.RegistrationContest.create({userId,  })
+      h.models.RegistrationContest.create({userId,  })
 
       return contest;
     },

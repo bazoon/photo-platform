@@ -31,7 +31,6 @@ module.exports = [
     path: '/api/admin/nominations/{id}',
     handler: async function (request, h) {
       const {id} = request.params;
-      console.log(id)
 
       const query = `
           select id, max_count_img, name from sections where contest_id=:id

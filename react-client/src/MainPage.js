@@ -67,7 +67,6 @@ function MainPage({history}) {
         {renderStats()}
         <div className="flex justify-center">
           <Button className="uppercase" onClick={handleSendPhoto}>отправить фото</Button>
-          <div className="mr-12"></div>
           {null && <Button className="uppercase p-button-secondary">проголосовать</Button>}
         </div>
       </div>
@@ -77,7 +76,7 @@ function MainPage({history}) {
 
   return (
     <>
-      <div className="container flex justify-center bg-darkgreen"> 
+      <div className="container flex justify-center"> 
         <div className="pb-40 wrap">
           {
             config.isOnService ? tempNote() : renderContent()

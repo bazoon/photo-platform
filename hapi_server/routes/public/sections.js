@@ -5,7 +5,7 @@ module.exports = [
     method: 'GET',
     path: '/api/sections',
     handler: async function (request, h) {
-      const domain = request.info.referrer.includes('3000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = request.info.referrer.includes('5000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
       if (!domain) {
         return {};

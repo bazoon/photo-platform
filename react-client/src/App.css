@@ -6,6 +6,16 @@ html {
   font-size: 12px;
 }
 
+.main-container {
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)
+    ), url('./images/bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
 ul {
   padding: 0;
 }

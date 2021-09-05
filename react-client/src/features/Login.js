@@ -51,7 +51,6 @@ function Main({store}) {
   };
 
   const [current, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
-  console.log(current.value);
   const [password, setPassword] = useState("");
   const [nickName, setNickName] = useState("");
   const [remember, setRemember] = useState(true);
