@@ -1,5 +1,5 @@
-# cd react-client
-# npm run build
+cd react-client
+npm run build
 
 # ssh root@185.65.202.124 "bash -s" << HERE 
 #   rm -rf /var/www/photo-platform
@@ -7,7 +7,7 @@
 
 ssh root@185.65.202.124 "bash -s" << HERE
   cd /var/www/photo-platform
-  git pull
+  git pull https://github.com/bazoon/photo-platform master
   
   # git clone https://github.com/bazoon/photo-platform.git /var/www/photo-platform
   # cd /var/www/photo-platform

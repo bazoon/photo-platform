@@ -161,6 +161,11 @@ body {
   color: rgba(255, 255, 255, 0.8) !important;
 }
 
+.wrap-0 {
+  max-width: 1170px;
+  width: 100%;
+}
+
 .wrap {
   max-width: 1170px;
   width: 100%;

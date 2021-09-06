@@ -12,12 +12,12 @@ import ProfileMenu from "../ProfileMenu";
 import {inspect} from "@xstate/inspect";
 import { Checkbox } from "primereact/checkbox";
 
-// if (location.href.includes("foto.ru")) {
-inspect({
-  url: "https://statecharts.io/inspect",
-  iframe: false
-});
-//}
+if (location.href.includes("foto.ru")) {
+  inspect({
+    url: "https://statecharts.io/inspect",
+    iframe: false
+  });
+}
 
 
 const initialContext = {

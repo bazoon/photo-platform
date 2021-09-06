@@ -9,7 +9,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  withRouter,
   Link,
 } from "react-router-dom";
 import Login from "./features/Login";
@@ -23,12 +22,14 @@ import Admin from "./features/admin/Layout";
 import Init from "./core/Init";
 import MainPage from "./MainPage";
 import Vk from "./icons/Vk";
+import Fb from "./icons/Fb";
+import Insta from "./icons/Insta";
+import Twitter from "./icons/Twitter";
 import Signup from "./features/Signup";
 import { collect } from "react-recollect";
 import JuryGallery from "./components/JuryGallery";
 import ConfirmEmail from "./features/ConfirmEmail";
 import Profile from "./features/Profile";
-import useAuth from "./core/hooks/useAuth";
 import {locale, addLocale} from "primereact/api";
 import Applications from "./features/Applications/Applications";
 import {loadLanguage} from "./core/utils";
@@ -73,9 +74,6 @@ function Main({store}) {
     setDefaultLocale(loadLanguage());
   }, []);
 
-  const handleHome = () => {
-    location.replace("/");
-  };
 
   return (
     <>
@@ -84,11 +82,14 @@ function Main({store}) {
           <Init/>
           <header className="flex justify-center h-24 bg-brown-medium">
             <div className="container flex justify-center items-center cursor-pointer">
-              <div className="relative">
-                <div><Link className="uppercase font-bold text-lg text-brown-light no-underline" to="/">Photo</Link></div>
-                <div><Link to="/" className="absolute top-8 right-0 font-text text-sm no-underline text-brown-light">конкурсы</Link></div>
+
+              <div className="flex wrap-0 items-center justify-between">
+                <div className="relative">
+                  <div><Link className="uppercase font-bold text-lg text-brown-light no-underline" to="/">Photo</Link></div>
+                  <div><Link to="/" className="absolute top-8 right-0 font-text text-sm no-underline text-brown-light">конкурсы</Link></div>
+                </div>
+                <MainMenu />
               </div>
-              <MainMenu />
             </div>
           </header>
 
@@ -143,33 +144,38 @@ function Main({store}) {
             <div className="container flex justify-center bg-brown-medium">
               <div className="pt-20 pb-36 wrap">
                 <div className="justify-between grid grid-cols-4">
-                  <div className="w-32 h-16">
-                    <img className="mb-4" src="https://via.placeholder.com/93"/>
+                  <div className="w-60 h-16">
+                    
+                    <div className="relative">
+                      <Link className="uppercase absolute font-bold text-3xl text-brown-light no-underline" to="/">Photo</Link>
+                      <Link style={{right: "86px", top: "32px"}} to="/" className="absolute font-text text-tiny no-underline text-brown-light">конкурсы</Link>
+                      <div style={{top: "64px"}} className="uppercase absolute text-sm text-gray2 text-right">@ 2021 Photoконкурсы</div> 
+                    </div>
                   </div>
 
                   <div className="grid gap-2 grid-cols-2 grid-rows-3">
-                    <a className="text-gray2" href="#">About</a>
-                    <a className="text-gray2" href="#">Partners</a>
-                    <a className="text-gray2" href="#">Gallery</a>
-                    <a className="text-gray2" href="#">Jury</a>
-                    <a className="text-gray2" href="#">Rules</a>
-                    <a className="text-gray2" href="#">Politics</a>
+                    <Link className="text-gray2 no-underline hover:underline" to="thesis">About</Link>
+                    <Link className="text-gray2 no-underline hover:underline" to="#">Partners</Link>
+                    <Link className="text-gray2 no-underline hover:underline" to="#">Gallery</Link>
+                    <Link className="text-gray2 no-underline hover:underline" to="jury">Jury</Link>
+                    <Link className="text-gray2 no-underline hover:underline" to="rules">Rules</Link>
+                    <Link className="text-gray2 no-underline hover:underline" to="#">Politics</Link>
                   </div>
                   
                   <div className="max-w-max gap-8 grid grid-cols-2 grid-rows-2">
                     <Vk/>
-                    <Vk/>
-                    <Vk/>
-                    <Vk/>
+                    <Twitter/>
+                    <Fb/>
+                    <Insta/>
                   </div>
 
 
                   <div className="grid grid-rows-2 text-gray2">
                     <div>
-                    8 (800) 255-42-12
+                      {store?.info?.phoneTech}
                     </div>
                     <div>
-                    photoproject@gmail.com
+                      {store?.info?.emailPub}
                     </div>
                   </div>
 

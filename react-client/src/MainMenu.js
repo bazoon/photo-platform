@@ -115,12 +115,10 @@ function Main({store, history}) {
   }, [i18n.language, location.href]);
 
   return (
-    <div className="flex wrap">
-      <Menubar
-        className="w-full h-"
-        model={items.concat(links)}
-      />
-    </div>
+    <Menubar
+      className=""
+      model={items.concat(links)}
+    />
   );
 }
 
