@@ -54,6 +54,10 @@ const staticMenu = {
           {
             name: 'rules',
             to: '/rules'
+          },
+          {
+            name: 'jury',
+            to: '/jury'
           }
         ]
       },

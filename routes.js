@@ -35,6 +35,8 @@ const publicRoute = {
 
 
 module.exports = flatten([
+  imgRoute,
+  publicRoute,
   require('./hapi_server/routes/public/translation'),
   require('./hapi_server/routes/login'),
   require('./hapi_server/routes/public/staticMenu'),
@@ -82,6 +84,4 @@ module.exports = flatten([
   require('./hapi_server/routes/public/meta/profile'),
   require('./hapi_server/routes/public/apply'),
   require('./hapi_server/routes/public/meta/signupForm'),
-  imgRoute,
-  publicRoute,
 ]);

@@ -23,7 +23,7 @@ export default function Main() {
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
       <div className="relative flex justify-center mt-20">
         <Document
-          file="uploads/docs/tesis.pdf"
+          file="uploads/docs/rules.pdf"
           onLoadSuccess={onDocumentLoadSuccess}
         >
           {range(1, numPages + 1).map(pageNumber => <Page key={"p" + pageNumber} pageNumber={pageNumber} />)}

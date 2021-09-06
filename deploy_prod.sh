@@ -1,5 +1,5 @@
-cd react-client
-npm run build
+# cd react-client
+# npm run build
 
 # ssh root@185.65.202.124 "bash -s" << HERE 
 #   rm -rf /var/www/photo-platform
@@ -11,10 +11,11 @@ ssh root@185.65.202.124 "bash -s" << HERE
   
   # git clone https://github.com/bazoon/photo-platform.git /var/www/photo-platform
   # cd /var/www/photo-platform
-  /root/.nvm/versions/node/v14.17.5/bin/npm i
+  # /root/.nvm/versions/node/v14.17.5/bin/npm i
 HERE
 
-scp -r /Users/vn/projects/work/photo-platform/react-client/build root@138.124.182.78:/var/www/photo-platform/react-client
+scp -r /Users/vn/projects/work/photo-platform/react-client/build root@185.65.202.124:/var/www/photo-platform/react-client
+scp -r /Users/vn/projects/work/photo-platform/uploads/docs root@185.65.202.124:/var/www/photo-platform/uploads
 # scp /Users/vn/projects/work/photo-platform/.env_test root@138.124.182.78:/var/www/photo-platform/.env
 
 ssh root@185.65.202.124 "bash -s" << HERE 

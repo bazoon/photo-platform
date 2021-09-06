@@ -16,6 +16,9 @@ import Login from "./features/Login";
 import {asyncGet} from "./core/api";
 import i18n from "./core/i18n";
 import Thesis from "./features/Thesis";
+import Rules from "./features/Rules";
+import Jury from "./features/Jury";
+import Contacts from "./features/Contacts";
 import Admin from "./features/admin/Layout";
 import Init from "./core/Init";
 import MainPage from "./MainPage";
@@ -89,7 +92,7 @@ function Main({store}) {
             </div>
           </header>
 
-          <main className="main-container">
+          <main className="main-container bg-brown-medium">
             <Switch>
               <Route path="/login">
                 <Login />
@@ -102,6 +105,17 @@ function Main({store}) {
               </Route>
               <Route path="/thesis">
                 <Thesis/>
+              </Route>
+
+              <Route path="/rules">
+                <Rules/>
+              </Route>
+
+              <Route path="/jury">
+                <Jury/>
+              </Route>
+              <Route path="/contacts">
+                <Contacts/>
               </Route>
               <Route path="/jgallery">
                 <JuryGallery/>
@@ -118,7 +132,9 @@ function Main({store}) {
                 </Suspense>
               </Route>
               <Route path="/">
-                <MainPage/>
+                <div className="main-bg w-full">
+                  <MainPage/>
+                </div>
               </Route>
             </Switch>
           </main>

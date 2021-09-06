@@ -114,7 +114,7 @@ export default function Main() {
         }
         <div className="flex justify-center mb-16">
           {
-            !(isApproved === true) && <Button disabled={isApproved === false} className="uppercase mr-5" onClick={apply}>Подать заявку</Button>
+            !(isApproved === true) && <Button disabled={isApproved === false} className="uppercase" onClick={apply}>Подать заявку</Button>
           }
 
           {
