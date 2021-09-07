@@ -2,29 +2,30 @@ const Router = require('koa-router');
 const router = new Router();
 const models = require('../../../models');
 const R = require('ramda');
+const {pick} = require('lodash/fp');
 
 const expiresIn = 24 * 60 * 60 * 30;
-const fields = [
-  'id',
-  'languageId',
-  'name',
-  'emailSys',
-  'emailPub',
-  'addressLine1',
-  'addressLine2',
-  'www',
-  'phone',
-  'phoneTech',
-  'officer',
-  'logo',
-  'virtual',
-  'smtp',
-  'smtpPassword',
-  'smtpUsePub',
-  'createdA',
-  'rowState',
-  'dateStatus'
-];
+// const fields = [
+//   'id',
+//   'languageId',
+//   'name',
+//   'emailSys',
+//   'emailPub',
+//   'addressLine1',
+//   'addressLine2',
+//   'www',
+//   'phone',
+//   'phoneTech',
+//   'officer',
+//   'logo',
+//   'virtual',
+//   'smtp',
+//   'smtpPassword',
+//   'smtpUsePub',
+//   'createdA',
+//   'rowState',
+//   'dateStatus'
+// ];
 
 // router.get('/', async ctx => {
 // });
@@ -117,6 +118,29 @@ const fields = [
 //   }
 // };
 
+const fields = [
+  'addressLine1',
+  'addressLine2',
+  'dateStatus',
+  'emailPub',
+  'emailSys',
+  'id',
+  'language',
+  'languageId',
+  'logo',
+  'name',
+  'officer',
+  'phone',
+  'phoneTech',
+  'phone_tech',
+  'smtp',
+  'smtpUsePub',
+  'type',
+  'virtual',
+  'www'
+];
+
+
 module.exports = [
   {
     method: 'GET',
@@ -133,6 +157,31 @@ module.exports = [
         mode: 'optional'
       }
     }
-  }
+  },
+  {
+    method: 'PUT',
+    path: '/api/admin/organizers/{id}',
+    handler: async function (request, h) {
+      const { id } = request.params;
+      const rec = pick(fields, request.payload);
+        
+      const organizer = await h.models.Organizer.findOne({
+        where: {
+          id
+        }
+      });
+
+      console.log(rec)
+
+      await organizer.update(rec);
+      return organizer;
+    },
+    options: {
+      auth: {
+        mode: 'optional'
+      }
+    }
+  },
+
 ];
 

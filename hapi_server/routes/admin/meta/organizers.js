@@ -11,27 +11,27 @@ module.exports = [
           width: 200
         },
         { 
-          title: 'email_sys',
-          dataIndex: 'email_sys',
-          key: 'email_sys',
+          title: 'emailSys',
+          dataIndex: 'emailSys',
+          key: 'emailSys',
           width: 200
         },
         {
-          title: 'email_pub',
-          dataIndex: 'email_pub',
-          key: 'email_pub',
+          title: 'emailPub',
+          dataIndex: 'emailPub',
+          key: 'emailPub',
           width: 200
         },
         {
-          title: 'address_line1',
-          dataIndex: 'address_line1',
-          key: 'address_line1',
+          title: 'addressLine1',
+          dataIndex: 'addressLine1',
+          key: 'addressLine1',
           width: 200
         },
         {
-          title: 'address_line2',
-          dataIndex: 'address_line2',
-          key: 'address_line2',
+          title: 'addressLine2',
+          dataIndex: 'addressLine2',
+          key: 'addressLine2',
           width: 200
         },
         {
@@ -47,9 +47,9 @@ module.exports = [
           width: 200
         },
         {
-          title: 'phone_tech',
-          dataIndex: 'phone_tech',
-          key: 'phone_tech',
+          title: 'phoneTech',
+          dataIndex: 'phoneTech',
+          key: 'phoneTech',
           width: 200
         },
         {
@@ -77,39 +77,39 @@ module.exports = [
           width: 200
         },
         {
-          title: 'smtp_psw',
-          dataIndex: 'smtp_psw',
-          key: 'smtp_psw',
+          title: 'smtpPsw',
+          dataIndex: 'smtpPsw',
+          key: 'smtpPsw',
           width: 200
         },
         {
-          title: 'smtp_user',
-          dataIndex: 'smtp_user',
-          key: 'smtp_user',
+          title: 'stmpUser',
+          dataIndex: 'stmpUser',
+          key: 'stmpUser',
           width: 200
         },
         {
-          title: 'smtp_use_pub',
-          dataIndex: 'smtp_use_pub',
-          key: 'smtp_use_pub',
+          title: 'smtpUsePub',
+          dataIndex: 'smtpUsePub',
+          key: 'smtpUsePub',
           width: 200
         },
         {
-          title: 'date_create',
-          dataIndex: 'date_create',
-          key: 'date_create',
+          title: 'dateCreate',
+          dataIndex: 'dateCreate',
+          key: 'dateCreate',
           width: 200
         },
         {
-          title: 'row_state',
-          dataIndex: 'row_state',
-          key: 'row_state',
+          title: 'rowState',
+          dataIndex: 'rowState',
+          key: 'rowState',
           width: 200
         },
         {
-          title: 'date_status',
-          dataIndex: 'date_status',
-          key: 'date_status',
+          title: 'dateStatus',
+          dataIndex: 'dateStatus',
+          key: 'dateStatus',
           width: 200
         },
       ];
