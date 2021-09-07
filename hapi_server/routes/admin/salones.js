@@ -1,7 +1,8 @@
-const Router = require("koa-router");
+const Router = require('koa-router');
 const router = new Router();
-const models = require("../../../models");
-const R = require("ramda");
+const models = require('../../../models');
+const R = require('ramda');
+const {pick} = require('lodash/fp');
 
 const fields = [
   'id',
@@ -17,7 +18,7 @@ const fields = [
   'private'
 ];
 
-router.get("/", async ctx => {
+router.get('/', async ctx => {
   const query = `
     select organizers.name as organizer, spr_salone_types.name as saloneType, spr_salone_type_id, organizer_id,
     salones.name, regular, private, domain, design_code, salones.row_state, salones.id
@@ -44,7 +45,7 @@ router.get("/", async ctx => {
   });
 });
 
-router.put("/:id", async ctx => {
+router.put('/:id', async ctx => {
   const { id } = ctx.params;
   const saloneValues = R.pick(fields, ctx.request.body);
   const salone = await models.Salone.findOne({
@@ -57,14 +58,14 @@ router.put("/:id", async ctx => {
   ctx.body = await getSalone(salone);
 });
 
-router.post("/", async ctx => {
+router.post('/', async ctx => {
   const saloneValues = R.pick(fields, ctx.request.body);
   delete saloneValues.id;
   let salone = await models.Salone.create(saloneValues);
   ctx.body = await getSalone(salone);
 });
 
-router.delete("/:id", async ctx => {
+router.delete('/:id', async ctx => {
   const { id } = ctx.params;
 
   await models.Salone.destroy({
@@ -133,6 +134,28 @@ module.exports = [
       delete saloneValues.id;
       let salone = await h.models.Salone.create(saloneValues);
       return await getSalone(salone);
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/api/admin/salones/{id}',
+    handler: async function (request, h) {
+      const { id } = request.params;
+      const rec = pick(fields, request.payload);
+        
+      const salone = await h.models.Salone.findOne({
+        where: {
+          id
+        }
+      });
+
+      await salone.update(rec);
+      return salone;
     },
     options: {
       auth: {

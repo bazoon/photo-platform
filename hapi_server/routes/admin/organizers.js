@@ -171,8 +171,6 @@ module.exports = [
         }
       });
 
-      console.log(rec)
-
       await organizer.update(rec);
       return organizer;
     },
