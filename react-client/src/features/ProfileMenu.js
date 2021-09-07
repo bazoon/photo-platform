@@ -62,7 +62,7 @@ export default function ProfileMenu() {
 
 
   return (
-    <SlideMenu model={links} className="flex-1 bg-brown-medium border-0"/>
+    <SlideMenu model={links} className="bg-brown-medium border-0"/>
   );
 
 }

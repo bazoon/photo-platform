@@ -6,11 +6,12 @@ module.exports = (sequelize, DataTypes) => {
     dateReg: DataTypes.DATE,
     sectionCount: DataTypes.INTEGER,
     regState: DataTypes.INTEGER,
-    rejectionReason: DataTypes.STRING
+    rejectionReason: DataTypes.STRING,
+    payment: DataTypes.INTEGER
   }, {
-      createdAt: 'dateReg',
-      updatedAt: false
-    });
+    createdAt: 'dateReg',
+    updatedAt: false
+  });
   RegistrationContest.associate = function (models) {
     // associations can be defined here
   };

@@ -10,14 +10,14 @@ import {keys} from "lodash/fp";
 import { Form, Field } from "react-final-form";
 import ProfileMenu from "../ProfileMenu";
 import {inspect} from "@xstate/inspect";
-import { Checkbox } from "primereact/checkbox";
+import { MultiSelect } from "primereact/multiselect";
 
-if (location.href.includes("foto.ru")) {
-  inspect({
-    url: "https://statecharts.io/inspect",
-    iframe: false
-  });
-}
+// if (location.href.includes("foto.ru")) {
+inspect({
+  url: "https://statecharts.io/inspect",
+  iframe: false
+});
+//}
 
 
 const initialContext = {
@@ -33,25 +33,20 @@ const initialContext = {
 //TODO here!
 
 const validateForm = data => {
-  return keys(data).reduce((a, e) => data[e] ? a : {...a, [e]: "Это поле обязательно для заполнения !"}, {});
+  // return keys(data).reduce((a, e) => data[e] ? a : {...a, [e]: "Это поле обязательно для заполнения !"}, {});
+  return {};
 };
 
-
-
-
-const Section = section => (
-  <Field type="checkbox" name={"id-" + section.id}>
-    {({ input }) => (
-      <div className="mb-10">
-        <Checkbox {...input} className="mr-5"/>
-        <label>{section.name}</label>
-      </div>
-    )}
-  </Field>
-);
-const Sections = ({sections}) => (
-  sections.map(Section)
-);
+const Sections = ({sections, className}) => {
+  const options = sections.map(s => ({label: s.name, value: s.id}));
+  return (
+    <Field name='sections'>
+      {({ input }) => (
+        <MultiSelect optionLabel="label" display="chip" value={input.value} className={className} onChange={({value}) => input.onChange(value)} options={options}/>
+      )}
+    </Field>
+  );
+};
 
 const api = "applications";
 const apiParams = "";
@@ -79,17 +74,17 @@ export default function Main() {
 
   const renderSection = (title, photos) => {
     return (
-      <>
+      <React.Fragment key={title}>
         <div className="uppercase text-sm pt-24 mb-6 text-bright font-header text-center">{title}</div>
         <div className="grid grid-flow-row auto-rows-max grid-cols-2 w-4/5 m-auto gap-10">
           {photos.map(p => <img className="w-full" key={p.src} src={p.src}/>)}
         </div>
-      </>
+      </React.Fragment>
     );  
   };
   
   const onSubmit = data => {
-    //console.log(data);
+    send("apply", {data});
   };
 
   const handleChooseFiles = (files, onChange) => {
@@ -98,59 +93,73 @@ export default function Main() {
     onChange(f);
   };
 
-  const apply = e => {
+  const apply = (e, data) => {
     e.preventDefault();
-    send("apply");
   };
   
+  console.log(current.value);
+
   return (
     <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
-      <div className="relative flex justify-center w-4/5 wrap">
-        <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">Мои заявки</div>
-        {
-          <div className="text-center mb-24">
-            { applicationMessage && <Message text={applicationMessage}/> }
-          </div>
-        }
-        <div className="flex justify-center mb-16">
+      <div className="relative flex justify-center w-full">
+        <div className="flex-1">
+          <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">Мои заявки</div>
           {
-            !(isApproved === true) && <Button disabled={isApproved === false} className="uppercase" onClick={apply}>Подать заявку</Button>
-          }
-
-          {
-            isApproved && <Button className="uppercase" onClick={() => send("open") }>Загрузить</Button>
-          }
-        </div>
-        {
-          keys(photoworks).map(s => renderSection(s, photoworks[s]))
-        }
-
-
-        <Form
-          validate={validateForm}
-          className="overflow-y-auto max-h-96"
-          onSubmit={onSubmit}
-          initialValues={{files: [], sectionId: null}}
-          render={({ handleSubmit }) => (
-            <div>
-              {message && <Message text={message} />}
-              <form className="p-10 p-fluid" onSubmit={handleSubmit}>
-                <div className="flex justify-center flex-col">
-                  <Sections sections={sections}/>
-                </div>
-                <Field name="files">
-                  {({ input }) => (
-                    <input type="file" className="hidden" multiple onChange={({target}) => handleChooseFiles(target.files, files => input.onChange(files)) }/>
-                  )}
-                </Field>
-              </form>
-              <div>
-                {files.map(renderFile)}
-              </div>
+            <div className="text-center mb-24">
+              { applicationMessage && <Message text={applicationMessage}/> }
             </div>
-          )}/>
+          }
+          {
+            keys(photoworks).map(s => renderSection(s, photoworks[s]))
+          }
+
+          <Form
+            validate={validateForm}
+            className="overflow-y-auto max-h-96"
+            onSubmit={onSubmit}
+            initialValues={{files: [], sections: null}}
+            render={({ handleSubmit }) => (
+              <div>
+                {message && <Message text={message} />}
+
+                {
+                  current.value === "noApplication" && (
+
+                    <form className="p-10" onSubmit={handleSubmit}>
+                      <div className="flex justify-center w-3/5">
+                        <Sections className="flex-1 mr-10" sections={sections}/>
+                        <div>
+                          { 
+                            !(isApproved === true) && <Button disabled={isApproved === false} className="uppercase flex-1" onClick={handleSubmit}>Подать заявку</Button>
+                          }
+                        </div>
+                      </div>
+                      <Field name="files">
+                        {({ input }) => (
+                          <input type="file" className="hidden" multiple onChange={({target}) => handleChooseFiles(target.files, files => input.onChange(files)) }/>
+                        )}
+                      </Field>
+        
+                      <div className="flex justify-center mb-16">
+                        {
+                          isApproved && <Button className="uppercase" onClick={() => send("open") }>Загрузить</Button>
+                        }
+                      </div>
+
+                    </form>
+
+                  )
+                }
+
+                <div>
+                  {files.map(renderFile)}
+                </div>
+              </div>
+            )}/>
+        </div>
+
+        <ProfileMenu/>
       </div>
-      <ProfileMenu/>
     </div>
   );
 

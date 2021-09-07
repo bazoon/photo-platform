@@ -15,9 +15,11 @@ module.exports = [
         return {};
       }
 
+      const {sections} = request.payload;
+
       const contestsQuery = `
         SELECT
-          contests.id as contest_id
+          contests.id
         FROM
           contests,
           salones
@@ -27,15 +29,15 @@ module.exports = [
         ORDER by contests.date_start desc
         limit 1
       `;
-      const contest = await h.query(contestsQuery, {
+      const contestId = get('[0].id', await h.query(contestsQuery, {
         replacements: {
           domain
         }
-      });
+      }));
 
-      h.models.RegistrationContest.create({userId,  })
+      const registrationContest = await h.models.RegistrationContest.create({userId, contestId, sectionCount: sections.length, regState: 0 })
 
-      return contest;
+      return registrationContest;
     },
     options: {
       auth: {

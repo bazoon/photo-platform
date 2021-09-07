@@ -118,45 +118,48 @@ export default function Main() {
 
   return (
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
-      <div className="relative flex justify-center w-4/5 wrap">
-        <div className="uppercase text-lg text-bright font-header text-center mt-24">Профиль</div>
-        <Form
-          validate={validateForm}
-          className="overflow-y-auto max-h-96"
-          onSubmit={onSubmit}
-          initialValues={profile}
-          render={({ handleSubmit }) => (
-            <form className="w-full p-10 border rounded bg-brown-dark2">
-              <div className="grid grid-cols-6 grid-rows-10 gap-12">
-                <Field name="avatar" key={name} render={({ input }) => (
-                  <div className="col-span-2 text-tiny place-self-end w-48 h-48 bg-brown-dark">
-                    {(file || profile.avatar) && <img className="square" src={file || profile.avatar}/>}
-                    <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => handleChooseFile(target.files[0], input.onChange)}/> 
-                  </div>   
-                )}/>
-                <div className="col-span-4 text-bright text-sm-2 flex flex-col justify-between">
-                  <span>{profile.firstName} {profile.lastName}</span>  
-                  <span></span>
-                  <Button disabled={!agreed} onClick={handleUploadAvatar} className="uppercase text-sm text-center w-72 uppercase">Загрузить фото</Button>
-                </div>
+      <div className="relative flex justify-center flex-1">
+        <div>
+          <div className="uppercase text-lg text-bright font-header text-center mt-24">Профиль</div>
+          <Form
+            validate={validateForm}
+            className="overflow-y-auto max-h-96"
+            onSubmit={onSubmit}
+            initialValues={profile}
+            render={({ handleSubmit }) => (
+              <form className="w-full p-10 border rounded bg-brown-dark2">
+                <div className="grid grid-cols-6 grid-rows-10 gap-12">
+                  <Field name="avatar" key={name} render={({ input }) => (
+                    <div className="col-span-2 text-tiny place-self-end w-48 h-48 bg-brown-dark">
+                      {(file || profile.avatar) && <img className="square" src={file || profile.avatar}/>}
+                      <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => handleChooseFile(target.files[0], input.onChange)}/> 
+                    </div>   
+                  )}/>
+                  <div className="col-span-4 text-bright text-sm-2 flex flex-col justify-between">
+                    <span>{profile.firstName} {profile.lastName}</span>  
+                    <span></span>
+                    <Button disabled={!agreed} onClick={handleUploadAvatar} className="uppercase text-sm text-center w-72 uppercase">Загрузить фото</Button>
+                  </div>
                   
-                {
-                  fields.map(({name, title, type}) => renderField(name, title, type))
-                }
-              </div>
-              <div className="uppercase text-lg text-bright font-header text-center mt-24">Смена пароля</div>
-              <div className="grid grid-cols-6 grid-rows-8 gap-12">
-                {renderField("password", "Текущий пароль")}
-                {renderField("newPassword", "Новый пароль")}
-                {renderField("newPasswordAgain", "Повторить новый пароль")}
-                <div className="col-span-2"></div>
-                <div className="col-span-4">
-                  <Button disabled={!agreed} onClick={handleSubmit} className="uppercase text-center">Сохранить</Button>
+                  {
+                    fields.map(({name, title, type}) => renderField(name, title, type))
+                  }
                 </div>
-              </div>
-            </form>
-          )}/>
+                <div className="uppercase text-lg text-bright font-header text-center mt-24">Смена пароля</div>
+                <div className="grid grid-cols-6 grid-rows-8 gap-12">
+                  {renderField("password", "Текущий пароль")}
+                  {renderField("newPassword", "Новый пароль")}
+                  {renderField("newPasswordAgain", "Повторить новый пароль")}
+                  <div className="col-span-2"></div>
+                  <div className="col-span-4">
+                    <Button disabled={!agreed} onClick={handleSubmit} className="uppercase text-center">Сохранить</Button>
+                  </div>
+                </div>
+              </form>
+            )}/>
+        </div>
       </div>
+
       <ProfileMenu/>
     </div>
   );

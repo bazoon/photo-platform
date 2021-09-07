@@ -31,7 +31,7 @@ module.exports = [
       const userId = get('request.auth.credentials.id', h);
       if (!userId) return [];
 
-      const domain = request.info.referrer.includes('3000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
       if (!domain) {
         return {};
@@ -61,6 +61,7 @@ module.exports = [
           domain
         }
       });
+      console.log(applications)
 
       return applications;
     },
@@ -75,7 +76,7 @@ module.exports = [
     path: '/api/applications',
     handler: async function (request, h) {
       const userId = h.request.auth.credentials.id;
-      const domain = request.info.referrer.includes('3000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
       let {files, sectionId} = request.payload;
       files = Array.isArray(files) ? files : [files];
 

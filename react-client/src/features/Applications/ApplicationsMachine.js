@@ -63,6 +63,11 @@ export default function applicationsMachine({ context = {}, api } = {}) {
           },
           loadingOk: [
             {
+              cond: (_, {data}) => { return view(pathLens("[0].regState"), data) === 0; },
+              target: "awaiting",
+              actions: "confirmAwait"
+            },
+            {
               cond: (_, {data}) => { return view(pathLens("[0].regState"), data) === 1; },
               target: "loadingPhotoworks",
               actions: ["approve"],
@@ -104,7 +109,7 @@ export default function applicationsMachine({ context = {}, api } = {}) {
       },
       awaiting: {
         isApproved: false,
-        applicationMessage: "Заявка ожидает рассмотрения"
+        entry: "confirmAwait"
       },
       loadingFailed: {
 
@@ -180,6 +185,10 @@ export default function applicationsMachine({ context = {}, api } = {}) {
       loadingFailed: assign({
 
       }),
+      confirmAwait: assign({
+        isApproved: false,
+        applicationMessage: "Заявка ожидает рассмотрения"
+      }),
       approve: assign({
         isApproved: true,
         applicationMessage: "Заявка одобрена"
@@ -198,7 +207,7 @@ export default function applicationsMachine({ context = {}, api } = {}) {
         .fork(failed("sendingFailed", callback), ok({state: "sendingOk", callback, failedState: "sendingFailed"})),
       loadingPhotoworks: () => callback => asyncGet("api/photoworks")
         .fork(failed("loadingPhotoworksFailed", callback), ok({state: "loadingPhotoworksOk", callback, failedState: "loadingPhotoworksFailed"})),
-      apply: () => asyncPost("api/apply").toPromise(),
+      apply: (_, {data}) => asyncPost("api/apply", data).toPromise(),
     }
   });
 }
