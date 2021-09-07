@@ -6,7 +6,7 @@ import {Button} from "primereact/button";
 import {Field, Form} from "react-final-form";
 import {filter} from "lodash/fp";
 import ProfileMenu from "./ProfileMenu";
-
+import {store} from "react-recollect";
 
 
 const toFormData = (obj) => {
@@ -91,11 +91,14 @@ export default function Main() {
 
   };
 
-  const submitOk = () => {
-
+  const submitOk = user => {
+    store.user = user;
   };
 
   const onSubmit = data => {
+    if (!(data.avatar instanceof File)) {
+      delete data.avatar;
+    }
     asyncPost("api/profile", toFormData(data), false).fork(submitFailed, submitOk);
   };
 

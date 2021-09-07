@@ -85,8 +85,6 @@ router.post('/login', async ctx => {
   });
   
   const user = users[0];
-  console.log(users);
-
   const isValidUser = await bcrypt.compare(password, user.psw);
 
   if (!isValidUser) {

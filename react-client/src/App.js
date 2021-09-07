@@ -85,7 +85,7 @@ function Main({store}) {
 
               <div className="flex wrap-0 items-center justify-between">
                 <div className="relative">
-                  <img src="logo.png" className="w-32 h-32 object-contain relative -left-12"/>
+                  <img src="/logo.png" className="w-32 h-32 object-contain relative -left-12"/>
                 </div>
                 <MainMenu />
               </div>

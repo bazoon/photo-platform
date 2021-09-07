@@ -20,8 +20,8 @@ const Config = () => {
     setConfig(options);
   };
 
-  console.log(config);
-  console.log(scheme);
+  //console.log(config);
+  //console.log(scheme);
 
 
   const load = () => {

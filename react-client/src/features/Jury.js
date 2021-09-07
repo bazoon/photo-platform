@@ -16,7 +16,7 @@ export default function Main() {
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
-    console.log(numPages);
+    //console.log(numPages);
   }
 
   return (

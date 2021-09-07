@@ -10,7 +10,7 @@ export const submit = ({form, record, onOk}) => {
       onOk({...values, id: record.id});
     })
     .catch(info => {
-      console.log("Validate Failed:", info);
+      //console.log("Validate Failed:", info);
     });
 };
 

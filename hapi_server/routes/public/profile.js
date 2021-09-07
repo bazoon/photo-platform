@@ -46,7 +46,12 @@ module.exports = [
       const {payload} = request;
       const {password, newPassword} = payload;
       const {avatar} = payload;
-      await uploadFiles(avatar);
+      if (avatar) {
+        await uploadFiles(avatar);
+      } else {
+        delete payload.avatar;
+      }
+      
       payload.avatar = avatar && avatar.filename;
       delete payload.password;
 
@@ -59,11 +64,14 @@ module.exports = [
         }
 
         await h.models.User.update(payload, {where: {id: credentials.id}})
-        user.avatar = getUploadPath(avatar);
+        
+        if (avatar) {
+          user.avatar = getUploadPath(avatar.filename);
+        }
 
         return user;
       } catch (e) {
-        return {ok: false, e}
+        return {ok: false, e: e.message}
       } 
     },
     options: {
