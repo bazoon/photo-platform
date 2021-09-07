@@ -93,7 +93,7 @@ export default function Main() {
 
   const submitOk = user => {
     store.user = user;
-    localStorage.setItem("user", user);
+    localStorage.setItem("user", JSON.stringify(user));
   };
 
   const onSubmit = data => {
