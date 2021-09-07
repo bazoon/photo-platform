@@ -85,8 +85,7 @@ function Main({store}) {
 
               <div className="flex wrap-0 items-center justify-between">
                 <div className="relative">
-                  <div><Link className="uppercase font-bold text-lg text-brown-light no-underline" to="/">Photo</Link></div>
-                  <div><Link to="/" className="absolute top-8 right-0 font-text text-sm no-underline text-brown-light">конкурсы</Link></div>
+                  <img src="logo.png" className="w-32 h-32 object-contain relative -left-12"/>
                 </div>
                 <MainMenu />
               </div>

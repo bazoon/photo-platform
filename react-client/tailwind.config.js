@@ -31,7 +31,7 @@ module.exports = {
       gray: "rgb(234, 234, 234)",
       gray2: "rgb(182, 182, 182)",
       white: {
-        80: "rgb(255, 255, 255, 0.8)"
+        80: "#D0D4D0"
       },
       bright: "#fff",
       black: "#000",
