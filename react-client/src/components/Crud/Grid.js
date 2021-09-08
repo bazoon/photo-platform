@@ -58,9 +58,9 @@ export default ({
     const columns = meta.columns.map(addRender);
     const actionBodyTemplate = (rowData) => {
       return (
-        <div className="flex justify-between">
+        <div className="flex w-40">
           {
-            canEdit && <Button icon="pi pi-pencil" className="p-button-rounded p-button-success" onClick={() => handleEdit(rowData)} />
+            canEdit && <Button icon="pi pi-pencil" className="mr-5 p-button-rounded p-button-success" onClick={() => handleEdit(rowData)} />
           }
           {
             canDelete && <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={e => onDelete(e, rowData)} />
@@ -73,7 +73,7 @@ export default ({
     useEffect(() => {
       send("load");
     }, []);
-    
+
     return (
       <>
         <div className="mb-10 text-lg text-3xl">{title}</div>
@@ -94,7 +94,7 @@ export default ({
           {
             canExpand && <Column expander style={{ width: "3em" }} />
           }
-          <Column key="actionBodyTemplate" headerStyle={{minWidth: "60px"}} body={actionBodyTemplate}></Column>
+          <Column key="actionBodyTemplate" headerStyle={{width: 50}} body={actionBodyTemplate}></Column>
           {
             columns.map(({dataIndex, title, width, body = record => record[dataIndex]}) => 
               <Column headerStyle={{width}} key={dataIndex} field={dataIndex} header={title} body={body}></Column>)

@@ -15,6 +15,7 @@ import Photos from "./Photos";
 import Nominations from "./Nominations";
 import {collect} from "react-recollect";
 import {Dialog} from "primereact/dialog";
+import Applications from "./Applications";
 
 
 // import { inspect } from "@xstate/inspect";
@@ -63,7 +64,7 @@ const Grid = ({store}) => {
     },
     {
       title: "Заявки",
-      render: () => null
+      Component: Applications
     },
   ];
 
@@ -86,7 +87,7 @@ const Grid = ({store}) => {
     const section = contestSections[sectionId];
     const Component = section && section.Component;
     return (
-      <Dialog visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "40vw"}}  onHide={() => hideSection(dialogId) }>
+      <Dialog contentClassName="flex-1" visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "70vw", height: "40vh"}}  onHide={() => hideSection(dialogId) }>
         {Component && <Component id={id}/>}
       </Dialog>
     );
@@ -104,7 +105,6 @@ const Grid = ({store}) => {
   };
 
   const rowExpansionTemplate = ({id}) => {
-    
     return (
       <div style={{width: "100%", overflowX: "auto"}}>
         {

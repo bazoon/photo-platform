@@ -62,6 +62,8 @@ module.exports = flatten([
   require('./hapi_server/routes/admin/meta/contests'),
   require('./hapi_server/routes/admin/contests'),
   require('./hapi_server/routes/admin/meta/contestsAbout'),
+  require('./hapi_server/routes/admin/meta/applications'),
+  require('./hapi_server/routes/admin/applications'),
   require('./hapi_server/routes/admin/contestAbouts'),
   require('./hapi_server/routes/upload'),
   require('./hapi_server/routes/admin/results'),

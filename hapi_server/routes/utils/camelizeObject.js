@@ -6,7 +6,7 @@ const camelizeObject = function(o) {
   keys.forEach(key => {
     camelizedObject[humps.camelize(key)] = o[key];
   });
-
+    
   return camelizedObject;
 };
 
