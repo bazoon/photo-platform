@@ -93,10 +93,6 @@ const Grid = ({store}) => {
     );
   };
 
-
-
-
-
   useEffect(() => {
     send("load");
   },[]);

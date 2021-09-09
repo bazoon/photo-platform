@@ -15,9 +15,7 @@ const imageBodyTemplate = (record) => {
 
 
 export default ({
-  api,
   customOperations = [],
-  apiParams = {},
   canEdit = true,
   canDelete = true,
   canAdd = true,
@@ -26,10 +24,11 @@ export default ({
   rowExpansionTemplate = undefined,
   onRowToggle = () => {},
   dialogConfig = {},
+  machine
 }) => {
   return function Main({expandedRows}) {
     const { t } = useTranslation("namespace1");
-    const [current, send] = useMachine(Machine({api, apiParams, t}));
+    const [current, send] = useMachine(machine);
     const {context} = current;
     const {records, record, error, isOpen, meta, dialogTitle} = context;
     const {onCancel, onOk, onChange, handleEdit, handleAdd, handleDelete} = useCrud(send, record);

@@ -3,6 +3,7 @@ import Grid from "../../../components/Crud/Grid";
 import {Dropdown} from "primereact/dropdown";
 import {asyncGet} from "../../../core/api";
 import {get} from "lodash/fp";
+import CrudMachine from "../../machines/CrudMachine";
 
 
 const mapOptions = (options) => options.map(({id, name}) => ({label: name, value: id}));
@@ -13,7 +14,8 @@ export default function Results({id}) {
 
   const G = ({sectionId}) => {
     if (!sectionId) return null;
-    const F = Grid({api: "api/admin/results", apiParams: {sectionId}, canEdit: false, canDelete: false, canAdd: false});
+    const machine = CrudMachine({api: "api/admin/contestsSections", apiParams: {sectionId}});
+    const F = Grid({machine, canEdit: false, canDelete: false, canAdd: false});
     return <F/>;
   };
 

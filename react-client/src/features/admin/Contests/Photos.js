@@ -4,6 +4,7 @@ import {Dropdown} from "primereact/dropdown";
 import {asyncGet, asyncPut} from "../../../core/api";
 import {get} from "lodash/fp";
 import {TriStateCheckbox} from "primereact/tristatecheckbox";
+import CrudMachine from "../../machines/CrudMachine";
 
 const mapOptions = (options) => options.map(({id, name}) => ({label: name, value: id}));
 
@@ -12,6 +13,8 @@ export default function Photos({id}) {
   const [sections, setSections] = useState([]);
   const approve = record => asyncPut(`api/admin/contestPhotos/approve/${record.id}`).fork(() => {}, () => { approveOk(record); });
   const decline = record => asyncPut(`api/admin/contestPhotos/decline/${record.id}`).fork(() => {}, () => { declineOk(record); });
+  const machine = CrudMachine({api: "api/admin/contestsPhotos", apiParams: {sectionId}});
+
   const changeApproval = (record, value) => {
     if (value === false) {
       decline(record);
@@ -43,7 +46,7 @@ export default function Photos({id}) {
 
   const G = ({sectionId}) => {
     if (!sectionId) return null;
-    const F = Grid({customOperations, api: "api/admin/contestPhotos", apiParams: {sectionId}, canEdit: false, canDelete: false, canAdd: false, setRefresh});
+    const F = Grid({customOperations, machine, canEdit: false, canDelete: false, canAdd: false, setRefresh});
     return <F/>;
   };
 

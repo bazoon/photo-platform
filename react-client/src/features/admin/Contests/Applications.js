@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import Grid from "../../../components/Crud/Grid";
 import {Button} from "primereact/button";
+import CrudMachine from "../../machines/CrudMachine";
 
 
 
@@ -18,6 +19,8 @@ export default ({id}) => {
   const customOperations = [
     record => <Button icon="pi pi-link" onClick={() => approve(record.id)} className="p-button-rounded" />
   ];
-  const G = Grid({api: "api/admin/applications", apiParams: {contestId: id}, customOperations, setRefresh: foo});
+
+  const machine = CrudMachine({api: "api/admin/applications", apiParams: {contestId: id}});
+  const G = Grid({machine, customOperations, setRefresh: foo});
   return <G/>;
 };

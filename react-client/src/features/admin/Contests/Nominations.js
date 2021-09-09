@@ -3,15 +3,17 @@ import {Button} from "primereact/button";
 import G from "../../../components/Crud/Grid";
 import {Dialog} from "primereact/dialog";
 import {collect} from "react-recollect";
+import CrudMachine from "../../machines/CrudMachine";
 
-const Grid= function NominationsGrid({id, store}) {
+const Grid = function NominationsGrid({id, store}) {
 
   const hideSideBar = (key) => {
     store.sidebars = store.sidebars.filter(s => s.props.dialogId !== key);
   };
 
   const renderSidebar = ({baseZIndex, dialogId, nominationId}) => {
-    const NominationsNamesGrid = G({api: "api/admin/nominationSections", dialogConfig: {style: {width: "20vw"}}, apiParams: {nominationId}});
+    const machine = CrudMachine({api: "api/admin/nominationSections", apiParams: {nominationId}});
+    const NominationsNamesGrid = G({machine, dialogConfig: {style: {width: "20vw"}}});
     return (
       <Dialog header="Перевод номинаций" visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "40%"}}  onHide={() => hideSideBar(dialogId)}>
         <NominationsNamesGrid/>
@@ -38,8 +40,9 @@ const Grid= function NominationsGrid({id, store}) {
   ];
     
   // select * from section_names
-
-  const Grid = G({api: "api/admin/nominations", title: "Номинации", customOperations,  width: "100%", apiParams: {id}});
+  
+  const machine = CrudMachine({api: "api/admin/nominations", apiParams: {id}});
+  const Grid = G({machine, title: "Номинации", customOperations,  width: "100%"});
   return (
     <>
       <Grid/>

@@ -1,2 +1,4 @@
 import Grid from "../../../components/Crud/Grid";
-export default Grid({api: "api/admin/users", width: 3000, title: "users"});
+import Machine from "../../../features/machines/CrudMachine";
+const machine = Machine({api: "api/admin/users"});
+export default Grid({width: 3000, title: "users", machine});

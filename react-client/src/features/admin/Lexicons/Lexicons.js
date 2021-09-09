@@ -1,14 +1,17 @@
 import React, {useState} from "react";
 import G from "../../../components/Crud/Grid";
+import CrudMachine from "../../machines/CrudMachine";
 
 const rowExpansionTemplate = ({id}) => {
-  const Grid = G({api: "api/admin/phrases", apiParams: {id}});
+  const machine = CrudMachine({api: "api/admin/phrases", apiParams: {id}});
+  const Grid = G({machine});
   return <Grid/>;
 };
 
 export default function() {
   const [expandedRows, setExpandedRows] = useState([]);
-  const Grid = G({api: "api/admin/lexicons", rowExpansionTemplate, onRowToggle: e => { setExpandedRows(e); } });
+  const machine = CrudMachine({api: "api/admin/lexicons"});
+  const Grid = G({machine, rowExpansionTemplate, onRowToggle: e => { setExpandedRows(e); } });
   return <Grid expandedRows={expandedRows}/>;
 }
 

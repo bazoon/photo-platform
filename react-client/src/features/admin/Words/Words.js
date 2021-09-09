@@ -1,2 +1,4 @@
 import Grid from "../../../components/Crud/Grid";
-export default Grid({api: "api/admin/words"});
+import CrudMachine from "../../machines/CrudMachine";
+const machine = CrudMachine({api: "api/admin/words"});
+export default Grid({machine});
