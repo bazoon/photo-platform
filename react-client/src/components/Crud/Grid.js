@@ -1,13 +1,13 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import Form from "./Form";
 import { useTranslation } from "react-i18next";
 import { useMachine } from "@xstate/react";
-import Machine from "../../features/machines/CrudMachine";
 import useCrud from "../../core/hooks/useCrud";
 import { confirmPopup } from "primereact/confirmpopup"; 
+import identity from "crocks/combinators/identity";
 
 const imageBodyTemplate = (record) => {
   return <img className="object-cover w-36 h-36" src={record.img}/>;
@@ -24,7 +24,9 @@ export default ({
   rowExpansionTemplate = undefined,
   onRowToggle = () => {},
   dialogConfig = {},
-  machine
+  machine,
+  hasCheck = false,
+  Toolbar = null
 }) => {
   return function Main({expandedRows}) {
     const { t } = useTranslation("namespace1");
@@ -33,7 +35,7 @@ export default ({
     const {records, record, error, isOpen, meta, dialogTitle} = context;
     const {onCancel, onOk, onChange, handleEdit, handleAdd, handleDelete} = useCrud(send, record);
     const canExpand = !! rowExpansionTemplate;
-
+    const [selection, setSelection] = useState(null);
 
     setRefresh(() => send("refresh"));
 
@@ -72,10 +74,10 @@ export default ({
     useEffect(() => {
       send("load");
     }, []);
-
     return (
       <>
         <div className="mb-10 text-lg text-3xl">{title}</div>
+        {Toolbar && <Toolbar refresh={() => send("load")} selection={selection}/>}
         {
           canAdd && (
             <div className="mb-4">
@@ -89,15 +91,25 @@ export default ({
           rowExpansionTemplate={rowExpansionTemplate}
           onRowToggle={e => { onRowToggle(e.data); }}
           expandedRows={expandedRows}
+          onSelectionChange={({value}) => setSelection(value)}
+          selection={selection}
+          selectionMode="checkbox"
+          dataKey="id"
         >
           {
             canExpand && <Column expander style={{ width: "3em" }} />
+          }
+
+          {
+            hasCheck && <Column selectionMode="multiple" headerStyle={{ width: "3rem" }}></Column>
           }
           <Column key="actionBodyTemplate" headerStyle={{width: 50}} body={actionBodyTemplate}></Column>
           {
             columns.map(({dataIndex, title, width, body = record => record[dataIndex]}) => 
               <Column headerStyle={{width}} key={dataIndex} field={dataIndex} header={title} body={body}></Column>)
           }
+
+
         </DataTable>
         {
           isOpen && <Form title={dialogTitle} dialogConfig={dialogConfig} fields={meta.fields} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 

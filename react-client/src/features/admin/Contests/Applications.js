@@ -1,26 +1,40 @@
 import React, {useState} from "react";
 import Grid from "../../../components/Crud/Grid";
-import {Button} from "primereact/button";
 import CrudMachine from "../../machines/CrudMachine";
+import { Toolbar } from "primereact/toolbar";
+import {Button} from "primereact/button";
+import {asyncPost} from "../../../core/api";
+import {all} from "crocks/Async";
 
 
+const TBar = ({selection, refresh}) => {
+  const approveFailed = () => {
+
+  };
+
+  const approveOk = d => {
+    refresh();
+  };
+
+  const approve = () => {
+    asyncPost("api/admin/applications/approve", {ids: selection.map(e => e.id)}).fork(approveFailed, approveOk);
+  };
+
+  const left = (
+    <Button label="Согласовать" icon="pi pi-check" className="mr-2" onClick={approve} />
+  );
+
+  return (
+    <Toolbar left={left}/>
+  );
+};
 
 export default ({id}) => {
-  const [regState, setRegState] = useState({});
 
-  const approve = id => {
-    console.log(id);
-  };
 
-  const foo =  () => {
-    console.log("REF");
-  };
-
-  const customOperations = [
-    record => <Button icon="pi pi-link" onClick={() => approve(record.id)} className="p-button-rounded" />
-  ];
-
-  const machine = CrudMachine({api: "api/admin/applications", apiParams: {contestId: id}});
-  const G = Grid({machine, customOperations, setRefresh: foo});
-  return <G/>;
+  const machine = CrudMachine({api: "api/admin/applications", apiParams: {contestId: id}, apiMetaParams: {id}});
+  const G = Grid({machine, canDelete: false, canEdit: true, canAdd: false, hasCheck: true, Toolbar: TBar });
+  return (
+    <G/>
+  );
 };

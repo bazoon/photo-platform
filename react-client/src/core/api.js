@@ -1,7 +1,8 @@
 import Async from "crocks/Async";
+import {keys} from "lodash/fp";
 
-function makeUrl(url) {
-  return `/${url}`;
+function makeUrl(url, params) {
+  return keys(params).length > 0 ? `/${url}?${new URLSearchParams(params).toString()}` : `/${url}`;
 }
 
 export const responseIsJson = (response) => {
@@ -35,7 +36,7 @@ function processResponse(r, resolve, reject) {
 }
 
 export const asyncGet = (url, params) => Async((reject, resolve) => {
-  fetch(makeUrl(url), params).then(r => processResponse(r, resolve, reject)).catch(reject);
+  fetch(makeUrl(url, params)).then(r => processResponse(r, resolve, reject)).catch(reject);
 });
 
 export const asyncPost = (url, params, json = true) => Async((reject, resolve) => {

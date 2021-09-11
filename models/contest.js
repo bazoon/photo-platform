@@ -13,12 +13,13 @@ module.exports = (sequelize, DataTypes) => {
     democraty: DataTypes.NUMBER,
     payType: DataTypes.NUMBER,
     sectionCount: DataTypes.NUMBER,
+    maxCountImg: DataTypes.NUMBER,
     maxrate: DataTypes.NUMBER,
     maxsize: DataTypes.NUMBER,
-    maxWeight: DataTypes.NUMBER
+    maxWeight: DataTypes.NUMBER,
   }, {
-      timestamps: false
-    });
+    timestamps: false
+  });
   Contest.associate = function (models) {
     // associations can be defined here
   };

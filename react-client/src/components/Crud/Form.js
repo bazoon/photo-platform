@@ -70,7 +70,7 @@ export default function FForm({
             <form onSubmit={handleSubmit} className="p-10 p-fluid">
               {
                 fields.map(f => <div className="mb-4" key={f.dataIndex}>
-                  <FormControl title={f.title} type={f.type}  dataIndex={f.dataIndex} options={f.options} width={f.width} onChange={onChange}  /></div>)
+                  <FormControl title={f.title} type={f.type} max={f.max} dataIndex={f.dataIndex} options={f.options} width={f.width} onChange={onChange}  /></div>)
               }
             </form>
           </Dialog>

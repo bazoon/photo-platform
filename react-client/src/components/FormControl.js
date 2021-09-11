@@ -10,6 +10,8 @@ import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
 import {TheUploadAdapterPlugin} from "./UploadAdapter";
 import {useTranslation} from "react-i18next";
 import { Checkbox } from "primereact/checkbox";
+import {SelectButton} from "primereact/selectbutton";
+import { InputNumber } from "primereact/inputnumber";
 
 const editorConfig = {
   alignment: {
@@ -56,17 +58,27 @@ const getFormErrorMessage = (meta) => {
 };
 
 
-export default function FormControl({title, dataIndex, options, key, type}) {
+export default function FormControl({title, dataIndex, options, key, type, max}) {
   const { t, i18n } = useTranslation("namespace1");
   switch(true) {
-  case (!!options):
+  case (!!options && type === "selectButton"):
     return (
       <Field name={dataIndex}  render={({ input, meta }) => (
         <div className="p-field">
           <span>
             <label htmlFor={dataIndex} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
-            <Dropdown id={key} {...input} options={mapOptions(options)} optionLabel="label" />
+            <SelectButton optionLabel="label" optionValue="dataIndex" value={input.value} options={options} onChange={(e) => {input.onChange(e.value);}} />  
           </span>
+          {getFormErrorMessage(meta)}
+        </div>
+      )} />
+    );
+  case (!!options):
+    return (
+      <Field name={dataIndex}  render={({ input, meta }) => (
+        <div className="p-field">
+          <label htmlFor={dataIndex} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+          <Dropdown id={key} {...input} options={mapOptions(options)} optionLabel="label" />
           {getFormErrorMessage(meta)}
         </div>
       )} />
@@ -130,13 +142,25 @@ export default function FormControl({title, dataIndex, options, key, type}) {
       )} />
 
     );
+  case type === "number":
+    return (
+      <Field name={dataIndex} render={({ input, meta }) => (
+        <div className="p-field">
+          <span className="p-input-icon-right">
+            <label htmlFor={key} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <InputNumber id={key} max={max} value={input.value} onChange={({value}) => input.onChange(value)} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
+          </span>
+          {getFormErrorMessage(meta)}
+        </div>
+      )} />
+    );
   default:
     return (
       <Field name={dataIndex} render={({ input, meta }) => (
         <div className="p-field">
           <span className="p-input-icon-right">
             <label htmlFor={key} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
-            <InputText id={key} {...input} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
+            <InputText id={key}  {...input} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
           </span>
           {getFormErrorMessage(meta)}
         </div>

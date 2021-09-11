@@ -140,9 +140,9 @@ body {
 
 
 .p-button {
-  background-color: #EFBC82 !important;
-  border-color: #EFBC82 !important;
-  color: rgba(53, 53, 53, 1) !important;
+  background-color: transparent !important;
+  border-color: #D0D4D0 !important;
+  color: #D0D4D0 !important;
   font-size: 12px !important;
   border-radius: 6px !important;
 }
@@ -150,12 +150,19 @@ body {
 .p-button:hover {
   background-color: #CB893E !important;
   border-color: #CB893E !important;
+  color: #353535 !important;
 }
 
 .p-button-secondary {
   background-color: transparent !important;
   border-color: rgba(255, 255, 255, 0.8) !important;
   color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.p-selectbutton .p-button.p-highlight {
+  background-color: #CB893E !important;
+  border-color: #CB893E !important;
+  color: #353535;
 }
 
 .wrap-0 {
@@ -180,3 +187,7 @@ body {
   padding: 0 !important;
 }
 
+/* HACK */
+.p-dropdown-panel {
+  /* margin-left: 7px; */
+}

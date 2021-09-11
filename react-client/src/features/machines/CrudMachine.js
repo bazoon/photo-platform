@@ -47,7 +47,7 @@ const getInitialContext = () => {
   };
 };
 
-export default ({api, idField = "id", apiParams, t = identity}) => {
+export default ({api, idField = "id", apiParams, t = identity, apiMetaParams = {}}) => {
   return Machine({
     id: "crud",
     context: getInitialContext(),
@@ -105,7 +105,7 @@ export default ({api, idField = "id", apiParams, t = identity}) => {
         invoke: {
           id: "loadGrid",
           src: () => (callback) => {
-            Async.all([asyncGet(combineApiWithParams(api)(apiParams)), asyncGet(api + "/meta")]) .fork(() => callback("loadFailed"), data => {
+            Async.all([asyncGet(combineApiWithParams(api)(apiParams)), asyncGet(api + "/meta", apiMetaParams)]) .fork(() => callback("loadFailed"), data => {
               callback({type: "loadOk", data});
             });
           }
@@ -221,13 +221,13 @@ export default ({api, idField = "id", apiParams, t = identity}) => {
             actions: assign({
               records: ({records}, {data}) => {
                 // тут бывают строковые id поэтому ==
-                return records.map(r => r[idField] == data[idField] ? data : r);
+                return records.map(r => r[idField] == data[idField] ? ({...r, ...data}) : r);
               }
             })
           },
           updateRecord: {
             actions: assign({
-              record: (_, {record}) => record
+              record: ({record}, data) => ({...record, ...data.record})
             })
           }
         }

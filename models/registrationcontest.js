@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     sectionCount: DataTypes.INTEGER,
     regState: DataTypes.INTEGER,
     rejectionReason: DataTypes.STRING,
-    payment: DataTypes.INTEGER
+    payment: DataTypes.INTEGER,
+    maxCountImg: DataTypes.INTEGER
   }, {
     createdAt: 'dateReg',
     updatedAt: false

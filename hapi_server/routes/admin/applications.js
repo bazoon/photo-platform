@@ -1,7 +1,7 @@
 const R = require('ramda');
 const { QueryTypes } = require('sequelize');
 const camelizeObject = require('../utils/camelizeObject');
-const {map} = require('lodash/fp');
+const {map, compose} = require('lodash/fp');
 
 const fields = [
   'id',
@@ -10,26 +10,40 @@ const fields = [
   'commentPhrase'
 ];
 
-const fullFields = ['language'].concat(fields);
+
+
+const regStates = [ 
+  'Подана',
+  'Принята',
+  'Ожидает оплаты',
+  'Отклонена по неуплате',
+  'Отклонена по другой причине',
+  'Регистрация приостановлена',
+  'Бан'
+];
+const addRegState = application => ({...application, regStateString: regStates[application.regState]});
 
 module.exports = [
   {
     method: 'POST',
-    path: '/api/admin/applications',
+    path: '/api/admin/applications/approve',
     handler: async function (request, h) {
       const {
-        category,
-        code,
-        commentPhrase,
+        ids
       } = request.payload;
 
-      const lexicon = await h.models.Lexicon.create({
-        category,
-        code,
-        commentPhrase,
-      });
+      const regContest = await h.models.RegistrationContest.findOne({where: {id: ids[0]}});
+      const contest = await h.models.Contest.findOne({where: {id: regContest.contestId}});
+      
+      if (contest.payType === 0) {
+        return await h.models.RegistrationContest.update({ regState: 1, sectionCount: contest.sectionCount, maxImgCount: contest.maxCountImg }, {
+          where: {
+            contestId: contest.id,
+          }
+        });
+      }
 
-      return lexicon.toJSON();
+      return {};
     },
     options: {
       auth: {
@@ -67,7 +81,7 @@ module.exports = [
           }
         });
 
-        return map(camelizeObject)(applications);
+        return map(compose(addRegState, camelizeObject))(applications)
       } catch(e) {
         return e;
       }
@@ -86,15 +100,41 @@ module.exports = [
     path: '/api/admin/applications/{id}',
     handler: async function (request, h) {
       const { id } = request.params;
-      const lexiconValues = R.pick(fields, request.payload);
-      const lexicon = await h.models.Lexicon.findAll({
+      const {payload} = request;
+      const application = await h.models.RegistrationContest.findOne({
         where: {
           id
         }
       });
 
-      await lexicon.update(lexiconValues);
-      return R.pick(fields, lexicon);
+      await application.update(payload);
+
+      // const query = `
+      //   select
+      //     registration_contests.id,
+      //     users.first_name || ' ' || users.last_name as user_name,
+      //     date_reg,
+      //     section_count,
+      //     reg_state,
+      //     rejection_reason,
+      //     payment,
+      //     max_count_img
+      //   from
+      //     users,
+      //     registration_contests
+      //   where
+      //     registration_contests.user_id = users.id and registration_contests.contest_id = :contestId
+      // `;
+
+
+      //   const [applications] = await h.models.sequelize.query(query, {
+      //     replacements: {
+      //       contestId: id
+      //     }
+      //   });
+
+
+      return addRegState(application.dataValues);
     },
     options: {
       auth: {
