@@ -1,7 +1,7 @@
 import { createMachine, assign } from "xstate";
 import {asyncGet, asyncPost} from "../../core/api";
 import {over, view, pathLens} from "lodash-lens";
-import {keys} from "lodash/fp";
+import {keys, get, omit} from "lodash/fp";
 
 const sendFiles = files => {
 
@@ -33,6 +33,16 @@ const preparePayload = data => {
   return d;
 };
 
+const regStates = [
+  "Подана",
+  "Принята",
+  "Ожидает оплаты",
+  "Отклонена по неуплате",
+  "Отклонена по другой причине",
+  "Регистрация приостановлена",
+  "Бан"
+];
+
 export default function applicationsMachine({ context = {}, api } = {}) {
   return createMachine({
     initial: "initial",
@@ -42,7 +52,7 @@ export default function applicationsMachine({ context = {}, api } = {}) {
         on: {
           loadPhotoworks: "loadingPhotoworks",
           open: {
-            target: "opened",
+            // target: "opened",
             actions: ["openWindow"]
           },
           load: {
@@ -63,23 +73,18 @@ export default function applicationsMachine({ context = {}, api } = {}) {
           },
           loadingOk: [
             {
-              cond: (_, {data}) => { return view(pathLens("[0].regState"), data) === 0; },
-              target: "awaiting",
-              actions: "confirmAwait"
-            },
-            {
-              cond: (_, {data}) => { return view(pathLens("[0].regState"), data) === 1; },
-              target: "loadingPhotoworks",
-              actions: ["approve"],
-            },
-            {
-              cond: (_, {applications}) => view(pathLens("[0].regState"), applications) === 3,
-              target: "initial",
-              actions: ["decline"],
-            },
-            {
+              cond: (_, {data}) => { return get("regState", data) === undefined;  },
               target: "noApplication",
               actions: ["noApplication"]
+            },
+            {
+              cond: (_, {data}) => { return get("regState", data) === 1;  },
+              target: "hasApplication",
+              actions: ["processApplication"]
+            },
+            {
+              target: "hasApplication",
+              actions: "processApplication"
             },
           ]
         }
@@ -89,36 +94,17 @@ export default function applicationsMachine({ context = {}, api } = {}) {
           apply: "apply"
         } 
       },
-      apply: {
+      hasApplication: {
         invoke: {
-          id: "apply",
-          src: "apply",
+          src: "loadingPhotoworks",
           onDone: {
-            target: "awaiting",
-            actions: assign({
-              success: true
-            })
-          },
-          onError: {
-            target: "noApplication",
-            actions: assign({
-              success: false
-            })
+            actions: "updatePhotoworks"
           }
-        }
-      },
-      awaiting: {
-        isApproved: false,
-        entry: "confirmAwait"
-      },
-      loadingFailed: {
-
-      },
-      opened: {
+        },
         on: {
           choose: {
             actions: assign({
-              files: ({files}, data) => [...files, ...data.files]
+              payload: ({payload}, data) => ({...payload, ...omit("type", data)})
             })
           },
           close: {
@@ -131,14 +117,35 @@ export default function applicationsMachine({ context = {}, api } = {}) {
           },
         }
       },
+      apply: {
+        invoke: {
+          id: "apply",
+          src: "apply",
+          onDone: {
+            // target: "confirmAwait",
+            actions: assign({
+              success: true
+            })
+          },
+          onError: {
+            target: "noApplication",
+            actions: assign({
+              success: false
+            })
+          }
+        }
+      },
+      loadingFailed: {
+
+      },
       sending: {
         on: {
           sendingOk: {
             target: "loadingPhotoworks",
-            actions: ["closeWindow", "clear"]
+            actions: ["clear"]
           },
           sendingFail: {
-            target: "opened",
+            // target: "opened",
             actions: ["closeWindow"]
           }
         },
@@ -154,12 +161,16 @@ export default function applicationsMachine({ context = {}, api } = {}) {
         },
         on: {
           loadingPhotoworksOk: {
-            target: "initial",
+            target: "worksLoaded",
             actions: ["updatePhotoworks"]
           }
         }
       },
       loadingPhotoworksFailed: {},
+      awaitingPayment: {},
+      worksLoaded: {
+
+      }
     }
   }, 
   {
@@ -185,28 +196,16 @@ export default function applicationsMachine({ context = {}, api } = {}) {
       loadingFailed: assign({
 
       }),
-      confirmAwait: assign({
-        isApproved: false,
-        applicationMessage: "Заявка ожидает рассмотрения"
-      }),
-      approve: assign({
-        isApproved: true,
-        applicationMessage: "Заявка одобрена"
-      }),
-      decline: assign({
-        isApproved: false,
-        applicationMessage: "Заявка отклонена"
-      }),
-      noApplication: assign({
-        isApproved: undefined,
-        applicationMessage: "Подайте заявку"
+      processApplication: assign({
+        isApproved: (_, {data}) => data.regState === 1,
+        applicationMessage: (_, {data}) => regStates[data.regState],
+        application: (_, {data}) => data
       }),
     },
     services: {
-      sendFiles: ({files, sectionId}) =>callback => asyncPost(`api/${api}`, preparePayload({files, sectionId}), false)
+      sendFiles: ({payload}) =>callback => asyncPost(`api/${api}`, preparePayload(payload), false)
         .fork(failed("sendingFailed", callback), ok({state: "sendingOk", callback, failedState: "sendingFailed"})),
-      loadingPhotoworks: () => callback => asyncGet("api/photoworks")
-        .fork(failed("loadingPhotoworksFailed", callback), ok({state: "loadingPhotoworksOk", callback, failedState: "loadingPhotoworksFailed"})),
+      loadingPhotoworks: () => asyncGet("api/photoworks").toPromise(),
       apply: (_, {data}) => asyncPost("api/apply", data).toPromise(),
     }
   });

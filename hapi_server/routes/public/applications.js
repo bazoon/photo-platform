@@ -61,9 +61,8 @@ module.exports = [
           domain
         }
       });
-      console.log(applications)
 
-      return applications;
+      return applications && applications[0] || {};
     },
     options: {
       auth: {
@@ -77,11 +76,8 @@ module.exports = [
     handler: async function (request, h) {
       const userId = h.request.auth.credentials.id;
       const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
-      let {files, sectionId} = request.payload;
-      files = Array.isArray(files) ? files : [files];
+      const sectionIds = keys(request.payload);
 
-      await uploadFiles(files);
-      
       if (!domain) {
         return {};
       }
@@ -107,19 +103,25 @@ module.exports = [
         }
       }));
 
-      await h.models.Photowork.bulkCreate(
-        files.map(f => {
-          return {
-            registrationContestId: application.id,
-            sectionId,
-            name: f.filename,
-            filename: f.filename,
-            moder: 0
-          };
-        })
-      );
+      sectionIds.forEach(async sectionId => {
+        let files = request.payload[sectionId];
+        files = Array.isArray(files) ? files : [files];
+        await uploadFiles(files);
+        
+        await h.models.Photowork.bulkCreate(
+          files.map(f => {
+            return {
+              registrationContestId: application.id,
+              sectionId,
+              name: f.filename,
+              filename: f.filename,
+              moder: 0
+            };
+          })
+        );
+      });
 
-      return application;
+      return {};
     },
     options: {
       payload: {

@@ -9,7 +9,7 @@ module.exports = [
       const userId = get('request.auth.credentials.id', h);
       if (!userId) return [];
 
-      const domain = request.info.referrer.includes('5000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
       if (!domain) {
         return {};

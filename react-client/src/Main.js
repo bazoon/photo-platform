@@ -22,16 +22,6 @@ import { collect } from "react-recollect";
 
 function Main() {
 
-  function loadTranslations(lang, t) {
-    i18n.addResourceBundle(lang, "namespace1", t);
-  }
-
-  useEffect(() => {
-    asyncGet("api/translation/ru").fork(e => e, data => loadTranslations("ru", data));
-    asyncGet("api/translation/en").fork(e => e, data => loadTranslations("en", data));
-  }, []);
-
-
   return (
     <>
       <Router>

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import { useTranslation } from "react-i18next";
 import {asyncGet} from "../../core/api";
 import {Button} from "primereact/button";
@@ -6,11 +6,12 @@ import {Message} from "primereact/message";
 import Machine from "./ApplicationsMachine";
 import { useMachine } from "@xstate/react";
 import SectionsMachine from "./SectionsMachine";
-import {keys} from "lodash/fp";
+import {keys, get} from "lodash/fp";
 import { Form, Field } from "react-final-form";
 import ProfileMenu from "../ProfileMenu";
 import {inspect} from "@xstate/inspect";
 import { MultiSelect } from "primereact/multiselect";
+import {constant} from "lodash";
 
 if (location.href.includes("foto.ru")) {
   inspect({
@@ -19,19 +20,99 @@ if (location.href.includes("foto.ru")) {
   });
 }
 
-
-
 const initialContext = {
   isOpen: false,
-  files: [],
   applications: [],
   message: "",
   applicationMessage: "",
-  photoworks: {}
+  photoworks: {},
+  payload: {},
+  application: {}
 };
 
+const ApplyForm = ({onSubmit, sections}) => {
+  return (
+    <Form
+      validate={validateForm}
+      className="overflow-y-auto max-h-96"
+      onSubmit={onSubmit}
+      initialValues={{files: [], sections: null}}
+      render={({ handleSubmit }) => (
+        <div>
+          {
+            <form className="p-10" onSubmit={handleSubmit}>
+              <div className="flex justify-center w-3/5">
+                <Sections className="flex-1 mr-10" sections={sections}/>
+                <div>
+                  { 
+                    <Button className="uppercase flex-1" onClick={handleSubmit}>Подать заявку</Button>
+                  }
+                </div>
+              </div>
 
-//TODO here!
+            </form>
+          }
+        </div>
+      )}/>
+  );
+};
+
+const UploadSection = ({section, onChooseFiles}) => {
+  const [images, setImages] = useState([]);
+  const fileRef = useRef();
+  
+  const handleChooseFiles = files => {
+    setImages(Array.from(files));
+    onChooseFiles(section, files);
+  };
+  
+  return (
+    <div>
+      <div className="grid grid-cols-2 max-w-6xl gap-4 m-auto mb-5">
+        <div className="text-tiny">{section.name}</div>
+        <div>
+          <input type="file" ref={fileRef} className="hidden" multiple onChange={({target}) => handleChooseFiles(target.files) }/>
+          <Button className=" uppercase max-w-md" onClick={() => fileRef.current.click() }>Загрузить</Button>
+        </div>
+      </div>
+      <div className="grid grid-cols-4 gap-4">
+        {renderImages(images)}
+      </div>
+    </div>
+  );
+};
+
+const ImagesForm = ({onSubmit, onChooseFiles, sections}) => {
+  return (
+    <Form
+      validate={validateForm}
+      className="overflow-y-auto max-h-96"
+      onSubmit={onSubmit}
+      initialValues={{files: [], sections: []}}
+      render={({ handleSubmit }) => (
+        <>
+          <div className="grid grid-cols-1 w-3/5 gap-4 m-auto">
+            {
+              sections.map(section => <UploadSection onChooseFiles={onChooseFiles} section={section} key={section.id}/>)
+            }
+
+            <div className='grid grid-cols-2 max-w-6xl gap-4 m-auto'>
+              <div></div>
+              <Button onClick={onSubmit}>Сохранить</Button>
+            </div>
+          </div>
+        </>
+      )}/>
+  );
+};
+
+const renderFile = file => {
+  return <div className="m-0 w-60 h-60"><img key={file.name} className="w-full h-full object-cover" src={URL.createObjectURL(file)}/></div>;
+};
+
+const renderImages = files => {
+  return files.map(renderFile);
+};
 
 const validateForm = data => {
   // return keys(data).reduce((a, e) => data[e] ? a : {...a, [e]: "Это поле обязательно для заполнения !"}, {});
@@ -63,15 +144,15 @@ export default function Main() {
   const {context} = current;
   const sections = sectionsCurrent.context.sections;
   const {isApproved, files, message, applicationMessage, photoworks} = context;
- 
+  const { i18n } = useTranslation("namespace1");
+  const [contestName, setContestName] = useState("");
+  const dateReg = get("application.dateReg", context);
+
+
   useEffect(() => {
     send("load", {});
     sendToSection("load");
   }, []);
-
-  const renderFile = file => {
-    return <img key={file.name} className="w-40" src={URL.createObjectURL(file)}/>;
-  };
 
   const renderSection = (title, photos) => {
     return (
@@ -84,81 +165,66 @@ export default function Main() {
     );  
   };
   
-  const onSubmit = data => {
+  const handleApply = data => {
     send("apply", {data});
   };
 
-  const handleChooseFiles = (files, onChange) => {
+  const handleChooseFiles = (section, files) => {
     const f = Array.from(files);
-    send("choose", {files: f});
-    onChange(f);
+    send("choose", {[section.id]: f});
   };
 
-  const apply = (e, data) => {
-    e.preventDefault();
+  const postImages = () => {
+    send("submit");
   };
   
-  console.log(current.value);
+  const loadContestInfoFailed = () => {
+
+  };
+
+  const loadContestInfoOk = ({name}) => {
+    setContestName(name);
+  };
+
+  const loadContestInfo = () => {
+    asyncGet(`api/mainPage/${i18n.language}`).fork(loadContestInfoFailed, loadContestInfoOk);
+  };
+
+  useEffect(() => {
+    loadContestInfo();
+  }, []);
+  
 
   return (
     <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
       <div className="relative flex justify-center w-full">
         <div className="flex-1">
           <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">Мои заявки</div>
+
+
+
+          <div className="grid grid-cols-2 m-auto w-2/5 text-base items-baseline">
+
+            <div>Текущий конкурс</div>
+            <div className="uppercase text-lg text-brown-light2 font-header">{contestName}</div>
+
+            <div>Статус</div>
+            <div>{applicationMessage}</div>
+
+            <div>Создана</div>
+            <div>{dateReg && new Intl.DateTimeFormat("ru").format(new Date(dateReg))}</div>
+          </div>
+
           {
-            <div className="text-center mb-24">
-              { applicationMessage && <Message text={applicationMessage}/> }
-            </div>
+            current.value !== "hasApplication" && <ApplyForm onSubmit={handleApply} sections={sections} />
           }
           {
-            keys(photoworks).map(s => renderSection(s, photoworks[s]))
+            // isApproved && <ImagesForm onSubmit={postImages} onChooseFiles={handleChooseFiles} sections={sections} />
           }
-
-          <Form
-            validate={validateForm}
-            className="overflow-y-auto max-h-96"
-            onSubmit={onSubmit}
-            initialValues={{files: [], sections: null}}
-            render={({ handleSubmit }) => (
-              <div>
-                {message && <Message text={message} />}
-
-                {
-                  current.value === "noApplication" && (
-
-                    <form className="p-10" onSubmit={handleSubmit}>
-                      <div className="flex justify-center w-3/5">
-                        <Sections className="flex-1 mr-10" sections={sections}/>
-                        <div>
-                          { 
-                            !(isApproved === true) && <Button disabled={isApproved === false} className="uppercase flex-1" onClick={handleSubmit}>Подать заявку</Button>
-                          }
-                        </div>
-                      </div>
-                      <Field name="files">
-                        {({ input }) => (
-                          <input type="file" className="hidden" multiple onChange={({target}) => handleChooseFiles(target.files, files => input.onChange(files)) }/>
-                        )}
-                      </Field>
-        
-                      <div className="flex justify-center mb-16">
-                        {
-                          isApproved && <Button className="uppercase" onClick={() => send("open") }>Загрузить</Button>
-                        }
-                      </div>
-
-                    </form>
-
-                  )
-                }
-
-                <div>
-                  {files.map(renderFile)}
-                </div>
-              </div>
-            )}/>
+          {
+            // keys(photoworks).map(s => renderSection(s, photoworks[s]))
+          }
         </div>
-
         <ProfileMenu/>
       </div>
     </div>

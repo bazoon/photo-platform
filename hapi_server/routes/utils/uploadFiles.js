@@ -20,8 +20,9 @@ module.exports = async function uploadFiles(f) {
       // const image = await Jimp.read(f.path);
       // await image.resize(200, 200);
       // await image.quality(90);
-      // await image.writeAsync(thumbTargetPath);
-      await renameP(f.path, targetPath);
+      // // await image.writeAsync(thumbTargetPath);
+      // await renameP(f.path, targetPath);
+      console.log(f.path, targetPath)
     } catch(e) {
       console.log(e, f.oldName);
     }

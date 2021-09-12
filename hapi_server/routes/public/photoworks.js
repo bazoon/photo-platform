@@ -12,7 +12,7 @@ module.exports = [
       const userId = get('request.auth.credentials.id', h);
       if (!userId) return [];
 
-      const domain = request.info.referrer.includes('3000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
       if (!domain) {
         return {};
@@ -27,13 +27,11 @@ module.exports = [
         FROM
           photoworks,
           registration_contests,
-          sections,
-          contests
+          sections
         WHERE
           photoworks.registration_contest_id = registration_contests.id
           AND photoworks.section_id = sections.id
-          AND sections.contest_id = contests.id
-          AND registration_contests.contest_id = contests.id
+          AND sections.contest_id = registration_contests.contest_id
           AND user_id = :userId
       `;
 
@@ -42,7 +40,6 @@ module.exports = [
           userId,
         }
       });
-
       return groupBy(e => e.sectionName, photoworks.map(p => ({...p, src: getUploadFilePath(p.filename)})));
     },
     options: {

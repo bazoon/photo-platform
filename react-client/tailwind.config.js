@@ -66,7 +66,10 @@ module.exports = {
     },
     extend: {
       gridTemplateRows: {
-        "g": "repeat(8, 5vw)"
+        "g": "repeat(8, 5vw)",
+      },
+      gridTemplateColumns: {
+        "square": "repeat(auto-fit, minmax(22rem, 1fr))",
       },
       minHeight: {
         "400": "400px"

@@ -18,6 +18,9 @@ import {useMachine} from "@xstate/react";
 import UserMachine from "./UserMachine";
 import {useHistory} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {loadLanguage} from "./utils";
+import i18n from "../core/i18n";
+import {locale} from "primereact/api";
 
 const initialContext = {
   user: {},
@@ -39,6 +42,15 @@ const loadLocalUser = (store) => {
       return localStorage.getItem(e);
     }
   )("user");
+};
+
+function loadTranslations(lang, t) {
+  i18n.addResourceBundle(lang, "namespace1", t);
+}
+
+const setDefaultLocale = lang => {
+  i18n.changeLanguage(lang);
+  locale(lang);
 };
 
 
@@ -70,6 +82,19 @@ function Init({store}) {
   const loadOk = info => {
     store.info = info;
   };
+
+  const loadTranslationFailed = () => {
+
+  };
+
+  useEffect(() => {
+    Async.of(a => b => [a, b]).ap( asyncGet("api/translation/ru")).ap(asyncGet("api/translation/en")).fork(loadTranslationFailed, ([a, b]) => {
+      loadTranslations("ru", a);
+      loadTranslations("en", b);
+      setDefaultLocale(loadLanguage());
+    });
+  }, []);
+
 
   useEffect(() => {
     asyncGet(`api/mainPage/${i18n.language}`).fork(loadFailed, loadOk);

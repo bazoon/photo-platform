@@ -61,20 +61,6 @@ function Main({store}) {
     });
   };
 
-
-
-  const setDefaultLocale = lang => {
-    i18n.changeLanguage(lang);
-    locale(lang);
-  };
-
-  useEffect(() => {
-    asyncGet("api/translation/ru").fork(e => e, data => loadTranslations("ru", data));
-    asyncGet("api/translation/en").fork(e => e, data => loadTranslations("en", data));
-    setDefaultLocale(loadLanguage());
-  }, []);
-
-
   return (
     <>
       <Router>
