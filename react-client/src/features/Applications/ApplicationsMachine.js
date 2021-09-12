@@ -122,7 +122,7 @@ export default function applicationsMachine({ context = {}, api } = {}) {
           id: "apply",
           src: "apply",
           onDone: {
-            // target: "confirmAwait",
+            target: "loading",
             actions: assign({
               success: true
             })

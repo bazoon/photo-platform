@@ -203,7 +203,7 @@ export default function Main() {
 
 
 
-          <div className="grid grid-cols-2 m-auto w-2/5 text-base items-baseline">
+          <div className="grid grid-cols-2 m-auto w-3/5 text-base items-baseline">
 
             <div>Текущий конкурс</div>
             <div className="uppercase text-lg text-brown-light2 font-header">{contestName}</div>
