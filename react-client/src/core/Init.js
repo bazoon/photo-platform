@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef} from "react";
 import compose from "crocks/helpers/compose";
 import map from "crocks/pointfree/map";
 import identity from "crocks/combinators/identity";
@@ -6,14 +6,13 @@ import ifElse from "crocks/logic/ifElse";
 import Result from "crocks/Result";
 import tryCatch from "crocks/Result/tryCatch";
 import chain from "crocks/pointfree/chain";
-import { collect, afterChange} from "react-recollect";
+import { collect} from "react-recollect";
 import { Toast } from "primereact/toast";
 import useAuth from "./hooks/useAuth";
 import {asyncGet} from "./api";
 import Async from "crocks/Async";
 import option from "crocks/pointfree/option";
 import resultToMaybe from "crocks/Maybe/resultToMaybe";
-import {loadRoles, loadUser} from "./api_utils";
 import {useMachine} from "@xstate/react";
 import UserMachine from "./UserMachine";
 import {useHistory, withRouter} from "react-router-dom";
@@ -83,15 +82,16 @@ function Init({store}) {
   const actions = {
     loadLocalUser: () => loadLocalUser(store),
     visitMainPage: () => location.href.endsWith("/login") && setTimeout(() => history.push("/"), 100),
-    saveRole: (_, {data}) => { store.role = data?.role; }
+    saveRole: (_, {data}) => { store.role = data?.role; },
+    storeLoggedIn: (_, {data}) => { store.isLoggedIn = !!data.id;}
   };
 
   const services = {
     loadRoles: () => asyncGet("api/roles").toPromise(),
-    checkLogin: () => asyncGet("api/isLoggedIn").toPromise()
+    checkLogin: () => asyncGet("api/isLoggedIn").toPromise(),
   };
 
-  const [_, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
+  const [current, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
   const { i18n } = useTranslation("namespace1");
   const loadFailed = () => {
 
@@ -118,9 +118,6 @@ function Init({store}) {
   useEffect(() => {
     asyncGet(`api/mainPage/${i18n.language}`).fork(loadFailed, loadOk);
   }, []);
-
-
-
 
   useEffect(() => {
     send("checkLogin");

@@ -5,6 +5,9 @@ import {dateFormat} from "./core/utils";
 import { store } from "react-recollect";
 import {withRouter} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import {identity} from "lodash/fp";
+import i18n from "./core/i18n";
+
 
 function MainPage({history}) {
   const [config, setConfig] = useState({});
@@ -27,9 +30,18 @@ function MainPage({history}) {
   }, []);
 
   const handleSendPhoto = () => {
-    if (!store.user) {
-      history.push("/signup");
-    }
+    asyncGet(`api/mainPage/${i18n.language}`).fork(identity, ({regId}) => {
+      switch(true) {
+      case !!regId:
+        history.push("/applications");
+        break;
+      case store.isLoggedIn:
+        history.push("/Applications");
+        break;
+      default:
+        history.push("/login");
+      }
+    });
   };
 
   const tempNote = () => <img src="inwork.jpg"/>;

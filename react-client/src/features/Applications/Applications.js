@@ -199,9 +199,7 @@ export default function Main() {
     <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
       <div className="relative flex justify-center w-full">
         <div className="flex-1">
-          <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">Мои заявки</div>
-
-
+          <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">{t("myApplications")}</div>
 
           <div className="grid grid-cols-2 m-auto w-3/5 text-base items-baseline">
 

@@ -26,6 +26,7 @@ export default function({ context = {}, guards, services, actions } = {}) {
             {
               cond: "isLoggedIn",
               target: "loggedIn",
+              actions: "storeLoggedIn"
             },
             {
               target: "idle"

@@ -26,12 +26,13 @@ const services = {
   login: (_, {data}) => asyncPost("api/login", data).toPromise(),
   loadRoles: () => asyncGet("api/roles").toPromise(),
   signup: params => asyncPost("api/login", params).toPromise(),
+  checkLogin: () => asyncGet("api/isLoggedIn").toPromise(),
 };
 
 const {canAdmin} = useAuth();
 
 const guards = {
-  hasAuth: (_, {data}) => canAdmin(data?.role)
+  hasAuth: (_, {data}) => canAdmin(data?.role),
 };
 
 const initialContext = {
@@ -46,8 +47,9 @@ function Main({store}) {
     saveUser: (_, {data}) => { 
       localStorage.setItem("user", JSON.stringify(data)); 
       store.user = data;
+      store.isLoggedIn = !!data.id;
     },
-    saveRole: (_, {data}) => { store.role = data?.role; }
+    saveRole: (_, {data}) => { store.role = data?.role; },
   };
 
   const [current, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
