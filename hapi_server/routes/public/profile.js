@@ -34,7 +34,7 @@ module.exports = [
     },
     options: {
       auth: {
-        mode: 'optional'
+        mode: 'required'
       },
     }
   },
@@ -82,7 +82,7 @@ module.exports = [
         multipart: true
       },
       auth: {
-        mode: 'optional'
+        mode: 'required'
       }
     }
   },

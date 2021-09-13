@@ -8,7 +8,7 @@ const chain = require('crocks/pointfree/chain');
 const identity = require('crocks/combinators/identity');
 const joinM = chain(identity);
 const mail = require('./services/mail.js');
-const {nth, split} = require('lodash/fp');
+const {nth, split, get} = require('lodash/fp');
 const getUploadFilePath = require('./utils/getUploadPath');
 
 
@@ -292,4 +292,20 @@ const checkEmail = {
   }
 };
 
-module.exports = [login, login2, signup, confirm, logout, checkEmail];
+const isLoggedIn = {
+  method: 'GET',
+  path: '/api/isLoggedIn',
+  handler: async function(request, h) {
+    return {id: get('request.auth.credentials.id', h)};
+  },
+  options: {
+    auth: {
+      mode: 'optional'
+    },
+    plugins: {
+      role: 'ADMIN'
+    }
+  }
+};
+
+module.exports = [login, login2, signup, confirm, logout, checkEmail, isLoggedIn];

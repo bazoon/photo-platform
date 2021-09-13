@@ -8,8 +8,7 @@ export default function({ context = {}, guards, services, actions } = {}) {
       idle: {
         on: {
           checkLogin: {
-            cond: "isLoggedIn",
-            target: "loggedIn",
+            target: "checkingLogin",
             actions: "loadLocalUser"
           },
           login: "loginIn",
@@ -18,6 +17,24 @@ export default function({ context = {}, guards, services, actions } = {}) {
             actions: "saveUser"
           },
           confirmEmail: "confirmingEmail"
+        }
+      },
+      checkingLogin: {
+        invoke: {
+          src: "checkLogin",
+          onDone: [
+            {
+              cond: "isLoggedIn",
+              target: "loggedIn",
+            },
+            {
+              target: "idle"
+            }
+          ],
+          onError: {
+            target: "idle",
+            actions: "visitMainPage"
+          }
         }
       },
       waitingConfirm: {

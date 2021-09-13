@@ -12,8 +12,7 @@ export const responseIsJson = (response) => {
 
 function processResponse(r, resolve, reject) {
   if (r.status === 401) {
-    // window.location = "/login";
-    // r.json().then(reject).catch(reject);
+    window.location = "/login";
   }
 
   if (!r.ok && responseIsJson(r)) {

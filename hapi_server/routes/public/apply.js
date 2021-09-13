@@ -41,7 +41,7 @@ module.exports = [
     },
     options: {
       auth: {
-        mode: 'optional'
+        mode: 'required'
       }
     }
   },

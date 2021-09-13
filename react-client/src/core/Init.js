@@ -59,7 +59,7 @@ function Init({store}) {
   const toast = useRef();
   const {canAdmin} = useAuth();
   const guards = {
-    isLoggedIn: () => !!localStorage.getItem("user"),
+    isLoggedIn: (_, {data}) => data.id,
     hasAuth: (_, {data}) => canAdmin(data?.role)
   };
   
@@ -71,6 +71,7 @@ function Init({store}) {
 
   const services = {
     loadRoles: () => asyncGet("api/roles").toPromise(),
+    checkLogin: () => asyncGet("api/isLoggedIn").toPromise()
   };
 
   const [_, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
