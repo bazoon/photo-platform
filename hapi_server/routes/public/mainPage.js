@@ -32,12 +32,34 @@ module.exports = [
       }
 
       const query = `
-        select contest_abouts."name", date_start, date_stop, salones.name as salone, phone_tech, email_pub from contests, salones, contest_abouts, languages, organizers
-        where contests.salone_id = salones.id and salones."domain" = :domain and
-        contests.id = contest_abouts.contest_id and contest_abouts.language_id=languages.id and languages.short = :lang and
-        organizers.language_id = languages.id and salones.organizer_id = organizers.id
-        order by date_start desc
-        limit 1
+        select
+          contest_abouts."name",
+          date_start,
+          date_stop,
+          salones.name as salone,
+          phone_tech,
+          email_pub,
+          salone_abouts.name as salone_name
+        from
+          contests,
+          salones,
+          contest_abouts,
+          languages,
+          organizers,
+          salone_abouts
+        where
+          contests.salone_id = salones.id
+          and salones."domain" = :domain
+          and contests.id = contest_abouts.contest_id
+          and contest_abouts.language_id = languages.id
+          and languages.short = :lang
+          and organizers.language_id = languages.id
+          and salones.organizer_id = organizers.id
+          and salones.id = salone_abouts.salone_id
+        order by
+          date_start desc
+        limit
+          1
      `;
 
       const info = await h.query(query, {

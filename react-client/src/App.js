@@ -48,7 +48,7 @@ addLocale("ru", {
   dateFormat: "dd.mm.yy"
 });
 
-function Main({store}) {
+function MainApp({store}) {
 
   function loadTranslations(lang, t) {
     i18n.addResourceBundle(lang, "namespace1", t);
@@ -60,6 +60,8 @@ function Main({store}) {
       return <Component key={sidebar.key} {...sidebar.props}/>;
     });
   };
+
+
 
   return (
     <>
@@ -178,4 +180,4 @@ function Main({store}) {
   );
 }
 
-export default collect(Main);
+export default collect(MainApp);

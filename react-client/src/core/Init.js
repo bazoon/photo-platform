@@ -16,7 +16,7 @@ import resultToMaybe from "crocks/Maybe/resultToMaybe";
 import {loadRoles, loadUser} from "./api_utils";
 import {useMachine} from "@xstate/react";
 import UserMachine from "./UserMachine";
-import {useHistory} from "react-router-dom";
+import {useHistory, withRouter} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {loadLanguage} from "./utils";
 import i18n from "../core/i18n";
@@ -53,11 +53,28 @@ const setDefaultLocale = lang => {
   locale(lang);
 };
 
+const setTitle = (pathname, saloneName, name) => {
+  if (pathname === "/") {
+    document.title = saloneName;
+  } else {
+    document.title = name;
+  }
+};
+
 
 function Init({store}) {
   const history = useHistory();
   const toast = useRef();
   const {canAdmin} = useAuth();
+
+  useEffect(() => {
+    const onChangleLocation = ({pathname}) => {
+      setTitle(pathname, store.info.saloneName, store.info.name);
+    };
+    return history.listen(onChangleLocation);
+  }, []);
+
+
   const guards = {
     isLoggedIn: (_, {data}) => data.id,
     hasAuth: (_, {data}) => canAdmin(data?.role)
@@ -82,6 +99,7 @@ function Init({store}) {
 
   const loadOk = info => {
     store.info = info;
+    setTitle(location.pathname, info.saloneName, info.name);
   };
 
   const loadTranslationFailed = () => {
@@ -103,6 +121,7 @@ function Init({store}) {
 
 
 
+
   useEffect(() => {
     send("checkLogin");
     store.toast = toast;
@@ -116,7 +135,7 @@ function Init({store}) {
   );
 }
 
-export default collect(Init);
+export default withRouter(collect(Init));
 
 
 
