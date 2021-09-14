@@ -23,6 +23,10 @@ const setTemplateForItems = (items = [], history, t) => {
       setTemplateForItems(item.items, history, t);
     }
   });
+  console.log("setTemplateForItems");
+  console.log(items);
+  console.log(t);
+
   return [...items];
 };
 
@@ -106,6 +110,7 @@ function Main({store, history}) {
 
   function menuLoaded(menu) {
     setItems(setTemplateForItems(menu, history, t));
+    console.log("menuLoaded", i18n.language);
   }
 
   useEffect(() => {
