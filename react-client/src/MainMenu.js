@@ -118,9 +118,9 @@ function Main({store, history}) {
   }, []);
 
 
-  // useEffect(() => {
-  //   setItems(setTemplateForItems(items, history, t));
-  // }, [i18n.language, location.href]);
+  useEffect(() => {
+    setItems(items => setTemplateForItems(items, history, t));
+  }, [i18n.language, location.href]);
 
   return (
     <Menubar
