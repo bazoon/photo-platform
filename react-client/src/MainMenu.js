@@ -17,7 +17,7 @@ const isActiveMenuItem = item => {
 const setTemplateForItems = (items = [], history, t) => {
   items.forEach(item => {
     item.command = item.command || (() => history.push(item.to));
-    item.label = t(item.name) || item.name;
+    item.label = t(item.name);
     item.className = isActiveMenuItem(item) ? "p-menuitem--active" : "";
     if (item.items) {
       setTemplateForItems(item.items, history, t);
@@ -118,9 +118,9 @@ function Main({store, history}) {
   }, []);
 
 
-  useEffect(() => {
-    setItems(setTemplateForItems(items, history, t));
-  }, [i18n.language, location.href]);
+  // useEffect(() => {
+  //   setItems(setTemplateForItems(items, history, t));
+  // }, [i18n.language, location.href]);
 
   return (
     <Menubar
