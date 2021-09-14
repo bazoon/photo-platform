@@ -107,7 +107,7 @@ function Init({store}) {
   };
 
   useEffect(() => {
-    Async.of(a => b => [a, b]).ap( asyncGet("api/translation/ru")).ap(asyncGet("api/translation/en")).fork(loadTranslationFailed, ([a, b]) => {
+    Async.of(a => b => [a, b]).ap(asyncGet("api/translation/ru")).ap(asyncGet("api/translation/en")).fork(loadTranslationFailed, ([a, b]) => {
       loadTranslations("ru", a);
       loadTranslations("en", b);
       setDefaultLocale(loadLanguage());

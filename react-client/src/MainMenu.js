@@ -34,6 +34,7 @@ function Main({store, history}) {
   const logout = useLogout(store);
 
   const changeLanguage = lang => {
+    console.log("changeLanguage");
     i18n.changeLanguage(lang);
     saveLanguage(lang);
     locale(lang);
@@ -97,6 +98,8 @@ function Main({store, history}) {
         } 
       } || {},
     ];
+
+    console.log("setLinks", i18n.language);
     
     setLinks(links);
   }, [store.role, store.user, location.href, i18n.language]);
