@@ -122,7 +122,7 @@ function Main({store, history}) {
 
   useEffect(() => {
     setItems(items => setTemplateForItems(items, history, t));
-  }, [i18n.language, location.href]);
+  }, [i18n.language, location.href, t]);
 
   return (
     <Menubar
