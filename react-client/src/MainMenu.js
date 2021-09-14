@@ -14,7 +14,9 @@ const isActiveMenuItem = item => {
   return location.href.includes(item.to) || (item.items && item.items.some(isActiveMenuItem));
 };
 
-const setTemplateForItems = (items = [], history, t) => {
+const setTemplateForItems = (items = [], history, t, i) => {
+  window.t =t;
+  window.i=i;
   items.forEach(item => {
     item.command = item.command || (() => history.push(item.to));
     item.label = t(item.name);
@@ -109,7 +111,7 @@ function Main({store, history}) {
   }, [store.role, store.user, location.href, i18n.language]);
 
   function menuLoaded(menu) {
-    setItems(setTemplateForItems(menu, history, t));
+    setItems(setTemplateForItems(menu, history, t, i18n));
     console.log("menuLoaded", i18n.language);
   }
 
