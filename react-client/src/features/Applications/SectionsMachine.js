@@ -1,4 +1,5 @@
 import { createMachine, assign } from "xstate";
+import {view, over, pathLens, findLens} from "lodash-lens";
 
 export default function({ context = {}, services } = {}) {
   return createMachine({
@@ -7,13 +8,15 @@ export default function({ context = {}, services } = {}) {
     states: {
       idle: {
         on: {
-          load: "loading"
+          load: "loading",
+          loadImages: "loadImages"
         }
       },
       loading: {
         invoke: {
           src: "getSections",
           onDone: {
+            target: "idle",
             actions: [
               assign({
                 sections: (_, event) => event.data
@@ -23,11 +26,20 @@ export default function({ context = {}, services } = {}) {
           onError: {
           }
         }
+      },
+      loadImages: {
+        invoke: {
+          src: "loadImages",
+          onDone: {
+            // target: "idle",
+            actions: assign({
+              sections: ({sections}, {data}) => over(findLens({id: data.id}), section => ({...section, images: data.images}), sections)
+            })
+          }
+        }
       }
     }
   }, {
-    services: {
-      getSections: services.getSections
-    }
+    services
   });
 }

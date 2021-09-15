@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     yearShot: DataTypes.STRING,
     locateShot: DataTypes.STRING
   }, {
-      createdAt: 'date_add',
-      updatedAt: false
-    });
+    createdAt: 'date_add',
+    updatedAt: false
+  });
   Photowork.associate = function (models) {
     // associations can be defined here
   };

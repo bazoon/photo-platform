@@ -187,7 +187,8 @@ body {
   padding: 0 !important;
 }
 
-/* HACK */
-.p-dropdown-panel {
-  /* margin-left: 7px; */
+.p-dialog-header {
+  background: transparent !important;
+  height: 40px;
 }
+

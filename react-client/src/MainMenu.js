@@ -15,8 +15,6 @@ const isActiveMenuItem = item => {
 };
 
 const setTemplateForItems = (items = [], history, t, i) => {
-  window.t =t;
-  window.i=i;
   items.forEach(item => {
     item.command = item.command || (() => history.push(item.to));
     item.label = t(item.name);
@@ -25,10 +23,6 @@ const setTemplateForItems = (items = [], history, t, i) => {
       setTemplateForItems(item.items, history, t);
     }
   });
-  console.log("setTemplateForItems");
-  console.log(items);
-  console.log(t);
-
   return [...items];
 };
 
@@ -40,7 +34,6 @@ function Main({store, history}) {
   const logout = useLogout(store);
 
   const changeLanguage = lang => {
-    console.log("changeLanguage");
     i18n.changeLanguage(lang);
     saveLanguage(lang);
     locale(lang);
@@ -105,14 +98,11 @@ function Main({store, history}) {
       } || {},
     ];
 
-    console.log("setLinks", i18n.language);
-    
     setLinks(links);
   }, [store.role, store.user, location.href, i18n.language]);
 
   function menuLoaded(menu) {
     setItems(setTemplateForItems(menu, history, t, i18n));
-    console.log("menuLoaded", i18n.language);
   }
 
   useEffect(() => {

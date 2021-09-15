@@ -75,7 +75,6 @@ export default function applicationsMachine({ context = {}, api } = {}) {
             {
               cond: (_, {data}) => { return get("regState", data) === undefined;  },
               target: "noApplication",
-              // actions: ["noApplication"]
             },
             {
               cond: (_, {data}) => { return get("regState", data) === 1;  },

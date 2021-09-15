@@ -33,14 +33,29 @@ module.exports = [
           AND photoworks.section_id = sections.id
           AND sections.contest_id = registration_contests.contest_id
           AND user_id = :userId
+          and registration_contests.contest_id = (
+            SELECT
+              contests.id
+            FROM
+              contests,
+              salones
+            where
+              salones.id = contests.salone_id
+              and salones.domain = :domain
+            ORDER BY
+              date_start DESC
+            LIMIT
+              1
+          )
       `;
 
       const photoworks = await h.query(applicationQuery, {
         replacements: {
           userId,
+          domain
         }
       });
-      return groupBy(e => e.sectionName, photoworks.map(p => ({...p, src: getUploadFilePath(p.filename)})));
+      return groupBy(e => e.id, photoworks.map(p => ({...p, src: getUploadFilePath(p.filename)})));
     },
     options: {
       auth: {

@@ -22,6 +22,7 @@ module.exports = {
       brown: {
         medium: "#2A2B2F",
         dark: "#202125",
+        light3: "#48494D",
         light: "rgb(239, 188, 130)",
         light2: "#CB893E",
         dark2: "rgb(30, 31, 37)"
