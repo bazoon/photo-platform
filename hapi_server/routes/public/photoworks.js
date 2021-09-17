@@ -55,7 +55,7 @@ module.exports = [
           domain
         }
       });
-      return groupBy(e => e.id, photoworks.map(p => ({...p, src: getUploadFilePath(p.filename)})));
+      return photoworks.map(p => ({...p, src: getUploadFilePath(p.filename)}));
     },
     options: {
       auth: {

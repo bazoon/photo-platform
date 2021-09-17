@@ -1,5 +1,3 @@
-const stringField = title => ({ type: 'string', title })
-
 const fields = [
   {
     name: 'id',
@@ -27,15 +25,12 @@ const fields = [
   }
 ];
 
-const fieldsToProperties = fields => {
-  return fields.reduce((a, e) => ({...a, [e]: stringField(e)}) , {});
-}
 
 module.exports = [
   {
     method: 'GET',
     path: '/api/profile/meta',
-    handler: async function (request, h) {
+    handler: async function () {
       const scheme = {
         '$id': 'https://example.com/geographical-location.schema.json',
         '$schema': 'https://json-schema.org/draft/2020-12/schema',

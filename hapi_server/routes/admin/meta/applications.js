@@ -1,3 +1,33 @@
+
+const imageFormFields = [
+  // {
+  //   name: 'id',
+  //   hidden: true,
+  // },
+  {
+    name: 'name',
+    title: 'Наименование',
+    type: 'string'
+  },
+  {
+    name: 'description',
+    title: 'Описание',
+    type: 'string'
+  },
+  {
+    name: 'year',
+    title: 'Год съемки',
+    type: 'string'
+  },
+  {
+    name: 'place',
+    title: 'Место съемки',
+    type: 'string'
+  }
+];
+
+
+
 module.exports = [
   {
     method: 'GET',
@@ -122,6 +152,26 @@ module.exports = [
         columns,
         fields
       }
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'GET',
+    path: '/api/applications/imageForm/meta',
+    handler: async function (request, h) {
+      const scheme = {
+        '$id': 'https://example.com/geographical-location.schema.json',
+        '$schema': 'https://json-schema.org/draft/2020-12/schema',
+        'title': 'Profile config',
+        'type': 'object',
+        'properties': imageFormFields
+      };
+
+      return scheme;
     },
     options: {
       auth: {

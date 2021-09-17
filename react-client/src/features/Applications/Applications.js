@@ -2,19 +2,22 @@ import React, {useEffect, useRef, useState} from "react";
 import { useTranslation } from "react-i18next";
 import {asyncGet} from "../../core/api";
 import {Button} from "primereact/button";
-import {Message} from "primereact/message";
 import Machine from "./ApplicationsMachine";
 import { useMachine } from "@xstate/react";
 import SectionsMachine from "./SectionsMachine";
-import {keys, get, nth, take, map, compose} from "lodash/fp";
+import {get, nth, map, compose, keys} from "lodash/fp";
 import { Form, Field } from "react-final-form";
 import ProfileMenu from "../ProfileMenu";
 import {inspect} from "@xstate/inspect";
 import { MultiSelect } from "primereact/multiselect";
 import { Dialog } from "primereact/dialog";
-import {view, pathLens} from "lodash-lens";
 import daggy from "daggy";
+import identity from "crocks/combinators/identity";
+import cn from "classnames";
+import $ from "sanctuary-def";
 
+const renderRequiredAsterix = (isRequired, fieldName) => isRequired(fieldName) && <sup>*</sup> || null;
+const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
 
 const Photowork = daggy.tagged("Photowork", ["id", "name", "filename", "year", "place"]);
 const UploadImage = daggy.taggedSum("UploadImage", {
@@ -68,27 +71,121 @@ const ApplyForm = ({onSubmit, sections}) => {
   );
 };
 
+const validateImageForm = () => {
 
-const Images = ({images, className}) => {
-  const count = images.length;
-  const [current, setCurrent] = useState(0);
-  const image = view(pathLens(`[${current}]`), images);
-  const left = () => current > 0 && setCurrent(c => (c - 1) % count);
-  const right = () => current < count && setCurrent(c => (c + 1) % count);
+};
 
-  const visibleImages = images.slice(current, current + 5);
+
+const ImageForm = ({onSubmit, image}) => {
+  const [imageFields, setImageFields] = useState([]);
+  const {t} = useTranslation("namespace1");
+  const required = new Set([]);
+
+
+  const getFormErrorMessage = (meta) => {
+    return isFormFieldValid(meta) && <small className="p-error">{t(meta.error)}</small>;
+  };
+
+  const loadFieldsFailed = () => {
+
+  };
+
+  const loadFieldsOk = ({properties}) => {
+    setImageFields(properties);
+    console.log(properties.map(f => f.name));
+  };
+
+  const loadFields = () => {
+    asyncGet("api/applications/imageForm/meta").fork(loadFieldsFailed, loadFieldsOk);
+  };
   
-  const scrollImage = () => {}; 
+  const handleRemove = () => {
+
+  };
+
+  const imageInfo = image && image.cata({
+    Draft: file => file,
+    Uploaded: photowork => photowork
+  });
+
+  console.log(imageInfo);
+
+  useEffect(() => {
+    loadFields();
+  }, []);
 
   return (
-    <div className={`flex justify-between overflow-hidden h-52 ${className}`}>
+    <Form
+      validate={validateImageForm}
+      className="overflow-y-auto max-h-96"
+      onSubmit={onSubmit}
+      initialValues={imageInfo}
+      render={({ handleSubmit }) => (
+        <div>
+          {
+            <form className="p-5" onSubmit={handleSubmit}>
+              <div className="grid grid-cols-5">  
+                {
+                  imageFields.map(({name, title, type}) => {
+                    return (
+                      <Field name={name} key={name} render={({ input, meta }) => (
+                        <>
+                          <label className="text-tiny place-self-end mr-5 mb-5">
+                            {title} 
+                            {renderRequiredAsterix(name => required.has(name), name)}
+                          </label>
+                          <div className="w-full relative col-span-4 mb-5">
+                            <input name={name} type={type} {...input} className="text-bright w-full text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright" />
+                            <div className="absolute">
+                              {getFormErrorMessage(meta)}
+                            </div>
+                          </div>
+                        </>
+                      )}/>
+                    );
+                  })
+                }
+              </div>
+
+              { 
+                <div className="flex justify-center">
+                  <Button className="uppercase flex-shrink-0 flex-grow-0 w-40 flex justify-center p-5 mr-10" onClick={handleSubmit}>Сохранить</Button>
+                  <Button className="uppercase flex-shrink-0 flex-grow-0 w-40 flex justify-center p-5" onClick={handleRemove}>Удалить</Button>
+                </div>
+              }
+            </form>
+          }
+        </div>
+      )}/>
+  );
+
+
+};
+
+
+const Images = ({images, className, onSelect}) => {
+  const count = images.length;
+  const [selectedImage, setSelectedImage] = useState();
+  
+  const selectImage = image => {
+    setSelectedImage(image);
+    onSelect(image);
+  }; 
+
+  return (
+    <div className={`flex gap-5 overflow-x-auto h-64 p-5 overflow-y-hidden hidden-scroll ${className}`}>
       {
-        visibleImages.map(image => {
+        images.map(image => {
+          const cls = cn("object-cover w-full h-full", {"border-brown-light2 border-2 border-dotted": image === selectedImage });
           const src = image.cata({
             Draft: file => URL.createObjectURL(file),
             Uploaded: photowork => photowork.filename
           });
-          return <div onClick={scrollImage} className="w-52 h-52" key={src}><img src={src} className="object-cover w-full h-full"/></div>;
+          const key = image.cata({
+            Draft: file => file.name,
+            Uploaded: photowork => photowork.id
+          });
+          return <div onClick={() => selectImage(image)} className="w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0" key={key}><img src={src} className={cls}/></div>;
         })
       }
     </div>
@@ -118,7 +215,8 @@ const SectionSelector = ({sections = [], t, onLoadSection}) => {
   const section = nth(current, sections);
   const left = () => current > 0 && setCurrent(c => (c - 1) % count);
   const right = () => current < sections.length && setCurrent(c => (c + 1) % count);
-  const [images, setImages] = useState();
+  const [, setImages] = useState();
+  const [selectedImage, setSelectedImage] = useState();
 
 
   console.assert(Section.is(section), "Not a section!", section);
@@ -133,6 +231,10 @@ const SectionSelector = ({sections = [], t, onLoadSection}) => {
       setImages(files);
       return current;
     });
+  };
+
+  const handleSelect = image => {
+    setSelectedImage(image);
   };
 
   return (
@@ -150,10 +252,10 @@ const SectionSelector = ({sections = [], t, onLoadSection}) => {
       </div>
       <div className="m-auto w-2/5 mb-5 text-center" >{t("chooseCategory")}</div>
 
-      <Images className="mb-5" images={section?.images || []}/>
+      <Images className="mb-5" onSelect={handleSelect} images={section?.images || []}/>
 
       <UploadButton className="m-auto w-min text-lg" onChooseFiles={chooseFiles}>{t("chooseFile")}</UploadButton>
-
+      <ImageForm onSubmit={identity} image={selectedImage}/>
     </div>
   );
 };
@@ -176,11 +278,8 @@ const renderFile = file => {
   return <div className="m-0 w-60 h-60"><img key={file.name} className="w-full h-full object-cover" src={URL.createObjectURL(file)}/></div>;
 };
 
-const renderImages = files => {
-  return files.map(renderFile);
-};
 
-const validateForm = data => {
+const validateForm = () => {
   // return keys(data).reduce((a, e) => data[e] ? a : {...a, [e]: "Это поле обязательно для заполнения !"}, {});
   return {};
 };
@@ -210,7 +309,7 @@ export default function Main() {
   const [sectionsCurrent, sendToSection]= useMachine(SectionsMachine({context: { sections: []}, services: sectionsService}), {devTools: true});
   const {context} = current;
   const sections = map(compose(Section.from, e => ({...e, images: e.images || []})), sectionsCurrent.context.sections);
-  const {isApproved, files, message, applicationMessage, photoworks} = context;
+  const {isApproved, applicationMessage} = context;
   const { i18n } = useTranslation("namespace1");
   const [contestName, setContestName] = useState("");
   const dateReg = get("application.dateReg", context);
@@ -221,29 +320,12 @@ export default function Main() {
     sendToSection("load");
   }, []);
 
-  const renderSection = (title, photos) => {
-    return (
-      <React.Fragment key={title}>
-        <div className="uppercase text-sm pt-24 mb-6 text-bright font-header text-center">{title}</div>
-        <div className="grid grid-flow-row auto-rows-max grid-cols-2 w-4/5 m-auto gap-10">
-          {photos.map(p => <img className="w-full" key={p.src} src={p.src}/>)}
-        </div>
-      </React.Fragment>
-    );  
-  };
   
   const handleApply = data => {
     send("apply", {data});
   };
 
-  const handleChooseFiles = (section, files) => {
-    const f = Array.from(files);
-    send("choose", {[section.id]: f});
-  };
 
-  const postImages = () => {
-    send("submit");
-  };
   
   const loadContestInfoFailed = () => {
 
