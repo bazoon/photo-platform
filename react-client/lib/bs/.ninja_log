@@ -67,3 +67,12 @@
 13	51	1631972447616820916	src/features/Applications/ApplicationInfo.cmj	ae3c5bdc46e1ce0b
 13	51	1631972447616820916	src/features/Applications/ApplicationInfo.cmi	ae3c5bdc46e1ce0b
 13	51	1631972447616820916	../../src/features/Applications/ApplicationInfo.bs.js	ae3c5bdc46e1ce0b
+0	25	1631973178403562759	src/features/Applications/ApplicationInfo.ast	5b5e83076520803d
+25	30	1631973178403562759	src/features/Applications/ApplicationInfo.d	50affb2eb18252c6
+0	9	1631973198176444174	src/features/Applications/ApplicationInfo.ast	5b5e83076520803d
+9	13	1631973198176444174	src/features/Applications/ApplicationInfo.d	50affb2eb18252c6
+1	9	1631973251895143456	src/features/Applications/ApplicationInfo.ast	5b5e83076520803d
+9	14	1631973251895143456	src/features/Applications/ApplicationInfo.d	50affb2eb18252c6
+14	54	1631973251895143456	src/features/Applications/ApplicationInfo.cmj	ae3c5bdc46e1ce0b
+14	54	1631973251895143456	src/features/Applications/ApplicationInfo.cmi	ae3c5bdc46e1ce0b
+14	54	1631973251895143456	../../src/features/Applications/ApplicationInfo.bs.js	ae3c5bdc46e1ce0b

@@ -25,7 +25,7 @@ function ApplicationInfo(Props) {
         return Curry._2(t$1, a, "");
       });
   }
-  var date = (dateReg == null) ? "" : dateReg.toLocaleDateString();
+  var date = (dateReg == null) ? "" : new Date(dateReg).toLocaleDateString();
   return React.createElement("div", {
               className: "grid grid-cols-2 m-auto w-3/5 text-base items-baseline"
             }, React.createElement("div", undefined, Curry._1(t, "currentContest")), React.createElement("div", {

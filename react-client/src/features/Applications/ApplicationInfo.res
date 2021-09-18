@@ -13,7 +13,7 @@ module Button = {
 /* } */
 
 @react.component
-let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<Js.Date.t>, ~openUpload, ~canUpload: bool) => {
+let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<string>, ~openUpload, ~canUpload: bool) => {
   /* let [t, _, _] = useTranslation("namespace1") */
   let t = switch useTranslation("namespace1") {
   | [t, _, _] => a => t(a, "")
@@ -21,7 +21,7 @@ let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<Js.Date.t>, ~
   }
 
   let date = switch Js.Nullable.toOption(dateReg) {
-   | Some(d) => Js.Date.toLocaleDateString(d)
+   | Some(d) => Js.Date.toLocaleDateString(Js.Date.fromString(d))
    | _ => ""
   }
 
