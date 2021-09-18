@@ -15,13 +15,11 @@ module.exports = {
     "sourceType": "module"
   },
   "plugins": [
-    "react"
+    "react",
   ],
   "rules": {
-    "indent": [
-      "error",
-      2
-    ],
+    "indent": "off",
+    "react/no-children-prop": "off",
     "linebreak-style": [
       "error",
       "unix"
@@ -31,13 +29,15 @@ module.exports = {
       "double"
     ],
     "semi": [
-      "error",
+      "warn",
       "always"
     ],
     "no-unused-vars": ["off", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
     "no-debugger": "warn",
     "no-var-requires": ["off"],
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "react/no-children-prop": "off"
   }
 };
+
 

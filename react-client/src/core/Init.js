@@ -108,9 +108,23 @@ function Init({store}) {
 
   useEffect(() => {
     Async.of(a => b => [a, b]).ap(asyncGet("api/translation/ru")).ap(asyncGet("api/translation/en")).fork(loadTranslationFailed, ([a, b]) => {
-      loadTranslations("ru", a);
-      loadTranslations("en", b);
+      const temps = {
+        currentContest: "Текущий конкурс",
+        status: "Статус",
+        dateReg: "Дата регистрации",
+        uploadPhoto: "Загрузить"
+      };
+
+      let aa = {...a, ...temps};
+      let bb = {...b, ...temps};
+
+      loadTranslations("ru", aa);
+      loadTranslations("en", bb);
+      
+
       setDefaultLocale(loadLanguage());
+
+
     });
   }, []);
 

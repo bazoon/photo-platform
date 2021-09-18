@@ -10,6 +10,7 @@
     "@ckeditor/ckeditor5-paste-from-office": "^28.0.0",
     "@ckeditor/ckeditor5-react": "^3.0.2",
     "@craco/craco": "^6.1.1",
+    "@rescript/react": "^0.10.3",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
@@ -40,7 +41,9 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "analyze": "source-map-explorer 'build/static/js/*.js'"
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "re:build": "rescript",
+    "re:start": "rescript build -w"
   },
   "eslintConfig": {
     "extends": [
@@ -84,6 +87,7 @@
     "postcss": "^7.0.35",
     "progress-bar-webpack-plugin": "^2.1.0",
     "react-editor-js": "^1.9.0",
+    "rescript": "^9.1.4",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.0",
     "webpack-bundle-analyzer": "^4.4.1"
   },

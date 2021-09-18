@@ -14,7 +14,10 @@ import { Dialog } from "primereact/dialog";
 import daggy from "daggy";
 import identity from "crocks/combinators/identity";
 import cn from "classnames";
-import $ from "sanctuary-def";
+import {make as ApplicationInfo} from "./ApplicationInfo.bs";
+
+
+
 
 const renderRequiredAsterix = (isRequired, fieldName) => isRequired(fieldName) && <sup>*</sup> || null;
 const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
@@ -54,8 +57,9 @@ const ApplyForm = ({onSubmit, sections}) => {
       render={({ handleSubmit }) => (
         <div>
           {
-            <form className="p-10" onSubmit={handleSubmit}>
-              <div className="flex justify-center w-3/5">
+            <form onSubmit={handleSubmit}>
+
+            <div className="grid grid-cols-2 m-auto w-3/5 text-base items-baseline">
                 <Sections className="flex-1 mr-10" sections={sections}/>
                 <div>
                   { 
@@ -314,6 +318,8 @@ export default function Main() {
   const [contestName, setContestName] = useState("");
   const dateReg = get("application.dateReg", context);
   const [isUploadVisible, setIsUploadVisible] = useState(false);
+  const [aboutText, setAboutText] = useState("");
+
 
   useEffect(() => {
     send("load", {});
@@ -339,8 +345,23 @@ export default function Main() {
     asyncGet(`api/mainPage/${i18n.language}`).fork(loadContestInfoFailed, loadContestInfoOk);
   };
 
+    const loadAboutFailed = () => {
+
+    };
+
+    const loadAboutOk = ({content}) => {
+      setAboutText(content);
+    };
+
+    const loadAbout = () => {
+      asyncGet("api/salones/about").fork(loadAboutFailed, loadAboutOk);
+    };
+  
+
+
   useEffect(() => {
     loadContestInfo();
+    loadAbout();
   }, []);
   
   const handleHideUpload = () => {
@@ -348,6 +369,7 @@ export default function Main() {
   };
   
   const openUpload = () => {
+    console.log("openUpload");
     setIsUploadVisible(true);
   };
 
@@ -355,39 +377,42 @@ export default function Main() {
     sendToSection("loadImages", {id});
   };
 
+// /api/salones/about
+
+  const About = () => {
+    return (
+      <div className="m-auto w-3/5 text-base items-baseline" dangerouslySetInnerHTML={{__html: aboutText}}/>
+    );
+  };
+
   return (
-    <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
-      <div className="relative flex justify-center w-full">
-        <div className="flex-1">
-          <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">{t("myApplications")}</div>
+    
+      <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
+        <div className="relative flex justify-center w-full">
+          <div className="flex-1">
+            <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">{t("myApplications")}</div>
+            
+            <ApplicationInfo
+              contestName={contestName}
+              status={applicationMessage}
+              dateReg={dateReg}
+              canUpload={isApproved}
+              openUpload={openUpload}
+            />
 
-          <div className="grid grid-cols-2 m-auto w-3/5 text-base items-baseline">
 
-            <div>Текущий конкурс</div>
-            <div className="uppercase text-lg text-brown-light2 font-header">{contestName}</div>
-
-            <div>Статус</div>
-            <div>{applicationMessage}</div>
-
-            <div>Создана</div>
-            <div>{dateReg && new Intl.DateTimeFormat("ru").format(new Date(dateReg))}</div>
-            <div className="mt-10"></div>
-            <div className="mt-10">
               {
-                isApproved && <Button onClick={openUpload}>{t("uploadPhoto")}</Button>
+                current.value !== "hasApplication" && <ApplyForm onSubmit={handleApply} sections={sections} />
               }
-            </div>
+              {
+                isApproved && <UploadDialog onLoadSection={loadSection} header={contestName} visible={isUploadVisible} onHide={handleHideUpload} sections={sections} t={t}/> 
+              }
+              <About/>
+            
           </div>
-          {
-            current.value !== "hasApplication" && <ApplyForm onSubmit={handleApply} sections={sections} />
-          }
-          {
-            isApproved && <UploadDialog onLoadSection={loadSection} header={contestName} visible={isUploadVisible} onHide={handleHideUpload} sections={sections} t={t}/> 
-          }
+          <ProfileMenu/>
         </div>
-        <ProfileMenu/>
       </div>
-    </div>
-  );
 
+  );
 }

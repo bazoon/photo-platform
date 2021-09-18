@@ -22,7 +22,7 @@ module.exports = {
     'no-var-requires': ['off'],
     'quotes': [2, 'single', { 'avoidEscape': true }],
     'require-atomic-updates': 'off',
-    'indent': ['error', 2],
+    'indent': ['off'],
     'react/prop-types': 'off'
   },
 };

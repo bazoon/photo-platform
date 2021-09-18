@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prod-restart": "git pull && pm2 restart server.js"
+    "prod-restart": "git pull && pm2 restart server.js",
+    "re:build": "rescript",
+    "re:start": "rescript build -w"
   },
   "author": "",
   "license": "ISC",

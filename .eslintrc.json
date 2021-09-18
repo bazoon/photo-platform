@@ -9,7 +9,8 @@
         "files": ["**/*.js?(x)"],
         "rules": {
           "additional-typescript-only-rule": "warn",
-          "sort-keys": "off"
+          "sort-keys": "off",
+          "indent": "off"
         }
       }
     ]
