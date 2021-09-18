@@ -22,7 +22,7 @@ module.exports = [
         }
       });
 
-      return get('[0]', info);
+      return get('[0]', info) || '';
     },
     options: {
       auth: {
