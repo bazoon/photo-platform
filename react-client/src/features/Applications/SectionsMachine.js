@@ -9,7 +9,12 @@ export default function({ context = {}, services } = {}) {
       idle: {
         on: {
           load: "loading",
-          loadImages: "loadImages"
+          loadImages: "loadImages",
+          addImages: {
+            actions: assign({
+              sections: ({sections}, {files, id}) => services.mapSection({sections, files, id})
+            })
+          }
         }
       },
       loading: {
@@ -31,9 +36,9 @@ export default function({ context = {}, services } = {}) {
         invoke: {
           src: "loadImages",
           onDone: {
-            // target: "idle",
+            target: "idle",
             actions: assign({
-              sections: ({sections}, {data}) => over(findLens({id: data.id}), section => ({...section, images: data.images}), sections)
+              sections: ({sections}, {data}) => services.mapSections({sections, images: data.images}) 
             })
           }
         }

@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const Hapi = require('@hapi/hapi');
 const roles = ['SUPERADMIN', 'ADMIN', 'MODER', 'USER', 'ANON'];
 const models = require('./models');
+
+models.initConnection();
+
 const {get, curry} = require('lodash/fp');
 const {compose, tryCatch, Async} = require('crocks');
 const R = require('ramda');

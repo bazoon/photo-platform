@@ -1,6 +1,25 @@
-const {compose, nth, split, get, map} = require('lodash/fp');
+const {compose, nth, split, get, map, pick, mapKeys, isEmpty} = require('lodash/fp');
 const camelizeObject = require('../utils/camelizeObject');
 const getUploadPath = require('../utils/getUploadPath');
+
+
+const imageFields = [
+  'name',
+  // 'filename',
+  'year',
+  'place',
+  'description',
+];
+
+const imageAlias = fieldName => {
+  const alias = {
+    year: 'yearShot',
+    place: 'locateShot',
+    description: 'tcontent'
+  };
+
+  return alias[fieldName] || fieldName;
+}
 
 module.exports = [
   {
@@ -49,8 +68,8 @@ module.exports = [
           contestId: get('[0].id', contest)
         }
       });
-
-      return info;
+      
+      return info.map(i => ({...i, images: []}));
     },
     options: {
       auth: {
@@ -71,7 +90,8 @@ module.exports = [
           name,
           filename,
           year_shot as year,
-          locate_shot as place
+          locate_shot as place,
+          tcontent as description
         from
           photoworks,
           registration_contests
@@ -89,6 +109,47 @@ module.exports = [
 
 
     },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/api/sections/{sectionId}/images',
+    handler: async function (request, h) {
+      const {sectionId} = request.params;
+      const userId = h.request.auth.credentials.id;
+      const {payload} = request;
+      const {id} = payload
+
+      if (isEmpty(payload) || !payload.description || !payload.year || !payload.name || !payload.place) return {};
+
+      
+      if (id) {
+        await h.models.Photowork.update(
+          mapKeys(imageAlias, pick(imageFields, payload)), {
+          where: {
+            id: payload.id
+          }
+        });
+
+        return {} 
+      } else {
+        const section = await h.models.Section.findOne({where: {id: sectionId}});
+        const application = await h.models.RegistrationContest.findOne({where: { userId, contestId: section.contestId }})
+        
+        console.assert(section.id > 0, 'Section id !!!!', section);
+        console.assert(application.id > 0, 'Application!!!', application)
+
+        const p = mapKeys(imageAlias, pick(imageFields, payload).concat({sectionId, registrationContestId: application.id, filename: payload.filename}));
+        const photowork = await h.models.Photowork.create(p);
+        return { id: photowork.id } 
+      }
+
+  
+    }, 
     options: {
       auth: {
         mode: 'required'

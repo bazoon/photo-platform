@@ -15,6 +15,7 @@ import Login from "./features/Login";
 import {asyncGet} from "./core/api";
 import i18n from "./core/i18n";
 import Thesis from "./features/Thesis";
+import Politics from "./features/Politics";
 import Rules from "./features/Rules";
 import Jury from "./features/Jury";
 import Contacts from "./features/Contacts";
@@ -91,8 +92,14 @@ function MainApp({store}) {
               <Route path="/confirm-email">
                 <ConfirmEmail />
               </Route>
+ 
               <Route path="/thesis">
                 <Thesis/>
+              </Route>
+
+
+              <Route path="/politics">
+                <Politics/>
               </Route>
 
               <Route path="/rules">

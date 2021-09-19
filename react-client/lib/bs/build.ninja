@@ -4,7 +4,7 @@ rule astj
   command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsc.exe  -bs-v 9.1.4 -bs-jsx 3  -absname -bs-ast -o $out $i
 o src/Hello.ast : astj ../../src/Hello.res
 rule deps
-  command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsb_helper.exe -hash 4dbe5f4334f67361ae99d2d4a4117378 $in
+  command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsb_helper.exe -hash de726a9e294af8f5d4f3eb4b53ef740d $in
   restat = 1
 o src/Hello.d : deps src/Hello.ast
 rule mij
@@ -18,3 +18,6 @@ o src/features/Applications/Application.cmj src/features/Applications/Applicatio
 o src/features/Applications/ApplicationInfo.ast : astj ../../src/features/Applications/ApplicationInfo.res
 o src/features/Applications/ApplicationInfo.d : deps src/features/Applications/ApplicationInfo.ast
 o src/features/Applications/ApplicationInfo.cmj src/features/Applications/ApplicationInfo.cmi ../../src/features/Applications/ApplicationInfo.bs.js : mij src/features/Applications/ApplicationInfo.ast
+o src/features/Applications/ApplicationImages.ast : astj ../../src/features/Applications/ApplicationImages.res
+o src/features/Applications/ApplicationImages.d : deps src/features/Applications/ApplicationImages.ast
+o src/features/Applications/ApplicationImages.cmj src/features/Applications/ApplicationImages.cmi ../../src/features/Applications/ApplicationImages.bs.js : mij src/features/Applications/ApplicationImages.ast

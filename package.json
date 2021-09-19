@@ -63,6 +63,7 @@
     "@welldone-software/why-did-you-render": "^6.2.1",
     "add": "^2.0.6",
     "bs-platform": "^9.0.2",
+    "faker": "^5.5.3",
     "gentype": "^4.2.0",
     "husky": "^7.0.2",
     "jimp": "^0.16.1",

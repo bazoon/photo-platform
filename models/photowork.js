@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     median: DataTypes.DOUBLE,
     demosRate: DataTypes.DOUBLE,
     yearShot: DataTypes.STRING,
-    locateShot: DataTypes.STRING
+    locateShot: DataTypes.STRING,
+    tcontent: DataTypes.TEXT
   }, {
     createdAt: 'date_add',
     updatedAt: false

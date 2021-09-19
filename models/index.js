@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const {Sequelize, DataTypes} = require('sequelize');
@@ -16,8 +17,10 @@ const db_config = {
   define: {
     underscored: true
   },
-  logging: () => console.log
+  logging: l => console.log(l)
 };
+
+console.log(db_config);
 
 let sequelize = new Sequelize(
   db_config.database,
@@ -44,7 +47,7 @@ Object.keys(db).forEach(modelName => {
 });
 
 
-async function foo() {
+async function initConnection() {
   try {
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');
@@ -53,11 +56,9 @@ async function foo() {
   }
 }
 
-foo()
-
-
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+db.initConnection = initConnection;
 
 module.exports = db;
 

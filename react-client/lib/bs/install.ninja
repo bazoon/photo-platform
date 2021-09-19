@@ -15,4 +15,8 @@ o ApplicationInfo.cmi : cp ../bs/src/features/Applications/ApplicationInfo.cmi
 o ApplicationInfo.cmj : cp ../bs/src/features/Applications/ApplicationInfo.cmj
 o ApplicationInfo.cmt : cp ../bs/src/features/Applications/ApplicationInfo.cmt
 o ApplicationInfo.res : cp ../../src/features/Applications/ApplicationInfo.res
-build install.stamp : touch Hello.cmi Hello.cmj Application.cmi Application.cmj ApplicationInfo.cmi ApplicationInfo.cmj 
+o ApplicationImages.cmi : cp ../bs/src/features/Applications/ApplicationImages.cmi
+o ApplicationImages.cmj : cp ../bs/src/features/Applications/ApplicationImages.cmj
+o ApplicationImages.cmt : cp ../bs/src/features/Applications/ApplicationImages.cmt
+o ApplicationImages.res : cp ../../src/features/Applications/ApplicationImages.res
+build install.stamp : touch Hello.cmi Hello.cmj Application.cmi Application.cmj ApplicationInfo.cmi ApplicationInfo.cmj ApplicationImages.cmi ApplicationImages.cmj 

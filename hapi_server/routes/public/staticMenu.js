@@ -45,6 +45,10 @@ const staticMenu = {
         to: '/photos/sections'
       },
       {
+        name: 'politics',
+        to: '/politics'
+      },
+      {
         name: 'about-contest',
         items: [
           {

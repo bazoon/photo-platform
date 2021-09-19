@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import { useTranslation } from "react-i18next";
-import {asyncGet} from "../../core/api";
+import {asyncGet, asyncPost, asyncPut} from "../../core/api";
 import {Button} from "primereact/button";
 import Machine from "./ApplicationsMachine";
 import { useMachine } from "@xstate/react";
 import SectionsMachine from "./SectionsMachine";
 import {get, nth, map, compose, keys} from "lodash/fp";
-import { Form, Field } from "react-final-form";
+import { Form, Field, FormSpy } from "react-final-form";
 import ProfileMenu from "../ProfileMenu";
 import {inspect} from "@xstate/inspect";
 import { MultiSelect } from "primereact/multiselect";
@@ -15,20 +15,23 @@ import daggy from "daggy";
 import identity from "crocks/combinators/identity";
 import cn from "classnames";
 import {make as ApplicationInfo} from "./ApplicationInfo.bs";
-
-
-
+import AutoSaveImageForm from "./AutoSaveImageForm";
+import {over, findLens} from "lodash-lens";
 
 const renderRequiredAsterix = (isRequired, fieldName) => isRequired(fieldName) && <sup>*</sup> || null;
 const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
 
-const Photowork = daggy.tagged("Photowork", ["id", "name", "filename", "year", "place"]);
+const Photowork = daggy.tagged("Photowork", ["id", "name", "filename", "year", "place", "description"]);
 const UploadImage = daggy.taggedSum("UploadImage", {
   Draft: ["file"],
   Uploaded: ["photowork"]
 });
 
-const Section = daggy.tagged("Section", ["id", "name", "maxCountImg", "images"]);
+const Section = daggy.taggedSum("Section", {
+  Filled: ["id", "name", "maxCountImg", "images"],
+  None: []
+});
+
 
 if (location.href.includes("foto.ru")) {
   inspect({
@@ -80,7 +83,7 @@ const validateImageForm = () => {
 };
 
 
-const ImageForm = ({onSubmit, image}) => {
+const ImageForm = ({onSubmit, image, sectionId, onChange}) => {
   const [imageFields, setImageFields] = useState([]);
   const {t} = useTranslation("namespace1");
   const required = new Set([]);
@@ -112,7 +115,22 @@ const ImageForm = ({onSubmit, image}) => {
     Uploaded: photowork => photowork
   });
 
-  console.log(imageInfo);
+  const saveImageInfo = async values => {
+    onChange(values);
+    
+    // if (values instanceof File) {
+      
+
+    // } else {
+
+
+    // }
+
+
+
+    //return await asyncPut(`api/sections/${sectionId}/images`, values).toPromise();
+  };
+ 
 
   useEffect(() => {
     loadFields();
@@ -122,13 +140,15 @@ const ImageForm = ({onSubmit, image}) => {
     <Form
       validate={validateImageForm}
       className="overflow-y-auto max-h-96"
-      onSubmit={onSubmit}
+      onSubmit={identity}
       initialValues={imageInfo}
       render={({ handleSubmit }) => (
         <div>
+        <AutoSaveImageForm debounce={1000} onSave={saveImageInfo}/>
           {
             <form className="p-5" onSubmit={handleSubmit}>
               <div className="grid grid-cols-5">  
+                <Field name="id" render={({input}) => <input type="hidden"/>}/>
                 {
                   imageFields.map(({name, title, type}) => {
                     return (
@@ -162,17 +182,10 @@ const ImageForm = ({onSubmit, image}) => {
         </div>
       )}/>
   );
-
-
 };
 
-
-const Images = ({images, className, onSelect}) => {
-  const count = images.length;
-  const [selectedImage, setSelectedImage] = useState();
-  
+const Images = ({images, className, onSelect, selectedImage}) => {
   const selectImage = image => {
-    setSelectedImage(image);
     onSelect(image);
   }; 
 
@@ -180,7 +193,10 @@ const Images = ({images, className, onSelect}) => {
     <div className={`flex gap-5 overflow-x-auto h-64 p-5 overflow-y-hidden hidden-scroll ${className}`}>
       {
         images.map(image => {
-          const cls = cn("object-cover w-full h-full", {"border-brown-light2 border-2 border-dotted": image === selectedImage });
+          const cls = cn("object-cover w-full h-full", {
+            "border-brown-light2 border-2 border-dotted": image === selectedImage,
+            "opacity-30": UploadImage.Draft.is(image)
+          });
           const src = image.cata({
             Draft: file => URL.createObjectURL(file),
             Uploaded: photowork => photowork.filename
@@ -213,33 +229,59 @@ const UploadButton = ({onChooseFiles, className}) => {
   );
 };
 
-const SectionSelector = ({sections = [], t, onLoadSection}) => {
+const SectionSelector = ({t, onLoadSection}) => {
+  const [current, send]= useMachine(SectionsMachine({context: { sections: []}, services: sectionsService}), {devTools: true});
+  const {sections} = current.context;
   const count = sections.length;
-  const [current, setCurrent] = useState(0);
-  const section = nth(current, sections);
-  const left = () => current > 0 && setCurrent(c => (c - 1) % count);
-  const right = () => current < sections.length && setCurrent(c => (c + 1) % count);
-  const [, setImages] = useState();
-  const [selectedImage, setSelectedImage] = useState();
-
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const section = nth(currentIdx, sections) || Section.None;
+  const left = () => current > 0 && setCurrentIdx(c => (c - 1) % count);
+  const right = () => current < sections.length && setCurrentIdx(c => (c + 1) % count);
+  const [selectedImageIdx, setSelectedImageIdx] = useState(0);
 
   console.assert(Section.is(section), "Not a section!", section);
 
+  const loadSection = id => {
+    send("loadImages", {id});
+  };
+
   useEffect(() => {
-    onLoadSection(section.id);
+    send("load");
+  }, []);
+
+  useEffect(() => {
+    if (Section.Filled.is(section))
+      onLoadSection(section.id);
   }, [current]);
 
+  useEffect(() => {
+    if (Section.Filled.is(section)) {
+      loadSection(section.id);
+      setSelectedImageIdx(0);
+    }
+  }, [section?.id]);
+
+  const selectedImage = Section.Filled.is(section) ? section?.images[selectedImageIdx] : null;
   
   const chooseFiles = files => {
-    setCurrent(current => {
-      setImages(files);
-      return current;
-    });
+    send("addImages", { files: Array.from(files), id: section.id });
   };
 
   const handleSelect = image => {
-    setSelectedImage(image);
+    if (Section.Filled.is(section)) {
+      setSelectedImageIdx(section.images.indexOf(image));
+    }
   };
+
+  const handleSubmit = values => {
+    send("updateImage", values);
+  };
+
+  const changeImageInfo = values => {
+    console.log(values, selectedImage);
+  };
+
+  if (Section.None.is(section)) return <div>Loading...</div>;
 
   return (
     <div>
@@ -256,24 +298,21 @@ const SectionSelector = ({sections = [], t, onLoadSection}) => {
       </div>
       <div className="m-auto w-2/5 mb-5 text-center" >{t("chooseCategory")}</div>
 
-      <Images className="mb-5" onSelect={handleSelect} images={section?.images || []}/>
-
+      <Images className="mb-5" onSelect={handleSelect} selectedImage={selectedImage} images={section?.images || []}/>
       <UploadButton className="m-auto w-min text-lg" onChooseFiles={chooseFiles}>{t("chooseFile")}</UploadButton>
-      <ImageForm onSubmit={identity} image={selectedImage}/>
+      <ImageForm onSubmit={handleSubmit} onChange={changeImageInfo} image={selectedImage} sectionId={section?.id}/>
     </div>
   );
 };
 
-const UploadDialog = ({visible, onHide, header, sections, t, onLoadSection}) => {
+const UploadDialog = ({visible, onHide, header, t, onLoadSection = identity}) => {
   return (
     <Dialog visible={visible} className="bg-brown-light3 w-3/5 text-bright" contentClassName="bg-brown-light3 text-bright" onHide={onHide}>
       <div className="text-lg uppercase text-center mb-4">{header}</div>
       
       <div className="mb-8">
-        <SectionSelector sections={sections} t={t} onLoadSection={onLoadSection}/>
+        <SectionSelector t={t} onLoadSection={onLoadSection}/>
       </div>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer euismod ligula odio, at blandit orci facilisis in. Nam mollis odio a aliquam fringilla. Maecenas lacinia, ante quis facilisis tincidunt, libero felis laoreet est, a interdum magna justo sit amet libero. Sed purus justo, pellentesque eu lacus sit amet, iaculis dignissim felis. Curabitur euismod interdum turpis, id venenatis justo accumsan sit amet. Nulla scelerisque lectus vel justo venenatis, dictum pharetra tellus maximus. Praesent dui eros, rutrum in sapien non, luctus sollicitudin dolor. Morbi et ipsum lobortis, imperdiet orci maximus, fermentum turpis. Morbi dapibus convallis auctor. Aliquam dictum pretium varius. Cras est eros, mattis dapibus interdum quis, tempus quis odio. Praesent maximus lorem sed sem luctus porttitor at ac tellus. Mauris quis fermentum felis, lobortis placerat nibh. Sed pulvinar, quam auctor tempor commodo, turpis felis dictum neque, et gravida nunc diam eget turpis. Vestibulum et purus eget erat facilisis porta quis ut felis. Donec facilisis orci vel lectus consectetur, eget bibendum nisi suscipit.
-
     </Dialog>
   );
 };
@@ -288,8 +327,15 @@ const validateForm = () => {
   return {};
 };
 
-const Sections = ({sections, className}) => {
+const Sections = ({className}) => {
+  const [current, send]= useMachine(SectionsMachine({context: { sections: []}, services: sectionsService}), {devTools: true});
+  const {sections} = current.context;
   const options = sections.map(s => ({label: s.name, value: s.id}));
+
+  useEffect(() => {
+    send("load");
+  }, []);
+
   return (
     <Field name='sections'>
       {({ input }) => (
@@ -302,28 +348,26 @@ const Sections = ({sections, className}) => {
 const api = "applications";
 const apiParams = "";
 const sectionsService = {
-  getSections: () => asyncGet("api/sections").toPromise(),
+  getSections: () => asyncGet("api/sections").map(map(Section.Filled.from)).toPromise(),
   loadImages: (_, {id}) => asyncGet(`api/sections/${id}/images`).map(images => ({ images: map(compose(UploadImage.Uploaded, Photowork.from), images), id})).toPromise(),
+  mapSections: ({sections, images}) => sections.map(section => {return Section.Filled.from({...section, images}); }),
+  mapSection: ({sections, files, id}) => over(findLens({id}), section => {return Section.Filled.from({...section, images: section.images.concat(files.map(f => UploadImage.Draft.from({file: f}))) }); }, sections),
 };
-
 
 export default function Main() {
   const { t } = useTranslation("namespace1");
   const [current, send] = useMachine(Machine({api, context: initialContext, apiParams, t}), {devTools: true});
-  const [sectionsCurrent, sendToSection]= useMachine(SectionsMachine({context: { sections: []}, services: sectionsService}), {devTools: true});
   const {context} = current;
-  const sections = map(compose(Section.from, e => ({...e, images: e.images || []})), sectionsCurrent.context.sections);
   const {isApproved, applicationMessage} = context;
   const { i18n } = useTranslation("namespace1");
   const [contestName, setContestName] = useState("");
   const dateReg = get("application.dateReg", context);
   const [isUploadVisible, setIsUploadVisible] = useState(false);
   const [aboutText, setAboutText] = useState("");
-
+ 
 
   useEffect(() => {
-    send("load", {});
-    sendToSection("load");
+    send("load");
   }, []);
 
   
@@ -369,13 +413,9 @@ export default function Main() {
   };
   
   const openUpload = () => {
-    console.log("openUpload");
     setIsUploadVisible(true);
   };
 
-  const loadSection = id => {
-    sendToSection("loadImages", {id});
-  };
 
 // /api/salones/about
 
@@ -400,12 +440,11 @@ export default function Main() {
               openUpload={openUpload}
             />
 
-
               {
-                current.value !== "hasApplication" && <ApplyForm onSubmit={handleApply} sections={sections} />
+                current.value !== "hasApplication" && <ApplyForm onSubmit={handleApply} />
               }
               {
-                isApproved && <UploadDialog onLoadSection={loadSection} header={contestName} visible={isUploadVisible} onHide={handleHideUpload} sections={sections} t={t}/> 
+                isApproved && <UploadDialog header={contestName} visible={isUploadVisible} onHide={handleHideUpload} t={t}/> 
               }
               <div className="mb-10"/>
               <About />
