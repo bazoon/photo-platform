@@ -354,7 +354,7 @@ export default function Main() {
     };
 
     const loadAbout = () => {
-      asyncGet("api/salones/about").fork(loadAboutFailed, loadAboutOk);
+      asyncGet(`api/salones/about/${i18n.language}`).fork(loadAboutFailed, loadAboutOk);
     };
   
 
@@ -407,7 +407,8 @@ export default function Main() {
               {
                 isApproved && <UploadDialog onLoadSection={loadSection} header={contestName} visible={isUploadVisible} onHide={handleHideUpload} sections={sections} t={t}/> 
               }
-              <About/>
+              <div className="mb-10"/>
+              <About />
             
           </div>
           <ProfileMenu/>
