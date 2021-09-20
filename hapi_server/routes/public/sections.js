@@ -1,11 +1,21 @@
 const {compose, nth, split, get, map, pick, mapKeys, isEmpty} = require('lodash/fp');
 const camelizeObject = require('../utils/camelizeObject');
 const getUploadPath = require('../utils/getUploadPath');
+const uploadFiles = require('../utils/uploadFiles');
+const chalk = require('chalk');
 
 
 const imageFields = [
   'name',
-  // 'filename',
+  'year',
+  'place',
+  'description',
+];
+
+
+const createImageFields = [
+  'name',
+  'filename',
   'year',
   'place',
   'description',
@@ -119,40 +129,57 @@ module.exports = [
     method: 'PUT',
     path: '/api/sections/{sectionId}/images',
     handler: async function (request, h) {
+      console.log(chalk.red(33, request.payload), 77)
       const {sectionId} = request.params;
       const userId = h.request.auth.credentials.id;
-      const {payload} = request;
-      const {id} = payload
+      const payload = request.payload;
+      const {id, file} = payload
 
-      if (isEmpty(payload) || !payload.description || !payload.year || !payload.name || !payload.place) return {};
+      if (file) {
+        await uploadFiles([file]);
+      }
 
-      
-      if (id) {
+      const filename = file ? file.filename : payload.filename;
+
+      const createPhotowork = async () => {
+        console.log(chalk.green('createPhotowork'))
+        // console.log(22, request.payload, 33)
+        const section = await h.models.Section.findOne({where: {id: sectionId}});
+        const application = await h.models.RegistrationContest.findOne({where: { userId, contestId: section.contestId }})
+
+        console.assert(section.id > 0, 'Section id !!!!', section);
+        console.assert(application.id > 0, 'Application!!!', application)
+        
+        const p = {
+          ...pick(createImageFields, payload),
+          ...({sectionId, registrationContestId: application.id, filename, dateAdd: new Date().toISOString().slice(0, 10)})};
+        const pp = mapKeys(imageAlias, p);
+        const photowork = await h.models.Photowork.create(pp);
+        return { id: photowork.id } 
+      }
+
+      const updatePhotowork = async () => {
+        console.log(chalk.green('updatePhotowork'))
+        console.log(22, request.payload, 33)
         await h.models.Photowork.update(
           mapKeys(imageAlias, pick(imageFields, payload)), {
           where: {
             id: payload.id
           }
         });
+        return {id};
+      };
 
-        return {} 
-      } else {
-        const section = await h.models.Section.findOne({where: {id: sectionId}});
-        const application = await h.models.RegistrationContest.findOne({where: { userId, contestId: section.contestId }})
-        
-        console.assert(section.id > 0, 'Section id !!!!', section);
-        console.assert(application.id > 0, 'Application!!!', application)
-
-        const p = mapKeys(imageAlias, pick(imageFields, payload).concat({sectionId, registrationContestId: application.id, filename: payload.filename}));
-        const photowork = await h.models.Photowork.create(p);
-        return { id: photowork.id } 
-      }
-
-  
+      return (+id ? updatePhotowork() : createPhotowork());
     }, 
     options: {
       auth: {
         mode: 'required'
+      },
+      payload: {
+        parse: true,
+        output: 'file',
+        multipart: true
       }
     }
   },

@@ -1,12 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import { useTranslation } from "react-i18next";
-import {asyncGet, asyncPost, asyncPut} from "../../core/api";
+import {asyncGet, asyncPut} from "../../core/api";
 import {Button} from "primereact/button";
 import Machine from "./ApplicationsMachine";
 import { useMachine } from "@xstate/react";
 import SectionsMachine from "./SectionsMachine";
 import {get, nth, map, compose, keys} from "lodash/fp";
-import { Form, Field, FormSpy } from "react-final-form";
+import { Form, Field } from "react-final-form";
 import ProfileMenu from "../ProfileMenu";
 import {inspect} from "@xstate/inspect";
 import { MultiSelect } from "primereact/multiselect";
@@ -22,8 +22,9 @@ const renderRequiredAsterix = (isRequired, fieldName) => isRequired(fieldName) &
 const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
 
 const Photowork = daggy.tagged("Photowork", ["id", "name", "filename", "year", "place", "description"]);
+
 const UploadImage = daggy.taggedSum("UploadImage", {
-  Draft: ["file"],
+  Draft: ["photowork", "file"],
   Uploaded: ["photowork"]
 });
 
@@ -83,10 +84,10 @@ const validateImageForm = () => {
 };
 
 
-const ImageForm = ({onSubmit, image, sectionId, onChange}) => {
+const ImageForm = ({image, sectionId, onSubmit}) => {
   const [imageFields, setImageFields] = useState([]);
   const {t} = useTranslation("namespace1");
-  const required = new Set([]);
+  const [required, setRequired] = useState([]);
 
 
   const getFormErrorMessage = (meta) => {
@@ -97,9 +98,9 @@ const ImageForm = ({onSubmit, image, sectionId, onChange}) => {
 
   };
 
-  const loadFieldsOk = ({properties}) => {
+  const loadFieldsOk = ({properties, required}) => {
     setImageFields(properties);
-    console.log(properties.map(f => f.name));
+    setRequired(required);
   };
 
   const loadFields = () => {
@@ -110,27 +111,33 @@ const ImageForm = ({onSubmit, image, sectionId, onChange}) => {
 
   };
 
-  const imageInfo = image && image.cata({
-    Draft: file => file,
-    Uploaded: photowork => photowork
-  });
-
-  const saveImageInfo = async values => {
-    onChange(values);
-    
-    // if (values instanceof File) {
+  const saveImageInfo = async (uploadImage) => {
+    // onChange(values);
       
+    const name = uploadImage?.photowork?.name;
+    const filename = uploadImage?.file?.name || uploadImage?.photowork?.filename;
 
-    // } else {
+    if (!name || !filename) {
+      return;
+    }
 
+    if (uploadImage.file instanceof File) {
+      const payload = new FormData();
+      payload.append("file", uploadImage.file);
+      keys(uploadImage.photowork).forEach(k => {
+        payload.append(k, uploadImage.photowork[k]);
+      });
 
-    // }
-
-
-
-    //return await asyncPut(`api/sections/${sectionId}/images`, values).toPromise();
+      const {id} = await asyncPut(`api/sections/${sectionId}/images`, payload, false).toPromise();
+      onSubmit({id, ...uploadImage.photowork});
+     } else {
+      const payload = new FormData();
+      keys(uploadImage.photowork).forEach(k => {
+        payload.append(k, uploadImage.photowork[k]);
+      });
+       return await asyncPut(`api/sections/${sectionId}/images`,payload, false).toPromise();
+     }
   };
- 
 
   useEffect(() => {
     loadFields();
@@ -141,22 +148,22 @@ const ImageForm = ({onSubmit, image, sectionId, onChange}) => {
       validate={validateImageForm}
       className="overflow-y-auto max-h-96"
       onSubmit={identity}
-      initialValues={imageInfo}
+      initialValues={image}
       render={({ handleSubmit }) => (
         <div>
         <AutoSaveImageForm debounce={1000} onSave={saveImageInfo}/>
           {
             <form className="p-5" onSubmit={handleSubmit}>
               <div className="grid grid-cols-5">  
-                <Field name="id" render={({input}) => <input type="hidden"/>}/>
+                <Field name="id" render={() => <input type="hidden"/>}/>
                 {
                   imageFields.map(({name, title, type}) => {
                     return (
-                      <Field name={name} key={name} render={({ input, meta }) => (
+                      <Field name={`photowork.${name}`} key={name} render={({ input, meta }) => (
                         <>
                           <label className="text-tiny place-self-end mr-5 mb-5">
                             {title} 
-                            {renderRequiredAsterix(name => required.has(name), name)}
+                            {renderRequiredAsterix(name => required.includes(name), name)}
                           </label>
                           <div className="w-full relative col-span-4 mb-5">
                             <input name={name} type={type} {...input} className="text-bright w-full text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright" />
@@ -198,7 +205,7 @@ const Images = ({images, className, onSelect, selectedImage}) => {
             "opacity-30": UploadImage.Draft.is(image)
           });
           const src = image.cata({
-            Draft: file => URL.createObjectURL(file),
+            Draft: (_, file) =>  URL.createObjectURL(file),
             Uploaded: photowork => photowork.filename
           });
           const key = image.cata({
@@ -239,8 +246,6 @@ const SectionSelector = ({t, onLoadSection}) => {
   const right = () => current < sections.length && setCurrentIdx(c => (c + 1) % count);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
 
-  console.assert(Section.is(section), "Not a section!", section);
-
   const loadSection = id => {
     send("loadImages", {id});
   };
@@ -274,11 +279,12 @@ const SectionSelector = ({t, onLoadSection}) => {
   };
 
   const handleSubmit = values => {
-    send("updateImage", values);
+    loadSection(section.id);
+    // send("updateImage", values);
   };
 
-  const changeImageInfo = values => {
-    console.log(values, selectedImage);
+  const changeImageInfo = () => {
+    //console.log(values, selectedImage);
   };
 
   if (Section.None.is(section)) return <div>Loading...</div>;
@@ -317,9 +323,6 @@ const UploadDialog = ({visible, onHide, header, t, onLoadSection = identity}) =>
   );
 };
 
-const renderFile = file => {
-  return <div className="m-0 w-60 h-60"><img key={file.name} className="w-full h-full object-cover" src={URL.createObjectURL(file)}/></div>;
-};
 
 
 const validateForm = () => {
@@ -351,7 +354,7 @@ const sectionsService = {
   getSections: () => asyncGet("api/sections").map(map(Section.Filled.from)).toPromise(),
   loadImages: (_, {id}) => asyncGet(`api/sections/${id}/images`).map(images => ({ images: map(compose(UploadImage.Uploaded, Photowork.from), images), id})).toPromise(),
   mapSections: ({sections, images}) => sections.map(section => {return Section.Filled.from({...section, images}); }),
-  mapSection: ({sections, files, id}) => over(findLens({id}), section => {return Section.Filled.from({...section, images: section.images.concat(files.map(f => UploadImage.Draft.from({file: f}))) }); }, sections),
+  mapSection: ({sections, files, id}) => over(findLens({id}), section => {return Section.Filled.from({...section, images: section.images.concat(files.map(f => UploadImage.Draft.from({file: f, photowork: Photowork.from({id: 0, name: "", filename: "", year: "", place: "", description: ""}) }))) }); }, sections),
 };
 
 export default function Main() {

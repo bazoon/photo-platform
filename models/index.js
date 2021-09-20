@@ -17,10 +17,8 @@ const db_config = {
   define: {
     underscored: true
   },
-  logging: l => console.log(l)
+  logging: l => () => {}
 };
-
-console.log(db_config);
 
 let sequelize = new Sequelize(
   db_config.database,
