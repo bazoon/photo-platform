@@ -52,6 +52,14 @@ const staticMenu = {
         name: 'about-contest',
         items: [
           {
+            name: 'hello',
+            to: '/hello'
+          },
+          {
+            name: 'organazers',
+            to: '/organizers'
+          },
+          {
             name: 'thesis',
             to: '/thesis'
           },

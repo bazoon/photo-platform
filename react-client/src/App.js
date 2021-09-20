@@ -1,4 +1,4 @@
-import React, {useEffect, Suspense, lazy} from "react";
+import React, {Suspense, lazy} from "react";
 import "./fonts/fonts.css";
 import "./App.css";
 import "./tails.css";
@@ -12,8 +12,9 @@ import {
   Link,
 } from "react-router-dom";
 import Login from "./features/Login";
-import {asyncGet} from "./core/api";
 import i18n from "./core/i18n";
+import Organizers from "./features/Organizers";
+import Partners from "./features/Partners";
 import Thesis from "./features/Thesis";
 import Politics from "./features/Politics";
 import Rules from "./features/Rules";
@@ -31,9 +32,9 @@ import { collect } from "react-recollect";
 import JuryGallery from "./components/JuryGallery";
 import ConfirmEmail from "./features/ConfirmEmail";
 import Profile from "./features/Profile";
-import {locale, addLocale} from "primereact/api";
+import {addLocale} from "primereact/api";
 import Applications from "./features/Applications/Applications";
-import {loadLanguage} from "./core/utils";
+import FooterLinks from "./FooterLinks";
 
 const MainMenu = lazy(() => import("./MainMenu"));
 
@@ -51,9 +52,6 @@ addLocale("ru", {
 
 function MainApp({store}) {
 
-  function loadTranslations(lang, t) {
-    i18n.addResourceBundle(lang, "namespace1", t);
-  }
 
   const sidebars = () => {
     return store.sidebars.map(sidebar => {
@@ -112,6 +110,12 @@ function MainApp({store}) {
               <Route path="/contacts">
                 <Contacts/>
               </Route>
+              <Route path="/partners">
+                <Partners/>
+              </Route>
+              <Route path="/organizers">
+                <Organizers/>
+              </Route>
               <Route path="/jgallery">
                 <JuryGallery/>
               </Route>
@@ -147,15 +151,7 @@ function MainApp({store}) {
                     </div>
                   </div>
 
-                  <div className="grid gap-2 grid-cols-2 grid-rows-3">
-                    <Link className="text-gray2 no-underline hover:underline" to="thesis">About</Link>
-                    <Link className="text-gray2 no-underline hover:underline" to="#">Partners</Link>
-                    <Link className="text-gray2 no-underline hover:underline" to="#">Gallery</Link>
-                    <Link className="text-gray2 no-underline hover:underline" to="jury">Jury</Link>
-                    <Link className="text-gray2 no-underline hover:underline" to="rules">Rules</Link>
-                    <Link className="text-gray2 no-underline hover:underline" to="#">Politics</Link>
-                  </div>
-                  
+                  <FooterLinks/>                 
                   <div className="max-w-max gap-8 grid grid-cols-2 grid-rows-2">
                     <Vk/>
                     <Twitter/>
