@@ -16,6 +16,7 @@ import i18n from "./core/i18n";
 import Organizers from "./features/Organizers";
 import Partners from "./features/Partners";
 import Thesis from "./features/Thesis";
+import Hello from "./features/Hello";
 import Politics from "./features/Politics";
 import Rules from "./features/Rules";
 import Jury from "./features/Jury";
@@ -100,6 +101,9 @@ function MainApp({store}) {
                 <Politics/>
               </Route>
 
+              <Route path="/hello">
+                <Hello/>
+              </Route>
               <Route path="/rules">
                 <Rules/>
               </Route>
