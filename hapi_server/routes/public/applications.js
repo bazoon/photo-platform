@@ -53,6 +53,7 @@ module.exports = [
           AND salones. "domain" = :domain
           AND registration_contests.contest_id = contests.id
           AND registration_contests.user_id=:userId
+          and registration_contests.contest_id = (select id from contests order by date_start desc limit 1 )
       `;
 
       const applications = await h.query(applicationQuery, {
