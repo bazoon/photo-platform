@@ -143,6 +143,7 @@ module.exports = [
 
       const createPhotowork = async () => {
         console.log(chalk.green('createPhotowork'))
+        
         // console.log(22, request.payload, 33)
         const section = await h.models.Section.findOne({where: {id: sectionId}});
         const application = await h.models.RegistrationContest.findOne({where: { userId, contestId: section.contestId }})
