@@ -56,7 +56,7 @@ const staticMenu = {
             to: '/hello'
           },
           {
-            name: 'organazers',
+            name: 'organizers',
             to: '/organizers'
           },
           {
