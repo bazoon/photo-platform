@@ -2,6 +2,7 @@ const R = require('ramda');
 const { QueryTypes } = require('sequelize');
 const camelizeObject = require('../utils/camelizeObject');
 const {map, compose} = require('lodash/fp');
+const chalk = require('chalk');
 
 const fields = [
   'id',
@@ -23,6 +24,12 @@ const regStates = [
 ];
 const addRegState = application => ({...application, regStateString: regStates[application.regState]});
 
+const l = () => {
+  let i = 0;
+  let s = `******** ${i} *******`;
+  return (w) => console.log(chalk.red(i++), chalk.green(w));
+}
+
 module.exports = [
   {
     method: 'POST',
@@ -36,10 +43,14 @@ module.exports = [
       const contest = await h.models.Contest.findOne({where: {id: regContest.contestId}});
       
       if (contest.payType === 0) {
-        return await h.models.RegistrationContest.update({ regState: 1, sectionCount: contest.sectionCount, maxImgCount: contest.maxCountImg }, {
-          where: {
-            contestId: contest.id,
-          }
+        return await h.models.RegistrationContest.update({
+          regState: 1, 
+          sectionCount: contest.sectionCount, 
+          maxImgCount: contest.maxCountImg 
+        }, {
+            where: {
+              id: ids
+            }
         });
       }
 

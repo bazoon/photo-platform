@@ -156,13 +156,7 @@ function MainApp({store}) {
                   </div>
 
                   <FooterLinks/>                 
-                  <div className="max-w-max gap-8 grid grid-cols-2 grid-rows-2">
-                    <Vk/>
-                    <Twitter/>
-                    <Fb/>
-                    <Insta/>
-                  </div>
-
+                  {SocialLinks()}
 
                   <div className="grid grid-rows-2 text-gray2">
                     <div>
@@ -172,19 +166,24 @@ function MainApp({store}) {
                       {store?.info?.emailPub}
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
           </footer>
-
-
         </Suspense>
       </Router>
-
       {sidebars()}
     </>
   );
 }
 
 export default collect(MainApp);
+
+function SocialLinks() {
+  return <div className="max-w-max gap-8 grid grid-cols-2 grid-rows-2">
+    <a href="https://vk.com/public207178308" rel="noreferrer" target="_blank"><Vk /></a>
+    <a href="https://twitter.com/fotoshifter" rel="noreferrer"><Twitter /></a>
+    <a href="https://www.facebook.com/groups/1112529292192329" target="_blank" rel="noreferrer"><Fb /></a>
+    <a href="https://www.instagram.com/prirodacup2021/" target="_blank" rel="noreferrer"><Insta /></a>
+  </div>;
+}
