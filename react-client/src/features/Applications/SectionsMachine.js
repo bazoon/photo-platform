@@ -12,9 +12,14 @@ export default function({ context = {}, services } = {}) {
           loadImages: "loadImages",
           addImages: {
             actions: assign({
-              sections: ({sections}, {files, id}) => services.mapSection({sections, files, id})
+              sections: ({sections}, {files, id}) => services.addFilesToSection({sections, files, id})
             })
-          }
+          },
+          updateImage: {
+            actions: assign({
+              sections: ({sections}, data) => services.updateImage({sections, data})
+            })
+          },
         }
       },
       loading: {

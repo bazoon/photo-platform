@@ -12,11 +12,12 @@ const TBar = ({selection, refresh}) => {
 
   };
 
-  const approveOk = d => {
+  const approveOk = () => {
     refresh();
   };
 
   const approve = () => {
+    console.log(selection);
     asyncPost("api/admin/applications/approve", {ids: selection.map(e => e.id)}).fork(approveFailed, approveOk);
   };
 

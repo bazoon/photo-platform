@@ -84,7 +84,7 @@ const validateImageForm = () => {
 };
 
 
-const ImageForm = ({image, sectionId, onSubmit}) => {
+const ImageForm = ({image, sectionId, onSubmit, onChange}) => {
   const [imageFields, setImageFields] = useState([]);
   const {t} = useTranslation("namespace1");
   const [required, setRequired] = useState([]);
@@ -112,7 +112,8 @@ const ImageForm = ({image, sectionId, onSubmit}) => {
   };
 
   const saveImageInfo = async (uploadImage) => {
-    // onChange(values);
+    onChange(uploadImage);
+    console.log(uploadImage);
       
     const name = uploadImage?.photowork?.name;
     const filename = uploadImage?.file?.name || uploadImage?.photowork?.filename;
@@ -128,14 +129,14 @@ const ImageForm = ({image, sectionId, onSubmit}) => {
         payload.append(k, uploadImage.photowork[k]);
       });
 
-      const {id} = await asyncPut(`api/sections/${sectionId}/images`, payload, false).toPromise();
-      onSubmit({id, ...uploadImage.photowork});
+      // const {id} = await asyncPut(`api/sections/${sectionId}/images`, payload, false).toPromise();
+      // onSubmit({id, ...uploadImage.photowork});
      } else {
       const payload = new FormData();
       keys(uploadImage.photowork).forEach(k => {
         payload.append(k, uploadImage.photowork[k]);
       });
-       return await asyncPut(`api/sections/${sectionId}/images`,payload, false).toPromise();
+       // return await asyncPut(`api/sections/${sectionId}/images`,payload, false).toPromise();
      }
   };
 
@@ -283,8 +284,8 @@ const SectionSelector = ({t, onLoadSection}) => {
     // send("updateImage", values);
   };
 
-  const changeImageInfo = () => {
-    //console.log(values, selectedImage);
+  const changeImageInfo = uploadImage => {
+    send("updateImage", {uploadImage, id: section.id});
   };
 
   if (Section.None.is(section)) return <div>Loading...</div>;
@@ -350,11 +351,31 @@ const Sections = ({className}) => {
 
 const api = "applications";
 const apiParams = "";
+
+//  
+const addFilesToSection = files => section => {
+  const emptyPhotowork = {id: 0, name: "", filename: "", year: "", place: "", description: ""};
+  const filesToDrafts = files => files.map(f => UploadImage.Draft.from({file: f, photowork: Photowork.from(emptyPhotowork)}));
+  const filled = {...section, images: section.images.concat(filesToDrafts(files)) };
+  return Section.Filled.from(filled); 
+};
+
+const upateImageInSection = uploadImage => section => {
+  findLens(image => image === uploadImage);
+  //TODO
+  //сделать для новых секций идентификаторы временные
+  //потом доделать тут
+};
+
 const sectionsService = {
   getSections: () => asyncGet("api/sections").map(map(Section.Filled.from)).toPromise(),
   loadImages: (_, {id}) => asyncGet(`api/sections/${id}/images`).map(images => ({ images: map(compose(UploadImage.Uploaded, Photowork.from), images), id})).toPromise(),
-  mapSections: ({sections, images}) => sections.map(section => {return Section.Filled.from({...section, images}); }),
-  mapSection: ({sections, files, id}) => over(findLens({id}), section => {return Section.Filled.from({...section, images: section.images.concat(files.map(f => UploadImage.Draft.from({file: f, photowork: Photowork.from({id: 0, name: "", filename: "", year: "", place: "", description: ""}) }))) }); }, sections),
+  // 
+  mapSections: ({sections, images}) => sections.map(section => {
+    return Section.Filled.from({...section, images}); 
+  }),
+  addFilesToSection: ({sections, files, id}) => over(findLens({id}), addFilesToSection(files), sections),
+  udateImage: ({sections}, {uploadImage, id}) => over(findLens({id}), upateImageInSection(uploadImage), sections) 
 };
 
 export default function Main() {
