@@ -182,7 +182,7 @@ export default collect(MainApp);
 function SocialLinks() {
   return <div className="max-w-max gap-8 grid grid-cols-2 grid-rows-2">
     <a href="https://vk.com/public207178308" rel="noreferrer" target="_blank"><Vk /></a>
-    <a href="https://twitter.com/fotoshifter" rel="noreferrer"><Twitter /></a>
+    <a href="https://twitter.com/fotoshifter" rel="noreferrer" target="_blank"><Twitter /></a>
     <a href="https://www.facebook.com/groups/1112529292192329" target="_blank" rel="noreferrer"><Fb /></a>
     <a href="https://www.instagram.com/prirodacup2021/" target="_blank" rel="noreferrer"><Insta /></a>
   </div>;
