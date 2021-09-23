@@ -199,7 +199,7 @@ const Images = ({images, className, onSelect, selectedImage}) => {
   );
 };
 
-const UploadButton = ({onChooseFiles, className}) => {
+const UploadButton = ({onChooseFiles, className, disabled}) => {
   const fileRef = useRef();
   
   const handleChooseFiles = files => {
@@ -210,7 +210,7 @@ const UploadButton = ({onChooseFiles, className}) => {
     <div className={className}>
       <div className="mb-5">
         <input type="file" ref={fileRef} className="hidden" multiple onChange={({target}) => handleChooseFiles(target.files) }/>
-        <Button className=" uppercase max-w-md" onClick={() => fileRef.current.click() }>Загрузить</Button>
+        <Button disabled={disabled} className=" uppercase max-w-md" onClick={() => fileRef.current.click() }>Загрузить</Button>
       </div>
     </div>
   );
@@ -221,14 +221,20 @@ const SectionSelector = ({t, onLoadSection}) => {
   const {sections} = current.context;
   const count = sections.length;
   const [currentIdx, setCurrentIdx] = useState(0);
-  const section = nth(currentIdx, sections) || Section.None;
-  const left = () => current > 0 && setCurrentIdx(c => (c - 1) % count);
-  const right = () => current < sections.length && setCurrentIdx(c => (c + 1) % count);
+  const [section, setSection] = useState(Section.None);
+  const left = () => currentIdx > 0 && setCurrentIdx(c => (c - 1) % count);
+  const right = () => currentIdx < sections.length && setCurrentIdx(c => (c + 1) % count);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
+
   const loadSection = id => {
     send("loadImages", {id});
   };
 
+  useEffect(() => {
+    const s = nth(currentIdx, sections) || Section.None;
+    setSection(s);
+  }, [sections, currentIdx]);
+ 
   useEffect(() => {
     send("load");
   }, []);
@@ -246,8 +252,12 @@ const SectionSelector = ({t, onLoadSection}) => {
   }, [section?.id]);
 
   const selectedImage = Section.Filled.is(section) ? section?.images[selectedImageIdx] : UploadImage.Empty;
+  const images = section?.images || [];
+  const canUploadToSection = images.length < section.maxCountImg;
   
   const chooseFiles = files => {
+    if (images.length + files.length > section.maxCountImg) return;
+
     send("addImages", { files: Array.from(files), id: section.id });
   };
 
@@ -289,6 +299,7 @@ const SectionSelector = ({t, onLoadSection}) => {
 
   if (Section.None.is(section)) return <div>Loading...</div>;
 
+
   return (
     <div>
       <div className="flex justify-center text-base relative">
@@ -305,7 +316,7 @@ const SectionSelector = ({t, onLoadSection}) => {
       <div className="m-auto w-2/5 mb-5 text-center" >{t("chooseCategory")}</div>
 
       <Images className="mb-5" onSelect={handleSelect} selectedImage={selectedImage} images={section?.images || []}/>
-      <UploadButton className="m-auto w-min text-lg" onChooseFiles={chooseFiles}>{t("chooseFile")}</UploadButton>
+      <UploadButton disabled={!canUploadToSection} className="m-auto w-min text-lg" onChooseFiles={chooseFiles}>{t("chooseFile")}</UploadButton>
       <ImageForm onSubmit={handleSubmit} onChange={changeImageInfo} image={selectedImage} sectionId={section?.id}/>
     </div>
   );
@@ -352,8 +363,8 @@ const apiParams = "";
 
 //  
 const addFilesToSection = files => section => {
-  const emptyPhotowork = {id: Math.random(), name: "", filename: "", year: "", place: "", description: ""};
-  const filesToDrafts = files => files.map(f => UploadImage.Some.from({file: f, photowork: Photowork.from(emptyPhotowork)}));
+  const getEmptyPhotowork = () => ({id: Math.random(), name: "", filename: "", year: "", place: "", description: ""});
+  const filesToDrafts = files => files.map(f => UploadImage.Some.from({file: f, photowork: Photowork.from(getEmptyPhotowork())}));
   const filled = {...section, images: section.images.concat(filesToDrafts(files)) };
   return Section.Filled.from(filled); 
 };

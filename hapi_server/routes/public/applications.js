@@ -43,6 +43,7 @@ module.exports = [
           registration_contests.id,
           registration_contests.date_reg,
           registration_contests.max_count_img,
+          contests.max_count_img as contest_max_count_img,
           payment
         FROM
           contests,
