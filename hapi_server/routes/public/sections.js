@@ -1,4 +1,4 @@
-const {compose, nth, split, get, map, pick, mapKeys, isEmpty} = require('lodash/fp');
+const {compose, nth, split, get, map, pick, mapKeys, isEmpty, omit} = require('lodash/fp');
 const camelizeObject = require('../utils/camelizeObject');
 const getUploadPath = require('../utils/getUploadPath');
 const uploadFiles = require('../utils/uploadFiles');
@@ -154,7 +154,7 @@ module.exports = [
         const p = {
           ...pick(createImageFields, payload),
           ...({sectionId, registrationContestId: application.id, filename, dateAdd: new Date().toISOString().slice(0, 10)})};
-        const pp = mapKeys(imageAlias, p);
+        const pp = omit(['id]'], mapKeys(imageAlias, p));
         const photowork = await h.models.Photowork.create(pp);
         return { id: photowork.id } 
       }
@@ -171,7 +171,7 @@ module.exports = [
         return {id};
       };
 
-      return (+id ? updatePhotowork() : createPhotowork());
+      return (+id && Number.isInteger(+id) ? updatePhotowork() : createPhotowork());
     }, 
     options: {
       auth: {

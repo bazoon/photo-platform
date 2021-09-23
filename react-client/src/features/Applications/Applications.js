@@ -5,7 +5,7 @@ import {Button} from "primereact/button";
 import Machine from "./ApplicationsMachine";
 import { useMachine } from "@xstate/react";
 import SectionsMachine from "./SectionsMachine";
-import {get, nth, map, compose, keys} from "lodash/fp";
+import {get, nth, map, compose, keys, curry, isEmpty} from "lodash/fp";
 import { Form, Field } from "react-final-form";
 import ProfileMenu from "../ProfileMenu";
 import {inspect} from "@xstate/inspect";
@@ -16,7 +16,7 @@ import identity from "crocks/combinators/identity";
 import cn from "classnames";
 import {make as ApplicationInfo} from "./ApplicationInfo.bs";
 import AutoSaveImageForm from "./AutoSaveImageForm";
-import {over, findLens} from "lodash-lens";
+import {over, findLens, pathLens} from "lodash-lens";
 
 const renderRequiredAsterix = (isRequired, fieldName) => isRequired(fieldName) && <sup>*</sup> || null;
 const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
@@ -24,8 +24,8 @@ const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
 const Photowork = daggy.tagged("Photowork", ["id", "name", "filename", "year", "place", "description"]);
 
 const UploadImage = daggy.taggedSum("UploadImage", {
-  Draft: ["photowork", "file"],
-  Uploaded: ["photowork"]
+  Some: ["photowork", "file"],
+  Empty: []
 });
 
 const Section = daggy.taggedSum("Section", {
@@ -112,32 +112,9 @@ const ImageForm = ({image, sectionId, onSubmit, onChange}) => {
   };
 
   const saveImageInfo = async (uploadImage) => {
-    onChange(uploadImage);
-    console.log(uploadImage);
-      
-    const name = uploadImage?.photowork?.name;
-    const filename = uploadImage?.file?.name || uploadImage?.photowork?.filename;
-
-    if (!name || !filename) {
-      return;
+    if (!isEmpty(uploadImage)) {
+      onChange(uploadImage);
     }
-
-    if (uploadImage.file instanceof File) {
-      const payload = new FormData();
-      payload.append("file", uploadImage.file);
-      keys(uploadImage.photowork).forEach(k => {
-        payload.append(k, uploadImage.photowork[k]);
-      });
-
-      // const {id} = await asyncPut(`api/sections/${sectionId}/images`, payload, false).toPromise();
-      // onSubmit({id, ...uploadImage.photowork});
-     } else {
-      const payload = new FormData();
-      keys(uploadImage.photowork).forEach(k => {
-        payload.append(k, uploadImage.photowork[k]);
-      });
-       // return await asyncPut(`api/sections/${sectionId}/images`,payload, false).toPromise();
-     }
   };
 
   useEffect(() => {
@@ -148,7 +125,7 @@ const ImageForm = ({image, sectionId, onSubmit, onChange}) => {
     <Form
       validate={validateImageForm}
       className="overflow-y-auto max-h-96"
-      onSubmit={identity}
+      onSubmit={onSubmit}
       initialValues={image}
       render={({ handleSubmit }) => (
         <div>
@@ -201,17 +178,19 @@ const Images = ({images, className, onSelect, selectedImage}) => {
     <div className={`flex gap-5 overflow-x-auto h-64 p-5 overflow-y-hidden hidden-scroll ${className}`}>
       {
         images.map(image => {
+
           const cls = cn("object-cover w-full h-full", {
             "border-brown-light2 border-2 border-dotted": image === selectedImage,
-            "opacity-30": UploadImage.Draft.is(image)
+            "opacity-30": !Number.isInteger(image?.photowork?.id)
           });
+
           const src = image.cata({
-            Draft: (_, file) =>  URL.createObjectURL(file),
-            Uploaded: photowork => photowork.filename
+            Some: (photowork, file) => file?.name ? URL.createObjectURL(file) : photowork.filename,
+            Empty: () => ""
           });
           const key = image.cata({
-            Draft: file => file.name,
-            Uploaded: photowork => photowork.id
+            Some: photowork => photowork.id,
+            Empty: () => "empty"
           });
           return <div onClick={() => selectImage(image)} className="w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0" key={key}><img src={src} className={cls}/></div>;
         })
@@ -246,7 +225,6 @@ const SectionSelector = ({t, onLoadSection}) => {
   const left = () => current > 0 && setCurrentIdx(c => (c - 1) % count);
   const right = () => current < sections.length && setCurrentIdx(c => (c + 1) % count);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
-
   const loadSection = id => {
     send("loadImages", {id});
   };
@@ -267,7 +245,7 @@ const SectionSelector = ({t, onLoadSection}) => {
     }
   }, [section?.id]);
 
-  const selectedImage = Section.Filled.is(section) ? section?.images[selectedImageIdx] : null;
+  const selectedImage = Section.Filled.is(section) ? section?.images[selectedImageIdx] : UploadImage.Empty;
   
   const chooseFiles = files => {
     send("addImages", { files: Array.from(files), id: section.id });
@@ -279,14 +257,35 @@ const SectionSelector = ({t, onLoadSection}) => {
     }
   };
 
-  const handleSubmit = values => {
-    loadSection(section.id);
-    // send("updateImage", values);
-  };
-
   const changeImageInfo = uploadImage => {
     send("updateImage", {uploadImage, id: section.id});
   };
+
+  const handleSubmit = ({file, photowork}) => {
+    const saveFailed = () => {
+      console.info("ERR");
+    };
+
+    const saveOk = ({id}) => {
+      const uploadImage = 
+        UploadImage.Some.from({
+          photowork: Photowork.from({...photowork, id}), file });
+      send("replaceImage", {uploadImage, sectionId: section?.id, oldImageId: photowork.id });
+    };
+
+    const payload = new FormData();
+
+    if (file instanceof File) {
+      payload.append("file", file);
+    }
+
+    keys(photowork).forEach(k => {
+      payload.append(k, photowork[k]);
+    });
+
+    asyncPut(`api/sections/${section.id}/images`, payload, false).fork(saveFailed, saveOk);
+  };
+
 
   if (Section.None.is(section)) return <div>Loading...</div>;
 
@@ -335,7 +334,6 @@ const Sections = ({className}) => {
   const [current, send]= useMachine(SectionsMachine({context: { sections: []}, services: sectionsService}), {devTools: true});
   const {sections} = current.context;
   const options = sections.map(s => ({label: s.name, value: s.id}));
-
   useEffect(() => {
     send("load");
   }, []);
@@ -354,28 +352,46 @@ const apiParams = "";
 
 //  
 const addFilesToSection = files => section => {
-  const emptyPhotowork = {id: 0, name: "", filename: "", year: "", place: "", description: ""};
-  const filesToDrafts = files => files.map(f => UploadImage.Draft.from({file: f, photowork: Photowork.from(emptyPhotowork)}));
+  const emptyPhotowork = {id: Math.random(), name: "", filename: "", year: "", place: "", description: ""};
+  const filesToDrafts = files => files.map(f => UploadImage.Some.from({file: f, photowork: Photowork.from(emptyPhotowork)}));
   const filled = {...section, images: section.images.concat(filesToDrafts(files)) };
   return Section.Filled.from(filled); 
 };
 
-const upateImageInSection = uploadImage => section => {
-  findLens(image => image === uploadImage);
-  //TODO
-  //сделать для новых секций идентификаторы временные
-  //потом доделать тут
+const upateImageInSection = uploadImage => sections => id => {
+  if (UploadImage.Empty.is(uploadImage)) return sections;
+
+  const findImageInSections = compose(
+    findLens({id}),
+    pathLens("images"), 
+    findLens(image => image.photowork.id === uploadImage.photowork.id),
+  );
+
+  return over(findImageInSections, _ => UploadImage.Some.from(uploadImage), sections).map(e => Section.Filled.from(e));
+};
+
+
+const replaceImageInSection = uploadImage => sections => (sectionId, oldImageId) => {
+  if (UploadImage.Empty.is(uploadImage)) return sections;
+
+  const findImageInSections = compose(
+    findLens({id: sectionId}),
+    pathLens("images"), 
+    findLens(image => image.photowork.id === oldImageId)
+  );
+
+  return over(findImageInSections, _ => UploadImage.Some.from(uploadImage), sections).map(e => Section.Filled.from(e));
 };
 
 const sectionsService = {
   getSections: () => asyncGet("api/sections").map(map(Section.Filled.from)).toPromise(),
-  loadImages: (_, {id}) => asyncGet(`api/sections/${id}/images`).map(images => ({ images: map(compose(UploadImage.Uploaded, Photowork.from), images), id})).toPromise(),
-  // 
+  loadImages: (_, {id}) => asyncGet(`api/sections/${id}/images`).map(images => ({ images: map(compose(p => UploadImage.Some.from({photowork: p, file: null}), Photowork.from), images), id})).toPromise(),
   mapSections: ({sections, images}) => sections.map(section => {
     return Section.Filled.from({...section, images}); 
   }),
   addFilesToSection: ({sections, files, id}) => over(findLens({id}), addFilesToSection(files), sections),
-  udateImage: ({sections}, {uploadImage, id}) => over(findLens({id}), upateImageInSection(uploadImage), sections) 
+  updateImage: ({sections}, {uploadImage, id}) => upateImageInSection(uploadImage)(sections)(id),
+  replaceImage: ({sections}, {uploadImage, sectionId, oldImageId}) => replaceImageInSection(uploadImage)(sections)(sectionId, oldImageId) 
 };
 
 export default function Main() {
@@ -388,7 +404,7 @@ export default function Main() {
   const dateReg = get("application.dateReg", context);
   const [isUploadVisible, setIsUploadVisible] = useState(false);
   const [aboutText, setAboutText] = useState("");
- 
+  console.info(context);
 
   useEffect(() => {
     send("load");

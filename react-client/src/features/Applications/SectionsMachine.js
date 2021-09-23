@@ -17,9 +17,14 @@ export default function({ context = {}, services } = {}) {
           },
           updateImage: {
             actions: assign({
-              sections: ({sections}, data) => services.updateImage({sections, data})
+              sections: ({sections}, data) => services.updateImage({sections}, data)
             })
           },
+          replaceImage: {
+            actions: assign({
+              sections: ({sections}, data) => services.replaceImage({sections}, data)
+            })
+          }
         }
       },
       loading: {
