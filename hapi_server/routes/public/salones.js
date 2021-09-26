@@ -12,8 +12,6 @@ module.exports = [
         return {};
       }
 
-
-
       const query = `
         select content from salone_abouts, salones, languages
         where salone_abouts.salone_id=salones.id and salones.domain=:domain

@@ -24,8 +24,37 @@ export default function({ context = {}, services } = {}) {
             actions: assign({
               sections: ({sections}, data) => services.replaceImage({sections}, data)
             })
+          },
+          removeImage: "removeImage"
+        }
+      },
+      removeImage: {
+        invoke: {
+          src: "removeRemoteImage",
+          onDone: {
+            target: "idle",
+            actions: assign({
+              sections: ({sections}, {data}) => services.removeImage({sections}, data)
+            })
+          },
+          onError: {
+            target: "idle"
           }
         }
+      },
+      loadImages: {
+        invoke: {
+          src: "loadImages",
+          onDone: {
+            target: "idle",
+            actions: assign({
+                sections: (_ , {data}) => data
+              })
+            }
+          },
+          onError: {
+            target: "idle"
+          }
       },
       loading: {
         invoke: {
@@ -39,22 +68,12 @@ export default function({ context = {}, services } = {}) {
             ]
           },
           onError: {
-          }
-        }
-      },
-      loadImages: {
-        invoke: {
-          src: "loadImages",
-          onDone: {
-            target: "idle",
-            actions: assign({
-              sections: ({sections}, {data}) => services.mapSections({sections, images: data.images}) 
-            })
+            target: "idle"
           }
         }
       }
     }
   }, {
-    services
+    services,
   });
 }

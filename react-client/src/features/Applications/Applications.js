@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import { useTranslation } from "react-i18next";
-import {asyncGet, asyncPut} from "../../core/api";
+import {asyncGet, asyncPut, asyncDel} from "../../core/api";
 import {Button} from "primereact/button";
 import Machine from "./ApplicationsMachine";
 import { useMachine } from "@xstate/react";
@@ -32,6 +32,8 @@ const Section = daggy.taggedSum("Section", {
   Filled: ["id", "name", "maxCountImg", "images"],
   None: []
 });
+
+
 
 
 if (location.href.includes("foto.ru")) {
@@ -84,7 +86,7 @@ const validateImageForm = () => {
 };
 
 
-const ImageForm = ({image, sectionId, onSubmit, onChange}) => {
+const ImageForm = ({image, onSubmit, onChange, onRemove}) => {
   const [imageFields, setImageFields] = useState([]);
   const {t} = useTranslation("namespace1");
   const [required, setRequired] = useState([]);
@@ -107,8 +109,9 @@ const ImageForm = ({image, sectionId, onSubmit, onChange}) => {
     asyncGet("api/applications/imageForm/meta").fork(loadFieldsFailed, loadFieldsOk);
   };
   
-  const handleRemove = () => {
-
+  const handleRemove = e => {
+    e.preventDefault();
+    onRemove(image);
   };
 
   const saveImageInfo = async (uploadImage) => {
@@ -209,14 +212,42 @@ const UploadButton = ({onChooseFiles, className, disabled}) => {
   return (
     <div className={className}>
       <div className="mb-5">
-        <input type="file" ref={fileRef} className="hidden" multiple onChange={({target}) => handleChooseFiles(target.files) }/>
+        <input type="file" ref={fileRef} className="hidden" onChange={({target}) => handleChooseFiles(target.files) }/>
         <Button disabled={disabled} className=" uppercase max-w-md" onClick={() => fileRef.current.click() }>Загрузить</Button>
       </div>
     </div>
   );
 };
 
-const SectionSelector = ({t, onLoadSection}) => {
+
+const UnableMaxCountContest = 1;
+const UnableMaxCountSection = 2; 
+const UnableMaxCountPersonal = 3; 
+const AbleToUpload = 0; 
+
+const UnableMessage = ({status, className}) => {
+  const { t } = useTranslation("namespace1");
+  const message = {
+    [UnableMaxCountContest]: t("unableMaxCountContest"),
+    [UnableMaxCountSection]: t("unableMaxCountSection"),
+    [UnableMaxCountPersonal]: t("unableMaxCountPersonal")
+  }[status];
+  
+  return (
+    <div className={className}>
+      {message}     
+    </div>
+  );  
+};
+
+const canUploadToSection = ({maxCountContest, maxCountPersonal, alreadyLoaded}) => section =>  {
+  if (alreadyLoaded >= maxCountContest && maxCountContest > 0) return UnableMaxCountContest;
+  if (alreadyLoaded >= maxCountPersonal && maxCountPersonal > 0) return UnableMaxCountPersonal;
+  if (section?.images?.length >= section?.maxCountImg) return UnableMaxCountSection;
+  return AbleToUpload;
+};
+
+const SectionSelector = ({t, onLoadSection, application}) => {
   const [current, send]= useMachine(SectionsMachine({context: { sections: []}, services: sectionsService}), {devTools: true});
   const {sections} = current.context;
   const count = sections.length;
@@ -225,6 +256,8 @@ const SectionSelector = ({t, onLoadSection}) => {
   const left = () => currentIdx > 0 && setCurrentIdx(c => (c - 1) % count);
   const right = () => currentIdx < sections.length && setCurrentIdx(c => (c + 1) % count);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
+  const {contestMaxCountImg, maxCountImg: maxCountPersonal} = application;
+  const alreadyLoaded = (sections || []).reduce((a, s) => a + s.images.length ,0);
 
   const loadSection = id => {
     send("loadImages", {id});
@@ -253,8 +286,9 @@ const SectionSelector = ({t, onLoadSection}) => {
 
   const selectedImage = Section.Filled.is(section) ? section?.images[selectedImageIdx] : UploadImage.Empty;
   const images = section?.images || [];
-  const canUploadToSection = images.length < section.maxCountImg;
-  
+  const canUploadStatus = canUploadToSection({ maxCountContest: contestMaxCountImg, maxCountPersonal, alreadyLoaded })(section);
+  const canUpload = canUploadStatus === AbleToUpload;
+
   const chooseFiles = files => {
     if (images.length + files.length > section.maxCountImg) return;
 
@@ -271,6 +305,11 @@ const SectionSelector = ({t, onLoadSection}) => {
     send("updateImage", {uploadImage, id: section.id});
   };
 
+
+  const handleRemoveImage = image => {
+    send("removeImage", { image, id: section.id });
+  };
+
   const handleSubmit = ({file, photowork}) => {
     const saveFailed = () => {
       console.info("ERR");
@@ -282,6 +321,7 @@ const SectionSelector = ({t, onLoadSection}) => {
           photowork: Photowork.from({...photowork, id}), file });
       send("replaceImage", {uploadImage, sectionId: section?.id, oldImageId: photowork.id });
     };
+
 
     const payload = new FormData();
 
@@ -316,19 +356,24 @@ const SectionSelector = ({t, onLoadSection}) => {
       <div className="m-auto w-2/5 mb-5 text-center" >{t("chooseCategory")}</div>
 
       <Images className="mb-5" onSelect={handleSelect} selectedImage={selectedImage} images={section?.images || []}/>
-      <UploadButton disabled={!canUploadToSection} className="m-auto w-min text-lg" onChooseFiles={chooseFiles}>{t("chooseFile")}</UploadButton>
-      <ImageForm onSubmit={handleSubmit} onChange={changeImageInfo} image={selectedImage} sectionId={section?.id}/>
+      {
+       canUpload ? 
+        <UploadButton disabled={!canUpload} className="m-auto w-min text-lg h-20" onChooseFiles={chooseFiles}>{t("chooseFile")}</UploadButton>
+        :
+        <UnableMessage status={canUploadStatus} className="text-red-400 text-center h-20"/>
+      }
+      <ImageForm onRemove={handleRemoveImage} onSubmit={handleSubmit} onChange={changeImageInfo} image={selectedImage} sectionId={section?.id}/>
     </div>
   );
 };
 
-const UploadDialog = ({visible, onHide, header, t, onLoadSection = identity}) => {
+const UploadDialog = ({visible, onHide, application, header, t, onLoadSection = identity}) => {
   return (
     <Dialog visible={visible} className="bg-brown-light3 w-3/5 text-bright" contentClassName="bg-brown-light3 text-bright" onHide={onHide}>
       <div className="text-lg uppercase text-center mb-4">{header}</div>
       
       <div className="mb-8">
-        <SectionSelector t={t} onLoadSection={onLoadSection}/>
+        <SectionSelector t={t} onLoadSection={onLoadSection} application={application}/>
       </div>
     </Dialog>
   );
@@ -381,7 +426,6 @@ const upateImageInSection = uploadImage => sections => id => {
   return over(findImageInSections, _ => UploadImage.Some.from(uploadImage), sections).map(e => Section.Filled.from(e));
 };
 
-
 const replaceImageInSection = uploadImage => sections => (sectionId, oldImageId) => {
   if (UploadImage.Empty.is(uploadImage)) return sections;
 
@@ -394,15 +438,66 @@ const replaceImageInSection = uploadImage => sections => (sectionId, oldImageId)
   return over(findImageInSections, _ => UploadImage.Some.from(uploadImage), sections).map(e => Section.Filled.from(e));
 };
 
+const removeRemoteImage = (_, {image, id}) => {
+  if (Number.isSafeInteger(image.photowork.id)) {
+    return asyncDel(`api/photoworks/${image.photowork.id}`).map(_ = () => ({image, id})).toPromise();
+  }
+  return Promise.resolve({image, id});
+};
+
+const removeImage = ({sections}, {image, id}) => {
+  const imagesInSections = compose(
+    findLens({id}),
+    pathLens("images"), 
+  );
+  return over(imagesInSections, images => images.filter(im => im.photowork.id !== image.photowork.id), sections).map(e => Section.Filled.from(e));
+};
+
+const tapLog = m => e => (console.log(m, e), e);
+
+const loadImages = ({sections}, {id}) => {
+  const url = `api/sections/${id}/images`;
+  const toUploadImage = compose(
+    p => UploadImage.Some.from({photowork: p, file: null}),
+    im => Photowork.from(im),
+  );
+
+  const updateSection = uploadImages => section => {
+    const s = Section.Filled.from({...section, images: uploadImages, id});
+    return s;
+  };
+
+  const applyToSection = sections => uploadImages => {
+    return over(findLens({id}), updateSection(uploadImages), sections);
+  };
+
+  // const p = asyncGet(url).map(map(toUploadImage)).fork(() => {}, r => {
+  //   debugger;
+  // });
+
+  return asyncGet(url)
+    .map(map(toUploadImage))
+    .map(applyToSection(sections))
+    // .map(e => {
+    //   debugger;
+    //   return e;
+    // })
+    .toPromise();
+
+   // return Promise.resolve([]);
+};
+
 const sectionsService = {
   getSections: () => asyncGet("api/sections").map(map(Section.Filled.from)).toPromise(),
-  loadImages: (_, {id}) => asyncGet(`api/sections/${id}/images`).map(images => ({ images: map(compose(p => UploadImage.Some.from({photowork: p, file: null}), Photowork.from), images), id})).toPromise(),
+  loadImages: loadImages,
   mapSections: ({sections, images}) => sections.map(section => {
     return Section.Filled.from({...section, images}); 
   }),
   addFilesToSection: ({sections, files, id}) => over(findLens({id}), addFilesToSection(files), sections),
   updateImage: ({sections}, {uploadImage, id}) => upateImageInSection(uploadImage)(sections)(id),
-  replaceImage: ({sections}, {uploadImage, sectionId, oldImageId}) => replaceImageInSection(uploadImage)(sections)(sectionId, oldImageId) 
+  replaceImage: ({sections}, {uploadImage, sectionId, oldImageId}) => replaceImageInSection(uploadImage)(sections)(sectionId, oldImageId),
+  removeImage,
+  removeRemoteImage
 };
 
 export default function Main() {
@@ -415,7 +510,7 @@ export default function Main() {
   const dateReg = get("application.dateReg", context);
   const [isUploadVisible, setIsUploadVisible] = useState(false);
   const [aboutText, setAboutText] = useState("");
-  console.info(context);
+  const {application} = context;
 
   useEffect(() => {
     send("load");
@@ -495,8 +590,8 @@ export default function Main() {
                 current.value !== "hasApplication" && <ApplyForm onSubmit={handleApply} />
               }
               {
-                isApproved && <UploadDialog header={contestName} visible={isUploadVisible} onHide={handleHideUpload} t={t}/> 
-              }
+                isApproved && <UploadDialog application={application} header={contestName} visible={isUploadVisible} onHide={handleHideUpload} t={t}/> 
+              } 
               <div className="mb-10"/>
               <About />
             

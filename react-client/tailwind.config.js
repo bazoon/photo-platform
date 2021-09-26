@@ -1,3 +1,5 @@
+const colors = require("tailwindcss/colors");
+
 module.exports = {
   purge: [
     "./src/**/*.html",
@@ -18,6 +20,7 @@ module.exports = {
       "xl": "1440px",
     },
     colors: {
+      ...colors,
       transparent: "transparent",
       brown: {
         medium: "#2A2B2F",

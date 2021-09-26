@@ -62,6 +62,24 @@ module.exports = [
         mode: 'optional'
       }
     }
+  },
+  {
+    method: 'DELETE',
+    path: '/api/photoworks/{id}',
+    handler: async function (request, h) {
+      const userId = get('request.auth.credentials.id', h);
+ 
+      if (!userId) return [];
+
+      const id = request.params.id;
+      await h.models.Photowork.destroy({ where: {id}})
+      return {};
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
   }
 ];
 
