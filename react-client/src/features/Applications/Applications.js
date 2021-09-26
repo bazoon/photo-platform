@@ -5,7 +5,7 @@ import {Button} from "primereact/button";
 import Machine from "./ApplicationsMachine";
 import { useMachine } from "@xstate/react";
 import SectionsMachine from "./SectionsMachine";
-import {get, nth, map, compose, keys, curry, isEmpty} from "lodash/fp";
+import {get, nth, map, compose, keys, curry, isEmpty, values} from "lodash/fp";
 import { Form, Field } from "react-final-form";
 import ProfileMenu from "../ProfileMenu";
 import {inspect} from "@xstate/inspect";
@@ -17,6 +17,7 @@ import cn from "classnames";
 import {make as ApplicationInfo} from "./ApplicationInfo.bs";
 import AutoSaveImageForm from "./AutoSaveImageForm";
 import {over, findLens, pathLens} from "lodash-lens";
+import {Checkbox} from "primereact/checkbox";
 
 const renderRequiredAsterix = (isRequired, fieldName) => isRequired(fieldName) && <sup>*</sup> || null;
 const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
@@ -48,7 +49,7 @@ const initialContext = {
   applications: [],
   message: "",
   applicationMessage: "",
-  photoworks: {},
+  photoworks: [],
   payload: {},
   application: {}
 };
@@ -172,6 +173,26 @@ const ImageForm = ({image, onSubmit, onChange, onRemove}) => {
   );
 };
 
+const Image = ({image, onSelect, isSelected}) => {
+  const cls = cn("object-cover w-full h-full", {
+    "border-0 border-b-2 border-coolGray-50 border-solid box-content pb-5": isSelected,
+    "opacity-30": !Number.isInteger(image?.photowork?.id)
+  });
+
+  const src = image.cata({
+    Some: (photowork, file) => file?.name ? URL.createObjectURL(file) : photowork.filename,
+    Empty: () => ""
+  });
+  const key = image.cata({
+    Some: photowork => photowork.id,
+    Empty: () => "empty"
+  });
+
+  return (
+    <div onClick={() => onSelect(image)} className="w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0" key={key}><img src={src} className={cls}/></div>
+    );
+};
+
 const Images = ({images, className, onSelect, selectedImage}) => {
   const selectImage = image => {
     onSelect(image);
@@ -180,23 +201,7 @@ const Images = ({images, className, onSelect, selectedImage}) => {
   return (
     <div className={`flex gap-5 overflow-x-auto h-64 p-5 overflow-y-hidden hidden-scroll ${className}`}>
       {
-        images.map(image => {
-
-          const cls = cn("object-cover w-full h-full", {
-            "border-brown-light2 border-2 border-dotted": image === selectedImage,
-            "opacity-30": !Number.isInteger(image?.photowork?.id)
-          });
-
-          const src = image.cata({
-            Some: (photowork, file) => file?.name ? URL.createObjectURL(file) : photowork.filename,
-            Empty: () => ""
-          });
-          const key = image.cata({
-            Some: photowork => photowork.id,
-            Empty: () => "empty"
-          });
-          return <div onClick={() => selectImage(image)} className="w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0" key={key}><img src={src} className={cls}/></div>;
-        })
+        images.map(im => <Image image={im} onSelect={selectImage} key={im?.photowork?.id} isSelected={im === selectedImage}/>)
       }
     </div>
   );
@@ -453,14 +458,16 @@ const removeImage = ({sections}, {image, id}) => {
   return over(imagesInSections, images => images.filter(im => im.photowork.id !== image.photowork.id), sections).map(e => Section.Filled.from(e));
 };
 
+
+const toUploadImage = compose(
+  p => UploadImage.Some.from({photowork: p, file: null}),
+  im => Photowork.from(im),
+);
+
 const tapLog = m => e => (console.log(m, e), e);
 
 const loadImages = ({sections}, {id}) => {
   const url = `api/sections/${id}/images`;
-  const toUploadImage = compose(
-    p => UploadImage.Some.from({photowork: p, file: null}),
-    im => Photowork.from(im),
-  );
 
   const updateSection = uploadImages => section => {
     const s = Section.Filled.from({...section, images: uploadImages, id});
@@ -471,17 +478,10 @@ const loadImages = ({sections}, {id}) => {
     return over(findLens({id}), updateSection(uploadImages), sections);
   };
 
-  // const p = asyncGet(url).map(map(toUploadImage)).fork(() => {}, r => {
-  //   debugger;
-  // });
 
   return asyncGet(url)
     .map(map(toUploadImage))
     .map(applyToSection(sections))
-    // .map(e => {
-    //   debugger;
-    //   return e;
-    // })
     .toPromise();
 
    // return Promise.resolve([]);
@@ -500,6 +500,62 @@ const sectionsService = {
   removeRemoteImage
 };
 
+  
+const Thumb = ({image, onChange, checked}) => {
+  const cls = cn("object-cover w-full h-full");
+  return (
+    <div className="flex items-start">
+      <Checkbox className="mr-10" checked={checked} onChange={(checked) => { onChange(checked); }} />
+      <div className="w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0"><img src={image.src} className={cls}/></div>
+      <div className="ml-10 justify-between h-28 cursor-pointer flex-shrink-0 flex-col flex">
+        <span className="text-sm-2">{image.name}</span>
+        <span className="text-sm-2">тут описание</span>
+        <span className="text-sm-2 text-brown-light4 uppercase">{image.sectionName}</span>
+      </div>
+    </div>
+  );
+};
+
+const Thumbs = ({images, onRemove}) => {
+  return (
+      <Form
+        validate={validateImageForm}
+        className="overflow-y-auto max-h-96"
+        onSubmit={onRemove}
+        initialValues={{}}
+        render={({ handleSubmit }) => (
+          <div>
+            {
+              <>
+                <div className="flex justify-center">
+                  <Button className="uppercase flex-shrink-0 flex-grow-0 w-40 flex justify-center p-5" onClick={handleSubmit}>Удалить</Button>
+                </div>
+                <form className="p-5" onSubmit={handleSubmit}>
+
+                <div className="grid grid-cols-1 gap-20 m-auto w-3/5 text-base items-baseline">
+                    {
+                      images.map(image => {
+                        return (
+                          <Field type="checkbox" name={`id-${image.id}`} key={image.id} render={({ input, meta }) => (
+                            <>
+                              <Thumb {...input} image={image}/>
+                            </>
+                          )}/>
+                        );
+                      })
+                    }
+
+                </div>
+
+                  
+                </form>
+              </>
+            }
+          </div>
+        )}/>
+  );
+};
+
 export default function Main() {
   const { t } = useTranslation("namespace1");
   const [current, send] = useMachine(Machine({api, context: initialContext, apiParams, t}), {devTools: true});
@@ -510,19 +566,18 @@ export default function Main() {
   const dateReg = get("application.dateReg", context);
   const [isUploadVisible, setIsUploadVisible] = useState(false);
   const [aboutText, setAboutText] = useState("");
-  const {application} = context;
+  const {application, photoworks} = context;
 
   useEffect(() => {
     send("load");
   }, []);
 
-  
+
   const handleApply = data => {
     send("apply", {data});
   };
 
 
-  
   const loadContestInfoFailed = () => {
 
   };
@@ -535,35 +590,30 @@ export default function Main() {
     asyncGet(`api/mainPage/${i18n.language}`).fork(loadContestInfoFailed, loadContestInfoOk);
   };
 
-    const loadAboutFailed = () => {
+  const loadAboutFailed = () => {
 
-    };
+  };
 
-    const loadAboutOk = ({content}) => {
-      setAboutText(content);
-    };
+  const loadAboutOk = ({content}) => {
+    setAboutText(content);
+  };
 
-    const loadAbout = () => {
-      asyncGet(`api/salones/about/${i18n.language}`).fork(loadAboutFailed, loadAboutOk);
-    };
-  
-
+  const loadAbout = () => {
+    asyncGet(`api/salones/about/${i18n.language}`).fork(loadAboutFailed, loadAboutOk);
+  };
 
   useEffect(() => {
     loadContestInfo();
     loadAbout();
   }, []);
-  
+
   const handleHideUpload = () => {
     setIsUploadVisible(false);
   };
-  
+
   const openUpload = () => {
     setIsUploadVisible(true);
   };
-
-
-// /api/salones/about
 
   const About = () => {
     return (
@@ -571,34 +621,50 @@ export default function Main() {
     );
   };
 
-  return (
-    
-      <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
-        <div className="relative flex justify-center w-full">
-          <div className="flex-1">
-            <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">{t("myApplications")}</div>
-            
-            <ApplicationInfo
-              contestName={contestName}
-              status={applicationMessage}
-              dateReg={dateReg}
-              canUpload={isApproved}
-              openUpload={openUpload}
-            />
+  const removeImages = values => {
+    console.info(values);
+    const ids = keys(values).map(k => k.split("-")[1]);
+    send("remove", { ids });
+  };
 
-              {
-                current.value !== "hasApplication" && <ApplyForm onSubmit={handleApply} />
-              }
-              {
-                isApproved && <UploadDialog application={application} header={contestName} visible={isUploadVisible} onHide={handleHideUpload} t={t}/> 
-              } 
-              <div className="mb-10"/>
-              <About />
-            
-          </div>
-          <ProfileMenu/>
-        </div>
-      </div>
+  return (
+    <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
+      <div className="relative flex justify-center w-full">
+      <div className="flex-1">
+      <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">{t("myApplications")}</div>
+
+      <ApplicationInfo
+        contestName={contestName}
+        status={applicationMessage}
+        dateReg={dateReg}
+        canUpload={isApproved}
+        openUpload={openUpload}
+      />
+
+    {
+      current.value !== "hasApplication" && <ApplyForm onSubmit={handleApply} />
+    }
+
+    {
+      isApproved && <UploadDialog application={application} header={contestName} visible={isUploadVisible} onHide={handleHideUpload} t={t}/> 
+    } 
+
+      <div className="mb-10"/>
+      <About />
+      
+      <div className="mb-10"/>
+      <Thumbs images={photoworks} onRemove={removeImages}>
+
+      </Thumbs>
+
+    </div>
+    
+
+   
+    <ProfileMenu/>
+    
+    </div>
+    </div>
 
   );
 }

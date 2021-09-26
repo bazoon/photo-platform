@@ -3,7 +3,7 @@
 
 module Button = {
   @react.component @module("primereact/button")
-  external make: (~children: React.element, ~onClick: unit => unit) => React.element = "Button"
+  external make: (~children: React.element, ~onClick: unit => unit, ~className: string) => React.element = "Button"
 }
 
 // Bindings.res
@@ -37,7 +37,7 @@ let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<string>, ~ope
       <div className="mt-10" />
       <div className="mt-10">
         {switch canUpload {
-        | true => <Button onClick={openUpload}> {React.string(t("uploadPhoto"))} </Button>
+        | true => <Button className="uppercase flex-shrink-0 flex-grow-0 w-40 flex justify-center p-5" onClick={openUpload}> {React.string(t("uploadPhoto"))} </Button>
         | false => <div />
         }}
       </div>

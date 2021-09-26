@@ -28,7 +28,8 @@ module.exports = {
         light3: "#48494D",
         light: "rgb(239, 188, 130)",
         light2: "#CB893E",
-        dark2: "rgb(30, 31, 37)"
+        dark2: "rgb(30, 31, 37)",
+        light4: "#EFBC82"
       },
       darkgreen: "#0b160d",
       dark: "rgb(53, 53, 53)",

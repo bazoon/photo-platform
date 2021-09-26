@@ -1,5 +1,5 @@
 import { createMachine, assign } from "xstate";
-import {asyncGet, asyncPost} from "../../core/api";
+import {asyncGet, asyncPost, asyncDel} from "../../core/api";
 import {over, view, pathLens} from "lodash-lens";
 import {keys, get, omit} from "lodash/fp";
 
@@ -114,6 +114,17 @@ export default function applicationsMachine({ context = {}, api } = {}) {
             target: "sending",
             actions: ["sendFiles"]
           },
+          remove: {
+            target: "removing"
+          }
+        }
+      },
+      removing: {
+        invoke: {
+          src: "removeImages",
+          onDone: {
+            target: "hasApplication"
+          }
         }
       },
       apply: {
@@ -206,6 +217,7 @@ export default function applicationsMachine({ context = {}, api } = {}) {
         .fork(failed("sendingFailed", callback), ok({state: "sendingOk", callback, failedState: "sendingFailed"})),
       loadingPhotoworks: () => asyncGet("api/photoworks").toPromise(),
       apply: (_, {data}) => asyncPost("api/apply", data).toPromise(),
+      removeImages: (_, {ids}) => { debugger; return asyncDel("api/photoworks", ids).toPromise(); }
     }
   });
 }

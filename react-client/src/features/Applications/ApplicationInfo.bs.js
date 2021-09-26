@@ -36,7 +36,8 @@ function ApplicationInfo(Props) {
                   className: "mt-10"
                 }, canUpload ? React.createElement(Button.Button, {
                         children: Curry._1(t, "uploadPhoto"),
-                        onClick: openUpload
+                        onClick: openUpload,
+                        className: "uppercase flex-shrink-0 flex-grow-0 w-40 flex justify-center p-5"
                       }) : React.createElement("div", undefined)));
 }
 

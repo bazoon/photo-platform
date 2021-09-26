@@ -20,10 +20,13 @@ module.exports = [
 
       const applicationQuery = `
         SELECT
+          photoworks.id,
           photoworks.name,
           photoworks.filename,
           section_id,
-          sections.name as section_name
+          sections.name as section_name,
+          year_shot as year,
+          locate_shot as place
         FROM
           photoworks,
           registration_contests,
@@ -65,10 +68,28 @@ module.exports = [
   },
   {
     method: 'DELETE',
+    path: '/api/photoworks',
+    handler: async function (request, h) {
+      const {payload} = request;
+      const ids = payload.split(',');
+
+      const userId = get('request.auth.credentials.id', h);
+      if (!userId) return [];
+      
+      await h.models.Photowork.destroy({ where: {id: ids}});
+      return {};
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'DELETE',
     path: '/api/photoworks/{id}',
     handler: async function (request, h) {
       const userId = get('request.auth.credentials.id', h);
- 
       if (!userId) return [];
 
       const id = request.params.id;

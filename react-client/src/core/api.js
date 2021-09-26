@@ -64,7 +64,7 @@ export const asyncPut = (url, params, json = true) => Async((reject, resolve) =>
   }, json).then(r => processResponse(r, resolve, reject)).catch(reject);
 });
 
-export const asyncDel = (url) => Async((reject, resolve) => {
-  fetch(makeUrl(url), {method: "DELETE"}).then(r => processResponse(r, resolve, reject)).catch(reject);
+export const asyncDel = (url, params) => Async((reject, resolve) => {
+  fetch(makeUrl(url), {method: "DELETE", body: params}).then(r => processResponse(r, resolve, reject)).catch(reject);
 });
 
