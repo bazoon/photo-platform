@@ -43,9 +43,47 @@ const indexRoute = {
       const userId = get('request.auth.credentials.id', h) || -1;
       const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
       
+      const lang = 'ru';
 
-      const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8');
+      if (!domain) {
+        return {};
+      }
 
+      const query = `
+        SELECT
+        contests.id AS contest_id,
+        contest_abouts.name,
+        date_start,
+        date_stop,
+        salones.name salone,
+        sa.name AS saloneName,
+        contest_abouts. "name",
+        phone_tech,
+        email_pub,
+        sa.name AS salone_name,
+        rc.id as reg_id
+      FROM
+        contest_abouts
+        JOIN languages l ON contest_abouts.language_id = l.id and l.short=:lang
+        LEFT JOIN contests ON contests.id = contest_abouts.contest_id
+        LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
+        LEFT JOIN salone_abouts AS sa ON sa.salone_id = salones.id AND sa.language_id = l.id
+        LEFT JOIN organizers AS o on salones.organizer_id=o.id
+        LEFT JOIN registration_contests as rc on rc.user_id=1 and rc.contest_id=contests.id and rc.user_id=:userId
+        ORDER BY
+          date_start DESC
+      `;
+
+      const info = await h.query(query, {
+        replacements: {
+          lang,
+          domain,
+          userId
+        }
+      });
+
+      const r = get('[0]', info);
+      const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8').replace('__OG_TITLE__', r.saloneName);
       return html;
     },
     options: {
