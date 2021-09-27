@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import compose from "crocks/helpers/compose";
 import map from "crocks/pointfree/map";
 import identity from "crocks/combinators/identity";
@@ -20,6 +20,7 @@ import {useTranslation} from "react-i18next";
 import {loadLanguage} from "./utils";
 import i18n from "../core/i18n";
 import {locale} from "primereact/api";
+import {Helmet} from "react-helmet";
 
 const initialContext = {
   user: {},
@@ -52,23 +53,24 @@ const setDefaultLocale = lang => {
   locale(lang);
 };
 
-const setTitle = (pathname, saloneName, name) => {
+
+const getTitle = (pathname, saloneName, name) => {
   if (pathname === "/") {
-    document.title = saloneName;
+    return saloneName;
   } else {
-    document.title = name;
+    return name;
   }
 };
-
 
 function Init({store}) {
   const history = useHistory();
   const toast = useRef();
   const {canAdmin} = useAuth();
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     const onChangleLocation = ({pathname}) => {
-      setTitle(pathname, store.info.saloneName, store.info.name);
+      setTitle(getTitle(pathname, store.info.saloneName, store.info.name));
     };
     return history.listen(onChangleLocation);
   }, []);
@@ -99,7 +101,9 @@ function Init({store}) {
 
   const loadOk = info => {
     store.info = info;
-    setTitle(location.pathname, info.saloneName, info.name);
+    const t = getTitle(location.pathname, store.info.saloneName, store.info.name);
+
+    setTitle(t);
   };
 
   const loadTranslationFailed = () => {
@@ -120,11 +124,7 @@ function Init({store}) {
 
       loadTranslations("ru", aa);
       loadTranslations("en", bb);
-      
-
       setDefaultLocale(loadLanguage());
-
-
     });
   }, []);
 
@@ -138,9 +138,15 @@ function Init({store}) {
     store.toast = toast;
   }, []);
   
+  console.info(title, 1);
   return (
     <>
       <Toast ref={toast} />
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{title}</title>
+        <link rel="canonical" href="https://prirodacup.ru/" />
+      </Helmet>
     </>
 
   );

@@ -20,7 +20,7 @@ import {over, findLens, pathLens} from "lodash-lens";
 import {Checkbox} from "primereact/checkbox";
 
 const renderRequiredAsterix = (isRequired, fieldName) => isRequired(fieldName) && <sup>*</sup> || null;
-const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
+const isFormFieldValid = meta => !!(meta?.touched && meta?.error);
 
 const Photowork = daggy.tagged("Photowork", ["id", "name", "filename", "year", "place", "description"]);
 
@@ -33,9 +33,6 @@ const Section = daggy.taggedSum("Section", {
   Filled: ["id", "name", "maxCountImg", "images"],
   None: []
 });
-
-
-
 
 if (location.href.includes("foto.ru")) {
   inspect({
@@ -86,16 +83,15 @@ const validateImageForm = () => {
 
 };
 
+const getFormErrorMessage = (meta) => {
+  const {t} = useTranslation("namespace1");
+  debugger;
+  return isFormFieldValid(meta) && <small className="p-error">{t(meta.error)}</small>;
+};
 
 const ImageForm = ({image, onSubmit, onChange, onRemove}) => {
   const [imageFields, setImageFields] = useState([]);
-  const {t} = useTranslation("namespace1");
   const [required, setRequired] = useState([]);
-
-
-  const getFormErrorMessage = (meta) => {
-    return isFormFieldValid(meta) && <small className="p-error">{t(meta.error)}</small>;
-  };
 
   const loadFieldsFailed = () => {
 
@@ -131,7 +127,7 @@ const ImageForm = ({image, onSubmit, onChange, onRemove}) => {
       className="overflow-y-auto max-h-96"
       onSubmit={onSubmit}
       initialValues={image}
-      render={({ handleSubmit }) => (
+      render={({ handleSubmit, pristine, submitting }) => (
         <div>
         <AutoSaveImageForm debounce={1000} onSave={saveImageInfo}/>
           {
@@ -162,7 +158,7 @@ const ImageForm = ({image, onSubmit, onChange, onRemove}) => {
 
               { 
                 <div className="flex justify-center">
-                  <Button className="uppercase flex-shrink-0 flex-grow-0 w-40 flex justify-center p-5 mr-10" onClick={handleSubmit}>Сохранить</Button>
+                  <Button disabled={submitting} className="uppercase flex-shrink-0 flex-grow-0 w-40 flex justify-center p-5 mr-10" onClick={handleSubmit}>Сохранить</Button>
                   <Button className="uppercase flex-shrink-0 flex-grow-0 w-40 flex justify-center p-5" onClick={handleRemove}>Удалить</Button>
                 </div>
               }
@@ -202,6 +198,8 @@ const Images = ({images, className, onSelect, selectedImage}) => {
   const selectImage = image => {
     onSelect(image);
   }; 
+
+  window.ims = images;
 
   return (
     <div className={`flex gap-5 overflow-x-auto h-64 p-5 overflow-y-hidden hidden-scroll relative ${className}`}>
@@ -302,6 +300,7 @@ const SectionSelector = ({t, onLoadSection, application}) => {
   const chooseFiles = files => {
     if (images.length + files.length > section.maxCountImg) return;
     send("addImages", { files: Array.from(files), id: section.id });
+    setSelectedImageIdx(0);
   };
 
   const handleSelect = image => {
@@ -327,7 +326,7 @@ const SectionSelector = ({t, onLoadSection, application}) => {
     const saveOk = ({id}) => {
       const uploadImage = 
         UploadImage.Some.from({
-          photowork: Photowork.from({...photowork, id}), file });
+          photowork: Photowork.from({...photowork, id: +id}), file });
       send("replaceImage", {uploadImage, sectionId: section?.id, oldImageId: photowork.id });
     };
 
@@ -389,10 +388,10 @@ const UploadDialog = ({visible, onHide, application, header, t, onLoadSection = 
 };
 
 
-
-const validateForm = () => {
-  // return keys(data).reduce((a, e) => data[e] ? a : {...a, [e]: "Это поле обязательно для заполнения !"}, {});
-  return {};
+const validateForm = ({sections}) => {
+  let r = !sections && {sections: "Необходимо выбрать секции!"} || {};
+  console.info("validateForm", sections, r);
+  return r;
 };
 
 const Sections = ({className}) => {
@@ -405,8 +404,13 @@ const Sections = ({className}) => {
 
   return (
     <Field name='sections'>
-      {({ input }) => (
-        <MultiSelect optionLabel="label" display="chip" value={input.value} className={className} onChange={({value}) => input.onChange(value)} options={options}/>
+      {({ input, meta }) => (
+        <div className="flex flex-col">
+          <MultiSelect optionLabel="label" display="chip" value={input.value} className={className} onChange={({value}) => input.onChange(value)} options={options}/>
+          {
+            getFormErrorMessage(meta)
+          }
+        </div>
       )}
     </Field>
   );
@@ -419,7 +423,7 @@ const apiParams = "";
 const addFilesToSection = files => section => {
   const getEmptyPhotowork = () => ({id: Math.random(), name: "", filename: "", year: "", place: "", description: ""});
   const filesToDrafts = files => files.map(f => UploadImage.Some.from({file: f, photowork: Photowork.from(getEmptyPhotowork())}));
-  const filled = {...section, images: section.images.concat(filesToDrafts(files)) };
+  const filled = {...section, images: filesToDrafts(files).concat(section.images) };
   return Section.Filled.from(filled); 
 };
 
@@ -626,7 +630,6 @@ export default function Main() {
   };
 
   const removeImages = values => {
-    console.info(values);
     const ids = keys(values).map(k => k.split("-")[1]);
     send("remove", { ids });
   };
@@ -657,10 +660,8 @@ export default function Main() {
       <About />
       
       <div className="mb-10"/>
-    { isApproved && <Thumbs images={photoworks} onRemove={removeImages}> 
-
-      </Thumbs>
-
+    { 
+      isApproved && photoworks?.length > 0 && <Thumbs images={photoworks} onRemove={removeImages}/>
     }
 
     </div>

@@ -37,6 +37,7 @@ import {addLocale} from "primereact/api";
 import Applications from "./features/Applications/Applications";
 import FooterLinks from "./FooterLinks";
 
+
 const MainMenu = lazy(() => import("./MainMenu"));
 
 addLocale("ru", {
