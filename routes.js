@@ -38,7 +38,7 @@ const publicRoute = {
 
 const indexRoute = {
     method: 'GET',
-    path: '/index.html',
+    path: '/good-index',
     handler: async function (request, h) {
       const userId = get('request.auth.credentials.id', h) || -1;
       const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);

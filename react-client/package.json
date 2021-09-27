@@ -31,6 +31,7 @@
     "react-recollect": "^5.2.3",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-snap": "^1.23.0",
     "react-transition-group": "^4.4.1",
     "recoil": "^0.2.0",
     "source-map-explorer": "^2.5.2",
@@ -44,7 +45,8 @@
     "eject": "react-scripts eject",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "re:build": "rescript",
-    "re:start": "rescript build -w"
+    "re:start": "rescript build -w",
+    "postbuild": "react-snap"
   },
   "eslintConfig": {
     "extends": [
