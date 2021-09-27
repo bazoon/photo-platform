@@ -1,5 +1,7 @@
 const flatten = require('ramda/src/flatten');
-
+const {compose, nth, split, get} = require('lodash/fp');
+const fs = require('fs');
+const path = require('path');
 
 const imgRoute = {
   method: 'GET',
@@ -34,7 +36,27 @@ const publicRoute = {
 };
 
 
+const indexRoute = {
+    method: 'GET',
+    path: '/index.html',
+    handler: async function (request, h) {
+      const userId = get('request.auth.credentials.id', h) || -1;
+      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      
+
+      const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8');
+
+      return html;
+    },
+    options: {
+      auth: {
+        mode: 'optional'
+      }
+    }
+  };
+
 module.exports = flatten([
+  indexRoute,
   imgRoute,
   publicRoute,
   require('./hapi_server/routes/public/translation'),
