@@ -175,8 +175,11 @@ const ImageForm = ({image, onSubmit, onChange, onRemove}) => {
 
 const Image = ({image, onSelect, isSelected}) => {
   const cls = cn("object-cover w-full h-full", {
-    "border-0 border-b-2 border-coolGray-50 border-solid box-content pb-5": isSelected,
     "opacity-30": !Number.isInteger(image?.photowork?.id)
+  });
+
+  const wrapCsl = cn("w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0 pt-5", {
+    "border-0 border-t-2 border-coolGray-50 selected-image": isSelected,
   });
 
   const src = image.cata({
@@ -189,7 +192,9 @@ const Image = ({image, onSelect, isSelected}) => {
   });
 
   return (
-    <div onClick={() => onSelect(image)} className="w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0" key={key}><img src={src} className={cls}/></div>
+    <div onClick={() => onSelect(image)} className={wrapCsl} key={key}>
+      <img src={src} className={cls}/>
+    </div>
     );
 };
 
@@ -199,7 +204,7 @@ const Images = ({images, className, onSelect, selectedImage}) => {
   }; 
 
   return (
-    <div className={`flex gap-5 overflow-x-auto h-64 p-5 overflow-y-hidden hidden-scroll ${className}`}>
+    <div className={`flex gap-5 overflow-x-auto h-64 p-5 overflow-y-hidden hidden-scroll relative ${className}`}>
       {
         images.map(im => <Image image={im} onSelect={selectImage} key={im?.photowork?.id} isSelected={im === selectedImage}/>)
       }
@@ -296,7 +301,6 @@ const SectionSelector = ({t, onLoadSection, application}) => {
 
   const chooseFiles = files => {
     if (images.length + files.length > section.maxCountImg) return;
-
     send("addImages", { files: Array.from(files), id: section.id });
   };
 
@@ -653,9 +657,11 @@ export default function Main() {
       <About />
       
       <div className="mb-10"/>
-      <Thumbs images={photoworks} onRemove={removeImages}>
+    { isApproved && <Thumbs images={photoworks} onRemove={removeImages}> 
 
       </Thumbs>
+
+    }
 
     </div>
     
