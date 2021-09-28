@@ -388,7 +388,8 @@ const UploadDialog = ({visible, onHide, application, header, t, onLoadSection = 
 
 
 const validateForm = ({sections}) => {
-  return (!sections || sections?.length === 0) && {sections: "Необходимо выбрать секции!"} || {};
+  const { t } = useTranslation("namespace1");
+  return (!sections || sections?.length === 0) && {sections: t("sectionsRequired")} || {};
 };
 
 const Sections = ({className}) => {
@@ -610,7 +611,7 @@ export default function Main() {
   useEffect(() => {
     loadContestInfo();
     loadAbout();
-  }, []);
+  }, [i18n.language]);
 
   const handleHideUpload = () => {
     setIsUploadVisible(false);
