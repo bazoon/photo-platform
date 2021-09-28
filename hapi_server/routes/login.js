@@ -127,7 +127,8 @@ const signup = {
       psw: hashedPassword,
       userType: 1,
       emailState: 0,
-      rowState: 0
+      rowState: 0,
+      firstDomainRegistration: domain
     });
 
     const token = signToken(user);

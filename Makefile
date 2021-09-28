@@ -36,6 +36,9 @@ all:
 	make restart
 install:
 	cd /var/www/photo-platform/react-client;npm install
+dpt:
+	sh ./deploy_test.sh
+
 
 .PHONY: lint lintAll build
 
