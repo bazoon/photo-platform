@@ -388,8 +388,7 @@ const UploadDialog = ({visible, onHide, application, header, t, onLoadSection = 
 
 
 const validateForm = ({sections}) => {
-  const { t } = useTranslation("namespace1");
-  return (!sections || sections?.length === 0) && {sections: t("sectionsRequired")} || {};
+  return (!sections || sections?.length === 0) && {sections: "sectionsRequired"} || {};
 };
 
 const Sections = ({className}) => {
