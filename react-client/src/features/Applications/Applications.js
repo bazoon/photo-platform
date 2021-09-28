@@ -85,7 +85,6 @@ const validateImageForm = () => {
 
 const getFormErrorMessage = (meta) => {
   const {t} = useTranslation("namespace1");
-  debugger;
   return isFormFieldValid(meta) && <small className="p-error">{t(meta.error)}</small>;
 };
 
@@ -389,9 +388,7 @@ const UploadDialog = ({visible, onHide, application, header, t, onLoadSection = 
 
 
 const validateForm = ({sections}) => {
-  let r = !sections && {sections: "Необходимо выбрать секции!"} || {};
-  console.info("validateForm", sections, r);
-  return r;
+  return (!sections || sections?.length === 0) && {sections: "Необходимо выбрать секции!"} || {};
 };
 
 const Sections = ({className}) => {
