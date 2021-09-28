@@ -7,6 +7,7 @@ import {Field, Form} from "react-final-form";
 import {filter} from "lodash/fp";
 import ProfileMenu from "./ProfileMenu";
 import {store} from "react-recollect";
+import {Dropdown} from "primereact/dropdown";
 
 
 const toFormData = (obj) => {
@@ -17,7 +18,8 @@ const toFormData = (obj) => {
   return formData;
 };
 
-const renderField = (name, title) => {
+
+const renderTextField = ({name, title}) => {
   return (
     <Field name={name} key={name} render={({ input }) => (
       <>
@@ -26,6 +28,53 @@ const renderField = (name, title) => {
       </>
     )}/>
   );
+};
+
+const renderDateField = ({name, title}) => {
+  return (
+    <Field name={name} key={name} render={({ input }) => (
+      <>
+        <label className="col-span-2 text-tiny place-self-end">{title}</label>
+        <input value={name} type="date" onChange={input.onChange} {...input} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+      </>
+    )}/>
+  );
+};
+
+const renderMemo = ({name, title}) => {
+  return (
+    <Field name={name} key={name} render={({ input }) => (
+      <>
+        <label className="col-span-2 text-tiny place-self-end">{title}</label>
+        <textarea value={name} name="story" rows="5" cols="33" onChange={input.onChange} {...input} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright" />
+      </>
+    )}/>
+  );
+};
+
+
+const renderSelect = ({name, title, options}) => {
+  return (
+    <Field name={name} render={({ input }) => (
+      <>
+        <label className="col-span-2 text-tiny place-self-end">{title}</label>
+        <Dropdown id={name} {...input} onChange={e => input.onChange(e.value)} options={options} optionValue="key" optionLabel="label" className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright" />
+      </>
+    )} />
+  );
+};
+
+
+const renderField = ({name, title, type, options}) => {
+  const fns = {
+    string: renderTextField,
+    date: renderDateField,
+    text: renderMemo,
+    select: renderSelect
+  };
+
+  const fn = fns[type] || renderTextField;
+  return fn({name, title, type, options});
 };
 
 const isActiveMenuItem = item => {
@@ -114,7 +163,7 @@ export default function Main() {
     fileRef.current.click();
   };
 
-
+  console.info(profile);
 
   return (
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
@@ -142,14 +191,14 @@ export default function Main() {
                   </div>
                   
                   {
-                    fields.map(({name, title, type}) => renderField(name, title, type))
+                    fields.map(({name, title, type, options}) => renderField({options, name, title, type}))
                   }
                 </div>
                 <div className="uppercase text-lg text-bright font-header text-center mt-24">Смена пароля</div>
                 <div className="grid grid-cols-6 grid-rows-8 gap-12">
-                  {renderField("password", "Текущий пароль")}
-                  {renderField("newPassword", "Новый пароль")}
-                  {renderField("newPasswordAgain", "Повторить новый пароль")}
+                  {renderField({name: "password", title: "Текущий пароль"})}
+                  {renderField({name: "newPassword", title: "Новый пароль"})}
+                  {renderField({name: "newPasswordAgain", title: "Повторить новый пароль"})}
                   <div className="col-span-2"></div>
                   <div className="col-span-4">
                     <Button disabled={!agreed} onClick={handleSubmit} className="uppercase text-center">Сохранить</Button>

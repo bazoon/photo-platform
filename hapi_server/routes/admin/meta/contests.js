@@ -15,8 +15,6 @@ module.exports = [
         }
       });
 
-      console.log(cols.map(c=>c.dataValues))
-
       const salones = salonesData.map(({id, name}) => ({key: id, dataIndex: id, label: name, id}))
 
       const fields = compose(
