@@ -138,7 +138,6 @@ function Init({store}) {
     store.toast = toast;
   }, []);
   
-  console.info(title, 1);
   return (
     <>
       <Toast ref={toast} />

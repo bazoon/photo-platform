@@ -5,32 +5,45 @@ const bcrypt = require('bcryptjs');
 const {get, pick} = require('lodash/fp');
 const uploadFiles = require('../utils/uploadFiles');
 const getUploadPath = require('../utils/getUploadPath');
+const camelizeObject = require('../utils/camelizeObject');
+
+const getUserInfo = async (userId, query) => {
+  const sql = `
+    SELECT
+      users.id,
+      first_name,
+      last_name,
+      avatar,
+      email,
+      phone,
+      avatar,
+      countries.id as country_id,
+      address,
+      post_index,
+      birthday,
+      biography,
+      memo_field,
+      awards,
+      memo_field
+    FROM
+      users, customers, countries
+    WHERE
+      users.id = :userId and
+      customers.user_id = :userId and
+      countries.id = customers.country_id
+  `;
+
+  const info = await query(sql, {replacements: {userId}})
+  return camelizeObject({...info[0], avatar: getUploadPath(get('[0].avatar', info))});
+}
 
 module.exports = [
   {
     method: 'GET',
     path: '/api/profile',
     handler: async function (request, h) {
-      const { host } = request.info;
       const user = get('auth.credentials', request);
-
-      const query = `
-      SELECT
-        id,
-        first_name,
-        last_name,
-        avatar,
-        email,
-        phone,
-        avatar
-      FROM
-        users
-      WHERE
-        users.id = :userId
-    `;
-
-      const info = await h.query(query, {replacements: {userId: user.id}})
-      return {...info[0], avatar: getUploadPath(get('[0].avatar', info))};
+      return await getUserInfo(user.id, h.query);
     },
     options: {
       auth: {
@@ -70,8 +83,6 @@ module.exports = [
 
         const customerPayload = {userId, ...pick(['countryId', 'userId', 'address', 'postIndex', 'memoField', 'birthday'])(payload)};
 
-        console.info(customerPayload);
-
         if (customer) {
           console.info('update');
           customer = await h.models.Customer.update(customerPayload, {where: { userId } })
@@ -80,14 +91,15 @@ module.exports = [
           customer = await h.models.Customer.create({...customerPayload, userId}, {where: { userId } })
         }
 
-
         if (avatar) {
           user.avatar = getUploadPath(avatar.filename);
         }
-        
 
+        customer = await h.models.Customer.findOne({where: { userId }});
 
-        return customer;
+        console.info(customer);
+
+        return {...customer.dataValues, ...user.dataValues};
       } catch (e) {
         return {ok: false, e: e.message}
       } 

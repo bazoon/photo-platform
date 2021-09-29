@@ -4,10 +4,14 @@ import {asyncPost, asyncGet} from "../core/api";
 import {useHistory} from "react-router-dom";
 import {Button} from "primereact/button";
 import {Field, Form} from "react-final-form";
-import {filter} from "lodash/fp";
+import {filter, memoize} from "lodash/fp";
 import ProfileMenu from "./ProfileMenu";
 import {store} from "react-recollect";
 import {Dropdown} from "primereact/dropdown";
+import { Calendar } from "primereact/calendar";
+import { InputTextarea } from "primereact/inputtextarea";
+
+const fieldCls = "col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
 
 
 const toFormData = (obj) => {
@@ -18,54 +22,61 @@ const toFormData = (obj) => {
   return formData;
 };
 
+const validateField = (value, {required}) => {
+  return required && !value && "required";
+};
 
-const renderTextField = ({name, title}) => {
+const renderLabel = (title, required) => {
   return (
-    <Field name={name} key={name} render={({ input }) => (
-      <>
-        <label className="col-span-2 text-tiny place-self-end">{title}</label>
-        <input value={name} onChange={input.onChange} {...input} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-      </>
-    )}/>
+    <label className="col-span-2 text-tiny place-self-end">
+      {title} {required && <sup>*</sup>}
+    </label>
   );
 };
 
-const renderDateField = ({name, title}) => {
+const renderTextField = ({name, title, required, input}) => {
   return (
-    <Field name={name} key={name} render={({ input }) => (
-      <>
-        <label className="col-span-2 text-tiny place-self-end">{title}</label>
-        <input value={name} type="date" onChange={input.onChange} {...input} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
-      </>
-    )}/>
+    <>
+      {renderLabel(title, required)}
+      <input value={name} onChange={input.onChange} {...input} className={fieldCls}/>
+    </>
   );
 };
 
-const renderMemo = ({name, title}) => {
+const renderDateField = ({name, title, required, input}) => {
   return (
-    <Field name={name} key={name} render={({ input }) => (
       <>
-        <label className="col-span-2 text-tiny place-self-end">{title}</label>
-        <textarea value={name} name="story" rows="5" cols="33" onChange={input.onChange} {...input} className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright" />
+        {renderLabel(title, required)}
+        <Calendar {...input} inputClassName="col-span-4 bg-transparent border-0" className={fieldCls}/>
       </>
-    )}/>
   );
 };
 
-
-const renderSelect = ({name, title, options}) => {
+const renderMemo = ({name, title, required, input}) => {
   return (
-    <Field name={name} render={({ input }) => (
-      <>
-        <label className="col-span-2 text-tiny place-self-end">{title}</label>
-        <Dropdown id={name} {...input} onChange={e => input.onChange(e.value)} options={options} optionValue="key" optionLabel="label" className="col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright" />
-      </>
-    )} />
+    <>
+      {renderLabel(title, required)}
+      <InputTextarea {...input} rows={1} cols={30} autoResize className={fieldCls} />
+    </>
   );
 };
 
+const renderSelect = ({name, title, options, required, input}) => {
+  return (
+    <>
+      {renderLabel(title, required)}
+      <Dropdown id={name} {...input} onChange={e => input.onChange(e.value)} options={options} optionValue="key" optionLabel="label" className={fieldCls} />
+    </>
+  );
+};
 
-const renderField = ({name, title, type, options}) => {
+const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
+
+const getFormErrorMessage = (meta, t) => {
+  return isFormFieldValid(meta) && <small className="p-error absolute">{t(meta.error)}</small>;
+};
+
+const renderField = ({name, title, type, options, required}, t) => {
   const fns = {
     string: renderTextField,
     date: renderDateField,
@@ -74,7 +85,16 @@ const renderField = ({name, title, type, options}) => {
   };
 
   const fn = fns[type] || renderTextField;
-  return fn({name, title, type, options});
+  
+  return (
+    <Field name={name} key={name} validate={v => validateField(v, {required, name})} render={({ input, meta }) => (
+      <>
+        {fn({name, title, type, options, required, input})}
+        <div className="col-span-2"></div>
+        <div className="col-span-4 relative -top-8">{getFormErrorMessage(meta, t)}</div>
+      </>
+    )} />
+  );
 };
 
 const isActiveMenuItem = item => {
@@ -99,13 +119,17 @@ export default function Main() {
   const [fields, setFields] = useState([]);
   const fileRef = useRef(null);
   const [file, setFile] = useState(null);
+  const { t } = useTranslation("namespace1");
+  const [loading, setLoading] = useState(false);
 
   const loadProfileFailed = () => {
 
   };
 
   const loadProfileOk = profile => {
+    profile.birthday = profile.birthday && new Date(profile.birthday);
     setProfile(profile);
+    setLoading(false);
   };
 
   const loadProfile = () => {
@@ -117,38 +141,48 @@ export default function Main() {
   };
 
   const loadMetaOk = meta => {
-    setFields(filter(field => !field.hidden, meta.properties));
+    setFields(filter(field => !field.hidden, meta.properties).map(field => ({...field, required: meta.required.includes(field.name)})));
   };
 
   const loadMeta = () => {
     asyncGet("api/profile/meta").fork(loadMetaFailed, loadMetaOk);
   };
 
-
-
   useEffect(() => {
+    setLoading(true);
     loadMeta();
     loadProfile();
   }, []);
 
-  const validateForm = () => {
-
+  const validateForm = (values, a) => {
+    return {};
   };
 
 
   const submitFailed = () => {
-
+    setLoading(false);
   };
 
   const submitOk = user => {
+    user.birthday = user.birthday && new Date(user.birthday);
     store.user = user;
+    debugger;
+    setLoading(false);
     localStorage.setItem("user", JSON.stringify(user));
   };
 
-  const onSubmit = data => {
+  const onSubmit = (data, e,b) => {
+    console.info(e,e);
+    setLoading(true);
     if (!(data.avatar instanceof File)) {
       delete data.avatar;
     }
+    
+    if (data.birthday) {
+      const birthday = new Date(data.birthday);
+      data.birthday = (new Date(+birthday - birthday.getTimezoneOffset() * 60 * 1000)).toUTCString();
+    }
+
     asyncPost("api/profile", toFormData(data), false).fork(submitFailed, submitOk);
   };
 
@@ -163,7 +197,6 @@ export default function Main() {
     fileRef.current.click();
   };
 
-  console.info(profile);
 
   return (
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
@@ -176,7 +209,7 @@ export default function Main() {
             onSubmit={onSubmit}
             initialValues={profile}
             render={({ handleSubmit }) => (
-              <form className="w-full p-10 border rounded bg-brown-dark2">
+              <form className="w-full p-10 border rounded bg-brown-dark2" onSubmit={e => e.preventDefault()}>
                 <div className="grid grid-cols-6 grid-rows-10 gap-12">
                   <Field name="avatar" key={name} render={({ input }) => (
                     <div className="col-span-2 text-tiny place-self-end w-48 h-48 bg-brown-dark">
@@ -184,14 +217,13 @@ export default function Main() {
                       <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => handleChooseFile(target.files[0], input.onChange)}/> 
                     </div>   
                   )}/>
-                  <div className="col-span-4 text-bright text-sm-2 flex flex-col justify-between">
-                    <span>{profile.firstName} {profile.lastName}</span>  
+                  <div className="col-span-4 text-bright text-tiny flex flex-col justify-between">
+                    <span>{profile.firstName} <span className="uppercase">{profile.lastName}</span></span>  
                     <span></span>
-                    <Button disabled={!agreed} onClick={handleUploadAvatar} className="uppercase text-sm text-center w-72 uppercase">Загрузить фото</Button>
+                    <Button disabled={!agreed} onClick={handleUploadAvatar} className="text-sm uppercase max-w-xs flex justify-center h-16">Загрузить фото</Button>
                   </div>
-                  
                   {
-                    fields.map(({name, title, type, options}) => renderField({options, name, title, type}))
+                    fields.map(f => renderField(f, t))
                   }
                 </div>
                 <div className="uppercase text-lg text-bright font-header text-center mt-24">Смена пароля</div>
@@ -201,7 +233,7 @@ export default function Main() {
                   {renderField({name: "newPasswordAgain", title: "Повторить новый пароль"})}
                   <div className="col-span-2"></div>
                   <div className="col-span-4">
-                    <Button disabled={!agreed} onClick={handleSubmit} className="uppercase text-center">Сохранить</Button>
+                    <Button disabled={!agreed} label="Сохранить" loading={loading} onClick={handleSubmit} className="uppercase text-center"/>
                   </div>
                 </div>
               </form>

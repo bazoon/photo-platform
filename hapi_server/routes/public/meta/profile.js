@@ -55,7 +55,7 @@ module.exports = [
           type: 'string'
         },
         {
-          name: 'memo_field',
+          name: 'memoField',
           title: 'Дополнительная информация',
           type: 'string'
         },

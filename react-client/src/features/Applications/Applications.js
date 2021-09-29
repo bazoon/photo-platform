@@ -220,7 +220,7 @@ const UploadButton = ({onChooseFiles, className, disabled}) => {
     <div className={className}>
       <div className="mb-5">
         <input type="file" ref={fileRef} className="hidden" onChange={({target}) => handleChooseFiles(target.files) }/>
-        <Button disabled={disabled} className=" uppercase max-w-md" onClick={() => fileRef.current.click() }>Загрузить</Button>
+        <Button disabled={disabled} className="uppercase max-w-md" onClick={() => fileRef.current.click() }>Загрузить</Button>
       </div>
     </div>
   );
