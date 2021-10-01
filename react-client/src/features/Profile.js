@@ -166,13 +166,12 @@ export default function Main() {
   const submitOk = user => {
     user.birthday = user.birthday && new Date(user.birthday);
     store.user = user;
-    debugger;
+    setProfile(user);
     setLoading(false);
     localStorage.setItem("user", JSON.stringify(user));
   };
 
   const onSubmit = (data, e,b) => {
-    console.info(e,e);
     setLoading(true);
     if (!(data.avatar instanceof File)) {
       delete data.avatar;
@@ -210,7 +209,7 @@ export default function Main() {
             initialValues={profile}
             render={({ handleSubmit }) => (
               <form className="w-full p-10 border rounded bg-brown-dark2" onSubmit={e => e.preventDefault()}>
-                <div className="grid grid-cols-6 grid-rows-10 gap-12">
+                <div className="grid grid-cols-6 grid-rows-10 gap-x-6 gap-y-5">
                   <Field name="avatar" key={name} render={({ input }) => (
                     <div className="col-span-2 text-tiny place-self-end w-48 h-48 bg-brown-dark">
                       {(file || profile.avatar) && <img className="square" src={file || profile.avatar}/>}
@@ -220,7 +219,7 @@ export default function Main() {
                   <div className="col-span-4 text-bright text-tiny flex flex-col justify-between">
                     <span>{profile.firstName} <span className="uppercase">{profile.lastName}</span></span>  
                     <span></span>
-                    <Button disabled={!agreed} onClick={handleUploadAvatar} className="text-sm uppercase max-w-xs flex justify-center h-16">Загрузить фото</Button>
+                    <Button disabled={!agreed} onClick={handleUploadAvatar} className="text-sm uppercase w-72 flex justify-center h-12">Загрузить фото</Button>
                   </div>
                   {
                     fields.map(f => renderField(f, t))
@@ -233,7 +232,7 @@ export default function Main() {
                   {renderField({name: "newPasswordAgain", title: "Повторить новый пароль"})}
                   <div className="col-span-2"></div>
                   <div className="col-span-4">
-                    <Button disabled={!agreed} label="Сохранить" loading={loading} onClick={handleSubmit} className="uppercase text-center"/>
+                    <Button disabled={!agreed} label="Сохранить" loading={loading} onClick={handleSubmit} className="text-sm uppercase w-72 flex justify-center h-12"/>
                   </div>
                 </div>
               </form>

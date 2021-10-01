@@ -26,11 +26,11 @@ const getUserInfo = async (userId, query) => {
       awards,
       memo_field
     FROM
-      users, customers, countries
+      users
+      left join customers on users.id = customers.user_id
+      left join countries on countries.id = customers.country_id
     WHERE
-      users.id = :userId and
-      customers.user_id = :userId and
-      countries.id = customers.country_id
+      users.id=:userId
   `;
 
   const info = await query(sql, {replacements: {userId}})
@@ -84,10 +84,8 @@ module.exports = [
         const customerPayload = {userId, ...pick(['countryId', 'userId', 'address', 'postIndex', 'memoField', 'birthday'])(payload)};
 
         if (customer) {
-          console.info('update');
           customer = await h.models.Customer.update(customerPayload, {where: { userId } })
         } else {
-          console.info('Create');
           customer = await h.models.Customer.create({...customerPayload, userId}, {where: { userId } })
         }
 
@@ -97,9 +95,7 @@ module.exports = [
 
         customer = await h.models.Customer.findOne({where: { userId }});
 
-        console.info(customer);
-
-        return {...customer.dataValues, ...user.dataValues};
+        return await getUserInfo(user.id, h.query);
       } catch (e) {
         return {ok: false, e: e.message}
       } 
