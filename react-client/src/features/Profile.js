@@ -201,7 +201,7 @@ export default function Main() {
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
       <div className="relative flex justify-center flex-1">
         <div>
-          <div className="uppercase text-lg text-bright font-header text-center mt-24">Профиль</div>
+          <div className="uppercase text-lg text-bright font-header text-center mt-32">Профиль</div>
           <Form
             validate={validateForm}
             className="overflow-y-auto max-h-96"
@@ -209,14 +209,14 @@ export default function Main() {
             initialValues={profile}
             render={({ handleSubmit }) => (
               <form className="w-full p-10 border rounded bg-brown-dark2" onSubmit={e => e.preventDefault()}>
-                <div className="grid grid-cols-12 grid-rows-10 gap-x-6 gap-y-5">
+                <div className="grid grid-cols-12 grid-rows-10 gap-x-9 gap-y-5">
                   <Field name="avatar" key={name} render={({ input }) => (
-                    <div className="col-span-4 text-tiny place-self-end w-48 h-48 bg-brown-dark">
+                    <div className="col-span-4 text-tiny place-self-end w-48 h-48 mb-16 bg-brown-dark">
                       {(file || profile.avatar) && <img className="w-full h-full object-cover " src={file || profile.avatar}/>}
                       <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => handleChooseFile(target.files[0], input.onChange)}/> 
                     </div>   
                   )}/>
-                  <div className="col-span-8 text-bright text-tiny flex flex-col justify-between">
+                  <div className="col-span-8 text-bright text-tiny flex flex-col mb-16 justify-between">
                     <span>{profile.firstName} <span className="uppercase">{profile.lastName}</span></span>  
                     <span></span>
                     <Button disabled={!agreed} onClick={handleUploadAvatar} className="text-sm uppercase w-72 flex justify-center h-12">Загрузить фото</Button>
@@ -225,8 +225,8 @@ export default function Main() {
                     fields.map(f => renderField(f, t))
                   }
                 </div>
-                <div className="uppercase text-lg text-bright font-header text-center mt-24">Смена пароля</div>
-                <div className="grid grid-cols-6 grid-rows-8 gap-12">
+                <div className="uppercase text-lg text-bright font-header text-center mt-32">Смена пароля</div>
+                <div className="grid grid-cols-12 gap-x-6 gap-y-5">
                   {renderField({name: "password", title: "Текущий пароль"})}
                   {renderField({name: "newPassword", title: "Новый пароль"})}
                   {renderField({name: "newPasswordAgain", title: "Повторить новый пароль"})}
