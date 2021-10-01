@@ -11,7 +11,7 @@ import {Dropdown} from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
 
-const fieldCls = "col-span-4 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
+const fieldCls = "col-span-8 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
 
 
 const toFormData = (obj) => {
@@ -28,7 +28,7 @@ const validateField = (value, {required}) => {
 
 const renderLabel = (title, required) => {
   return (
-    <label className="col-span-2 text-tiny place-self-end">
+    <label className="col-span-4 text-tiny place-self-end">
       {title} {required && <sup>*</sup>}
     </label>
   );
@@ -90,8 +90,8 @@ const renderField = ({name, title, type, options, required}, t) => {
     <Field name={name} key={name} validate={v => validateField(v, {required, name})} render={({ input, meta }) => (
       <>
         {fn({name, title, type, options, required, input})}
-        <div className="col-span-2"></div>
-        <div className="col-span-4 relative -top-8">{getFormErrorMessage(meta, t)}</div>
+        <div className="col-span-4"></div>
+        <div className="col-span-8 relative -top-8">{getFormErrorMessage(meta, t)}</div>
       </>
     )} />
   );
@@ -209,14 +209,14 @@ export default function Main() {
             initialValues={profile}
             render={({ handleSubmit }) => (
               <form className="w-full p-10 border rounded bg-brown-dark2" onSubmit={e => e.preventDefault()}>
-                <div className="grid grid-cols-6 grid-rows-10 gap-x-6 gap-y-5">
+                <div className="grid grid-cols-12 grid-rows-10 gap-x-6 gap-y-5">
                   <Field name="avatar" key={name} render={({ input }) => (
-                    <div className="col-span-2 text-tiny place-self-end w-48 h-48 bg-brown-dark">
-                      {(file || profile.avatar) && <img className="square" src={file || profile.avatar}/>}
+                    <div className="col-span-4 text-tiny place-self-end w-48 h-48 bg-brown-dark">
+                      {(file || profile.avatar) && <img className="w-full h-full object-cover " src={file || profile.avatar}/>}
                       <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => handleChooseFile(target.files[0], input.onChange)}/> 
                     </div>   
                   )}/>
-                  <div className="col-span-4 text-bright text-tiny flex flex-col justify-between">
+                  <div className="col-span-8 text-bright text-tiny flex flex-col justify-between">
                     <span>{profile.firstName} <span className="uppercase">{profile.lastName}</span></span>  
                     <span></span>
                     <Button disabled={!agreed} onClick={handleUploadAvatar} className="text-sm uppercase w-72 flex justify-center h-12">Загрузить фото</Button>
@@ -230,8 +230,8 @@ export default function Main() {
                   {renderField({name: "password", title: "Текущий пароль"})}
                   {renderField({name: "newPassword", title: "Новый пароль"})}
                   {renderField({name: "newPasswordAgain", title: "Повторить новый пароль"})}
-                  <div className="col-span-2"></div>
-                  <div className="col-span-4">
+                  <div className="col-span-4"></div>
+                  <div className="col-span-8">
                     <Button disabled={!agreed} label="Сохранить" loading={loading} onClick={handleSubmit} className="text-sm uppercase w-72 flex justify-center h-12"/>
                   </div>
                 </div>
