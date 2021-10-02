@@ -3,15 +3,17 @@ import { useTranslation } from "react-i18next";
 import {asyncPost, asyncGet} from "../core/api";
 import {useHistory} from "react-router-dom";
 import {Button} from "primereact/button";
-import {Field, Form} from "react-final-form";
-import {filter, memoize} from "lodash/fp";
+import {Field, Form, FormSpy} from "react-final-form";
+import {filter, memoize, values, keys, pick} from "lodash/fp";
 import ProfileMenu from "./ProfileMenu";
 import {store} from "react-recollect";
 import {Dropdown} from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
+import {debounce} from "lodash";
 
 const fieldCls = "col-span-8 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
+const SAVE_INTERVAL = 2000;
 
 
 const toFormData = (obj) => {
@@ -47,7 +49,7 @@ const renderDateField = ({name, title, required, input}) => {
   return (
       <>
         {renderLabel(title, required)}
-        <Calendar {...input} inputClassName="col-span-4 bg-transparent border-0" className={fieldCls}/>
+        <Calendar {...input} monthNavigator yearNavigator inputClassName="col-span-4 bg-transparent border-0" className={fieldCls} yearRange="1940:2030" />
       </>
   );
 };
@@ -73,7 +75,7 @@ const renderSelect = ({name, title, options, required, input}) => {
 const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
 
 const getFormErrorMessage = (meta, t) => {
-  return isFormFieldValid(meta) && <small className="p-error absolute">{t(meta.error)}</small>;
+  return isFormFieldValid(meta) && <small className="p-error absolute top-5">{t(meta.error)}</small>;
 };
 
 const renderField = ({name, title, type, options, required}, t) => {
@@ -117,6 +119,7 @@ export default function Main() {
   const [profile, setProfile] = useState({});
   const [agreed] = useState(true);
   const [fields, setFields] = useState([]);
+  const [requiredFields, setRequiredFields] = useState(new Set([]));
   const fileRef = useRef(null);
   const [file, setFile] = useState(null);
   const { t } = useTranslation("namespace1");
@@ -141,7 +144,10 @@ export default function Main() {
   };
 
   const loadMetaOk = meta => {
-    setFields(filter(field => !field.hidden, meta.properties).map(field => ({...field, required: meta.required.includes(field.name)})));
+    const fields = filter(field => !field.hidden, meta.properties).map(field => ({...field, required: meta.required.includes(field.name)}));
+    setFields(fields);
+    const requiredFields = new Set(fields.filter(f => f.required).map(f => f.name));
+    setRequiredFields(requiredFields);
   };
 
   const loadMeta = () => {
@@ -171,7 +177,7 @@ export default function Main() {
     localStorage.setItem("user", JSON.stringify(user));
   };
 
-  const onSubmit = (data, e,b) => {
+  const onSubmit = (data) => {
     setLoading(true);
     if (!(data.avatar instanceof File)) {
       delete data.avatar;
@@ -184,8 +190,7 @@ export default function Main() {
 
     asyncPost("api/profile", toFormData(data), false).fork(submitFailed, submitOk);
   };
-
-
+  
   const handleChooseFile = (file, onChange) => {
     setFile(URL.createObjectURL(file));
     onChange(file);
@@ -195,7 +200,32 @@ export default function Main() {
     e.preventDefault();
     fileRef.current.click();
   };
+  
+  const saveRequiredFailed = () => {
+    setLoading(false);
+  };
 
+  const saveRequiredOk = d => {
+    setLoading(false);
+  };
+
+  const saveRequired = debounce((fields, form) => {
+    setLoading(true);
+    asyncPost("api/profile", toFormData(fields), false).fork(saveRequiredFailed, saveRequiredOk);
+    setProfile(p => ({...p, ...fields}));
+    form.restart();
+  }, SAVE_INTERVAL);
+
+  const onFormChange = (state, form) => {
+    const {values, modified} = state;
+    const fields = keys(values);
+    const toSave = fields.reduce((a, f) => modified[f] && requiredFields.has(f) ? [...a, f] : a, []);
+
+    if (toSave.length > 0) {
+      const changed = pick(toSave, values);
+      saveRequired(changed,form);
+    }
+  };
 
   return (
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
@@ -207,7 +237,7 @@ export default function Main() {
             className="overflow-y-auto max-h-96"
             onSubmit={onSubmit}
             initialValues={profile}
-            render={({ handleSubmit }) => (
+            render={({ handleSubmit, form }) => (
               <form className="w-full p-10 border rounded bg-brown-dark2" onSubmit={e => e.preventDefault()}>
                 <div className="grid grid-cols-12 grid-rows-10 gap-x-9 gap-y-5">
                   <Field name="avatar" key={name} render={({ input }) => (
@@ -216,11 +246,17 @@ export default function Main() {
                       <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => handleChooseFile(target.files[0], input.onChange)}/> 
                     </div>   
                   )}/>
+                  <FormSpy
+                    onChange={f => onFormChange(f, form)}
+                  />
                   <div className="col-span-8 text-bright text-tiny flex flex-col mb-16 justify-between">
                     <span>{profile.firstName} <span className="uppercase">{profile.lastName}</span></span>  
                     <span></span>
                     <Button disabled={!agreed} onClick={handleUploadAvatar} className="text-sm uppercase w-72 flex justify-center h-12">Загрузить фото</Button>
                   </div>
+                
+                  <div className="col-span-4"></div>
+                  <div className={`col-span-8 text-brown-light4 ${!loading && "invisible"}`}>{t("isSaving")}...</div>
                   {
                     fields.map(f => renderField(f, t))
                   }

@@ -77,7 +77,7 @@ module.exports = [
         'title': 'Profile config',
         'type': 'object',
         'properties': fields,
-        required: ['firstName', 'lastName', 'countryId', 'address']
+        required: ['firstName', 'lastName', 'countryId', 'address', 'birthday']
       };
 
       return scheme;
