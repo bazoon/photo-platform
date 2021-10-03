@@ -209,7 +209,8 @@ export default function applicationsMachine({ context = {}, api } = {}) {
       processApplication: assign({
         isApproved: (_, {data}) => data.regState === 1,
         applicationMessage: (_, {data}) => regStates[data.regState],
-        application: (_, {data}) => data
+        application: (_, {data}) => data,
+        rejectionReason: (_, {data}) => data.rejectionReason,
       }),
     },
     services: {

@@ -47,9 +47,9 @@ const getInitialContext = () => {
   };
 };
 
-export default ({api, idField = "id", apiParams, t = identity, apiMetaParams = {}}) => {
+export default ({name = "crud", api, idField = "id", apiParams, t = identity, apiMetaParams = {}}) => {
   return Machine({
-    id: "crud",
+    id: name,
     context: getInitialContext(),
     initial: "idle",
     states: {
@@ -137,7 +137,7 @@ export default ({api, idField = "id", apiParams, t = identity, apiMetaParams = {
           add: {
             on: {
               close: {
-                target: "#crud.idle",
+                target: `#${name}.idle`,
               },
               save: {
                 actions: assign({
@@ -151,7 +151,7 @@ export default ({api, idField = "id", apiParams, t = identity, apiMetaParams = {
           edit: {
             on: {
               close: {
-                target: "#crud.idle"
+                target: `#${name}.idle`
               },
               save: {
                 target: "update",
@@ -190,7 +190,7 @@ export default ({api, idField = "id", apiParams, t = identity, apiMetaParams = {
                 target: "update"
               },
               close: {
-                target: "#crud.idle"
+                target: `#${name}.idle`
               }
             }
           }

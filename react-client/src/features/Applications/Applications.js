@@ -46,6 +46,7 @@ const initialContext = {
   applications: [],
   message: "",
   applicationMessage: "",
+  rejectionReason: "",
   photoworks: [],
   payload: {},
   application: {}
@@ -355,7 +356,7 @@ const SectionSelector = ({t, onLoadSection, application}) => {
           <span>{section?.name}</span>
           <i className="pi-angle-right pi text-xl absolute right-44 cursor-pointer" onClick={right}/>
           <div className="right-20 absolute flex flex-col justify-center">
-            <div className="uppercase text-lg text-brown-light2">{section?.maxCountImg}</div>
+            <div className="uppercase text-tiny text-brown-light2">{section?.maxCountImg}</div>
             <div className="text-sm">{t("limit-photo")}</div>
           </div>
         </div>
@@ -365,7 +366,7 @@ const SectionSelector = ({t, onLoadSection, application}) => {
       <Images className="mb-5" onSelect={handleSelect} selectedImage={selectedImage} images={section?.images || []}/>
       {
        canUpload ? 
-        <UploadButton disabled={!canUpload} className="m-auto w-min text-lg h-20" onChooseFiles={chooseFiles}>{t("chooseFile")}</UploadButton>
+        <UploadButton disabled={!canUpload} className="m-auto w-min text-tiny h-20" onChooseFiles={chooseFiles}>{t("chooseFile")}</UploadButton>
         :
         <UnableMessage status={canUploadStatus} className="text-red-400 text-center h-20"/>
       }
@@ -376,8 +377,8 @@ const SectionSelector = ({t, onLoadSection, application}) => {
 
 const UploadDialog = ({visible, onHide, application, header, t, onLoadSection = identity}) => {
   return (
-    <Dialog visible={visible} className="bg-brown-light3 w-3/5 text-bright" contentClassName="bg-brown-light3 text-bright" onHide={onHide}>
-      <div className="text-lg uppercase text-center mb-4">{header}</div>
+    <Dialog visible={visible} showHeader={false} className="bg-brown-light3 w-3/5 text-bright" contentClassName="bg-brown-light3 text-bright" onHide={onHide}>
+      <div className="text-tiny uppercase text-center mb-4">{header}</div>
       
       <div className="mb-8">
         <SectionSelector t={t} onLoadSection={onLoadSection} application={application}/>
@@ -569,6 +570,7 @@ export default function Main() {
   const { i18n } = useTranslation("namespace1");
   const [contestName, setContestName] = useState("");
   const dateReg = get("application.dateReg", context);
+  const rejectionReason = get("application.rejectionReason", context);
   const [isUploadVisible, setIsUploadVisible] = useState(false);
   const [aboutText, setAboutText] = useState("");
   const {application, photoworks} = context;
@@ -631,16 +633,26 @@ export default function Main() {
     send("remove", { ids });
   };
 
+  const uploadHeader = (onClose) => {
+    return (
+      <div className="bg-brown-light3 p-5 text-bright flex cursor-pointer justify-between">
+        <div>{contestName}</div>
+        <i onClick={onClose} className="pi pi-times"/>
+      </div>
+    );
+  };
+
   return (
     <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
       <div className="relative flex justify-center w-full">
       <div className="flex-1">
-      <div className="uppercase text-lg pt-24 mb-24 text-bright font-header text-center">{t("myApplications")}</div>
+      <div className="uppercase text-tiny pt-24 mb-24 text-bright font-header text-center">{t("myApplications")}</div>
 
       <ApplicationInfo
         contestName={contestName}
         status={applicationMessage}
         dateReg={dateReg}
+        rejectionReason={rejectionReason}
         canUpload={isApproved}
         openUpload={openUpload}
       />
@@ -650,7 +662,7 @@ export default function Main() {
     }
 
     {
-      isApproved && <UploadDialog application={application} header={contestName} visible={isUploadVisible} onHide={handleHideUpload} t={t}/> 
+      isApproved && <UploadDialog application={application} header={uploadHeader(handleHideUpload)} visible={isUploadVisible} onHide={handleHideUpload} t={t}/> 
     } 
 
       <div className="mb-10"/>

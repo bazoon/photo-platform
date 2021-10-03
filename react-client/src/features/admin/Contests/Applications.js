@@ -31,7 +31,7 @@ const TBar = ({selection, refresh}) => {
 };
 
 export default ({id}) => {
-  const machine = CrudMachine({api: "api/admin/applications", apiParams: {contestId: id}, apiMetaParams: {id}});
+  const machine = CrudMachine({name: "CA", api: "api/admin/applications", apiParams: {contestId: id}, apiMetaParams: {id}});
   const G = Grid({machine, canDelete: false, canEdit: true, canAdd: false, hasCheck: true, Toolbar: TBar });
   return (
     <G/>

@@ -29,7 +29,7 @@ let make = (~onSelect, ~images, ~className) => {
 
 
   let im = React.array(Belt.Array.map(images, image => {
-        let cls = cn("object-cover w-full h-full", {"border-brown-light2 border-2 border-dotted": image === selectedImage });
+       // let cls = cn("object-cover w-full h-full", {"border-brown-light2 border-2 border-dotted": image === selectedImage });
         let src = switch image {
           | Draft(file) => file.name
           | Uploaded(Photowork({filename})) => filename

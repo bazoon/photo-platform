@@ -84,9 +84,9 @@ function App() {
 
   return (
     <Router>
-      <div className="container flex">
+      <div className="container flex admin">
         <AdminMenu/>
-        <main className="w-4/5 p-5 overflow-auto bg-yellow-50">
+        <main className="w-4/5 p-5 overflow-auto">
           <Switch>
             {
               routes.map(({path, Component}) => {

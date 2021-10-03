@@ -3,7 +3,7 @@
 }
 
 html {
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .main-bg {
@@ -188,8 +188,8 @@ body {
 }
 
 .p-dialog-header {
-  background: transparent !important;
-  height: 40px;
+  height: 20px;
+
 }
 
 .hidden-scroll::-webkit-scrollbar {
@@ -219,5 +219,37 @@ body {
 
 .p-inputtext {
   color: #fff !important;
+  background-color: rgb(30, 31, 37) !important;
 }
+
+.p-dropdown {
+  background-color: rgb(30, 31, 37) !important;
+}
+
+.p-dialog-header,
+.p-dialog-content,
+.p-dialog-footer, 
+.p-toolbar, 
+.p-datatable, 
+.p-datatable-tbody, 
+.p-datatable .p-datatable-tbody > tr, 
+.p-datatable-thead, 
+.p-datatable .p-datatable-thead > tr > th,
+.p-tieredmenu,
+.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link,
+.p-tieredmenu .p-submenu-list,
+.p-tieredmenu .p-menuitem-link .p-menuitem-text,
+.p-tieredmenu .p-menuitem-link:not(.p-disabled):hover {
+  background-color: rgb(30, 31, 37) !important;
+  color: #fff !important;
+}
+
+.p-tieredmenu .p-menuitem-link {
+  color: #fff !important;
+}
+
+.p-tieredmenu {
+  border: none !important;
+}
+
 

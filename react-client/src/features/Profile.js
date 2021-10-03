@@ -12,7 +12,7 @@ import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
 import {debounce} from "lodash";
 
-const fieldCls = "col-span-8 text-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
+const fieldCls = "col-span-8 text-bright text-sm-2 focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
 const SAVE_INTERVAL = 2000;
 
 
@@ -30,7 +30,7 @@ const validateField = (value, {required}) => {
 
 const renderLabel = (title, required) => {
   return (
-    <label className="col-span-4 text-tiny place-self-end">
+    <label className="col-span-4 text-sm-2 place-self-end">
       {title} {required && <sup>*</sup>}
     </label>
   );
@@ -241,7 +241,7 @@ export default function Main() {
               <form className="w-full p-10 border rounded bg-brown-dark2" onSubmit={e => e.preventDefault()}>
                 <div className="grid grid-cols-12 grid-rows-10 gap-x-9 gap-y-5">
                   <Field name="avatar" key={name} render={({ input }) => (
-                    <div className="col-span-4 text-tiny place-self-end w-48 h-48 mb-16 bg-brown-dark">
+                    <div className="col-span-4 text-sm-2 place-self-end w-48 h-48 mb-16 bg-brown-dark">
                       {(file || profile.avatar) && <img className="w-full h-full object-cover " src={file || profile.avatar}/>}
                       <input type="file" style={{display: "none"}} ref={fileRef} onChange={({target}) => handleChooseFile(target.files[0], input.onChange)}/> 
                     </div>   
@@ -249,7 +249,7 @@ export default function Main() {
                   <FormSpy
                     onChange={f => onFormChange(f, form)}
                   />
-                  <div className="col-span-8 text-bright text-tiny flex flex-col mb-16 justify-between">
+                  <div className="col-span-8 text-bright text-sm-2 flex flex-col mb-16 justify-between">
                     <span>{profile.firstName} <span className="uppercase">{profile.lastName}</span></span>  
                     <span></span>
                     <Button disabled={!agreed} onClick={handleUploadAvatar} className="text-sm uppercase w-72 flex justify-center h-12">Загрузить фото</Button>

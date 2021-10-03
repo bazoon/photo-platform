@@ -13,8 +13,7 @@ module Button = {
 /* } */
 
 @react.component
-let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<string>, ~openUpload, ~canUpload: bool) => {
-  /* let [t, _, _] = useTranslation("namespace1") */
+let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<string>, ~openUpload, ~canUpload: bool, ~rejectionReason: Js.Nullable.t<string>) => {
   let t = switch useTranslation("namespace1") {
   | [t, _, _] => a => t(a, "")
   | _ => (a: string) => a
@@ -25,15 +24,22 @@ let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<string>, ~ope
    | _ => ""
   }
 
-    <div className="grid grid-cols-2 m-auto w-3/5 text-base items-baseline">
-      <div> {React.string(t("currentContest"))} </div>
-      <div className="uppercase text-lg text-brown-light2 font-header">
+  let rr = switch Js.Nullable.toOption(rejectionReason) {
+   | Some(d) => "(" ++ d ++ ")"
+   | _ => ""
+  }
+
+    <div className="grid grid-cols-2 gap-5 gap-y-2 m-auto w-3/5 text-sm items-center">
+      <span className="place-self-end"> {React.string(t("currentContest"))} </span>
+      <span className="uppercase text-sm text-brown-light2 font-header">
         {React.string(contestName)}
-      </div>
-      <div> {React.string(t("status"))} </div>
-      <div> {React.string(status)} </div>
-      <div> {React.string(t("dateReg"))} </div>
-      <div> {React.string(date)} </div>
+      </span>
+      <span className="place-self-end"> {React.string(t("status"))} </span>
+      <span> { React.string(status) } </span>
+      <span></span>
+      <span className="text-xs">{React.string(rr)}</span>
+      <span className="place-self-end"> {React.string(t("dateReg"))} </span>
+      <span className=""> {React.string(date)} </span>
       <div className="mt-10" />
       <div className="mt-10">
         {switch canUpload {

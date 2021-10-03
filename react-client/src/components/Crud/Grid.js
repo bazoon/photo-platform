@@ -30,7 +30,7 @@ export default ({
 }) => {
   return function Main({expandedRows}) {
     const { t } = useTranslation("namespace1");
-    const [current, send] = useMachine(machine);
+    const [current, send] = useMachine(machine, { devTools: true });
     const {context} = current;
     const {records, record, error, isOpen, meta, dialogTitle} = context;
     const {onCancel, onOk, onChange, handleEdit, handleAdd, handleDelete} = useCrud(send, record);
@@ -74,6 +74,8 @@ export default ({
     useEffect(() => {
       send("load");
     }, []);
+
+
     return (
       <>
         <div className="mb-10 text-lg text-3xl">{title}</div>
