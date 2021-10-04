@@ -61,6 +61,18 @@ const getFormErrorMessage = (meta) => {
 export default function FormControl({title, dataIndex, options, key, type, max}) {
   const { t, i18n } = useTranslation("namespace1");
   switch(true) {
+  case (type === "enum"):
+    return (
+      <Field name={dataIndex}  render={({ input, meta }) => (
+        <div className="p-field">
+          <div>
+            <label htmlFor={dataIndex} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <SelectButton className="grid grid-cols-4 p-5 gap-5" optionLabel="label" optionValue="dataIndex" value={input.value} options={options} onChange={(e) => {input.onChange(e.value);}} />  
+          </div>
+          {getFormErrorMessage(meta)}
+        </div>
+      )} />
+    );
   case (!!options && type === "selectButton"):
     return (
       <Field name={dataIndex}  render={({ input, meta }) => (
@@ -85,9 +97,9 @@ export default function FormControl({title, dataIndex, options, key, type, max})
     );
   case(type === "boolean"):
     return (
-      <Field name={dataIndex} render={({ input, meta }) => (
+      <Field name={dataIndex} type="checkbox" render={({ input, meta }) => (
         <div className="p-field-checkbox">
-          <Checkbox inputId={dataIndex} checked={input.value} onChange={input.onChange} />
+          <Checkbox inputId={dataIndex} checked={input.checked} onChange={input.onChange} />
           &nbsp;&nbsp;
           <label htmlFor={dataIndex}>{title}</label>
         </div>

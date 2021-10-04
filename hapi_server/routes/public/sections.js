@@ -129,7 +129,6 @@ module.exports = [
     method: 'PUT',
     path: '/api/sections/{sectionId}/images',
     handler: async function (request, h) {
-      console.log(chalk.red(33, request.payload), 77)
       const {sectionId} = request.params;
       const userId = h.request.auth.credentials.id;
       const payload = request.payload;
@@ -142,9 +141,6 @@ module.exports = [
       const filename = file ? file.filename : payload.filename;
 
       const createPhotowork = async () => {
-        console.log(chalk.green('createPhotowork'))
-        
-        // console.log(22, request.payload, 33)
         const section = await h.models.Section.findOne({where: {id: sectionId}});
         const application = await h.models.RegistrationContest.findOne({where: { userId, contestId: section.contestId }})
 
@@ -160,8 +156,6 @@ module.exports = [
       }
 
       const updatePhotowork = async () => {
-        console.log(chalk.green('updatePhotowork'))
-        console.log(22, request.payload, 33)
         await h.models.Photowork.update(
           mapKeys(imageAlias, pick(imageFields, payload)), {
           where: {

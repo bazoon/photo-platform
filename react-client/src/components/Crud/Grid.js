@@ -56,7 +56,13 @@ export default ({
       });
     };
 
-    const columns = meta.columns.map(addRender);
+    let columns;
+    if (meta.columns) {
+      columns = meta.columns.map(addRender);
+    } else if (meta.properties) {
+      columns = meta.properties.filter(e => !e.hidden).map(e => ({...e, dataIndex: e.name, title: e.title, key: e.name, type: e.type})).map(addRender);
+    }
+
     const actionBodyTemplate = (rowData) => {
       return (
         <div className="flex w-40">
@@ -74,6 +80,44 @@ export default ({
     useEffect(() => {
       send("load");
     }, []);
+
+    const renderTextColumn = value => {
+      return value;
+    };
+
+    const renderBooleanColumn = value => {
+      return value ? <i className="pi pi-check"/> : "";
+    };
+
+    const getColumnsClass = type => {
+      return {
+        "boolean": "text-center"
+      }[type] || "text-left";
+    };
+
+    const renderColumn = ({dataIndex, title, type, width}) => {
+      const render = {
+        boolean: renderBooleanColumn,
+        string: renderTextColumn,
+
+      }[type] || renderTextColumn;
+
+      const renderValue = rowData => { 
+        return render(rowData[dataIndex]);
+      };
+
+
+      return (
+        <Column 
+          className={getColumnsClass(type)}
+          headerClassName={getColumnsClass(type)}
+          headerStyle={{width}} 
+          key={dataIndex} 
+          field={dataIndex} 
+          header={title} 
+          body={renderValue}/>
+      );
+    };
 
 
     return (
@@ -101,20 +145,16 @@ export default ({
           {
             canExpand && <Column expander style={{ width: "3em" }} />
           }
-
           {
             hasCheck && <Column selectionMode="multiple" headerStyle={{ width: "3rem" }}></Column>
           }
           <Column key="actionBodyTemplate" headerStyle={{width: 50}} body={actionBodyTemplate}></Column>
           {
-            columns.map(({dataIndex, title, width, body = record => record[dataIndex]}) => 
-              <Column headerStyle={{width}} key={dataIndex} field={dataIndex} header={title} body={body}></Column>)
+            columns.map(renderColumn)
           }
-
-
         </DataTable>
         {
-          isOpen && <Form title={dialogTitle} dialogConfig={dialogConfig} fields={meta.fields} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
+          isOpen && <Form title={dialogTitle} dialogConfig={dialogConfig} fields={meta.fields || columns} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
         }
       </>
     );

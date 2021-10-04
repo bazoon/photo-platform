@@ -146,4 +146,6 @@ module.exports = flatten([
   require('./hapi_server/routes/public/apply'),
   require('./hapi_server/routes/public/meta/signupForm'),
   require('./hapi_server/routes/public/salones'),
+  require('./hapi_server/routes/admin/settings'),
+  require('./hapi_server/routes/admin/meta/settings'),
 ]);

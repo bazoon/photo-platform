@@ -26,6 +26,10 @@ function App({history}) {
       label: t("settings"),
       items: [
         {
+          label: t("settings"),
+          command: () => history.push("/admin/settings")
+        },
+        {
           label: t("languages"),
           command: () => history.push("/admin/languages")
         },

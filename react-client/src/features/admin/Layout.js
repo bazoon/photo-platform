@@ -21,6 +21,8 @@ import Config from "./Config/Config";
 import { collect } from "react-recollect";
 import { initStore } from "react-recollect";
 import { store } from "react-recollect";
+import Settings from "./Settings/Settings";
+
 initStore({sidebars: []});
 
 
@@ -76,9 +78,13 @@ function App() {
       Component: Config
     },
     {
+      path: "/admin/settings",
+      Component: Settings
+    },
+    {
       path: "/admin",
       Component: Empty
-    },
+    }
   ];
 
 

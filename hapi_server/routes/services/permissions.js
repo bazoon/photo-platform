@@ -30,8 +30,6 @@ module.exports = {
       }
     });
 
-    console.log(user);
-
     if (user.userType === 0) {
       return 'superAdmin';
     }
@@ -52,9 +50,6 @@ module.exports = {
         userId: user.id
       }
     });
-
-    console.log(roles);
-
 
     if (roles.length > 0) {
       let role = roles[0];

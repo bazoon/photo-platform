@@ -34,7 +34,7 @@ const users = [
     },
     options: {
       auth: {
-        mode: 'optional'
+        mode: 'required'
       }
     }
   },
@@ -84,7 +84,7 @@ const users = [
         allow: ['application/*+json', 'application/json']
       }, 
       auth: {
-        mode: 'optional'
+        mode: 'required'
       }
     }
   },
@@ -110,7 +110,7 @@ const users = [
     },
     options: {
       auth: {
-        mode: 'optional'
+        mode: 'required'
       }
     }
   }

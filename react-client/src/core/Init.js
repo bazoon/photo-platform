@@ -70,7 +70,7 @@ function Init({store}) {
 
   useEffect(() => {
     const onChangleLocation = ({pathname}) => {
-      setTitle(getTitle(pathname, store.info.saloneName, store.info.name));
+      setTitle(getTitle(pathname, store?.info?.saloneName, store?.info?.name));
     };
     return history.listen(onChangleLocation);
   }, []);

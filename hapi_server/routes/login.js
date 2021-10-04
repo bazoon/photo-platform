@@ -301,11 +301,11 @@ const isLoggedIn = {
   },
   options: {
     auth: {
-      mode: 'optional'
+      mode: 'required'
     },
-    plugins: {
-      role: 'ADMIN'
-    }
+    // plugins: {
+    //   role: 'ADMIN'
+    // }
   }
 };
 
