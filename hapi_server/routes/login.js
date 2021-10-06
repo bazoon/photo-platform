@@ -301,7 +301,7 @@ const isLoggedIn = {
   },
   options: {
     auth: {
-      mode: 'required'
+      mode: 'optional'
     },
     // plugins: {
     //   role: 'ADMIN'
