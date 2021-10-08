@@ -12,7 +12,7 @@ import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
 import {debounce} from "lodash";
 
-const fieldCls = "col-span-8 text-bright text-sm-2 focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
+const fieldCls = "col-span-8 text-bright text-lg focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
 const SAVE_INTERVAL = 2000;
 
 
@@ -30,7 +30,7 @@ const validateField = (value, {required}) => {
 
 const renderLabel = (title, required) => {
   return (
-    <label className="col-span-4 text-sm-2 place-self-end">
+    <label className="col-span-4 text-lg place-self-end">
       {title} {required && <sup>*</sup>}
     </label>
   );
@@ -231,7 +231,7 @@ export default function Main() {
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
       <div className="relative flex justify-center flex-1">
         <div>
-          <div className="uppercase text-lg text-bright font-header text-center mt-32">Профиль</div>
+          <div className="uppercase text-4xl text-bright font-header text-center mt-32">Профиль</div>
           <Form
             validate={validateForm}
             className="overflow-y-auto max-h-96"

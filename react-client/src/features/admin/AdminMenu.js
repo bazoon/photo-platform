@@ -30,6 +30,10 @@ function App({history}) {
           command: () => history.push("/admin/settings")
         },
         {
+          label: t("saloneSettings"),
+          command: () => history.push("/admin/saloneSettings")
+        },
+        {
           label: t("languages"),
           command: () => history.push("/admin/languages")
         },

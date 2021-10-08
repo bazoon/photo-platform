@@ -49,7 +49,7 @@ function MainPage({history}) {
   const renderStats = () => {
     return null;
     // return (
-    //   <div className="flex justify-center mt-12 uppercase text-white-80">
+    //   <div className="flex justify-center mt-10 uppercase text-white-80">
     //     <div className="p-10">
     //       <div className="text-lg">2762</div>
     //       <div className="text-sm">УЧАСТНИКОВ</div>
@@ -65,21 +65,21 @@ function MainPage({history}) {
   const renderContent = () => {
     return (
       <div>
-        <div className="mt-20 text-center uppercase text-11xl text-white-80 font-header">
+        <div className="mt-32 text-center uppercase text-9xl text-white-80 font-bebas-bold">
           {info.salone}
         </div>
-        <div className="mt-10 text-center uppercase text-tiny text-white-80">
+        <div className="mt-9 text-center uppercase text-2xl font-futura-normal text-white-80">
           {info.name}
         </div>
-        <div className="mt-24 text-center uppercase text-tiny text-white-80">
+        <div className="mt-32 text-center uppercase text-2xl font-futura-normal text-white-80">
             прием работ {dateFormat(info.dateStart)} - {dateFormat(info.dateStop)} 
           <br/>
         </div>
         <br/><br/>
         {renderStats()}
-        <div className="flex justify-center">
-          <Button className="uppercase" onClick={handleSendPhoto}>отправить фото</Button>
-          {null && <Button className="uppercase p-button-secondary">проголосовать</Button>}
+        <div className="flex m-48 justify-center">
+          <Button className="uppercase w-72 h-12 flex justify-center" onClick={handleSendPhoto}>отправить фото</Button>
+          <Button className="uppercase w-72 h-12 p-button-secondary flex justify-center ml-14">проголосовать</Button>
         </div>
       </div>
     );

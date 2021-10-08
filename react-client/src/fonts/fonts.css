@@ -1,21 +1,35 @@
 @font-face {
-    font-family: 'FuturaPTBook';
-    src: url('./FuturaPT-Book.eot'),
-         url('./FuturaPT-Book.woff'),
-         url('./FuturaPT-Book.ttf');
+    font-family: 'Futura-Light';
+    src: url('./Futura-300/futura_pt_light.eot'),
+         url('./Futura-300/futura_pt_light.svg'),
+         url('./Futura-300/futura_pt_light.ttf'),
+         url('./Futura-300/futura_pt_light.woff'),
+         url('./Futura-300/futura_pt_light.woff2');
 }
 
 @font-face {
-    font-family: 'BebasNeueRegular';
-    src: url('./BebasNeueRegular.eot'),
-         url('./BebasNeueRegular.ttf'),
-         url('./BebasNeueRegular.woff');
+    font-family: 'Futura-Normal';
+    src: url('./Futura-400/futura_pt_medium.eot'),
+         url('./Futura-400/futura_pt_medium.ttf'),
+         url('./Futura-400/futura_pt_medium.woff'),
+         url('./Futura-400/futura_pt_medium.woff2'),
+         url('./Futura-400/futura_pt_medium.svg');
 }
 
+@font-face {
+    font-family: 'Futura-DemiBold';
+    src: url('./Futura-600/futura_pt_demi.eot'),
+         url('./Futura-600/futura_pt_demi.svg'),
+         url('./Futura-600/futura_pt_demi.ttf'),
+         url('./Futura-600/futura_pt_demi.woff'),
+         url('./Futura-600/futura_pt_demi.woff2');
+}
 
 @font-face {
     font-family: 'BebasNeueBold';
-    src: url('./BebasNeueBold.eot'),
-         url('./BebasNeueBold.ttf'),
-         url('./BebasNeueBold.woff');
+    src: url('./700/bebas-neue-bold.eot'),
+         url('./700/bebas-neue-bold.ttf'),
+         url('./700/bebas-neue-bold.woff'),
+         url('./700/bebas-neue-bold.woff2'),
+         url('./700/bebas-neue-bold.svg');
 }

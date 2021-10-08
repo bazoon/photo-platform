@@ -148,10 +148,9 @@ function MainApp({store}) {
               <div className="pt-20 pb-36 wrap">
                 <div className="justify-between grid grid-cols-4">
                   <div className="w-60 h-16">
-                    
                     <div className="relative">
                       <Link className="uppercase absolute font-bold text-3xl text-brown-light no-underline" to="/">Photo</Link>
-                      <Link style={{right: "86px", top: "32px"}} to="/" className="absolute font-text text-tiny no-underline text-brown-light">конкурсы</Link>
+                      <Link style={{right: "111px", top: "32px"}} to="/" className="absolute font-text text-tiny no-underline text-brown-light">конкурсы</Link>
                       <div style={{top: "64px"}} className="uppercase absolute text-sm text-gray2 text-right">@ 2021 Photoконкурсы</div> 
                     </div>
                   </div>

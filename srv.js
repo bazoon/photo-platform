@@ -81,7 +81,7 @@ const init = async () => {
           }});
         const userRole = ['SUPERADMIN', 'ADMIN', 'MODER', 'USER'][u && u.userType] || 'ANON';
         routeRole = get('route.settings.plugins.role', request) || 'ANON';
-        console.log(routeRole, userRole, request.path)
+        // console.log(routeRole, userRole, request.path)
         return { valid: can(userRole, routeRole), credentials: user, role: userRole };
       }
       return { valid: routeRole === '' };

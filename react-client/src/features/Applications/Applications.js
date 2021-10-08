@@ -68,7 +68,7 @@ const ApplyForm = ({onSubmit, sections}) => {
                 <Sections className="flex-1 mr-10" sections={sections}/>
                 <div>
                   { 
-                    <Button className="uppercase flex-1" onClick={handleSubmit}>Подать заявку</Button>
+                    <Button className="uppercase flex-1 w-64 h-12" onClick={handleSubmit}>Подать заявку</Button>
                   }
                 </div>
               </div>
@@ -646,7 +646,7 @@ export default function Main() {
     <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
       <div className="relative flex justify-center w-full">
       <div className="flex-1">
-      <div className="uppercase text-tiny pt-24 mb-24 text-bright font-header text-center">{t("myApplications")}</div>
+      <div className="uppercase text-4xl pt-24 mb-24 text-bright font-header text-center">{t("myApplications")}</div>
 
       <ApplicationInfo
         contestName={contestName}

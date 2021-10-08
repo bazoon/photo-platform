@@ -22,6 +22,7 @@ import { collect } from "react-recollect";
 import { initStore } from "react-recollect";
 import { store } from "react-recollect";
 import Settings from "./Settings/Settings";
+import SaloneSettings from "./Settings/SaloneSettings";
 
 initStore({sidebars: []});
 
@@ -80,6 +81,10 @@ function App() {
     {
       path: "/admin/settings",
       Component: Settings
+    },
+    {
+      path: "/admin/saloneSettings",
+      Component: SaloneSettings
     },
     {
       path: "/admin",

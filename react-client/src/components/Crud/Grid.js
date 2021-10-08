@@ -56,11 +56,13 @@ export default ({
       });
     };
 
-    let columns;
+    let columns, fields;
     if (meta.columns) {
       columns = meta.columns.map(addRender);
+      fields = meta.fields;
     } else if (meta.properties) {
-      columns = meta.properties.filter(e => !e.hidden).map(e => ({...e, dataIndex: e.name, title: e.title, key: e.name, type: e.type})).map(addRender);
+      columns = meta.properties.columns.enum.filter(e => !e.hidden).map(e => ({...e, dataIndex: e.name, title: e.title, key: e.name, type: e.type})).map(addRender);
+      fields = meta.properties.fields.enum.filter(e => !e.hidden).map(e => ({...e, dataIndex: e.name, title: e.title, key: e.name, type: e.type})).map(addRender);
     }
 
     const actionBodyTemplate = (rowData) => {
@@ -154,7 +156,7 @@ export default ({
           }
         </DataTable>
         {
-          isOpen && <Form title={dialogTitle} dialogConfig={dialogConfig} fields={meta.fields || columns} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
+          isOpen && <Form title={dialogTitle} dialogConfig={dialogConfig} fields={fields || columns} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
         }
       </>
     );

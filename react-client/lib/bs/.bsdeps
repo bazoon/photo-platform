@@ -2,18 +2,20 @@
 /Users/vn/projects/work/photo-platform/react-client
 0
 bsconfig.json	0x1.8516df05ee202p+30
-src	0x1.851ffba82ee1fp+30
-src/fonts	0x1.84edf4f0a0ca7p+30
+src	0x1.8566a5b84685bp+30
+src/fonts	0x1.857ca76eaa3e8p+30
+src/fonts/400	0x1.857ca7805fc6ep+30
+src/fonts/700	0x1.857c9642b4c6fp+30
 src/icons	0x1.84edf60414396p+30
 src/components	0x1.84edf70b5217p+30
-src/components/Crud	0x1.84edf6040b856p+30
-src/features	0x1.851ff09138a76p+30
-src/features/Applications	0x1.854139fabcd52p+30
-src/features/machines	0x1.84edf4f09c349p+30
-src/features/admin	0x1.84edf4f09bde4p+30
+src/components/Crud	0x1.8566a5b847388p+30
+src/features	0x1.8566a5b848deep+30
+src/features/Applications	0x1.8566a5b84882bp+30
+src/features/machines	0x1.8566a5b849616p+30
+src/features/admin	0x1.856b9d5548995p+30
 src/features/admin/Salones	0x1.84edf60413177p+30
 src/features/admin/AwardTypes	0x1.84edf6040fd2ep+30
-src/features/admin/Contests	0x1.84edf70b5298p+30
+src/features/admin/Contests	0x1.8566a5b849244p+30
 src/features/admin/Organizers	0x1.84edf60412e3p+30
 src/features/admin/Users	0x1.84edf604137acp+30
 src/features/admin/Lexicons	0x1.84edf60412adap+30
@@ -21,8 +23,9 @@ src/features/admin/Languages	0x1.84edf60412605p+30
 src/features/admin/Admins	0x1.84edf6040fa1bp+30
 src/features/admin/Config	0x1.84edf6041002ep+30
 src/features/admin/Words	0x1.84edf60413a9fp+30
+src/features/admin/Settings	0x1.8576b92fb2868p+30
 src/images	0x1.84edf604145fep+30
 src/core	0x1.84edf6040ca58p+30
-src/core/hooks	0x1.84edf6040c75ap+30
+src/core/hooks	0x1.8566b22447927p+30
 ===
 /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/rescript.exe	0x1.85128b42178d5p+30

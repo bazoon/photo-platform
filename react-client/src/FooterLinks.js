@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 function FooterLinks(){
   const { t } = useTranslation("namespace1");
   return(
-    <div className="grid gap-2 grid-cols-2 grid-rows-3">
+    <div className="grid gap-2 text-lg grid-cols-2 grid-rows-3">
       <Link className="text-gray2 no-underline hover:underline" to="/thesis">{t("about-us")}</Link>
       <Link className="text-gray2 no-underline hover:underline" to="/partners">{t("partners")}</Link>
       <Link className="text-gray2 no-underline hover:underline" to="/organizers">{t("organizers")}</Link>

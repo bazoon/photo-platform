@@ -29,9 +29,9 @@ let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<string>, ~ope
    | _ => ""
   }
 
-    <div className="grid grid-cols-2 gap-5 gap-y-2 m-auto w-3/5 text-sm items-center">
+    <div className="grid grid-cols-2 gap-5 gap-y-2 m-auto w-3/5 text-lg items-center">
       <span className="place-self-end"> {React.string(t("currentContest"))} </span>
-      <span className="uppercase text-sm text-brown-light2 font-header">
+      <span className="uppercase text-3xl text-brown-light2 font-header">
         {React.string(contestName)}
       </span>
       <span className="place-self-end"> {React.string(t("status"))} </span>
@@ -43,7 +43,7 @@ let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<string>, ~ope
       <div className="mt-10" />
       <div className="mt-10">
         {switch canUpload {
-        | true => <Button className="uppercase flex-shrink-0 flex-grow-0 w-40 flex justify-center p-5" onClick={openUpload}> {React.string(t("uploadPhoto"))} </Button>
+        | true => <Button className="uppercase flex-shrink-0 w-64 h-12 flex-grow-0 w-40 flex justify-center p-5" onClick={openUpload}> {React.string(t("uploadPhoto"))} </Button>
         | false => <div />
         }}
       </div>

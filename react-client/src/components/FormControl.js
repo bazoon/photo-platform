@@ -43,7 +43,7 @@ const editorConfig = {
   }
 };
 
-const mapOptions = (options) => options.map(({dataIndex, label}) => ({label: label, value: dataIndex}));
+const mapOptions = (options) => options.map(({dataIndex, value, label}) => ({label: label, value: dataIndex || value}));
 
 const Upl = ({onChange}) => {
   return (

@@ -26,7 +26,7 @@ module.exports = [
         {
           name: 'typeSet',
           title: 'Тип',
-          options: ['string', 'check', 'list', 'json', 'file', 'fileName', 'fileNameList'].map(c =>({key: c, label: c}))
+          options: ['string', 'check', 'list', 'json', 'file', 'fileName', 'fileNameList'].map(c =>({value: c, label: c}))
         }
       ];
 

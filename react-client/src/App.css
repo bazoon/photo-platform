@@ -1,9 +1,9 @@
 * {
-  font-family: FuturaPTBook;
+  font-family: Futura-Normal;
 }
 
 html {
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .main-bg {
@@ -57,7 +57,7 @@ body {
 
 :root {
   --main-width: 1440px;
-  --menu-bg: #2c2d31;
+  --menu-bg: #2A2B2F;
   --menu-active-text: #EFBC82;
   --menu-text: #fff;
   --menu-font-size: 12px;
@@ -137,20 +137,20 @@ body {
   text-transform: uppercase;
 }
 
-
-
 .p-button {
   background-color: transparent !important;
   border-color: #D0D4D0 !important;
   color: #D0D4D0 !important;
   font-size: 12px !important;
   border-radius: 6px !important;
+  font-family: Futura-Normal;
 }
 
 .p-button:hover {
   background-color: #CB893E !important;
   border-color: #CB893E !important;
   color: #353535 !important;
+  font-family: Futura-DemiBold;
 }
 
 .p-button-secondary {

@@ -43,9 +43,10 @@ module.exports = {
       orange: "rgba(239, 188, 130, 1)"
     },
     fontFamily: {
-      header: ["BebasNeueRegular"],
-      text: ["FuturaPTBook"],
-      bold: ["BebasNeueBold"]
+      "futura-light": ["Futura-Light"],
+      "futura-normal": ["Futura-Normal"],
+      "futura-demi-bold": ["Futura-DemiBold"],
+      "bebas-bold": ["BebasNeueBold"]
     },
     container: {
       center: true,
