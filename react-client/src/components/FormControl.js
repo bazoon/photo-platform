@@ -43,79 +43,90 @@ const editorConfig = {
   }
 };
 
-const mapOptions = (options) => options.map(({dataIndex, value, label}) => ({label: label, value: dataIndex || value}));
-
 const Upl = ({onChange}) => {
   return (
     <FileUpload name="demo[]" onSelect={({files}) => onChange(files[0])} multiple accept="image/*" maxFileSize={1000000} />
   );
 };
 
-
 const isFormFieldValid = (meta) => !!(meta.touched && meta.error);
 const getFormErrorMessage = (meta) => {
   return isFormFieldValid(meta) && <small className="p-error">{meta.error}</small>;
 };
 
-
-export default function FormControl({title, dataIndex, options, key, type, max}) {
-  const { t, i18n } = useTranslation("namespace1");
-  switch(true) {
-  case (type === "enum"):
+  const renderEnum = field => {
+    const {name, title, items} = field;
     return (
-      <Field name={dataIndex}  render={({ input, meta }) => (
+      <Field name={name}  render={({ input, meta }) => (
         <div className="p-field">
           <div>
-            <label htmlFor={dataIndex} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
-            <SelectButton className="grid grid-cols-4 p-5 gap-5" optionLabel="label" optionValue="dataIndex" value={input.value} options={options} onChange={(e) => {input.onChange(e.value);}} />  
+            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <SelectButton className="grid grid-cols-4 p-5 gap-5" optionLabel="label" optionValue="name" value={input.value} options={items?.enum} onChange={(e) => {input.onChange(e.value);}} />  
           </div>
           {getFormErrorMessage(meta)}
         </div>
       )} />
     );
-  case (!!options && type === "selectButton"):
+  };
+
+  const renderSelect = field => {
+    const {name, title, items} = field;
+    console.info(name, items, );
     return (
-      <Field name={dataIndex}  render={({ input, meta }) => (
+      <Field name={name}  render={({ input, meta }) => (
+        <div className="p-field">
+          {input.value}
+          <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+          <Dropdown id={name} {...input} options={items?.enum} optionLabel="label" />
+          {getFormErrorMessage(meta)}
+        </div>
+      )} />
+    );
+  };
+
+  const renderSelectButton = field => {
+    const {name, title, items} = field;
+    return (
+      <Field name={name}  render={({ input, meta }) => (
         <div className="p-field">
           <span>
-            <label htmlFor={dataIndex} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
-            <SelectButton optionLabel="label" optionValue="dataIndex" value={input.value} options={options} onChange={(e) => {input.onChange(e.value);}} />  
+            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <SelectButton optionLabel="label" optionValue="name" value={input.value} options={items?.enum} onChange={(e) => {input.onChange(e.value);}} />  
           </span>
           {getFormErrorMessage(meta)}
         </div>
       )} />
     );
-  case (!!options):
+  };
+
+  const renderBoolean = field => {
+    const {name, title} = field;
     return (
-      <Field name={dataIndex}  render={({ input, meta }) => (
-        <div className="p-field">
-          <label htmlFor={dataIndex} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
-          <Dropdown id={key} {...input} options={mapOptions(options)} optionLabel="label" />
-          {getFormErrorMessage(meta)}
-        </div>
-      )} />
-    );
-  case(type === "boolean"):
-    return (
-      <Field name={dataIndex} type="checkbox" render={({ input, meta }) => (
+      <Field name={name} type="checkbox" render={({ input, meta }) => (
         <div className="p-field-checkbox">
-          <Checkbox inputId={dataIndex} checked={input.checked} onChange={input.onChange} />
+          <Checkbox inputId={name} checked={input.checked} onChange={input.onChange} />
           &nbsp;&nbsp;
-          <label htmlFor={dataIndex}>{title}</label>
+          <label htmlFor={name}>{title}</label>
         </div>
       )} />
     );
-  case (type === "file"):
+  };
+
+  const renderFile = field => {
+    const {name} = field;
     return (
-      <Field name={dataIndex} render={({ input }) => (
+      <Field name={name} render={({ input }) => (
         <Upl {...input} />
       )}/>
     );
-  case (type === "editor"):
+  };
+
+  const renderEditor = field => {
+    const {name, title} = field;
     return (
-      <Field name={dataIndex} render={({ meta, input }) => (
+      <Field name={name} render={({ meta, input }) => (
         <>
-          <label htmlFor={dataIndex} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+          <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
           <CKEditor
             onReady={ editor => {
               // Insert the toolbar before the editable area.
@@ -141,42 +152,66 @@ export default function FormControl({title, dataIndex, options, key, type, max})
         </>
       )}/>
     );
-  case type === "date":
+  };
+
+  const renderDate = field => {
+    const {name, title} = field;
     return (
-      <Field name={dataIndex} render={({ input, meta }) => (
+      <Field name={name} render={({ input, meta }) => (
         <div className="p-field">
           <span className="p-input-icon-right">
-            <label htmlFor={key} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
             <Calendar id="basic" {...input} />
           </span>
           {getFormErrorMessage(meta)}
         </div>
       )} />
+    );
+  };
 
-    );
-  case type === "number":
+  const renderNumber = field => {
+    const {name, title, max} = field;
     return (
-      <Field name={dataIndex} render={({ input, meta }) => (
+      <Field name={name} render={({ input, meta }) => (
         <div className="p-field">
           <span className="p-input-icon-right">
-            <label htmlFor={key} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
-            <InputNumber id={key} max={max} value={input.value} onChange={({value}) => input.onChange(value)} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
+            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <InputNumber id={name} max={max} value={input.value} onChange={({value}) => input.onChange(value)} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
           </span>
           {getFormErrorMessage(meta)}
         </div>
       )} />
     );
-  default:
+  };
+
+  const renderText = field => {
+    const {name, title} = field;
     return (
-      <Field name={dataIndex} render={({ input, meta }) => (
+      <Field name={name} render={({ input, meta }) => (
         <div className="p-field">
           <span className="p-input-icon-right">
-            <label htmlFor={key} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
-            <InputText id={key}  {...input} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
+            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <InputText id={name}  {...input} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
           </span>
           {getFormErrorMessage(meta)}
         </div>
       )} />
     );
-  }
-}
+  };
+
+const FormControl = ({field}) => {
+  const render = {
+    enum: renderEnum,
+    array: renderSelect,
+    selectButton: renderSelectButton,
+    boolean: renderBoolean,
+    file: renderFile,
+    editor: renderEditor,
+    date: renderDate,
+    number: renderNumber,
+  }[field.type] || renderText;
+  
+  return render(field);
+};
+
+export default FormControl;

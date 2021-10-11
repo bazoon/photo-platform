@@ -127,9 +127,9 @@ export default function Main() {
 
   const signupForm = () => {
     return (
-      <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
+      <div className="container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"> 
         <div className="relative flex justify-center w-4/5 wrap">
-          <div className="uppercase text-lg text-bright font-header text-center mt-24">Регистрация</div>
+          <div className="uppercase text-lg text-semi-bright font-header text-center mt-24">Регистрация</div>
           <Form
             validate={validateForm}
             initialValues={user}
@@ -152,7 +152,7 @@ export default function Main() {
                                 }
                               </label>
                               <div className="col-span-4 w-full relative">
-                                <input name={fieldName} type={fields[fieldName].type} onChange={input.onChange} className="text-bright w-full text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright" />
+                                <input name={fieldName} type={fields[fieldName].type} onChange={input.onChange} className="text-semi-bright w-full text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright" />
                                 <div className="absolute">
                                   {getFormErrorMessage(meta)}
                                 </div>
@@ -185,9 +185,9 @@ export default function Main() {
 
   const successMessage = () => {
     return (
-      <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
+      <div className="container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"> 
         <div className="relative flex justify-center w-4/5 wrap">
-          <div className="uppercase text-lg text-bright font-header text-center mt-24">Регистрация прошла успешно</div>
+          <div className="uppercase text-lg text-semi-bright font-header text-center mt-24">Регистрация прошла успешно</div>
           <div className="text-center text-orange text-base">На почту {user?.email} отправлено письмо с ссылкой для подтверждения регистрации.</div>
         </div>
       </div>

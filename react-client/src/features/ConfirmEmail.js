@@ -43,9 +43,9 @@ const ConfirmEmail = ({history, store}) => {
   }, []);
 
   return (
-    <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
+    <div className="container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"> 
       <div className="relative flex justify-center w-4/5 wrap">
-        <div className="uppercase text-lg text-bright font-header text-center mt-24">
+        <div className="uppercase text-lg text-semi-bright font-header text-center mt-24">
         </div>
       </div>
     </div>

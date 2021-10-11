@@ -16,6 +16,7 @@ import Nominations from "./Nominations";
 import {collect} from "react-recollect";
 import {Dialog} from "primereact/dialog";
 import Applications from "./Applications";
+import {keys} from "lodash/fp";
 
 
 // import { inspect } from "@xstate/inspect";
@@ -25,6 +26,15 @@ import Applications from "./Applications";
 //     iframe: false
 //   });
 // }
+
+
+const fieldsFromSchema = ({properties}) => {
+  return keys(properties).filter(e => e !== "id").map(name => ({name, ...properties[name]}));
+};
+
+const columnsFromSchema = ({properties}, t) => {
+  return keys(properties).filter(e => e !== "id").map(name => ({name, ...properties[name], label: t(properties[name].label)}));
+};
 
 const Grid = ({store}) => {
   const { t } = useTranslation("namespace1");
@@ -110,6 +120,8 @@ const Grid = ({store}) => {
     );
   };
 
+  console.info(columnsFromSchema(meta), meta, meta.columnsSchema);
+
   return (
     <>
       <div className="mb-4">
@@ -126,13 +138,13 @@ const Grid = ({store}) => {
       >
         <Column expander style={{ width: "3em" }} />
         {
-          meta.columns.map(({dataIndex, title, width, body = record => record[dataIndex]}) => 
-            <Column headerStyle={{width}} key={dataIndex} field={dataIndex} header={title} body={body}></Column>)
+          columnsFromSchema(meta).map(({name, title, width, body = record => record[name]}) => 
+            <Column headerStyle={{width}} key={name} field={name} header={title} body={body}></Column>)
         }
       </DataTable>
 
       {
-        isOpen && <Form fields={meta.fields} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
+        isOpen && <Form fields={fieldsFromSchema(meta)} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
       }
     </>
   );

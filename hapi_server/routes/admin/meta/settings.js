@@ -3,43 +3,72 @@ module.exports = [
     method: 'GET',
     path: '/api/admin/settings/meta',
     handler: async function (_, h) {
-      const fields = [
-        {
-          name: 'id',
-          hidden: true,
-        },
-        {
-          name: 'code',
-          title: 'Код',
-          type: 'string'
-        },
-        {
-          name: 'levelable',
-          title: 'Уровень доступа',
-          type: 'number'
-        },
-        {
-          name: 'enable',
-          title: 'Активна',
-          type: 'boolean'
-        },
-        {
-          name: 'typeSet',
-          title: 'Тип',
-          options: ['string', 'check', 'list', 'json', 'file', 'fileName', 'fileNameList'].map(c =>({value: c, label: c}))
+      const fieldsSchema = {
+        'definitions': {},
+        '$schema': 'http://json-schema.org/draft-07/schema#', 
+        '$id': 'https://example.com/object1633789276.json', 
+        'title': 'Root', 
+        'type': 'array',
+        'default': [],
+        'properties': {
+          'id': {
+            '$id': '#root/items/id', 
+            'title': 'Id', 
+            'type': 'integer',
+            'examples': [
+              7
+            ],
+            'default': 0,
+          },
+          'code': {
+            '$id': '#root/items/code', 
+            'title': 'Code', 
+            'type': 'string',
+            'default': '',
+            'examples': [
+              'backGroundImages'
+            ],
+            'pattern': '^.*$'
+          },
+          'levelable': {
+            '$id': '#root/items/levelable', 
+            'title': 'Levelable', 
+            'type': 'integer',
+            'examples': [
+              2
+            ],
+            'default': 0
+          },
+          'enable': {
+            '$id': '#root/items/enable', 
+            'title': 'Enable', 
+            'type': 'boolean',
+            'examples': [
+              true
+            ],
+            'default': true
+          },
+          'typeSet': {
+            '$id': '#root/items/type_set', 
+            'title': 'typeSet', 
+            'type': 'array',
+            'default': '',
+            'examples': [
+              'fileNameList'
+            ],
+            'pattern': '^.*$',
+            items: {
+              type: 'string',
+              enum: ['string', 'check', 'list', 'json', 'file', 'fileName', 'fileNameList'].map(c =>({value: c, label: c}))
+            }
+          }
         }
-      ];
-
-      const scheme = {
-        '$id': 'https://example.com/geographical-location.schema.json',
-        '$schema': 'https://json-schema.org/draft/2020-12/schema',
-        'title': 'Profile config',
-        'type': 'object',
-        'properties': fields,
-        required: ['firstName', 'lastName', 'countryId', 'address', 'birthday']
       };
 
-      return scheme;
+      return {
+        fieldsSchema,
+        columnsSchema: fieldsSchema
+      };
     },
     options: {
       auth: {

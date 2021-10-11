@@ -57,6 +57,7 @@ async function initConnection() {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.initConnection = initConnection;
+db.db_config = db_config;
 
 module.exports = db;
 

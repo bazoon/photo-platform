@@ -144,7 +144,7 @@ const ImageForm = ({image, onSubmit, onChange, onRemove}) => {
                             {renderRequiredAsterix(name => required.includes(name), name)}
                           </label>
                           <div className="w-full relative col-span-4 mb-5">
-                            <input name={name} type={type} {...input} className="text-bright w-full text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright" />
+                            <input name={name} type={type} {...input} className="text-semi-bright w-full text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright" />
                             <div className="absolute">
                               {getFormErrorMessage(meta)}
                             </div>
@@ -377,7 +377,7 @@ const SectionSelector = ({t, onLoadSection, application}) => {
 
 const UploadDialog = ({visible, onHide, application, header, t, onLoadSection = identity}) => {
   return (
-    <Dialog visible={visible} showHeader={false} className="bg-brown-light3 w-3/5 text-bright" contentClassName="bg-brown-light3 text-bright" onHide={onHide}>
+    <Dialog visible={visible} showHeader={false} className="bg-brown-light3 w-3/5 text-semi-bright" contentClassName="bg-brown-light3 text-semi-bright" onHide={onHide}>
       <div className="text-tiny uppercase text-center mb-4">{header}</div>
       
       <div className="mb-8">
@@ -635,7 +635,7 @@ export default function Main() {
 
   const uploadHeader = (onClose) => {
     return (
-      <div className="bg-brown-light3 p-5 text-bright flex cursor-pointer justify-between">
+      <div className="bg-brown-light3 p-5 text-semi-bright flex cursor-pointer justify-between">
         <div>{contestName}</div>
         <i onClick={onClose} className="pi pi-times"/>
       </div>
@@ -643,10 +643,10 @@ export default function Main() {
   };
 
   return (
-    <div className="container flex bg-brown-dark2 text-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
+    <div className="container flex bg-brown-dark2 text-semi-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
       <div className="relative flex justify-center w-full">
       <div className="flex-1">
-      <div className="uppercase text-4xl pt-24 mb-24 text-bright font-header text-center">{t("myApplications")}</div>
+      <div className="uppercase text-4xl pt-24 mb-24 text-semi-bright font-header text-center">{t("myApplications")}</div>
 
       <ApplicationInfo
         contestName={contestName}

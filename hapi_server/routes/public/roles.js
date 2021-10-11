@@ -13,7 +13,7 @@ module.exports =  {
 
     const [domain] = host.split(':');
     const r = { role: await permissions.getRole(user, domain) };
-    return r
+    return r;
   },
   options: {
     auth: {

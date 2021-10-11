@@ -14,58 +14,63 @@ const acl = new Acl();
 // acl.allow("moder", "publication", "create", function (err, role, resource, action, result, next) {
 
 
-
 // });
+
+const roles = {
+  superAdmin: {
+    name: 'superAdmin',
+    level: 0,
+  },
+  systemAdmin: {
+    name: 'systemAdmin',
+    level: 1,
+  },
+  admin: {
+    name: 'admin',
+    level: 2,
+  },
+  moder: {
+    name: 'moder',
+    level: 3,
+  },
+  user: {
+    name: 'user',
+    level: 4,
+  }
+};
 
 
 module.exports = {
   getRole: async function (u, domain) {
-    if (!u) {
+    if (!u || !u.id) {
       return '';
     }
 
-    const user = await models.User.findOne({
-      where: {
-        id: u.id
-      }
-    });
-
+    const user = await models.User.findOne({where: {id: u.id}});
+    
     if (user.userType === 0) {
-      return 'superAdmin';
-    }
-
-    if (user.userType === 2) {
-      return 'moder';
+      return roles.superAdmin;
     }
 
     const query = `
       select admins.adm_type 
       from admins, organizers, salones 
       where admins.organizer_id=organizers.id and salones.organizer_id=organizers.id and
-      admins.user_id=:userId
+      admins.user_id=:userId and salones.domain=:domain
     `;
 
-    const [roles] = await models.sequelize.query(query, {
+    const [role] = await models.sequelize.query(query, {
       replacements: {
-        userId: user.id
+        userId: u.id,
+        domain
       }
     });
 
-    if (roles.length > 0) {
-      let role = roles[0];
-      if (role.adm_type === 0) {
-        return 'admin';
-      } else if (role.adm_type === 1) {
-        return 'moder';
-      }
-    } else if (user.id) {
-      return 'user';
-    } else {
-      return ''
-    }
-
-
+    return {
+      0: roles.systemAdmin,
+      1: roles.systemModer,
+      1000: roles.admin,
+      1010: roles.moder
+    }[role.adm_type] || roles.user;
   }
-
-
 };

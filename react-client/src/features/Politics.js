@@ -10,7 +10,7 @@ export default function Main() {
   }
 
   return (
-    <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
+    <div className="container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"> 
       <div className="relative flex justify-center mt-20">
         <Document
           file="./pol.pdf"

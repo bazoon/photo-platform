@@ -12,7 +12,7 @@ import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
 import {debounce} from "lodash";
 
-const fieldCls = "col-span-8 text-bright text-lg focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
+const fieldCls = "col-span-8 text-semi-bright text-lg focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
 const SAVE_INTERVAL = 2000;
 
 
@@ -228,10 +228,10 @@ export default function Main() {
   };
 
   return (
-    <div className="container flex justify-center flex-1 bg-brown-dark2 text-bright"> 
+    <div className="container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"> 
       <div className="relative flex justify-center flex-1">
         <div>
-          <div className="uppercase text-4xl text-bright font-header text-center mt-32">Профиль</div>
+          <div className="uppercase text-4xl text-semi-bright font-header text-center mt-32">Профиль</div>
           <Form
             validate={validateForm}
             className="overflow-y-auto max-h-96"
@@ -249,19 +249,18 @@ export default function Main() {
                   <FormSpy
                     onChange={f => onFormChange(f, form)}
                   />
-                  <div className="col-span-8 text-bright text-sm-2 flex flex-col mb-16 justify-between">
+                  <div className="col-span-8 text-semi-bright text-sm-2 flex flex-col mb-16 justify-between">
                     <span>{profile.firstName} <span className="uppercase">{profile.lastName}</span></span>  
                     <span></span>
                     <Button disabled={!agreed} onClick={handleUploadAvatar} className="text-sm uppercase w-72 flex justify-center h-12">Загрузить фото</Button>
                   </div>
-                
                   <div className="col-span-4"></div>
                   <div className={`col-span-8 text-brown-light4 ${!loading && "invisible"}`}>{t("isSaving")}...</div>
                   {
                     fields.map(f => renderField(f, t))
                   }
                 </div>
-                <div className="uppercase text-lg text-bright font-header text-center mt-32">Смена пароля</div>
+                <div className="uppercase text-lg text-semi-bright font-header text-center mt-32">Смена пароля</div>
                 <div className="grid grid-cols-12 gap-x-6 gap-y-5">
                   {renderField({name: "password", title: "Текущий пароль"})}
                   {renderField({name: "newPassword", title: "Новый пароль"})}

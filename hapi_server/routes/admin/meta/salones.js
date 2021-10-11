@@ -24,113 +24,104 @@ const saloneRegulars = [
 
 module.exports = [
   {
-    method: 'GET',
+    method: 'gET',
     path: '/api/admin/salones/meta',
     handler: async function (request, h) {
-      const organizers = await h.models.Organizer.findAll();
-      const salonTypes = await h.models.SaloneType.findAll();
+      const salonTypes = await h.query('select name as label, id as value from spr_salone_types');
+      const organizers = await h.query('select name as label, id as value from organizers');
 
-      const columns = [   
-        {
-          title: 'saloneType',
-          dataIndex: 'saloneType',
-          key: 'saloneType',
-          width: 200
-        },
-        {
-          title: 'organizer',
-          dataIndex: 'organizer',
-          key: 'organizer',
-          width: 200
-        },
-        {
-          title: 'name',
-          dataIndex: 'name',
-          key: 'name',
-          width: 200
-        },
-        {
-          title: 'regular',
-          dataIndex: 'regular',
-          key: 'regular',
-          width: 200
-        },
-        {
-          title: 'private',
-          dataIndex: 'private',
-          key: 'private',
-          width: 200
-        },
-        {
-          title: 'domain',
-          dataIndex: 'domain',
-          key: 'domain',
-          width: 200
-        },
-        {
-          title: 'design_code',
-          dataIndex: 'design_code',
-          key: 'design_code',
-          width: 200
-        },
-        {
-          title: 'row_state',
-          dataIndex: 'row_state',
-          key: 'row_state',
-          width: 200
+
+      const columnsSchema = {
+        'definitions': {},
+        '$schema': 'http://json-schema.org/draft-07/schema#', 
+        '$id': 'https://example.com/object1633968778.json', 
+        'title': 'root', 
+        'type': 'object',
+        'required': [
+          'id',
+          'sprSaloneTypeId',
+          'organizerId',
+          'name',
+          'regular',
+          'private',
+          'domain',
+          'designCode',
+          'rowState'
+        ],
+        'properties': {
+          'id': {
+            '$id': '#root/id', 
+            'title': 'id', 
+            'type': 'integer',
+            'default': 0
+          },
+          'sprSaloneTypeId': {
+            '$id': '#root/sprSaloneTypeId', 
+            'title': 'sprSaloneTypeId', 
+            'type': 'array',
+            'default': 0,
+            items: {
+              type: 'object',
+              enum: salonTypes
+            }
+          },
+          'organizerId': {
+            '$id': '#root/organizerId', 
+            'title': 'organizer', 
+            'type': 'array',
+            'default': 0,
+            items: {
+              type: 'object',
+              enum: organizers
+            }
+          },
+          'name': {
+            '$id': '#root/name', 
+            'title': 'name', 
+            'type': 'string',
+            'default': '',
+            'pattern': '^.*$'
+          },
+          'regular': {
+            '$id': '#root/regular', 
+            'title': 'regular', 
+            'type': 'integer',
+            'default': 0
+          },
+          'private': {
+            '$id': '#root/private', 
+            'title': 'private', 
+            'type': 'integer',
+            'default': 0
+          },
+          'domain': {
+            '$id': '#root/domain', 
+            'title': 'domain', 
+            'type': 'string',
+            'default': '',
+            'pattern': '^.*$'
+          },
+          'designCode': {
+            '$id': '#root/designCode', 
+            'title': 'designCode', 
+            'type': 'string',
+            'default': '',
+            'pattern': '^.*$'
+          },
+          'rowState': {
+            '$id': '#root/rowState', 
+            'title': 'rowState', 
+            'type': 'integer',
+            'default': 0
+          }
         }
-      ]
-
-      const fields = [
-        {
-          title: 'sprSaloneTypeId',
-          dataIndex: 'sprSaloneTypeId',
-          key: 'sprSaloneTypeId',
-          options: salonTypes.map(({name, id}) => ({key: id, dataIndex: id, label: name }))
-        },
-        {
-          title: 'organizerId',
-          dataIndex: 'organizerId',
-          key: 'organizerId',
-          options: organizers.map(({name, id}) => ({key: id, dataIndex: id, label: name }))
-        },
-        {
-          title: 'name',
-          dataIndex: 'name',
-          key: 'name',
-        },
-        {
-          title: 'regular',
-          dataIndex: 'regular',
-          key: 'regular',
-        },
-        {
-          title: 'private',
-          dataIndex: 'private',
-          key: 'private',
-        },
-        {
-          title: 'domain',
-          dataIndex: 'domain',
-          key: 'domain',
-        },
-        {
-          title: 'designCode',
-          dataIndex: 'designCode',
-          key: 'designCode',
-        },
-        {
-          title: 'rowState',
-          dataIndex: 'rowState',
-          key: 'rowState' 
-        }
-      ];
-
+      }
 
       return {
-        columns,
-        fields: fields
-      }
+        fieldsSchema: columnsSchema,
+        columnsSchema
+      };
+
     },
     options: {
       auth: {

@@ -38,6 +38,7 @@ module.exports = {
       white: {
         80: "#D0D4D0"
       },
+      "semi-bright": "#D0D4D0",
       bright: "#fff",
       black: "#000",
       orange: "rgba(239, 188, 130, 1)"

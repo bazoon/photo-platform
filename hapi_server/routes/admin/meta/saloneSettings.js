@@ -3,89 +3,120 @@ module.exports = [
     method: 'GET',
     path: '/api/admin/saloneSettings/meta',
     handler: async function (_, h) {
-      const settings = await h.models.Setting.findAll();
-      const salones = await h.models.Salone.findAll();
+      const settings = await h.query('select code as label, id as value from settings');
+      const salones = await h.query('select id as value, name as label from salones');
 
-      const fields = [
-        {
-          name: 'id',
-          hidden: true,
-        },
-        {
-          name: 'settingId',
-          title: 'Настройка',
-          options: settings.map(({code, id}) => ({value: id, dataIndex: id, label: code }))
-        },
-        {
-          name: 'saloneId',
-          title: 'Салон',
-          options: salones.map(({name, id}) => ({value: id, dataIndex: id, label: name }))
-        },
-        {
-          name: 'content',
-          title: 'Значение',
-          type: 'string'
-        },
-        {
-          name: 'keycheck',
-          title: 'keycheck',
-          type: 'boolean'
-        }
-      ];
-
-      const columns = [
-        {
-          name: 'id',
-          hidden: true,
-        },
-        {
-          name: 'setting',
-          title: 'Настройка',
-        },
-        {
-          name: 'salone',
-          title: 'Салон',
-        },
-        {
-          name: 'content',
-          title: 'Значение',
-          type: 'string'
-        },
-        {
-          name: 'keycheck',
-          title: 'keycheck',
-          type: 'boolean'
-        }
-      ];
-
-      const scheme = {
-        '$id': 'https://example.com/geographical-location.schema.json',
-        '$schema': 'https://json-schema.org/draft/2020-12/schema',
-        'title': 'Profile config',
-        'type': 'object',
-        definitions: {
-          fields: {
-            type: 'object',
-            enum: fields
-          },
-          columns: {
-            type: 'object',
-            enum: columns
-          }
-        },
+      const fieldsSchema = {
+        'definitions': {},
+        '$schema': 'http://json-schema.org/draft-07/schema#', 
+        '$id': 'https://example.com/object1633844187.json', 
+        'title': 'Root', 
+        'type': 'array',
+        'default': [],
         'properties': {
-          fields: {
-            type: 'object',
-            enum: fields
+          'id': {
+            '$id': '#root/items/id', 
+            'title': 'Id', 
+            'type': 'integer',
+            'examples': [
+              1
+            ],
+            'default': 0
           },
-          columns: {
-            type: 'object',
-            enum: columns
+          'settingId': {
+            '$id': '#root/items/setting_id', 
+            'title': 'SettingId', 
+            'type': 'array',
+            items: {
+              type: 'object',
+              enum: settings
+            }
+          },
+          'saloneId': {
+            '$id': '#root/items/salone_id', 
+            'title': 'SaloneId', 
+            'type': 'array',
+            items: {
+              type: 'object',
+              enum: salones
+            }
+          },
+          'content': {
+            '$id': '#root/items/content', 
+            'title': 'Content', 
+            'type': 'string',
+            'default': '',
+            'examples': [
+              '33'
+            ],
+            'pattern': '^.*$'
+          },
+          'keycheck': {
+            '$id': '#root/items/keycheck', 
+            'title': 'Keycheck', 
+            'type': 'boolean',
+            'examples': [
+              true
+            ],
+            'default': true
           }
-        },
-        required: ['settingId', 'saloneId']
+        }
+      }
+
+
+      const columnsSchema = {
+        'definitions': {},
+        '$schema': 'http://json-schema.org/draft-07/schema#', 
+        '$id': 'https://example.com/object1633844187.json', 
+        'title': 'Root', 
+        'type': 'array',
+        'default': [],
+        'properties': {
+          'id': {
+            '$id': '#root/items/id', 
+            'title': 'Id', 
+            'type': 'integer',
+            'examples': [
+              1
+            ],
+            'default': 0
+          },
+          'setting': {
+            '$id': '#root/items/setting', 
+            'title': 'Setting', 
+            'type': 'string',
+          },
+          'salone': {
+            '$id': '#root/items/salone', 
+            'title': 'Salone', 
+            'type': 'string',
+          },
+          'content': {
+            '$id': '#root/items/content', 
+            'title': 'Content', 
+            'type': 'string',
+            'default': '',
+            'examples': [
+              '33'
+            ],
+            'pattern': '^.*$'
+          },
+          'keycheck': {
+            '$id': '#root/items/keycheck', 
+            'title': 'Keycheck', 
+            'type': 'boolean',
+            'examples': [
+              true
+            ],
+            'default': true
+          }
+        }
+      }
+      
+      return {
+        fieldsSchema,
+        columnsSchema
       };
-      return scheme;
     },
     options: {
       auth: {

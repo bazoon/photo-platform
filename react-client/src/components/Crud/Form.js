@@ -6,6 +6,12 @@ import { Form } from "react-final-form";
 import { Message } from "primereact/message";
 import {isNil} from "crocks/predicates";
 import isEmpty from "crocks/predicates/isEmpty";
+import {keys} from "lodash/fp";
+
+
+const fieldsFromSchema = ({properties}) => {
+  return keys(properties).filter(e => e !== "id").map(name => ({name, ...properties[name]}));
+};
 
 export default function FForm({
   record, 
@@ -14,7 +20,7 @@ export default function FForm({
   onOk, 
   onChange, 
   saveError, 
-  fields, 
+  schema, 
   title,
   dialogConfig = {}
 }) {
@@ -42,13 +48,15 @@ export default function FForm({
     if (saveError) {
       // ref.current.show();
     }
-  }, [saveError, fields]);
+  }, [saveError, schema]);
   
   const validateForm = values => {
-    let r = fields.reduce((a, {dataIndex, required}) => required && isNil(values[dataIndex]) ? ({...a, [dataIndex]: "required"}) : a, {});
-    let d = isEmpty(r) ? true : r;
-    return d;
+    // let r = fields.reduce((a, {dataIndex, required}) => required && isNil(values[dataIndex]) ? ({...a, [dataIndex]: "required"}) : a, {});
+    // let d = isEmpty(r) ? true : r;
+    // return d;
   };
+
+  const fields = fieldsFromSchema(schema);
 
   return (
     <div>
@@ -68,10 +76,13 @@ export default function FForm({
           >
             {message && <Message severity="error" text={message} />}
             <form onSubmit={handleSubmit} className="p-10 p-fluid">
-              {
-                fields.map(f => <div className="mb-4" key={f.dataIndex}>
-                  <FormControl title={f.title} type={f.type} max={f.max} dataIndex={f.dataIndex} options={f.options} width={f.width} onChange={onChange}  /></div>)
-              }
+            {
+              fields.map(field => (
+                <div className="mb-4" key={field.name}>
+                  <FormControl field={field}/>
+                </div>
+              ))
+            }
             </form>
           </Dialog>
         )}>

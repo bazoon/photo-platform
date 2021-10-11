@@ -19,7 +19,7 @@ const AutoSave = ({values, debounce, onSave}) => {
     setTim(setTimeout(save, debounce));
   }, [values, debounce]);
 
-  const cls = cn("text-bright",{
+  const cls = cn("text-semi-bright",{
     invisible: !submitting
   });
 

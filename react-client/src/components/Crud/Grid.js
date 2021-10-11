@@ -8,11 +8,15 @@ import { useMachine } from "@xstate/react";
 import useCrud from "../../core/hooks/useCrud";
 import { confirmPopup } from "primereact/confirmpopup"; 
 import identity from "crocks/combinators/identity";
+import {keys, values} from "lodash/fp";
 
 const imageBodyTemplate = (record) => {
   return <img className="object-cover w-36 h-36" src={record.img}/>;
 };
 
+const columnsFromSchema = ({properties}, t) => {
+  return keys(properties).filter(e => e !== "id").map(name => ({name, ...properties[name], label: t(properties[name].label)}));
+};
 
 export default ({
   customOperations = [],
@@ -56,13 +60,16 @@ export default ({
       });
     };
 
-    let columns, fields;
+
+    let columns;
+    const {columnsSchema} = meta;
     if (meta.columns) {
       columns = meta.columns.map(addRender);
-      fields = meta.fields;
-    } else if (meta.properties) {
-      columns = meta.properties.columns.enum.filter(e => !e.hidden).map(e => ({...e, dataIndex: e.name, title: e.title, key: e.name, type: e.type})).map(addRender);
-      fields = meta.properties.fields.enum.filter(e => !e.hidden).map(e => ({...e, dataIndex: e.name, title: e.title, key: e.name, type: e.type})).map(addRender);
+    } else if (columnsSchema) {
+      columns = columnsFromSchema(columnsSchema, t);
+      console.info(columns);
+      // columns = meta.properties.columns.enum.filter(e => !e.hidden).map(e => ({...e, dataIndex: e.name, title: e.title, key: e.name, type: e.type})).map(addRender);
+      // fields = meta.properties.fields.enum.filter(e => !e.hidden).map(e => ({...e, dataIndex: e.name, title: e.title, key: e.name, type: e.type})).map(addRender);
     }
 
     const actionBodyTemplate = (rowData) => {
@@ -97,7 +104,7 @@ export default ({
       }[type] || "text-left";
     };
 
-    const renderColumn = ({dataIndex, title, type, width}) => {
+    const renderColumn = ({name, title, type, width}) => {
       const render = {
         boolean: renderBooleanColumn,
         string: renderTextColumn,
@@ -105,22 +112,20 @@ export default ({
       }[type] || renderTextColumn;
 
       const renderValue = rowData => { 
-        return render(rowData[dataIndex]);
+        return render(rowData[name]);
       };
-
 
       return (
         <Column 
           className={getColumnsClass(type)}
           headerClassName={getColumnsClass(type)}
           headerStyle={{width}} 
-          key={dataIndex} 
-          field={dataIndex} 
+          key={name} 
+          field={name} 
           header={title} 
           body={renderValue}/>
       );
     };
-
 
     return (
       <>
@@ -156,7 +161,7 @@ export default ({
           }
         </DataTable>
         {
-          isOpen && <Form title={dialogTitle} dialogConfig={dialogConfig} fields={fields || columns} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
+          isOpen && <Form schema={meta.fieldsSchema} title={dialogTitle} dialogConfig={dialogConfig} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
         }
       </>
     );

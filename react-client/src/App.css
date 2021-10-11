@@ -27,7 +27,7 @@ ul {
 }
 
 body {
-  background-color: #fff;
+  background-color: #D0D4D0;
 }
 
 .main-container {
@@ -59,7 +59,7 @@ body {
   --main-width: 1440px;
   --menu-bg: #2A2B2F;
   --menu-active-text: #EFBC82;
-  --menu-text: #fff;
+  --menu-text: #D0D4D0;
   --menu-font-size: 12px;
 }
 
@@ -71,14 +71,14 @@ body {
 
 .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-text,
 .p-slidemenu .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-text {
-  color: #fff !important;
+  color: #D0D4D0 !important;
   font-size: var(--menu-font-size);
   text-transform: uppercase;
 }
 
 .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-text,
 .p-slidemenu .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-text {
-  color: #fff !important;
+  color: #D0D4D0 !important;
   font-size: var(--menu-font-size);
   text-transform: uppercase;
 }
@@ -210,7 +210,7 @@ body {
 .selected-image::after {
   position: absolute;
   top: 15px;
-  background-color: #fff;
+  background-color: #D0D4D0;
   height: 2px;
   content: "";
   width: 13rem;
@@ -218,7 +218,7 @@ body {
 }
 
 .p-inputtext {
-  color: #fff !important;
+  color: #D0D4D0 !important;
   background-color: rgb(30, 31, 37) !important;
 }
 
@@ -241,11 +241,11 @@ body {
 .p-tieredmenu .p-menuitem-link .p-menuitem-text,
 .p-tieredmenu .p-menuitem-link:not(.p-disabled):hover {
   background-color: rgb(30, 31, 37) !important;
-  color: #fff !important;
+  color: #D0D4D0 !important;
 }
 
 .p-tieredmenu .p-menuitem-link {
-  color: #fff !important;
+  color: #D0D4D0 !important;
 }
 
 .p-tieredmenu {

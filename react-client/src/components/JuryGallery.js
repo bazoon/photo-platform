@@ -43,8 +43,8 @@ export default function JuryGallery() {
   const renderSwitch = () => {
     return (
       <div className="absolute left-0 grid grid-cols-2">
-        <i className="text-tiny pi pi-th-large text-bright mr-5" onClick={() => setMode(0)}/>
-        <i className="text-tiny pi pi-table text-bright" onClick={() => setMode(1)}/>
+        <i className="text-tiny pi pi-th-large text-semi-bright mr-5" onClick={() => setMode(0)}/>
+        <i className="text-tiny pi pi-table text-semi-bright" onClick={() => setMode(1)}/>
       </div>
     );
   };
@@ -53,7 +53,7 @@ export default function JuryGallery() {
     return (
       <div className="absolute right-0 flex flex-col items-center">
         <div className="uppercase text-brown-light text-sm-2">Красоты России</div>
-        <div className="text-bright text-sm-2" >{current + 1} из {photos.length}</div>
+        <div className="text-semi-bright text-sm-2" >{current + 1} из {photos.length}</div>
       </div>
     );
   };
@@ -61,13 +61,13 @@ export default function JuryGallery() {
   const renderSlider = () => {
     return (
       <div className="flex items-center justify-center">
-        <i className="text-2xl cursor-pointer hover:text-brown-light pi pi-angle-left text-bright" onClick={() => setLeft(l => l > 0 ? l - 1 : l)}/>
+        <i className="text-2xl cursor-pointer hover:text-brown-light pi pi-angle-left text-semi-bright" onClick={() => setLeft(l => l > 0 ? l - 1 : l)}/>
         <div className="flex-1 p-6 grid grid-cols-7 gap-8 grid-rows-1">
           {
             visiblePhotos.map((p, i) => <img onClick={() => handleClick(i)} title={i} className="w-20 h-20 cursor-pointer" key={p.id} src={p.src}/>)
           }
         </div>
-        <i className="text-2xl cursor-pointer hover:text-brown-light pi pi-angle-right text-bright" onClick={() => setLeft(l => l < photos.length - 1 ? l + 1 : l)}/>
+        <i className="text-2xl cursor-pointer hover:text-brown-light pi pi-angle-right text-semi-bright" onClick={() => setLeft(l => l < photos.length - 1 ? l + 1 : l)}/>
       </div>
     );
   };
@@ -125,7 +125,7 @@ export default function JuryGallery() {
             const hasRate = rates[id] === i;
             const className = cn("z-10 font-text w-8 h-8 flex rounded-bl text-base cursor-pointer mr-8 last:mr-0 justify-center rounded-round items-center", {
               "bg-brown-light text-dark": hasRate,
-              "text-bright": !hasRate
+              "text-semi-bright": !hasRate
             });
 
             return (
