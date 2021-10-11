@@ -1,0 +1,10 @@
+p, superAdmin, *, *, *
+p, superModer, *, config, *
+p, superModer, *, jury, *
+p, superModer, *, content, *
+p, superModer, *, application, *
+p, superModer, *, photowork, *
+p, superModer, *, stats, *
+
+g, alice, admin, domain1
+g, bob, admin, domain2
