@@ -45,7 +45,8 @@ const Grid = ({store}) => {
   const {context} = current;
   const {records, record, error, isOpen, meta} = context;
   const {onCancel, onOk, onChange, handleAdd} = useCrud(send, record);
- 
+  const columnsSchema = meta.columnsSchema || {};
+  const fieldsSchema = meta.fieldsSchema || {};
 
   const contestSections = [ 
     {
@@ -120,7 +121,7 @@ const Grid = ({store}) => {
     );
   };
 
-  console.info(columnsFromSchema(meta), meta, meta.columnsSchema);
+  console.info(columnsFromSchema(columnsSchema, t));
 
   return (
     <>
@@ -133,18 +134,18 @@ const Grid = ({store}) => {
         onRowToggle={e => setExpandedRows(e.data)}
         rowExpansionTemplate={rowExpansionTemplate}
         onRowExpand={onRowExpand}
-        style={{width: "100%"}}
+        style={{width: "4000px"}}
         scrollable scrollHeight="400px"
       >
-        <Column expander style={{ width: "3em" }} />
+        <Column expander style={{ width: "10em" }} />
         {
-          columnsFromSchema(meta).map(({name, title, width, body = record => record[name]}) => 
-            <Column headerStyle={{width}} key={name} field={name} header={title} body={body}></Column>)
+          columnsFromSchema(columnsSchema, t).map(({name, title, width, body = record => record[name]}) => 
+            <Column headerStyle={{width: "300px"}} key={name} field={name} header={title} body={body}></Column>)
         }
       </DataTable>
 
       {
-        isOpen && <Form fields={fieldsFromSchema(meta)} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
+        isOpen && <Form fields={fieldsFromSchema(fieldsSchema)} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
       }
     </>
   );

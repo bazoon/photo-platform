@@ -65,103 +65,119 @@ module.exports = [
             items: {
               type: 'object',
               enum: salones
-            }
+            },
+            width: 200
           },
           'subname': {
             '$id': '#root/subname', 
             'title': 'subname', 
             'type': 'string',
             'default': '',
-            'pattern': '^.*$'
+            'pattern': '^.*$',
+            width: 200
           },
           'years': {
             '$id': '#root/years', 
             'title': 'years', 
             'type': 'string',
             'default': '',
-            'pattern': '^.*$'
+            'pattern': '^.*$',
+            width: 200
           },
           'dateStart': {
             '$id': '#root/dateStart', 
             'title': 'dateStart', 
             'type': 'string',
             'default': '',
-            'pattern': '^.*$'
+            'pattern': '^.*$',
+            width: 200
           },
           'dateStop': {
             '$id': '#root/dateStop', 
             'title': 'dateStop', 
             'type': 'string',
             'default': '',
-            'pattern': '^.*$'
+            'pattern': '^.*$',
+            width: 200
           },
           'dateJuriEnd': {
             '$id': '#root/dateJuriEnd', 
             'title': 'dateJuriEnd', 
             'type': 'string',
             'default': '',
-            'pattern': '^.*$'
+            'pattern': '^.*$',
+            width: 200
           },
           'dateRateShow': {
             '$id': '#root/dateRateShow', 
             'title': 'dateRateShow', 
             'type': 'string',
             'default': '',
-            'pattern': '^.*$'
+            'pattern': '^.*$',
+            width: 200
           },
           'showType': {
             '$id': '#root/showType', 
             'title': 'showType', 
             'type': 'integer',
-            'default': 0
+            'default': 0,
+            width: 200
           },
           'showRateState': {
             '$id': '#root/showRateState', 
             'title': 'showRateState', 
             'type': 'integer',
-            'default': 0
+            'default': 0,
+            width: 200
           },
           'democraty': {
             '$id': '#root/democraty', 
             'title': 'democraty', 
             'type': 'integer',
-            'default': 0
+            'default': 0,
+            width: 200
           },
           'payType': {
             '$id': '#root/payType', 
             'title': 'payType', 
             'type': 'integer',
-            'default': 0
+            'default': 0,
+            width: 200
           },
           'sectionCount': {
             '$id': '#root/sectionCount', 
             'title': 'sectionCount', 
             'type': 'integer',
-            'default': 0
+            'default': 0,
+            width: 200
           },
           'maxrate': {
             '$id': '#root/maxrate', 
             'title': 'maxrate', 
             'type': 'integer',
-            'default': 0
+            'default': 0,
+            width: 200
           },
           'maxsize': {
             '$id': '#root/maxsize', 
             'title': 'maxsize', 
             'type': 'null',
-            'default': null
+            'default': null,
+            width: 200
           },
           'maxWeight': {
             '$id': '#root/maxWeight', 
             'title': 'maxWeight', 
             'type': 'integer',
-            'default': 0
+            'default': 0,
+            width: 200
           },
           'maxCountImg': {
             '$id': '#root/maxCountImg', 
             'title': 'maxCountImg', 
             'type': 'integer',
-            'default': 0
+            'default': 0,
+            width: 200
           }
         }
       }

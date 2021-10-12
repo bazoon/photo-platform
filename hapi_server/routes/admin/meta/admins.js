@@ -95,13 +95,10 @@ module.exports = [
         }
       }
 
-
       return {
         fieldsSchema,
         columnsSchema
       };
-
-
     },
     options: {
       auth: {

@@ -71,11 +71,9 @@ const getFormErrorMessage = (meta) => {
 
   const renderSelect = field => {
     const {name, title, items} = field;
-    console.info(name, items, );
     return (
       <Field name={name}  render={({ input, meta }) => (
         <div className="p-field">
-          {input.value}
           <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
           <Dropdown id={name} {...input} options={items?.enum} optionLabel="label" />
           {getFormErrorMessage(meta)}
@@ -161,7 +159,7 @@ const getFormErrorMessage = (meta) => {
         <div className="p-field">
           <span className="p-input-icon-right">
             <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
-            <Calendar id="basic" {...input} />
+            <Calendar id="basic" {...input} value={input.value ? new Date(input.value) : ""} />
           </span>
           {getFormErrorMessage(meta)}
         </div>
@@ -206,7 +204,7 @@ const FormControl = ({field}) => {
     selectButton: renderSelectButton,
     boolean: renderBoolean,
     file: renderFile,
-    editor: renderEditor,
+    text: renderEditor,
     date: renderDate,
     number: renderNumber,
   }[field.type] || renderText;

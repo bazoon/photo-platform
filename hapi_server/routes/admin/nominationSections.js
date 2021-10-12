@@ -36,12 +36,14 @@ module.exports = [
           from section_names, languages where section_names.language_id=languages.id and section_names.section_id=:id
       `;
 
+
       const nominationSections = await h.query(query, {
         replacements: {
           id
         }
       });
 
+      console.info(nominationSections);
       return nominationSections;
     },
     options: {
