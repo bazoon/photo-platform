@@ -1,11 +1,9 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState} from "react";
 import { useTranslation } from "react-i18next";
 import {asyncPost, asyncGet} from "../core/api";
 import { collect } from "react-recollect";
 import {useHistory} from "react-router-dom";
 import {Button} from "primereact/button";
-import useAsync from "../core/hooks/useAsync";
-import {loadRoles} from "../core/api_utils";
 import UserMachine from "../core/UserMachine";
 import { useMachine } from "@xstate/react";
 import useAuth from "../core/hooks/useAuth";
@@ -52,15 +50,14 @@ function Main({store}) {
     saveRole: (_, {data}) => { store.role = data?.role; },
   };
 
-  const [current, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
+  const [, send] = useMachine(UserMachine({context: initialContext, actions, services, guards}), {devTools: true});
   const [password, setPassword] = useState("");
   const [nickName, setNickName] = useState("");
-  const [remember, setRemember] = useState(true);
+  const [remember] = useState(true);
   const [agreed, setAgreed] = useState(true);
-  const [iConfirmAgreement, setIConfirmAgreement] = useState(true);
-  const [iKnowAboutCookies, setIKnowAboutCookies] = useState(true);
-  const [iReadAboutPersonal, setIReadAboutPersonal] = useState(true);
-  const { t } = useTranslation("namespace1");
+  const [iConfirmAgreement] = useState(true);
+  const [iKnowAboutCookies] = useState(true);
+  const [iReadAboutPersonal] = useState(true);
 
 
   // const loginFailed = error => {

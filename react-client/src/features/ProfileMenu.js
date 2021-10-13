@@ -31,19 +31,19 @@ export default function ProfileMenu() {
   useEffect(() => {
     const links = [
       {
-        name: "profile",
+        name: t("profile"),
         to: "profile",
         label: t("profile"),
         command: () => history.push("/profile")
       },
       {
-        label: "applications",
+        label: t("applications"),
         to: "applications",
         name: t("applications"),
         command: () => history.push("/applications")
       },
       {
-        label: "messages",
+        label: t("messages"),
         to: "messages",
         name: t("messages"),
         command: () => history.push("/messages")

@@ -509,13 +509,14 @@ const sectionsService = {
   
 const Thumb = ({image, onChange, checked}) => {
   const cls = cn("object-cover w-full h-full");
+  console.info(image);
   return (
     <div className="flex items-start">
       <Checkbox className="mr-10" checked={checked} onChange={(checked) => { onChange(checked); }} />
       <div className="w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0"><img src={image.src} className={cls}/></div>
       <div className="ml-10 justify-between h-28 cursor-pointer flex-shrink-0 flex-col flex">
         <span className="text-sm-2">{image.name}</span>
-        <span className="text-sm-2">тут описание</span>
+        <span className="text-sm-2">{image.description}</span>
         <span className="text-sm-2 text-brown-light4 uppercase">{image.sectionName}</span>
       </div>
     </div>
@@ -533,11 +534,10 @@ const Thumbs = ({images, onRemove}) => {
           <div>
             {
               <>
-                <div className="flex justify-center">
-                  <Button className="uppercase flex-shrink-0 flex-grow-0 w-40 flex justify-center p-5" onClick={handleSubmit}>Удалить</Button>
+                <div className="flex justify-center m-10">
+                  <Button className="uppercase flex-shrink-0 flex-grow-0 w-64 h-12 flex justify-center" onClick={handleSubmit}>Удалить</Button>
                 </div>
                 <form className="p-5" onSubmit={handleSubmit}>
-
                 <div className="grid grid-cols-1 gap-20 m-auto w-3/5 text-base items-baseline">
                     {
                       images.map(image => {

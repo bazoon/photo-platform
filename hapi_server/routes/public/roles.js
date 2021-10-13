@@ -8,12 +8,12 @@ module.exports =  {
   method: 'GET',
   path: '/api/roles',
   handler: async function (request, h) {
-    const { host } = request.info;
+    // const { host } = request.info;
     const user = get('auth.credentials', request);
 
-    const [domain] = host.split(':');
-    const r = { role: await permissions.getRole(user, domain) };
-    return r;
+    console.log(request.auth)
+
+    return {role: user && user.role};
   },
   options: {
     auth: {

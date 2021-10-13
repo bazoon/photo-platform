@@ -1,4 +1,6 @@
 const models = require('../../../models');
+const {isDefined} = require('crocks/predicates');
+const {get} = require('lodash/fp');
 const Acl = require('virgen-acl').Acl;
 const acl = new Acl();
 
@@ -21,39 +23,33 @@ const roles = {
     name: 'superAdmin',
     level: 0,
   },
-  systemAdmin: {
-    name: 'systemAdmin',
-    level: 1,
-  },
   admin: {
     name: 'admin',
-    level: 2,
+    level: 1,
+  },
+  superModer: {
+    name: 'superModer',
+    level: 3,
   },
   moder: {
     name: 'moder',
-    level: 3,
+    level: 4,
   },
   user: {
     name: 'user',
-    level: 4,
+    level: 5
+  },
+  anon: {
+    name: 'anon',
+    level: 6
   }
 };
 
 
 module.exports = {
-  getRole: async function (u, domain) {
-    if (!u || !u.id) {
-      return '';
-    }
-
-    const user = await models.User.findOne({where: {id: u.id}});
-    
-    if (user.userType === 0) {
-      return roles.superAdmin;
-    }
-
+  getRole: async function (user, domain) {
     const query = `
-      select admins.adm_type 
+      select distinct(admins.adm_type)
       from admins, organizers, salones 
       where admins.organizer_id=organizers.id and salones.organizer_id=organizers.id and
       admins.user_id=:userId and salones.domain=:domain
@@ -61,16 +57,22 @@ module.exports = {
 
     const [role] = await models.sequelize.query(query, {
       replacements: {
-        userId: u.id,
+        userId: user.id,
         domain
       }
     });
 
-    return {
-      0: roles.systemAdmin,
-      1: roles.systemModer,
+    const r = get('[0].adm_type', role);
+
+    if (!isDefined(r)) return roles.user;
+
+    const t = {
+      0: roles.superAdmin,
+      1: roles.superModer,
       1000: roles.admin,
       1010: roles.moder
-    }[role.adm_type] || roles.user;
+    }[r];
+
+    return isDefined(t) ? t : roles.user;
   }
 };

@@ -5,7 +5,7 @@ module.exports = [
     method: 'GET',
     path: '/api/profile/meta',
     handler: async function (_, h) {
-      const query = 'select *from countries order by short asc';
+      const query = 'select *from countries order by name asc';
       const [countries] = await h.models.sequelize.query(query);
 
       const fields = [

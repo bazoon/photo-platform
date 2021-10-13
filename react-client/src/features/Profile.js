@@ -67,7 +67,7 @@ const renderSelect = ({name, title, options, required, input}) => {
   return (
     <>
       {renderLabel(title, required)}
-      <Dropdown id={name} {...input} onChange={e => input.onChange(e.value)} options={options} optionValue="key" optionLabel="label" className={fieldCls} />
+      <Dropdown filter filterInputAutoFocus id={name} {...input} onChange={e => input.onChange(e.value)} options={options} optionValue="key" optionLabel="label" className={fieldCls} />
     </>
   );
 };

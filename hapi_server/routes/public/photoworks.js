@@ -23,6 +23,7 @@ module.exports = [
           photoworks.id,
           photoworks.name,
           photoworks.filename,
+          photoworks.tcontent as description,
           section_id,
           sections.name as section_name,
           year_shot as year,

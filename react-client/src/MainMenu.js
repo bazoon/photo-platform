@@ -39,6 +39,8 @@ function Main({store, history}) {
     locale(lang);
   };
 
+  console.info(store.role);
+
   useEffect(() => {
     const links = [
       { 

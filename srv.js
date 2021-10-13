@@ -7,7 +7,7 @@ const fs = require('fs');
 
 models.initConnection();
 
-const {get, curry} = require('lodash/fp');
+const {get, curry, nth, split} = require('lodash/fp');
 const {compose, tryCatch, Async} = require('crocks');
 const R = require('ramda');
 const L = require('lodash/fp');
@@ -17,13 +17,18 @@ const { newEnforcer, StringAdapter } = require('casbin')
 
 const pool = require('./models_objection');
 const {sql} = require('slonik');
+const {getRole} = require('./hapi_server/routes/services/permissions');
 const query = async (sql, options) => {
   const [rows] = await models.sequelize.query(sql, options);
   return L.map(L.mapKeys(toCamel), rows);
 }
 
 async function getEnforcer() {
-  const q = `
+  const adminsQuery = `
+    select nick_name from admins, users where admins.user_id=users.id and adm_type=:admType
+  `;
+
+  const salonesQuery = `
     select nick_name, adm_type, domain, salones.name as salone
     from users, admins, salones
     where users.id=admins.user_id and salones.organizer_id=admins.organizer_id and adm_type=:admType
@@ -31,17 +36,15 @@ async function getEnforcer() {
 
   const actions = ['create', 'view', 'update', 'delete'];
 
-  const admins = await query(q, {replacements: {admType: 0}});
-  const moders = await query(q, {replacements: {admType: 1}});
-  const saloneAdmins = await query(q, {replacements: {admType: 1000}});
-  const saloneModers = await query(q, {replacements: {admType: 1010}});
+  const admins = await query(adminsQuery, {replacements: {admType: 0}});
+  const moders = await query(adminsQuery, {replacements: {admType: 1}});
+  const saloneAdmins = await query(salonesQuery, {replacements: {admType: 1000}});
+  const saloneModers = await query(salonesQuery, {replacements: {admType: 1010}});
 
 
   const adminObjects = ['settings', 'moders', 'jury', 'contests', 'content', 'applications', 'review', 'stats'];
   const moderObjects = ['settings', 'jury', 'content', 'applications', 'review', 'stats'];
  
-
-  const adminPolicies = actions.map(a => ['p', 'admin', '*', '*', a]);
 
   const moderPolicies = moderObjects.map(o => {
     return actions.map(a => [ 'p', 'moder', '*', o, a]);
@@ -60,11 +63,11 @@ async function getEnforcer() {
   }).flat(2);
 
   const adminGroups = admins.map(({nickName}) => {
-    return ['g', nickName, 'admin', '*',];
+    return ['g', nickName, 'admin',];
   });
 
   const moderGroups = moders.map(({nickName}) => {
-    return ['g', nickName, 'moder', '*',];
+    return ['g', nickName, 'moder'];
   });
 
   const saloneModerGroups = saloneModers.map(({nickName, domain}) => {
@@ -76,19 +79,15 @@ async function getEnforcer() {
   });
 
   const policy = (
-    adminPolicies
-      .concat(moderPolicies)
-      // .concat(saloneAdminPolicies)
-      // .concat(saloneModerPolicies)
-      // .concat(adminGroups)
-      // .concat(moderGroups)
-      // .concat(saloneAdminGroups)
-      // .concat(saloneModerGroups)
+      moderPolicies
+      .concat(saloneAdminPolicies)
+      .concat(saloneModerPolicies)
+      .concat(adminGroups)
+      .concat(moderGroups)
+      .concat(saloneAdminGroups)
+      .concat(saloneModerGroups)
   ).map(p => p.join(', ')).join('\n')
-  console.info(Math.random());
-  console.info(policy);
-  console.info(Math.random());
-  // fs.writeFileSync('f.txt', policy);
+  fs.writeFileSync('f.txt', policy);
 
   return await newEnforcer('./perm/model.conf', new StringAdapter(policy));
 }
@@ -116,17 +115,13 @@ const init = async () => {
     }
   });
 
-
   await server.register(require('@hapi/inert'));
-
   server.decorate('toolkit', 'pool', pool);
   server.decorate('toolkit', 'sql', sql);
   server.decorate('toolkit', 'query', query);
   server.decorate('toolkit', 'models', models);
 
   getEnforcer().then(async e => {
-    const a = await e.enforce('vith2', 'foto.ru', 'settings', 'view');
-    console.info(a);
     server.decorate('toolkit', 'enforcer', e);
   });
 
@@ -160,10 +155,9 @@ const init = async () => {
           where: {
             id: user.id
           }});
-        const userRole = ['SUPERADMIN', 'ADMIN', 'MODER', 'USER'][u && u.userType] || 'ANON';
-        routeRole = get('route.settings.plugins.role', request) || 'ANON';
-        // console.log(routeRole, userRole, request.path)
-        return { valid: can(userRole, routeRole), credentials: user, role: userRole };
+        const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+        const role = await getRole(u, domain); 
+        return { valid: can(role, routeRole), credentials: {...user, role}, foo: role };
       }
 
       return { valid: routeRole === '' };
