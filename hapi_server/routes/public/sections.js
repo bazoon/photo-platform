@@ -101,15 +101,21 @@ module.exports = [
           filename,
           year_shot as year,
           locate_shot as place,
-          tcontent as description
+          tcontent as description,
+          CONCAT("first_name", ' ', "last_name") as author,
+          date_add,
+          moder
         from
           photoworks,
-          registration_contests
+          registration_contests,
+          users
         where
           registration_contests.user_id = :userId
           and section_id = :id
           and registration_contests.id = photoworks.registration_contest_id
-      `
+          and registration_contests.user_id = users.id
+      `;
+
       return map(compose(p => ({...p, filename: getUploadPath(p.filename)}), camelizeObject), await h.query(query, {
         replacements: {
           id,

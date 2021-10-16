@@ -16,6 +16,7 @@ import Nominations from "./Nominations";
 import {collect} from "react-recollect";
 import {Dialog} from "primereact/dialog";
 import Applications from "./Applications";
+import {make as Moder} from "./Moder.bs";
 import {keys} from "lodash/fp";
 
 
@@ -77,15 +78,20 @@ const Grid = ({store}) => {
       title: "Заявки",
       Component: Applications
     },
+    {
+      title: "Модерация",
+      Component: Moder
+    },
   ];
 
-  const showSection = ({id, index}) => {
+  const showSection = ({id, index, title}) => {
     const props = {
       id,
       sectionId: index,
       key: index,
       baseZIndex: 0,
-      dialogId: "Section"
+      dialogId: "Section",
+      title
     };
     store.sidebars.push({Component: renderSidebar, props});
   };
@@ -94,11 +100,11 @@ const Grid = ({store}) => {
     store.sidebars = store.sidebars.filter(s => s.props.dialogId !== dialogId);
   };
 
-  const renderSidebar = ({id, baseZIndex, sectionId, dialogId}) => {
+  const renderSidebar = ({id, baseZIndex, sectionId, dialogId, title}) => {
     const section = contestSections[sectionId];
     const Component = section && section.Component;
     return (
-      <Dialog contentClassName="flex-1" visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "70vw", height: "40vh"}}  onHide={() => hideSection(dialogId) }>
+      <Dialog header={title} contentClassName="flex-1" visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "90vw", height: "80vh"}}  onHide={() => hideSection(dialogId) }>
         {Component && <Component id={id}/>}
       </Dialog>
     );
@@ -115,13 +121,11 @@ const Grid = ({store}) => {
     return (
       <div style={{width: "100%", overflowX: "auto"}}>
         {
-          contestSections.map(({title}, i) => <div className="inline mr-5"  key={i}><Button className="p-button-outlined p-button-sm p-button-text"  label={title} onClick={() => showSection({id, index: i})}/></div>)
+          contestSections.map(({title}, i) => <div className="inline mr-5"  key={i}><Button className="p-button-outlined p-button-sm p-button-text"  label={title} onClick={() => showSection({id, index: i, title})}/></div>)
         }
       </div>
     );
   };
-
-  console.info(columnsFromSchema(columnsSchema, t));
 
   return (
     <>

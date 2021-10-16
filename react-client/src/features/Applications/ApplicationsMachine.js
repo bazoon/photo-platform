@@ -218,7 +218,7 @@ export default function applicationsMachine({ context = {}, api } = {}) {
         .fork(failed("sendingFailed", callback), ok({state: "sendingOk", callback, failedState: "sendingFailed"})),
       loadingPhotoworks: () => asyncGet("api/photoworks").toPromise(),
       apply: (_, {data}) => asyncPost("api/apply", data).toPromise(),
-      removeImages: (_, {ids}) => { debugger; return asyncDel("api/photoworks", ids).toPromise(); }
+      removeImages: (_, {ids}) => { return asyncDel("api/photoworks", ids).toPromise(); }
     }
   });
 }

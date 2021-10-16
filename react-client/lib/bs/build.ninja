@@ -4,11 +4,11 @@ rule astj
   command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsc.exe  -bs-v 9.1.4 -bs-jsx 3  -absname -bs-ast -o $out $i
 o src/Hello.ast : astj ../../src/Hello.res
 rule deps
-  command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsb_helper.exe -hash de726a9e294af8f5d4f3eb4b53ef740d $in
+  command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsb_helper.exe -hash b5c9e4156e8f7455032866f64505705f $in
   restat = 1
 o src/Hello.d : deps src/Hello.ast
 rule mij
-  command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsc.exe -I src/core/hooks -I src/core -I src/images -I src/features/admin/Settings -I src/features/admin/Words -I src/features/admin/Config -I src/features/admin/Admins -I src/features/admin/Languages -I src/features/admin/Lexicons -I src/features/admin/Users -I src/features/admin/Organizers -I src/features/admin/Contests -I src/features/admin/AwardTypes -I src/features/admin/Salones -I src/features/admin -I src/features/machines -I src/features/Applications -I src/features -I src/components/Crud -I src/components -I src/icons -I src/fonts/700 -I src/fonts/400 -I src/fonts -I src -I /Users/vn/projects/work/photo-platform/react-client/node_modules/@rescript/react/lib/ocaml   -bs-package-name your-project-name -bs-package-output es6:$in_d:.bs.js -bs-v $g_finger $i
+  command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsc.exe -I src/core/hooks -I src/core -I src/images -I src/features/admin/Settings -I src/features/admin/Words -I src/features/admin/Config -I src/features/admin/Admins -I src/features/admin/Languages -I src/features/admin/Lexicons -I src/features/admin/Users -I src/features/admin/Organizers -I src/features/admin/Contests -I src/features/admin/AwardTypes -I src/features/admin/Salones -I src/features/admin -I src/features/machines -I src/features/Applications -I src/features -I src/components/Crud -I src/components -I src/icons -I src/fonts/Futura-600 -I src/fonts/Bebas-700 -I src/fonts/Futura-300 -I src/fonts/Futura-400 -I src/fonts -I src -I /Users/vn/projects/work/photo-platform/react-client/node_modules/@rescript/react/lib/ocaml   -bs-package-name your-project-name -bs-package-output es6:$in_d:.bs.js -bs-v $g_finger $i
   dyndep = 1
   restat = 1
 o src/Hello.cmj src/Hello.cmi ../../src/Hello.bs.js : mij src/Hello.ast
@@ -21,3 +21,6 @@ o src/features/Applications/ApplicationInfo.cmj src/features/Applications/Applic
 o src/features/Applications/ApplicationImages.ast : astj ../../src/features/Applications/ApplicationImages.res
 o src/features/Applications/ApplicationImages.d : deps src/features/Applications/ApplicationImages.ast
 o src/features/Applications/ApplicationImages.cmj src/features/Applications/ApplicationImages.cmi ../../src/features/Applications/ApplicationImages.bs.js : mij src/features/Applications/ApplicationImages.ast
+o src/features/admin/Contests/Moder.ast : astj ../../src/features/admin/Contests/Moder.res
+o src/features/admin/Contests/Moder.d : deps src/features/admin/Contests/Moder.ast
+o src/features/admin/Contests/Moder.cmj src/features/admin/Contests/Moder.cmi ../../src/features/admin/Contests/Moder.bs.js : mij src/features/admin/Contests/Moder.ast

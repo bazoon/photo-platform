@@ -9,4 +9,6 @@ S src
 B lib/bs/src
 S src/features/Applications
 B lib/bs/src/features/Applications
+S src/features/admin/Contests
+B lib/bs/src/features/admin/Contests
 ####BSB GENERATED: NO EDIT}

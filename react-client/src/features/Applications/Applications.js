@@ -5,7 +5,7 @@ import {Button} from "primereact/button";
 import Machine from "./ApplicationsMachine";
 import { useMachine } from "@xstate/react";
 import SectionsMachine from "./SectionsMachine";
-import {get, nth, map, compose, keys, curry, isEmpty, values} from "lodash/fp";
+import {get, nth, map, compose, keys, isEmpty} from "lodash/fp";
 import { Form, Field } from "react-final-form";
 import ProfileMenu from "../ProfileMenu";
 import {inspect} from "@xstate/inspect";
@@ -127,7 +127,7 @@ const ImageForm = ({image, onSubmit, onChange, onRemove}) => {
       className="overflow-y-auto max-h-96"
       onSubmit={onSubmit}
       initialValues={image}
-      render={({ handleSubmit, pristine, submitting }) => (
+      render={({ handleSubmit, submitting }) => (
         <div>
         <AutoSaveImageForm debounce={1000} onSave={saveImageInfo}/>
           {
@@ -470,8 +470,6 @@ const toUploadImage = compose(
   im => Photowork.from(im),
 );
 
-const tapLog = m => e => (console.log(m, e), e);
-
 const loadImages = ({sections}, {id}) => {
   const url = `api/sections/${id}/images`;
 
@@ -542,7 +540,7 @@ const Thumbs = ({images, onRemove}) => {
                     {
                       images.map(image => {
                         return (
-                          <Field type="checkbox" name={`id-${image.id}`} key={image.id} render={({ input, meta }) => (
+                          <Field type="checkbox" name={`id-${image.id}`} key={image.id} render={({ input }) => (
                             <>
                               <Thumb {...input} image={image}/>
                             </>
