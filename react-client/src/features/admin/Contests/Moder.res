@@ -20,6 +20,7 @@ type image = {
   dateAdd: string,
   moder: int,
   moderResult: moderResult,
+  reason: string
 }
 
 type images = array<image>
@@ -56,18 +57,40 @@ type contestInfo = {
   subname: string
 }
 
+/* type targetT = { */
+/*   value: string */
+/* } */
+
+/* type eventWithTarget = { */
+/*   target: targetT */
+/* } */
+
+
 @module("../../../core/api.js") external asyncGetSections: string => async<sectionsPayload> = "asyncGet"
 @module("../../../core/api.js") external asyncGetImages: string => async<images> = "asyncGet"
 @module("../../../core/api.js") external asyncGetTotalPhotoworks: string => async<contestInfo> = "asyncGet"
+@module("../../../core/api.js") external asyncPutModer: (string, 'b) => async<'a> = "asyncPut"
 
 module Button = {
   @react.component @module("primereact/button")
   external make: (~children: React.element, ~onClick: unit => unit, ~className: string) => React.element = "Button"
-
 }
+
 module RadioButton = {
   @react.component @module("primereact/radiobutton")
   external make: (~onChange: unit => unit, ~checked: bool, ~name: string) => React.element = "RadioButton"
+}
+
+module Dialog = {
+  @react.component @module("primereact/dialog")
+  external make: (
+    ~children: React.element,
+    ~onHide: unit => unit,
+    ~visible: bool,
+    ~header: bool,
+    ~maximized: bool,
+    ~contentClassName: string,
+  ~maximizable: bool) => React.element = "Dialog"
 }
 
 module ListBox = {
@@ -108,7 +131,8 @@ let make = (~id: string) => {
   let (selectedImage, setSelectedImage) = React.useState(_ => None);
   let (contestInfo, setContestInfo) = React.useState(_ => None)
   let (moderFilter, setModerFilter) = React.useState(_ => Unseen)
-
+  let (isPreview, setIsPreview) = React.useState(_ => false)
+  let (reason, setReason) = React.useState(_ => "")
 
   let okImages = (s: option<section>) => data => {
     let id = switch s {
@@ -122,7 +146,7 @@ let make = (~id: string) => {
       let newSections = sections -> Belt.Array.map(x => x.id == id ? {...x, images} : x)
       Js.log2("setting", s)
       setSection(_ => newSections -> Belt.Array.getBy(e => e.id == id))
-      setSelectedImage(_ => data -> Belt.Array.get(0))
+      setSelectedImage(_ => images -> Belt.Array.get(0))
       newSections
     })
     ()
@@ -164,21 +188,52 @@ let make = (~id: string) => {
     None
   })
 
-  let selectImage = im => _ => {
-    setSelectedImage(_ => Some(im));
+  let preview = _ => setIsPreview(_ => true)
+  let hidePreview = () => setIsPreview(_ => false)
+
+  let renderPreview = im => {
+    <Dialog visible={isPreview} onHide={hidePreview} header={false} maximized={true} maximizable={true}
+    contentClassName="flex justify-center">
+    {
+      switch im {
+        | Some(img) => <div><img src={img.filename} className="preview"/></div>
+        | None => <div></div>
+      }
+    }
+    </Dialog>
   }
 
-  let renderImage = (im: image) => {
-    let basicCls = "w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0 pt-5";
-    let selectedCls = basicCls ++ " border-0 border-t-2 border-coolGray-50 selected-image"
-
-    let cls = switch (selectedImage) {
-      | Some(img) => if im == img { selectedCls } else { basicCls }
-      | None => basicCls
+  let selectImage = im => _ => {
+    let isSelected = switch selectedImage {
+      | Some(i) => i == im
+      | None => false
     }
-  
-    <div className={cls}>
-      <img onClick={selectImage(im)} className="object-cover h-full w-full" src={im.filename} key={im.id} />
+    
+    setReason(_ => im.reason)
+    Js.log(im)
+
+    if (isSelected) {
+      preview() 
+    } else {
+      setSelectedImage(_ => Some(im)) 
+    }
+  }
+
+
+
+  let renderImage = (im: image) => {
+    let basicCls = "object-cover h-full w-full opacity-40"
+    let selectedCls = basicCls ++ "opacity-100"
+
+    let (cls, isSelected) = switch selectedImage {
+      | Some(img) => if im == img { (selectedCls, true) } else { (basicCls, false) }
+      | None => (basicCls, false)
+    }
+
+    <div>
+      <div className="w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0 pt-5 opacity-80">
+        <img onClick={selectImage(im)} className={cls} src={im.filename} key={im.id} />
+      </div>
     </div>
   }
 
@@ -234,18 +289,18 @@ let make = (~id: string) => {
       | None => (0, 0, 0)
       | Some(s) => countByStatus(s)
     }
-    <div className="flex justify-around p-5">
+    <div className="flex justify-between p-5">
       <div>
         {
           switch contestInfo {
             | None => React.string("")
-            | Some(c) => <div>{React.string(t("totalPhotoworks"))} {React.string(c.totalPhotoworks)}</div>
+            | Some(c) => <div><span className="mr-2">{React.string(t("totalPhotoworks"))}</span> {React.string(c.totalPhotoworks)}</div>
           }
         }
       </div>
-      <div>{React.string(t("unseen"))} {React.string(Belt.Int.toString(unseen))}</div>
-      <div>{React.string(t("approved"))} {React.string(Belt.Int.toString(approved))}</div>
-      <div>{React.string(t("declined"))} {React.string(Belt.Int.toString(declined))}</div>
+      <div><span className="mr-2">{React.string(t("unseen"))}</span> {React.string(Belt.Int.toString(unseen))}</div>
+      <div><span className="mr-2">{React.string(t("approved"))}</span> {React.string(Belt.Int.toString(approved))}</div>
+      <div><span className="mr-2">{React.string(t("declined"))}</span> {React.string(Belt.Int.toString(declined))}</div>
     </div>
   }
 
@@ -271,29 +326,49 @@ let make = (~id: string) => {
     </div>
   }
 
-  let approve = (im, section) => {
+  let approveOk = () => {
+    ()
+  }
+
+  let declineOk = () => {
+    ()
+  }
+
+
+  let decide = (im, section, decision: moderResult) => {
     switch (im, section) {
       | (Some(ima: image), Some(sec)) => setSections(sections => {
-          let newImages = sec.images -> Belt.Array.map(x => x.id == ima.id ? {...x, moderResult: Approved} : x)
+          let newImages = sec.images -> Belt.Array.map(x => x.id == ima.id ? {...x, moderResult: decision} : x)
           let newSection = {...sec, images: newImages}
           let newSections = sections -> Belt.Array.map(x => x.id == sec.id ? newSection : x)
           setSection(_ => Some(newSection))
+          if (decision == Approved) {
+            asyncPutModer(`api/admin/moder/approve/${ima.id}`, {"reason": reason}).fork(failed, approveOk, cleanUp)
+          } else {
+            asyncPutModer(`api/admin/moder/decline/${ima.id}`, {"reason": reason}).fork(failed, declineOk, cleanUp)
+          }
           newSections
         })
       | _ => ()
     }
   }
 
+  let approve = (im, section) => decide(im, section, Approved)
+  let decline = (im, section) => decide(im, section, Declined)
+
   let renderModerToolbar = (im: option<image>, section) => {
-    <div>
+    <div className="flex justify-between">
+      <Button className="" onClick={_ => decline(im, section)}> {React.string(t("decline"))} </Button>
+      <input className="flex-1 ml-10 mr-10" value={reason} onChange={e => setReason(ReactEvent.Form.currentTarget(e)["value"])}></input>
       <Button className="" onClick={_ => approve(im, section)}> {React.string(t("approve"))} </Button>
     </div>
   }
 
+
   <div>
     {renderStats(section, contestInfo)}
     <div className="grid grid-cols-12 h-full p-5 gap-5">
-    <div className="col-span-4 row-span-3 h-full">
+    <div className="col-span-4 row-span-4 h-full">
       {
         renderSections(section)
       }
@@ -303,7 +378,7 @@ let make = (~id: string) => {
       {renderFilter()}
     </div>
 
-    <div className="col-span-8 h-full">
+    <div className="col-span-8 row-span-1 h-full">
       {
         switch section {
           | None => <div/>
@@ -312,7 +387,7 @@ let make = (~id: string) => {
       }
     </div>
       
-    <div className="col-span-8">
+    <div className="col-span-8 h-72 row-span-1">
     {
       switch selectedImage {
         | None => <div/>
@@ -320,9 +395,10 @@ let make = (~id: string) => {
       }
     }
     </div>
-    <div className="col-span-8">
+    <div className="col-span-8 row-span-1">
       {renderModerToolbar(selectedImage, section)}
     </div>
   </div>
+    {renderPreview(selectedImage)}
   </div>
 }

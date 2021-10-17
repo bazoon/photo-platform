@@ -7,6 +7,7 @@ import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as Caml_option from "rescript/lib/es6/caml_option.js";
 import * as ReactI18next from "react-i18next";
 import * as Button from "primereact/button";
+import * as Dialog from "primereact/dialog";
 import * as Listbox from "primereact/listbox";
 import * as ApiJs from "../../../core/api.js";
 import * as Radiobutton from "primereact/radiobutton";
@@ -31,9 +32,15 @@ function asyncGetTotalPhotoworks(prim) {
   return ApiJs.asyncGet(prim);
 }
 
+function asyncPutModer(prim0, prim1) {
+  return ApiJs.asyncPut(prim0, prim1);
+}
+
 var Button$1 = {};
 
 var RadioButton = {};
+
+var Dialog$1 = {};
 
 var ListBox = {};
 
@@ -114,6 +121,16 @@ function Moder(Props) {
       });
   var setModerFilter = match$5[1];
   var moderFilter = match$5[0];
+  var match$6 = React.useState(function () {
+        return false;
+      });
+  var setIsPreview = match$6[1];
+  var isPreview = match$6[0];
+  var match$7 = React.useState(function () {
+        return "";
+      });
+  var setReason = match$7[1];
+  var reason = match$7[0];
   var failed = function (param) {
     
   };
@@ -132,7 +149,8 @@ function Moder(Props) {
                                   author: im.author,
                                   dateAdd: im.dateAdd,
                                   moder: im.moder,
-                                  moderResult: valueToModerResult(im.moder)
+                                  moderResult: valueToModerResult(im.moder),
+                                  reason: im.reason
                                 };
                         }));
                   Curry._1(setSections, (function (sections) {
@@ -154,8 +172,8 @@ function Moder(Props) {
                                                 return e.id === id;
                                               }));
                                 }));
-                          Curry._1(setSelectedImage, (function (param$1) {
-                                  return Belt_Array.get(param, 0);
+                          Curry._1(setSelectedImage, (function (param) {
+                                  return Belt_Array.get(images, 0);
                                 }));
                           return newSections;
                         }));
@@ -185,22 +203,58 @@ function Moder(Props) {
           Curry._3(ApiJs.asyncGet("api/admin/moder/stats/" + id).fork, failed, okContestInfo, cleanUp);
           
         }), []);
+  var hidePreview = function (param) {
+    return Curry._1(setIsPreview, (function (param) {
+                  return false;
+                }));
+  };
+  var renderPreview = function (im) {
+    return React.createElement(Dialog.Dialog, {
+                children: im !== undefined ? React.createElement("div", undefined, React.createElement("img", {
+                            className: "preview",
+                            src: im.filename
+                          })) : React.createElement("div", undefined),
+                onHide: hidePreview,
+                visible: isPreview,
+                header: false,
+                maximized: true,
+                contentClassName: "flex justify-center",
+                maximizable: true
+              });
+  };
   var renderImage = function (im) {
-    var basicCls = "w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0 pt-5";
-    var selectedCls = "w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0 pt-5 border-0 border-t-2 border-coolGray-50 selected-image";
-    var cls = selectedImage !== undefined && Caml_obj.caml_equal(im, selectedImage) ? selectedCls : basicCls;
-    return React.createElement("div", {
-                className: cls
-              }, React.createElement("img", {
-                    key: im.id,
-                    className: "object-cover h-full w-full",
-                    src: im.filename,
-                    onClick: (function (param) {
-                        return Curry._1(setSelectedImage, (function (param) {
-                                      return im;
-                                    }));
-                      })
-                  }));
+    var basicCls = "object-cover h-full w-full opacity-40";
+    var selectedCls = "object-cover h-full w-full opacity-40opacity-100";
+    var match = selectedImage !== undefined && Caml_obj.caml_equal(im, selectedImage) ? [
+        selectedCls,
+        true
+      ] : [
+        basicCls,
+        false
+      ];
+    return React.createElement("div", undefined, React.createElement("div", {
+                    className: "w-52 h-52 cursor-pointer flex-shrink-0 flex-grow-0 pt-5 opacity-80"
+                  }, React.createElement("img", {
+                        key: im.id,
+                        className: match[0],
+                        src: im.filename,
+                        onClick: (function (param) {
+                            var isSelected = selectedImage !== undefined ? Caml_obj.caml_equal(selectedImage, im) : false;
+                            Curry._1(setReason, (function (param) {
+                                    return im.reason;
+                                  }));
+                            console.log(im);
+                            if (isSelected) {
+                              return Curry._1(setIsPreview, (function (param) {
+                                            return true;
+                                          }));
+                            } else {
+                              return Curry._1(setSelectedImage, (function (param) {
+                                            return im;
+                                          }));
+                            }
+                          })
+                      })));
   };
   var renderImages = function (section, visibleModerResult) {
     var visible = Belt_Array.map(section.images.filter(function (im) {
@@ -255,8 +309,16 @@ function Moder(Props) {
         0
       ];
     return React.createElement("div", {
-                className: "flex justify-around p-5"
-              }, React.createElement("div", undefined, contestInfo !== undefined ? React.createElement("div", undefined, Curry._1(t, "totalPhotoworks"), contestInfo.totalPhotoworks) : ""), React.createElement("div", undefined, Curry._1(t, "unseen"), String(match[0])), React.createElement("div", undefined, Curry._1(t, "approved"), String(match[2])), React.createElement("div", undefined, Curry._1(t, "declined"), String(match[1])));
+                className: "flex justify-between p-5"
+              }, React.createElement("div", undefined, contestInfo !== undefined ? React.createElement("div", undefined, React.createElement("span", {
+                              className: "mr-2"
+                            }, Curry._1(t, "totalPhotoworks")), contestInfo.totalPhotoworks) : ""), React.createElement("div", undefined, React.createElement("span", {
+                        className: "mr-2"
+                      }, Curry._1(t, "unseen")), String(match[0])), React.createElement("div", undefined, React.createElement("span", {
+                        className: "mr-2"
+                      }, Curry._1(t, "approved")), String(match[2])), React.createElement("div", undefined, React.createElement("span", {
+                        className: "mr-2"
+                      }, Curry._1(t, "declined")), String(match[1])));
   };
   var renderFilter = function (param) {
     return React.createElement("div", {
@@ -296,53 +358,86 @@ function Moder(Props) {
                         name: "radio"
                       })));
   };
+  var approveOk = function (param) {
+    
+  };
+  var declineOk = function (param) {
+    
+  };
+  var decide = function (im, section, decision) {
+    if (im !== undefined && section !== undefined) {
+      return Curry._1(setSections, (function (sections) {
+                    var newImages = Belt_Array.map(section.images, (function (x) {
+                            if (x.id === im.id) {
+                              return {
+                                      id: x.id,
+                                      description: x.description,
+                                      filename: x.filename,
+                                      name: x.name,
+                                      place: x.place,
+                                      year: x.year,
+                                      author: x.author,
+                                      dateAdd: x.dateAdd,
+                                      moder: x.moder,
+                                      moderResult: decision,
+                                      reason: x.reason
+                                    };
+                            } else {
+                              return x;
+                            }
+                          }));
+                    var newSection_id = section.id;
+                    var newSection_maxCountImg = section.maxCountImg;
+                    var newSection_name = section.name;
+                    var newSection = {
+                      id: newSection_id,
+                      maxCountImg: newSection_maxCountImg,
+                      name: newSection_name,
+                      images: newImages
+                    };
+                    var newSections = Belt_Array.map(sections, (function (x) {
+                            if (x.id === section.id) {
+                              return newSection;
+                            } else {
+                              return x;
+                            }
+                          }));
+                    Curry._1(setSection, (function (param) {
+                            return newSection;
+                          }));
+                    if (decision === /* Approved */1) {
+                      Curry._3(ApiJs.asyncPut("api/admin/moder/approve/" + im.id, {
+                                reason: reason
+                              }).fork, failed, approveOk, cleanUp);
+                    } else {
+                      Curry._3(ApiJs.asyncPut("api/admin/moder/decline/" + im.id, {
+                                reason: reason
+                              }).fork, failed, declineOk, cleanUp);
+                    }
+                    return newSections;
+                  }));
+    }
+    
+  };
   var renderModerToolbar = function (im, section) {
-    return React.createElement("div", undefined, React.createElement(Button.Button, {
+    return React.createElement("div", {
+                className: "flex justify-between"
+              }, React.createElement(Button.Button, {
+                    children: Curry._1(t, "decline"),
+                    onClick: (function (param) {
+                        return decide(im, section, /* Declined */2);
+                      }),
+                    className: ""
+                  }), React.createElement("input", {
+                    className: "flex-1 ml-10 mr-10",
+                    value: reason,
+                    onChange: (function (e) {
+                        return Curry._1(setReason, e.currentTarget.value);
+                      })
+                  }), React.createElement(Button.Button, {
                     children: Curry._1(t, "approve"),
                     onClick: (function (param) {
-                        if (im !== undefined && section !== undefined) {
-                          return Curry._1(setSections, (function (sections) {
-                                        var newImages = Belt_Array.map(section.images, (function (x) {
-                                                if (x.id === im.id) {
-                                                  return {
-                                                          id: x.id,
-                                                          description: x.description,
-                                                          filename: x.filename,
-                                                          name: x.name,
-                                                          place: x.place,
-                                                          year: x.year,
-                                                          author: x.author,
-                                                          dateAdd: x.dateAdd,
-                                                          moder: x.moder,
-                                                          moderResult: /* Approved */1
-                                                        };
-                                                } else {
-                                                  return x;
-                                                }
-                                              }));
-                                        var newSection_id = section.id;
-                                        var newSection_maxCountImg = section.maxCountImg;
-                                        var newSection_name = section.name;
-                                        var newSection = {
-                                          id: newSection_id,
-                                          maxCountImg: newSection_maxCountImg,
-                                          name: newSection_name,
-                                          images: newImages
-                                        };
-                                        var newSections = Belt_Array.map(sections, (function (x) {
-                                                if (x.id === section.id) {
-                                                  return newSection;
-                                                } else {
-                                                  return x;
-                                                }
-                                              }));
-                                        Curry._1(setSection, (function (param) {
-                                                return newSection;
-                                              }));
-                                        return newSections;
-                                      }));
-                        }
-                        
+                        return decide(im, section, /* Approved */1);
                       }),
                     className: ""
                   }));
@@ -350,16 +445,16 @@ function Moder(Props) {
   return React.createElement("div", undefined, renderStats(section, match$4[0]), React.createElement("div", {
                   className: "grid grid-cols-12 h-full p-5 gap-5"
                 }, React.createElement("div", {
-                      className: "col-span-4 row-span-3 h-full"
+                      className: "col-span-4 row-span-4 h-full"
                     }, renderSections(section)), React.createElement("div", {
                       className: "col-span-8"
                     }, renderFilter(undefined)), React.createElement("div", {
-                      className: "col-span-8 h-full"
+                      className: "col-span-8 row-span-1 h-full"
                     }, section !== undefined ? renderImages(section, moderFilter) : React.createElement("div", undefined)), React.createElement("div", {
-                      className: "col-span-8"
+                      className: "col-span-8 h-72 row-span-1"
                     }, selectedImage !== undefined ? renderInfo(selectedImage) : React.createElement("div", undefined)), React.createElement("div", {
-                      className: "col-span-8"
-                    }, renderModerToolbar(selectedImage, section))));
+                      className: "col-span-8 row-span-1"
+                    }, renderModerToolbar(selectedImage, section))), renderPreview(selectedImage));
 }
 
 var make = Moder;
@@ -369,8 +464,10 @@ export {
   asyncGetSections ,
   asyncGetImages ,
   asyncGetTotalPhotoworks ,
+  asyncPutModer ,
   Button$1 as Button,
   RadioButton ,
+  Dialog$1 as Dialog,
   ListBox ,
   countByStatus ,
   make ,

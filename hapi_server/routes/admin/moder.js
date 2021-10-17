@@ -30,40 +30,40 @@ module.exports = [
       }
     }
   },
-  // {
-  //   method: 'POST',
-  //   path: '/api/admin/juries/{id}',
-  //   handler: async function (request, h) {
-  //     const { id } = request.params;
-  //     const {
-  //       rank,
-  //       userId
-  //     } = request.payload;
-
-  //     const jury = await h.models.Jury.create({
-  //       rank,
-  //       userId,
-  //       contestId: id
-  //     });
-
-  //     const query = `
-  //       select first_name || ' ' || last_name as name, rank, juries.id from users, juries where users.id=juries.user_id and juries.id=:id
-  //     `;
-
-  //     const [j] = await h.models.sequelize.query(query, {
-  //       replacements: {
-  //         id: jury.id
-  //       }
-  //     });
-
-  //     return j[0];
-  //   },
-  //   options: {
-  //     auth: {
-  //       mode: 'required'
-  //     }
-  //   }
-  // },
+  {
+    method: 'PUT',
+    path: '/api/admin/moder/approve/{id}',
+    handler: async function (request, h) {
+      const { id } = request.params;
+      const photowork = await h.models.Photowork.findOne({ where: {id} });
+      photowork.moder = 1;
+      await photowork.save();
+      return photowork;     
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/api/admin/moder/decline/{id}',
+    handler: async function (request, h) {
+      const { id } = request.params;
+      const {reason} = request.payload;
+      const photowork = await h.models.Photowork.findOne({ where: {id} });
+      photowork.moder = 2;
+      photowork.reasonModeration = reason;
+      await photowork.save();
+      return photowork;
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
   // {
   //   method: 'DELETE',
   //   path: '/api/admin/juries/{id}',

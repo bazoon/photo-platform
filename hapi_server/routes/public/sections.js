@@ -104,7 +104,8 @@ module.exports = [
           tcontent as description,
           CONCAT("first_name", ' ', "last_name") as author,
           date_add,
-          moder
+          moder,
+          reason_moderation as reason
         from
           photoworks,
           registration_contests,
@@ -116,7 +117,7 @@ module.exports = [
           and registration_contests.user_id = users.id
       `;
 
-      return map(compose(p => ({...p, filename: getUploadPath(p.filename)}), camelizeObject), await h.query(query, {
+      return map(compose(p => ({...p, reason: p.reason || '', filename: getUploadPath(p.filename)}), camelizeObject), await h.query(query, {
         replacements: {
           id,
           userId
