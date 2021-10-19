@@ -243,7 +243,6 @@ function Moder(Props) {
                             Curry._1(setReason, (function (param) {
                                     return im.reason;
                                   }));
-                            console.log(im);
                             if (isSelected) {
                               return Curry._1(setIsPreview, (function (param) {
                                             return true;

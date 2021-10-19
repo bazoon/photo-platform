@@ -252,7 +252,11 @@ export default function Main() {
                   <div className="col-span-8 text-semi-bright text-sm-2 flex flex-col mb-16 justify-between">
                     <span>{profile.firstName} <span className="uppercase">{profile.lastName}</span></span>  
                     <span></span>
-                    <Button disabled={!agreed} onClick={handleUploadAvatar} className="text-sm uppercase w-72 flex justify-center h-12">Загрузить фото</Button>
+                    {
+                      !store?.role?.isJury && (
+                       <Button disabled={!agreed} onClick={handleUploadAvatar} className="text-sm uppercase w-72 flex justify-center h-12">Загрузить фото</Button>
+                      )
+                    }
                   </div>
                   <div className="col-span-4"></div>
                   <div className={`col-span-8 text-brown-light4 ${!loading && "invisible"}`}>{t("isSaving")}...</div>

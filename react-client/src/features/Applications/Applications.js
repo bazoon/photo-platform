@@ -641,7 +641,7 @@ export default function Main() {
   };
 
   return (
-    <div className="container flex bg-brown-dark2 text-semi-bright" style={{minHeight: "calc(100vh - 21rem)"}}> 
+    <div className="container flex bg-brown-dark2 text-semi-bright" style={{minHeight: "calc(100vh - 16rem)"}}> 
       <div className="relative flex justify-center w-full">
       <div className="flex-1">
       <div className="uppercase text-4xl pt-24 mb-24 text-semi-bright font-header text-center">{t("myApplications")}</div>

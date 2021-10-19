@@ -31,11 +31,11 @@ body {
 }
 
 .main-container {
-  min-height: calc(100vh - 21rem);
+  min-height: calc(100vh - 16rem);
 }
 
 .main-container > * {
-  min-height: calc(100vh - 21rem);
+  min-height: calc(100vh - 16rem);
 }
 
 .square {
@@ -196,7 +196,12 @@ body {
   width: 16px;
   scrollbar-width: thin;
 }
- 
+
+
+.invisible-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .hidden-scroll::-webkit-scrollbar-track {
   background-color: #e4e4e4;
   border-radius: 100px;
@@ -255,5 +260,16 @@ body {
 .preview {
   max-width: 100%;
   max-height: calc(100vh - 100px);
+}
+
+.responsive {
+  width: 60%;
+  height: auto;
+  object-fit: contain;
+}
+
+.p-slidemenu-wrapper {
+  height: 100% !important;
+
 }
 

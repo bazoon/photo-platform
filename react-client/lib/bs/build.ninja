@@ -4,7 +4,7 @@ rule astj
   command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsc.exe  -bs-v 9.1.4 -bs-jsx 3  -absname -bs-ast -o $out $i
 o src/Hello.ast : astj ../../src/Hello.res
 rule deps
-  command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsb_helper.exe -hash b5c9e4156e8f7455032866f64505705f $in
+  command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsb_helper.exe -hash b401e94fa16c0ea078b6ea26bab903d6 $in
   restat = 1
 o src/Hello.d : deps src/Hello.ast
 rule mij
@@ -12,6 +12,12 @@ rule mij
   dyndep = 1
   restat = 1
 o src/Hello.cmj src/Hello.cmi ../../src/Hello.bs.js : mij src/Hello.ast
+o src/components/JuryGallery.ast : astj ../../src/components/JuryGallery.res
+o src/components/JuryGallery.d : deps src/components/JuryGallery.ast
+o src/components/JuryGallery.cmj src/components/JuryGallery.cmi ../../src/components/JuryGallery.bs.js : mij src/components/JuryGallery.ast
+o src/features/JuryAnalytics.ast : astj ../../src/features/JuryAnalytics.res
+o src/features/JuryAnalytics.d : deps src/features/JuryAnalytics.ast
+o src/features/JuryAnalytics.cmj src/features/JuryAnalytics.cmi ../../src/features/JuryAnalytics.bs.js : mij src/features/JuryAnalytics.ast
 o src/features/Applications/Application.ast : astj ../../src/features/Applications/Application.res
 o src/features/Applications/Application.d : deps src/features/Applications/Application.ast
 o src/features/Applications/Application.cmj src/features/Applications/Application.cmi ../../src/features/Applications/Application.bs.js : mij src/features/Applications/Application.ast

@@ -210,7 +210,6 @@ let make = (~id: string) => {
     }
     
     setReason(_ => im.reason)
-    Js.log(im)
 
     if (isSelected) {
       preview() 

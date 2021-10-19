@@ -52,7 +52,7 @@ export default function JuryGallery() {
   const renderInfo = () => {
     return (
       <div className="absolute right-0 flex flex-col items-center">
-        <div className="uppercase text-brown-light text-sm-2">Красоты России</div>
+        <div className="uppercase text-brown-light text-sm-2">Красоты России и очень длинно е название тут находится</div>
         <div className="text-semi-bright text-sm-2" >{current + 1} из {photos.length}</div>
       </div>
     );
@@ -139,7 +139,7 @@ export default function JuryGallery() {
 
 
   return (
-    <div className="container flex justify-center flex-1 bg-brown-dark" style={{minHeight: "calc(100vh - 21rem)"}}> 
+    <div className="container flex justify-center flex-1 bg-brown-dark" style={{minHeight: "calc(100vh - 16rem)"}}> 
       <div className="wrap pt-8 pb-8">
         {
           mode === 0 ? renderSingle() : renderMultiple()

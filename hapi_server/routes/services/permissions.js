@@ -42,9 +42,43 @@ const roles = {
   anon: {
     name: 'anon',
     level: 6
-  }
+  },
 };
 
+const getJuryRole = async (userId, domain) => {
+  const contestQuery = `
+    SELECT
+      contests.id
+    FROM
+      contests
+      LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
+      LEFT JOIN organizers AS o on salones.organizer_id=o.id
+      ORDER BY
+        date_start DESC
+      limit 1
+  `;
+
+  const [contest] = await models.sequelize.query(contestQuery, { replacements: { domain: domain} })
+
+  const query = `
+    select
+      juries.id 
+    from
+      juries 
+    where
+      juries.user_id = :userId and juries.contest_id  = :contestId
+  `;
+
+  const [[jury]] = await models.sequelize.query(query, {
+    replacements: {
+      userId,
+      contestId: get('[0].id', contest) || 1000000000
+    }
+  });
+
+
+  return jury && jury.id > 0;
+}
 
 module.exports = {
   getRole: async function (user, domain) {
@@ -61,6 +95,13 @@ module.exports = {
         domain
       }
     });
+    
+    let isJury;
+    try {
+      isJury = await getJuryRole(user.id, domain); 
+    } catch(e) {
+      isJury = e.message;
+    }
 
     const r = get('[0].adm_type', role);
 
@@ -73,6 +114,6 @@ module.exports = {
       1010: roles.moder
     }[r];
 
-    return isDefined(t) ? t : roles.user;
+    return isDefined(t) ? {...t, isJury} : {...roles.user, isJury};
   }
 };

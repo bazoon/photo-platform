@@ -5,7 +5,6 @@ import {useHistory} from "react-router-dom";
 import { SlideMenu } from "primereact/slidemenu";
 import useLogout from "../core/hooks/useLogout";
 
-
 const isActiveMenuItem = item => {
   return location.href.includes(item.to) || (item.items && item.items.some(isActiveMenuItem));
 };
@@ -22,7 +21,7 @@ const setTemplateForItems = (items = [], history, t) => {
   return [...items];
 };
 
-export default function ProfileMenu() {
+export function ProfileMenu() {
   const [links, setLinks] = useState([]);
   const { t, i18n } = useTranslation("namespace1");
   const history = useHistory();
@@ -30,6 +29,12 @@ export default function ProfileMenu() {
 
   useEffect(() => {
     const links = [
+     store?.role?.isJury && {
+        name: t("jury"),
+        to: "jury",
+        label: t("jury"),
+        command: () => history.push("/jury-analytics")
+      } || {},
       {
         name: t("profile"),
         to: "profile",
@@ -66,3 +71,5 @@ export default function ProfileMenu() {
   );
 
 }
+
+export default ProfileMenu;

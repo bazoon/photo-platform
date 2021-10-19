@@ -38,6 +38,7 @@ module.exports = [
     handler: async function (request, h) {
       const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
+
       if (!domain) {
         return {};
       }
@@ -111,11 +112,17 @@ module.exports = [
           registration_contests,
           users
         where
-          registration_contests.user_id = :userId
-          and section_id = :id
+          section_id = :id
           and registration_contests.id = photoworks.registration_contest_id
           and registration_contests.user_id = users.id
       `;
+      
+      const e = await h.query(query, {
+        replacements: {
+          id,
+          userId
+        }
+      });
 
       return map(compose(p => ({...p, reason: p.reason || '', filename: getUploadPath(p.filename)}), camelizeObject), await h.query(query, {
         replacements: {

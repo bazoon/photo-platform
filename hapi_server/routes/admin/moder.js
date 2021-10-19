@@ -22,6 +22,7 @@ module.exports = [
           contestId
         }
       });
+
       return { totalPhotoworks: totalPhotoworks[0].count };
     },
     options: {

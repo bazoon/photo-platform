@@ -7,6 +7,14 @@ o Hello.cmi : cp ../bs/src/Hello.cmi
 o Hello.cmj : cp ../bs/src/Hello.cmj
 o Hello.cmt : cp ../bs/src/Hello.cmt
 o Hello.res : cp ../../src/Hello.res
+o JuryGallery.cmi : cp ../bs/src/components/JuryGallery.cmi
+o JuryGallery.cmj : cp ../bs/src/components/JuryGallery.cmj
+o JuryGallery.cmt : cp ../bs/src/components/JuryGallery.cmt
+o JuryGallery.res : cp ../../src/components/JuryGallery.res
+o JuryAnalytics.cmi : cp ../bs/src/features/JuryAnalytics.cmi
+o JuryAnalytics.cmj : cp ../bs/src/features/JuryAnalytics.cmj
+o JuryAnalytics.cmt : cp ../bs/src/features/JuryAnalytics.cmt
+o JuryAnalytics.res : cp ../../src/features/JuryAnalytics.res
 o Application.cmi : cp ../bs/src/features/Applications/Application.cmi
 o Application.cmj : cp ../bs/src/features/Applications/Application.cmj
 o Application.cmt : cp ../bs/src/features/Applications/Application.cmt
@@ -23,4 +31,4 @@ o Moder.cmi : cp ../bs/src/features/admin/Contests/Moder.cmi
 o Moder.cmj : cp ../bs/src/features/admin/Contests/Moder.cmj
 o Moder.cmt : cp ../bs/src/features/admin/Contests/Moder.cmt
 o Moder.res : cp ../../src/features/admin/Contests/Moder.res
-build install.stamp : touch Hello.cmi Hello.cmj Application.cmi Application.cmj ApplicationInfo.cmi ApplicationInfo.cmj ApplicationImages.cmi ApplicationImages.cmj Moder.cmi Moder.cmj 
+build install.stamp : touch Hello.cmi Hello.cmj JuryGallery.cmi JuryGallery.cmj JuryAnalytics.cmi JuryAnalytics.cmj Application.cmi Application.cmj ApplicationInfo.cmi ApplicationInfo.cmj ApplicationImages.cmi ApplicationImages.cmj Moder.cmi Moder.cmj 

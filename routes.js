@@ -151,4 +151,5 @@ module.exports = flatten([
   require('./hapi_server/routes/admin/saloneSettings'),
   require('./hapi_server/routes/admin/meta/saloneSettings'),
   require('./hapi_server/routes/admin/moder'),
+  require('./hapi_server/routes/public/jury'),
 ]);

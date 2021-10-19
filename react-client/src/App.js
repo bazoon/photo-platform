@@ -30,12 +30,13 @@ import Insta from "./icons/Insta";
 import Twitter from "./icons/Twitter";
 import Signup from "./features/Signup";
 import { collect } from "react-recollect";
-import JuryGallery from "./components/JuryGallery";
+import {make as JuryGallery} from "./components/JuryGallery.bs";
 import ConfirmEmail from "./features/ConfirmEmail";
 import Profile from "./features/Profile";
 import {addLocale} from "primereact/api";
 import Applications from "./features/Applications/Applications";
 import FooterLinks from "./FooterLinks";
+import {make as JuryAnalytics} from "./features/JuryAnalytics.bs";
 
 
 const MainMenu = lazy(() => import("./MainMenu"));
@@ -127,6 +128,9 @@ function MainApp({store}) {
               <Route path="/profile">
                 <Profile/>
               </Route>
+              <Route path="/jury-analytics">
+                <JuryAnalytics/>
+              </Route>
               <Route path="/applications">
                 <Applications/>
               </Route>
@@ -143,9 +147,9 @@ function MainApp({store}) {
             </Switch>
           </main>
 
-          <footer className="flex justify-center bg-brown-medium h-60">
+          <footer className="flex justify-center bg-brown-medium h-40">
             <div className="container flex justify-center bg-brown-medium">
-              <div className="pt-20 pb-36 wrap">
+              <div className="pt-10 wrap">
                 <div className="justify-between grid grid-cols-4">
                   <div className="w-60 h-16">
                     <div className="relative">

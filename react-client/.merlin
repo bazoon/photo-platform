@@ -7,6 +7,10 @@ S /Users/vn/projects/work/photo-platform/react-client/node_modules/@rescript/rea
 B /Users/vn/projects/work/photo-platform/react-client/node_modules/@rescript/react/lib/ocaml
 S src
 B lib/bs/src
+S src/components
+B lib/bs/src/components
+S src/features
+B lib/bs/src/features
 S src/features/Applications
 B lib/bs/src/features/Applications
 S src/features/admin/Contests
