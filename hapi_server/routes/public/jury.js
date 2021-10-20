@@ -1,6 +1,8 @@
 const {get, split, nth, compose} = require('lodash/fp');
 const getUploadFilePath = require('../utils/getUploadPath');
 const MODER_ACCEPTED = 2;
+const {groupBy} = require('lodash/fp')
+
 module.exports = [
   {
     method: 'GET',
@@ -77,14 +79,23 @@ module.exports = [
       `;
 
 
-      const photoworks = await h.query(query, {
+      let photoworks = await h.query(query, {
         replacements: {
           sectionId,
           moder: MODER_ACCEPTED
         }
       });
 
-      return photoworks.map(p => ({...p, filename: getUploadFilePath(p.filename)}))
+      const dup = (arr, n) => {
+        const a = []
+        for(let i=0;i<n;i++)
+        a.push(arr.map(e =>({...e, id: Math.random()})))
+        return a.flat()
+      }
+
+
+
+      return dup(photoworks.map(p => ({...p, filename: getUploadFilePath(p.filename)})), 10)
     },
     options: {
       auth: {
@@ -218,36 +229,6 @@ module.exports = [
         return {};
       }
 
-`
-
-
-select
-	s."name", count(r.id)
-from
-	sections s,
-	photoworks p,
-	rates r 
-where
-	s.contest_id = 11
-	and p.section_id = s.id
-	and r.photowork_id = p.id 
-	and r.jury_id = 21	
-group by s.name;
-
-select
-	s.name, count(p.id)
-from
-	sections s, photoworks p 
-where
-	s.contest_id = 11
-	and p.section_id = s.id
-group  by s.name;
-
-
-
-`
-
-
       const contestQuery = `
         SELECT
           contests.id
@@ -279,7 +260,56 @@ group  by s.name;
         }
       });
 
-      return { isJury: jury.id > 0 }
+
+      const doneQuery = `
+        select
+          s."name", count(r.id)
+        from
+          sections s,
+          photoworks p,
+          rates r 
+        where
+          s.contest_id = 11
+          and p.section_id = s.id
+          and r.photowork_id = p.id 
+          and r.jury_id = 21	
+        group by s.name
+        order by s.name
+      `
+
+      const totalQuery = `
+          select
+            s.name, count(p.id)
+          from
+            sections s, photoworks p 
+          where
+            s.contest_id = 11
+            and p.section_id = s.id
+          group  by s.name
+          order by s.name
+      `
+
+
+      const done = await h.query(doneQuery, {
+        replacements: {
+          juryId: jury.id,
+        }
+      });
+
+      const total = await h.query(totalQuery, {
+        replacements: {
+          contestId: contest.id
+        }
+      });
+
+      const all = total.reduce((a, e) => {  
+        const d = done.find(t => t.name === e.name);
+        if (d) return {...a, [e.name]: { all: +e.count, done: +d.count } };
+        return {...a, [e.name]: { all: +e.count, done: 0 }};
+      }, {})
+
+
+      return Object.keys(all).map(name => ({name, all: all[name].all, done: all[name].done})  )
     },
     options: {
       auth: {

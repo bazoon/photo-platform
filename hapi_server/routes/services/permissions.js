@@ -20,7 +20,7 @@ const acl = new Acl();
 
 const roles = {
   superAdmin: {
-    name: 'superAdmin',
+    name: 'admin',
     level: 0,
   },
   admin: {
@@ -28,7 +28,7 @@ const roles = {
     level: 1,
   },
   superModer: {
-    name: 'superModer',
+    name: 'moder',
     level: 3,
   },
   moder: {

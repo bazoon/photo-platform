@@ -50,10 +50,10 @@ function App({history}) {
           label: t("words"),
           command: () => history.push("/admin/words")
         },
-        {
-          label: t("config"),
-          command: () => history.push("/admin/config")
-        }
+        // {
+        //   label: t("config"),
+        //   command: () => history.push("/admin/config")
+        // }
       ]
     },
     {

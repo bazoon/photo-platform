@@ -196,7 +196,7 @@ function JuryGallery(Props) {
     return React.createElement("div", {
                 className: "flex items-center justify-center relative"
               }, React.createElement("i", {
-                    className: "text-2xl left-5 absolute cursor-pointer hover:text-brown-light pi pi-angle-left text-semi-bright",
+                    className: "text-2xl -left-10 absolute cursor-pointer hover:text-brown-light pi pi-angle-left text-semi-bright",
                     onClick: (function (param) {
                         var dom = ref.current;
                         if (!(dom == null)) {
@@ -207,9 +207,9 @@ function JuryGallery(Props) {
                       })
                   }), React.createElement("div", {
                     ref: ref,
-                    className: "flex gap-5 overflow-x-auto p-5 w-4/5 overflow-y-hidden invisible-scroll relative"
+                    className: "flex gap-5 overflow-x-auto p-5 w-full overflow-y-hidden invisible-scroll relative"
                   }, visible), React.createElement("i", {
-                    className: "text-2xl absolute right-5 cursor-pointer hover:text-brown-light pi pi-angle-right text-semi-bright",
+                    className: "text-2xl absolute -right-10 cursor-pointer hover:text-brown-light pi pi-angle-right text-semi-bright",
                     onClick: (function (param) {
                         var dom = ref.current;
                         if (!(dom == null)) {
@@ -319,13 +319,13 @@ function JuryGallery(Props) {
                         className: "absolute bottom-32"
                       }, renderRates(im, section)), React.createElement("div", {
                         className: "absolute bottom-20 text-4xl text-bright"
-                      }, match[1])), React.createElement("div", {
+                      }, match[1]), React.createElement("div", {
+                        className: "absolute w-2/5 bottom-7"
+                      }, renderSections(sections, section))), React.createElement("div", {
                     className: "flex items-center justify-center h-24 relative"
                   }, renderSwitch(undefined), React.createElement("div", {
-                        className: "mb-5"
-                      }, renderSlider(section)), React.createElement("div", {
-                        className: "absolute w-1/5 right-0"
-                      }, renderSections(sections, section))));
+                        className: "mb-5 w-4/5"
+                      }, renderSlider(section))));
   };
   var style = {
     minHeight: "calc(100vh - 16rem)"

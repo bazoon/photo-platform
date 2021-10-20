@@ -34,17 +34,27 @@ async function getEnforcer() {
     where users.id=admins.user_id and salones.organizer_id=admins.organizer_id and adm_type=:admType
   `;
 
+  const usersQuery = `
+    select distinct domain from salones
+  `
+
   const actions = ['create', 'view', 'update', 'delete'];
 
   const admins = await query(adminsQuery, {replacements: {admType: 0}});
   const moders = await query(adminsQuery, {replacements: {admType: 1}});
   const saloneAdmins = await query(salonesQuery, {replacements: {admType: 1000}});
   const saloneModers = await query(salonesQuery, {replacements: {admType: 1010}});
-
+  const domainUsers = await query(usersQuery);
 
   const adminObjects = ['settings', 'moders', 'jury', 'contests', 'content', 'applications', 'review', 'stats'];
   const moderObjects = ['settings', 'jury', 'content', 'applications', 'review', 'stats'];
+  const userObjects = ['profile', 'meta', 'applications'];
  
+  const userPolicies = domainUsers.map(({domain}) => {
+    return userObjects.map(o => {
+      return actions.map(a => [ 'p', 'user', domain, o, a]);
+    });
+  }).flat(2);
 
   const moderPolicies = moderObjects.map(o => {
     return actions.map(a => [ 'p', 'moder', '*', o, a]);
@@ -62,6 +72,9 @@ async function getEnforcer() {
     });
   }).flat(2);
 
+
+
+
   const adminGroups = admins.map(({nickName}) => {
     return ['g', nickName, 'admin',];
   });
@@ -78,8 +91,11 @@ async function getEnforcer() {
     return ['g', nickName, 'admin', domain,];
   });
 
+
+
   const policy = (
       moderPolicies
+      .concat(userPolicies)
       .concat(saloneAdminPolicies)
       .concat(saloneModerPolicies)
       .concat(adminGroups)
@@ -147,7 +163,8 @@ const init = async () => {
       isSecure: true,
       ttl: 1000 * 434200
     },
-    validateFunc: async (request, {tok}) => {
+    validateFunc: async (request, session) => {
+      const {tok} = session;
       let routeRole = '';
       if (tok) {
         const user = jwt.verify(tok, process.env.API_TOKEN);
@@ -156,9 +173,19 @@ const init = async () => {
             id: user.id
           }});
         const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
-        const role = await getRole(u, domain); 
-        return { valid: can(role, routeRole), credentials: {...user, role}, foo: role };
+      
+        const role = await getRole(u, domain);
+        const {path, method} = request.route;
+        
+        const parts = path.split('/');
+        const obj = parts[parts.length - 1];
+        const action = { post: 'create', put: 'update', delete: 'delete', get: 'view' }[method];
+
+        const enforcer = await getEnforcer();
+        const canDo = await enforcer.enforce(role.name, domain, obj, action);
+        return { valid: canDo, credentials: {...user, role} };
       }
+
 
       return { valid: routeRole === '' };
     }

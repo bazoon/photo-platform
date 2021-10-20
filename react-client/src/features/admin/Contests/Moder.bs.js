@@ -45,39 +45,37 @@ var Dialog$1 = {};
 var ListBox = {};
 
 function countByStatus(section) {
-  var e = Belt_Array.reduce(section.images, [
-        0,
-        0,
-        0
-      ], (function (param, e) {
-          var a = param[2];
-          var d = param[1];
-          var u = param[0];
-          var match = e.moderResult;
-          switch (match) {
-            case /* Unseen */0 :
-                return [
-                        u + 1 | 0,
-                        d,
-                        a
-                      ];
-            case /* Approved */1 :
-                return [
-                        u,
-                        d,
-                        a + 1 | 0
-                      ];
-            case /* Declined */2 :
-                return [
-                        u,
-                        d + 1 | 0,
-                        a
-                      ];
-            
-          }
-        }));
-  console.log(section, e);
-  return e;
+  return Belt_Array.reduce(section.images, [
+              0,
+              0,
+              0
+            ], (function (param, e) {
+                var a = param[2];
+                var d = param[1];
+                var u = param[0];
+                var match = e.moderResult;
+                switch (match) {
+                  case /* Unseen */0 :
+                      return [
+                              u + 1 | 0,
+                              d,
+                              a
+                            ];
+                  case /* Approved */1 :
+                      return [
+                              u,
+                              d,
+                              a + 1 | 0
+                            ];
+                  case /* Declined */2 :
+                      return [
+                              u,
+                              d + 1 | 0,
+                              a
+                            ];
+                  
+                }
+              }));
 }
 
 function Moder(Props) {

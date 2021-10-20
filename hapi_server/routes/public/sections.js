@@ -94,6 +94,7 @@ module.exports = [
     handler: async function (request, h) {
       const {id} = request.params;
       const userId = h.request.auth.credentials.id;
+      
 
       const query = `
         select
@@ -114,9 +115,12 @@ module.exports = [
         where
           section_id = :id
           and registration_contests.id = photoworks.registration_contest_id
-          and registration_contests.user_id = users.id
+          and registration_contests.user_id = users.id 
+          and users.id=:userId
       `;
+ 
       
+
       const e = await h.query(query, {
         replacements: {
           id,
@@ -160,6 +164,7 @@ module.exports = [
 
         console.assert(section.id > 0, 'Section id !!!!', section);
         console.assert(application.id > 0, 'Application!!!', application)
+
         
         const p = {
           ...pick(createImageFields, payload),

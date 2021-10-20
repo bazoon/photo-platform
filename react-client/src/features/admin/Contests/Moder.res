@@ -71,6 +71,8 @@ type contestInfo = {
 @module("../../../core/api.js") external asyncGetTotalPhotoworks: string => async<contestInfo> = "asyncGet"
 @module("../../../core/api.js") external asyncPutModer: (string, 'b) => async<'a> = "asyncPut"
 
+
+
 module Button = {
   @react.component @module("primereact/button")
   external make: (~children: React.element, ~onClick: unit => unit, ~className: string) => React.element = "Button"
@@ -113,7 +115,6 @@ let countByStatus = section => {
       | Approved => (u, d, a + 1)
     }
   })
-  Js.log2(section, e)
   e
 }
 
