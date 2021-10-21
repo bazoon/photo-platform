@@ -117,6 +117,7 @@ const ImageForm = ({image, onSubmit, onChange, onRemove}) => {
     }
   };
 
+
   useEffect(() => {
     loadFields();
   }, []);
@@ -266,7 +267,8 @@ const SectionSelector = ({t, onLoadSection, application}) => {
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const {contestMaxCountImg, maxCountImg: maxCountPersonal} = application;
   const alreadyLoaded = (sections || []).reduce((a, s) => a + s.images.length ,0);
-
+  
+  
   const loadSection = id => {
     send("loadImages", {id});
   };

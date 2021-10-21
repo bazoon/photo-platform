@@ -3,14 +3,19 @@
 
 module Button = {
   @react.component @module("primereact/button")
-  external make: (~children: React.element, ~onClick: unit => unit, ~className: string) => React.element = "Button"
+  external make: (~children: React.element, ~disabled: bool, ~onClick: unit => unit, ~className: string) => React.element = "Button"
 }
 
-// Bindings.res
-/* module Button = { */
-/* @module("primereact/button") @react.component */
-/* external make: (~children: React.element, ~onClick: unit => unit) => React.element = "default" */
-/* } */
+type asyncErr = unit => unit
+type cleanUp = unit => unit
+type asyncOk<'t> = 't => unit
+type forkT<'t> = (asyncErr, asyncOk<'t>, cleanUp) => unit
+
+type async<'t> = {
+  fork: forkT<'t>
+}
+
+@module("../../core/api.js") external asyncGetCan: string => async<'a> = "asyncGet"
 
 @react.component
 let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<string>, ~openUpload, ~canUpload: bool, ~rejectionReason: Js.Nullable.t<string>) => {
@@ -18,6 +23,26 @@ let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<string>, ~ope
   | [t, _, _] => a => t(a, "")
   | _ => (a: string) => a
   }
+
+  let (can, setCan) = React.useState(_ => false);
+
+  let failed = () => ()
+  let cleanUp = () => ()
+
+  let loadCanOk = can => {
+    setCan(can);
+  };
+
+  let loadCan = () => {
+    asyncGetCan("api/applications/can").fork(failed, loadCanOk, cleanUp);
+  };
+
+
+  React.useEffect0(() => {
+    loadCan()
+    None
+  })
+
 
   let date = switch Js.Nullable.toOption(dateReg) {
    | Some(d) => Js.Date.toLocaleDateString(Js.Date.fromString(d))
@@ -43,7 +68,7 @@ let make = (~contestName, ~status: string, ~dateReg: Js.Nullable.t<string>, ~ope
       <div className="mt-10" />
       <div className="mt-10">
         {switch canUpload {
-        | true => <Button className="uppercase flex-shrink-0 w-64 h-12 flex-grow-0 w-40 flex justify-center p-5" onClick={openUpload}> {React.string(t("uploadPhoto"))} </Button>
+        | true => <Button disabled={!can} className="uppercase flex-shrink-0 w-64 h-12 flex-grow-0 w-40 flex justify-center p-5" onClick={openUpload}> {React.string(t("uploadPhoto"))} </Button>
         | false => <div />
         }}
       </div>

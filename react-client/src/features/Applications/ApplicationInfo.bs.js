@@ -3,9 +3,14 @@
 import * as Curry from "rescript/lib/es6/curry.js";
 import * as React from "react";
 import * as ReactI18next from "react-i18next";
+import * as ApiJs from "../../core/api.js";
 import * as Button from "primereact/button";
 
 var Button$1 = {};
+
+function asyncGetCan(prim) {
+  return ApiJs.asyncGet(prim);
+}
 
 function ApplicationInfo(Props) {
   var contestName = Props.contestName;
@@ -26,6 +31,24 @@ function ApplicationInfo(Props) {
         return Curry._2(t$1, a, "");
       });
   }
+  var match$1 = React.useState(function () {
+        return false;
+      });
+  var setCan = match$1[1];
+  var failed = function (param) {
+    
+  };
+  var cleanUp = function (param) {
+    
+  };
+  var loadCanOk = Curry.__1(setCan);
+  var loadCan = function (param) {
+    return Curry._3(ApiJs.asyncGet("api/applications/can").fork, failed, loadCanOk, cleanUp);
+  };
+  React.useEffect((function () {
+          loadCan(undefined);
+          
+        }), []);
   var date = (dateReg == null) ? "" : new Date(dateReg).toLocaleDateString();
   var rr = (rejectionReason == null) ? "" : "(" + rejectionReason + ")";
   return React.createElement("div", {
@@ -48,6 +71,7 @@ function ApplicationInfo(Props) {
                   className: "mt-10"
                 }, canUpload ? React.createElement(Button.Button, {
                         children: Curry._1(t, "uploadPhoto"),
+                        disabled: !match$1[0],
                         onClick: openUpload,
                         className: "uppercase flex-shrink-0 w-64 h-12 flex-grow-0 w-40 flex justify-center p-5"
                       }) : React.createElement("div", undefined)));
@@ -57,6 +81,7 @@ var make = ApplicationInfo;
 
 export {
   Button$1 as Button,
+  asyncGetCan ,
   make ,
   
 }

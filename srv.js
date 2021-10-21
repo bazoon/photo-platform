@@ -10,16 +10,13 @@ const pack = require('./package');
 
 models.initConnection();
 
-const {get, curry, nth, split} = require('lodash/fp');
-const {compose, tryCatch, Async} = require('crocks');
-const R = require('ramda');
+const {nth, split} = require('lodash/fp');
+const {compose} = require('crocks');
 const L = require('lodash/fp');
 const routes = require('./routes');
 const { newEnforcer, StringAdapter } = require('casbin')
 
 
-const pool = require('./models_objection');
-const {sql} = require('slonik');
 const {getRole} = require('./hapi_server/routes/services/permissions');
 const query = async (sql, options) => {
   const [rows] = await models.sequelize.query(sql, options);
@@ -111,7 +108,6 @@ async function getEnforcer() {
   return await newEnforcer('./perm/model.conf', new StringAdapter(policy));
 }
 
-const can = (userRole, routeRole) => !routeRole || roles.indexOf(userRole) < roles.indexOf(routeRole);
 
 const toCamel = (s) => {
   return s.replace(/([-_][a-z])/ig, ($1) => {
@@ -153,8 +149,6 @@ const init = async () => {
   ])
 
 
-  server.decorate('toolkit', 'pool', pool);
-  server.decorate('toolkit', 'sql', sql);
   server.decorate('toolkit', 'query', query);
   server.decorate('toolkit', 'models', models);
 
