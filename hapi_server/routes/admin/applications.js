@@ -1,15 +1,8 @@
-const R = require('ramda');
-const { QueryTypes } = require('sequelize');
 const camelizeObject = require('../utils/camelizeObject');
 const {map, compose} = require('lodash/fp');
 const chalk = require('chalk');
+const joi = require('joi');
 
-const fields = [
-  'id',
-  'code',
-  'category',
-  'commentPhrase'
-];
 
 
 
@@ -24,11 +17,6 @@ const regStates = [
 ];
 const addRegState = application => ({...application, regStateString: regStates[application.regState]});
 
-const l = () => {
-  let i = 0;
-  let s = `******** ${i} *******`;
-  return (w) => console.log(chalk.red(i++), chalk.green(w));
-}
 
 module.exports = [
   {
@@ -57,6 +45,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -101,6 +90,7 @@ module.exports = [
       // return R.map(R.pick(fields), applications);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -148,6 +138,7 @@ module.exports = [
       return addRegState(application.dataValues);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -167,6 +158,14 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
+      validate: {
+        params: joi.object({
+          id : joi.number()
+          .required()
+          .description('the id for the user application'),
+        })
+        },
       auth: {
         mode: 'required'
       }

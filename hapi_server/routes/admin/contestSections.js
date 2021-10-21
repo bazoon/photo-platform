@@ -166,6 +166,7 @@ module.exports = [
       return lexicon.toJSON();
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -184,6 +185,7 @@ module.exports = [
       return R.map(R.pick(fields), sections);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -205,6 +207,7 @@ module.exports = [
       return R.pick(fields, lexicon);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -216,6 +219,7 @@ module.exports = [
     handler: async function (request, h) {
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -235,6 +239,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

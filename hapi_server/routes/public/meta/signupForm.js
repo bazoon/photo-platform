@@ -17,6 +17,7 @@ module.exports = [
       };
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }

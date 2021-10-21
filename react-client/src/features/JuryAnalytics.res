@@ -19,6 +19,7 @@ type juryStat = {
 type juryStats = array<juryStat>
 
 @module("../core/api.js") external asyncGet: string => async<'a> = "asyncGet"
+@module("../core/api.js") external asyncGetCan: string => async<'a> = "asyncGet"
 
 module ProfileMenu = {
   @react.component @module("./ProfileMenu.js")
@@ -39,6 +40,7 @@ let make = (~id: string) => {
   }
 
   let (stats, setStats) = React.useState(_ => []);
+  let (canStart, setCanStart) = React.useState(_ => false);
 
   let failed = () => ()
   let cleanUp = () => ()
@@ -48,8 +50,14 @@ let make = (~id: string) => {
     ()
   }
 
+  let okCan = d => {
+    setCanStart(_ => d)
+    ()
+  }
+
   React.useEffect0(() => {
     asyncGet("api/jury/analytics").fork(failed, ok, cleanUp)
+    asyncGet("api/jury/canStart").fork(failed, okCan, cleanUp)
     None
   })
 
@@ -80,8 +88,11 @@ let make = (~id: string) => {
     </div>
   }
 
-  let renderLink = () => {
-    <div className="flex-1"><Link className="self-start text-bright uppercase no-underline text-xl" to="jgallery">{React.string(t("jgallery"))}</Link></div>
+  let renderLink = (canStart) => {
+    switch canStart {
+      | true => <div className="flex-1"><Link className="self-start text-bright uppercase no-underline text-xl" to="jgallery">{React.string(t("jgallery"))}</Link></div>
+      | false => React.string("")
+    }
   }
 
   <div className="container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"> 
@@ -91,7 +102,7 @@ let make = (~id: string) => {
         </div>
         <div className="w-1/2 mb-10">{ renderStats(stats) }</div>
         <div className="w-1/2">{ renderTotal(stats) }</div>
-        <div className="w-1/2 mt-10">{renderLink()}</div>
+        <div className="w-1/2 mt-10">{renderLink(canStart)}</div>
 
 
         

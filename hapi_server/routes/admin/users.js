@@ -33,6 +33,7 @@ const users = [
       return R.map(R.omit(['psw', 'salt']), u);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -78,6 +79,7 @@ const users = [
       };
     },
     options: {
+      tags: ['api'],
       payload: {
         parse: true,
         output: 'data',
@@ -109,6 +111,7 @@ const users = [
 
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

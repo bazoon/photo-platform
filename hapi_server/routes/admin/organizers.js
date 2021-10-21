@@ -153,6 +153,7 @@ module.exports = [
       return await h.query(query);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }
@@ -175,6 +176,7 @@ module.exports = [
       return organizer;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }

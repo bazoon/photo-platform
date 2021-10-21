@@ -46,6 +46,7 @@ module.exports = [
       return await getUserInfo(user.id, h.query);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       },
@@ -101,6 +102,7 @@ module.exports = [
       } 
     },
     options: {
+      tags: ['api'],
       payload: {
         parse: true,
         output: 'file',

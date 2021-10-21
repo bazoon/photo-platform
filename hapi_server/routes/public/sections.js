@@ -71,6 +71,8 @@ module.exports = [
           salones. "domain" = :domain and
           sections.contest_id = contests.id and
           sections.contest_id = :contestId
+        ORDER BY 
+          sections.name
        `;
 
       const info = await h.query(query, {
@@ -83,6 +85,7 @@ module.exports = [
       return info.map(i => ({...i, images: []}));
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }
@@ -138,6 +141,7 @@ module.exports = [
 
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -187,6 +191,7 @@ module.exports = [
       return (+id && Number.isInteger(+id) ? updatePhotowork() : createPhotowork());
     }, 
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       },

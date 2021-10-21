@@ -169,6 +169,7 @@ module.exports = [
       return contest.toJSON();
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -249,6 +250,7 @@ module.exports = [
       });
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -270,6 +272,7 @@ module.exports = [
       return R.pick(fields, lexicon);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -281,6 +284,7 @@ module.exports = [
     handler: async function (request, h) {
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -300,6 +304,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

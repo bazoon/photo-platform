@@ -21,6 +21,7 @@ module.exports = [
       return sectionName.toJSON();
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -47,6 +48,7 @@ module.exports = [
       return nominationSections;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -86,6 +88,7 @@ module.exports = [
       return sectionName;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -105,6 +108,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

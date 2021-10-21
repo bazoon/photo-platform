@@ -21,6 +21,7 @@ module.exports = [
 
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -45,6 +46,7 @@ module.exports = [
       return nominations;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -66,6 +68,7 @@ module.exports = [
       return R.pick(fields, lexicon);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -85,6 +88,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

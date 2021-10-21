@@ -62,6 +62,7 @@ module.exports = [
       return photoworks.map(p => ({...p, src: getUploadFilePath(p.filename)}));
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }
@@ -81,6 +82,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -98,6 +100,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

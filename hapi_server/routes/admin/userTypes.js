@@ -19,6 +19,7 @@ const users = [
 
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

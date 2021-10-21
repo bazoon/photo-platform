@@ -47,6 +47,7 @@ module.exports = [
       return sections;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }
@@ -98,6 +99,7 @@ module.exports = [
       return photoworks.map(p => ({...p, filename: getUploadFilePath(p.filename)}));
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }
@@ -166,6 +168,7 @@ module.exports = [
       return rateRecord;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }
@@ -217,6 +220,7 @@ module.exports = [
       return { isJury: jury.id > 0 }
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }
@@ -317,6 +321,43 @@ module.exports = [
       return Object.keys(all).map(name => ({name, all: all[name].all, done: all[name].done})  )
     },
     options: {
+      tags: ['api'],
+      auth: {
+        mode: 'optional'
+      }
+    }
+  },
+  {
+    method: 'GET',
+    path: '/api/jury/canStart',
+    handler: async function (request, h) {
+      const { sectionId } = request.params;
+      const userId = get('request.auth.credentials.id', h) || -1;
+      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+
+      if (!domain) {
+        return {};
+      }
+
+      const contestQuery = `
+        SELECT
+          contests.date_stop
+        FROM
+          contests
+          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
+          LEFT JOIN organizers AS o on salones.organizer_id=o.id
+          ORDER BY
+            date_start DESC
+          limit 1
+      `;
+
+      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
+
+      return (new Date(contest.dateStop)) < (new Date())
+
+    },
+    options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }

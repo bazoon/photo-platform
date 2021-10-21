@@ -12,6 +12,10 @@ function asyncGet(prim) {
   return ApiJs.asyncGet(prim);
 }
 
+function asyncGetCan(prim) {
+  return ApiJs.asyncGet(prim);
+}
+
 var make = ProfileMenuJs.ProfileMenu;
 
 var ProfileMenu = {
@@ -38,6 +42,10 @@ function JuryAnalytics(Props) {
       });
   var setStats = match$1[1];
   var stats = match$1[0];
+  var match$2 = React.useState(function () {
+        return false;
+      });
+  var setCanStart = match$2[1];
   var failed = function (param) {
     
   };
@@ -50,8 +58,15 @@ function JuryAnalytics(Props) {
           }));
     
   };
+  var okCan = function (d) {
+    Curry._1(setCanStart, (function (param) {
+            return d;
+          }));
+    
+  };
   React.useEffect((function () {
           Curry._3(ApiJs.asyncGet("api/jury/analytics").fork, failed, ok, cleanUp);
+          Curry._3(ApiJs.asyncGet("api/jury/canStart").fork, failed, okCan, cleanUp);
           
         }), []);
   var renderStats = function (stats) {
@@ -84,14 +99,18 @@ function JuryAnalytics(Props) {
                     className: "text-xl"
                   }, String(match[1]) + " " + Curry._1(t, "from") + " " + String(match[0])));
   };
-  var renderLink = function (param) {
-    return React.createElement("div", {
-                className: "flex-1"
-              }, React.createElement(ReactRouterDom.Link, {
-                    to: "jgallery",
-                    className: "self-start text-bright uppercase no-underline text-xl",
-                    children: Curry._1(t, "jgallery")
-                  }));
+  var renderLink = function (canStart) {
+    if (canStart) {
+      return React.createElement("div", {
+                  className: "flex-1"
+                }, React.createElement(ReactRouterDom.Link, {
+                      to: "jgallery",
+                      className: "self-start text-bright uppercase no-underline text-xl",
+                      children: Curry._1(t, "jgallery")
+                    }));
+    } else {
+      return "";
+    }
   };
   return React.createElement("div", {
               className: "container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"
@@ -105,13 +124,14 @@ function JuryAnalytics(Props) {
                       className: "w-1/2"
                     }, renderTotal(stats)), React.createElement("div", {
                       className: "w-1/2 mt-10"
-                    }, renderLink(undefined))), React.createElement(make, {}));
+                    }, renderLink(match$2[0]))), React.createElement(make, {}));
 }
 
 var make$1 = JuryAnalytics;
 
 export {
   asyncGet ,
+  asyncGetCan ,
   ProfileMenu ,
   Link ,
   make$1 as make,

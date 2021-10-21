@@ -133,6 +133,7 @@ module.exports = [
       return abouts;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -169,6 +170,7 @@ module.exports = [
       return {...dataValues, language: language.name};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -192,6 +194,7 @@ module.exports = [
       }
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -236,6 +239,7 @@ module.exports = [
       return about;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

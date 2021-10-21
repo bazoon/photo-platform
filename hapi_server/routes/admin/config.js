@@ -32,6 +32,7 @@ module.exports = [
       return {}
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

@@ -16,6 +16,7 @@ module.exports =  {
     return {role: user && user.role};
   },
   options: {
+    tags: ['api'],
     auth: {
       mode: 'optional'
     },

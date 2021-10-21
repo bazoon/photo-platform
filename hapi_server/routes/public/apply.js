@@ -40,6 +40,7 @@ module.exports = [
       return registrationContest;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

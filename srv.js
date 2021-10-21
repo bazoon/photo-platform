@@ -5,6 +5,9 @@ const roles = ['SUPERADMIN', 'ADMIN', 'MODER', 'USER', 'ANON'];
 const models = require('./models');
 const fs = require('fs');
 
+const hapiSwagger = require('hapi-swagger');
+const pack = require('./package');
+
 models.initConnection();
 
 const {get, curry, nth, split} = require('lodash/fp');
@@ -131,7 +134,25 @@ const init = async () => {
     }
   });
 
-  await server.register(require('@hapi/inert'));
+
+
+  const swaggerOptions = {
+    info: {
+      title: 'Test API Documentation',
+      version: pack.version,
+    }
+  };
+  console.log(hapiSwagger)
+  await server.register([
+    require('@hapi/inert'),
+    require('@hapi/vision'),
+    {
+      plugin: hapiSwagger,
+      options: swaggerOptions
+    }
+  ])
+
+
   server.decorate('toolkit', 'pool', pool);
   server.decorate('toolkit', 'sql', sql);
   server.decorate('toolkit', 'query', query);
@@ -173,10 +194,10 @@ const init = async () => {
             id: user.id
           }});
         const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
-      
+
         const role = await getRole(u, domain);
         const {path, method} = request.route;
-        
+
         const parts = path.split('/');
         const obj = parts[parts.length - 1];
         const action = { post: 'create', put: 'update', delete: 'delete', get: 'view' }[method];
@@ -202,6 +223,8 @@ const init = async () => {
     strictHeader: false,
     isSameSite: false
   });
+
+
 
   server.route(routes);
 

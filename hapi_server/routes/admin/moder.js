@@ -18,7 +18,7 @@ module.exports = [
           registration_contests,
           contests
         where
-          registration_contests.contest_id=:contestId and contests.id=:contestId
+          registration_contests.contest_id=:contestId and contests.id=:contestId and photoworks.registration_contest_id=registration_contests.id
           group by subname
       `;
 
@@ -31,6 +31,7 @@ module.exports = [
       return { totalPhotoworks: totalPhotoworks[0].count };
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -47,6 +48,7 @@ module.exports = [
       return photowork;     
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -65,6 +67,7 @@ module.exports = [
       return photowork;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -107,6 +110,7 @@ module.exports = [
       }));
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

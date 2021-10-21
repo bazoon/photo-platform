@@ -29,6 +29,7 @@ const thesis = {
     return thesis[0];
   },
   options: {
+    tags: ['api'],
     auth: {
       mode: 'optional'
     }

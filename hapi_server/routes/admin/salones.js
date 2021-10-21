@@ -121,6 +121,7 @@ module.exports = [
       return await h.query(query);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -136,6 +137,7 @@ module.exports = [
       return await getSalone(salone);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -158,6 +160,7 @@ module.exports = [
       return salone;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -176,6 +179,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

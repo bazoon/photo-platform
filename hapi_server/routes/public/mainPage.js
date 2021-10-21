@@ -71,6 +71,7 @@ module.exports = [
       return get('[0]', info);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }

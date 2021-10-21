@@ -6,6 +6,7 @@ module.exports = [
       return await h.models.Language.findAll();
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -35,6 +36,7 @@ module.exports = [
       }
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -58,6 +60,7 @@ module.exports = [
       }
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -94,6 +97,7 @@ module.exports = [
       }
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -105,6 +109,7 @@ module.exports = [
     handler: async function (request, h) {
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

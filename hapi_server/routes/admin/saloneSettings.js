@@ -22,6 +22,7 @@ module.exports = [
       return saloneSettings;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -39,6 +40,7 @@ module.exports = [
       return saloneSetting;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       },
@@ -73,6 +75,7 @@ module.exports = [
       return r;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -87,6 +90,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

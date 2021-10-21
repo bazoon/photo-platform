@@ -81,6 +81,7 @@ const staticMenu = {
 
   },
   options: {
+    tags: ['api'],
     auth: {
       mode: 'optional'
     },

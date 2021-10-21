@@ -83,6 +83,7 @@ module.exports = [
       });
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -104,6 +105,7 @@ module.exports = [
       };
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       },
@@ -145,6 +147,7 @@ module.exports = [
       };
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       },

@@ -9,6 +9,7 @@ module.exports = [
       return await h.query(query);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }
@@ -31,6 +32,7 @@ module.exports = [
       return setting;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'optional'
       }

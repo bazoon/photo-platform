@@ -1,4 +1,4 @@
-const getUploadFilePath = require("../utils/getUploadPath");
+const getUploadFilePath = require('../utils/getUploadPath');
 
 module.exports = [
   {
@@ -28,6 +28,7 @@ module.exports = [
       });
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -46,6 +47,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -63,6 +65,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

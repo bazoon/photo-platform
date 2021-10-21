@@ -83,6 +83,7 @@ module.exports = [
       return scheme;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }

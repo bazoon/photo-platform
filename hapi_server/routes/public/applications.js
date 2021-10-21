@@ -69,6 +69,7 @@ module.exports = [
       return applications && applications[0] || {};
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       }
@@ -128,6 +129,7 @@ module.exports = [
       return {};
     },
     options: {
+      tags: ['api'],
       payload: {
         parse: true,
         output: 'file',

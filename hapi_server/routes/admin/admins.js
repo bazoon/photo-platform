@@ -100,6 +100,7 @@ module.exports =  [
       return rows;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       },
@@ -139,6 +140,7 @@ module.exports =  [
       return r;
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       },
@@ -153,6 +155,7 @@ module.exports =  [
       return await getAdmin(admin);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       },
@@ -173,6 +176,7 @@ module.exports =  [
       return await getAdmin(admin);
     },
     options: {
+      tags: ['api'],
       auth: {
         mode: 'required'
       },
