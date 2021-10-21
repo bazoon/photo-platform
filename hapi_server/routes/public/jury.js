@@ -1,6 +1,6 @@
 const {get, split, nth, compose} = require('lodash/fp');
 const getUploadFilePath = require('../utils/getUploadPath');
-const MODER_ACCEPTED = 2;
+const MODER_ACCEPTED = 1;
 const {groupBy} = require('lodash/fp')
 
 module.exports = [
@@ -73,9 +73,9 @@ module.exports = [
           rate_value as rate
         from
           photoworks
-          left join rates r on r.photowork_id=photoworks.id and photoworks.moder=:moder
+          left join rates r on r.photowork_id=photoworks.id
         where
-          section_id = :sectionId
+          section_id = :sectionId and photoworks.moder=:moder
       `;
 
 
@@ -95,7 +95,7 @@ module.exports = [
 
 
 
-      return dup(photoworks.map(p => ({...p, filename: getUploadFilePath(p.filename)})), 10)
+      return photoworks.map(p => ({...p, filename: getUploadFilePath(p.filename)}));
     },
     options: {
       auth: {
@@ -115,6 +115,7 @@ module.exports = [
       if (!domain) {
         return {};
       }
+
 
       const contestQuery = `
         SELECT
@@ -156,8 +157,12 @@ module.exports = [
         rateRecord = await h.models.Rate.create({ photoworkId: id, juryId: jury.id, rateValue: rate })
       }
 
+
+
       rateRecord.rateValue = rate;
+
       await rateRecord.save();
+      console.log(rateRecord)
       return rateRecord;
     },
     options: {

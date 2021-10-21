@@ -1,3 +1,8 @@
+const {compose, map} = require('lodash/fp');
+
+const camelizeObject = require('../utils/camelizeObject');
+const getUploadPath = require('../utils/getUploadPath');
+
 module.exports = [
   {
     method: 'GET',
@@ -65,63 +70,47 @@ module.exports = [
       }
     }
   },
-  // {
-  //   method: 'DELETE',
-  //   path: '/api/admin/juries/{id}',
-  //   handler: async function (request, h) {
-  //     const { id } = request.params;
+  {
+    method: 'GET',
+    path: '/api/admin/sections/{id}/images',
+    handler: async function (request, h) {
+      const {id} = request.params;
+      const userId = h.request.auth.credentials.id;
 
-  //     await h.models.Jury.destroy({
-  //       where: {
-  //         id
-  //       }
-  //     });
+      const query = `
+        select
+          photoworks.id,
+          name,
+          filename,
+          year_shot as year,
+          locate_shot as place,
+          tcontent as description,
+          CONCAT("first_name", ' ', "last_name") as author,
+          date_add,
+          moder,
+          reason_moderation as reason
+        from
+          photoworks,
+          registration_contests,
+          users
+        where
+          section_id = :id
+          and registration_contests.id = photoworks.registration_contest_id
+          and registration_contests.user_id = users.id 
+      `;
 
-  //     return {
-  //       id
-  //     }
-  //   },
-  //   options: {
-  //     auth: {
-  //       mode: 'required'
-  //     }
-  //   }
-  // },
-  // {
-  //   method: 'PUT',
-  //   path: '/api/admin/juries/{id}',
-  //   handler: async function (request, h) {
-  //     const { id } = request.params;
-  //     const {
-  //       name,
-  //       nameDialect,
-  //       short,
-  //     } = request.payload;
-
-  //     const language = await h.models.Language.findOne({
-  //       where: {
-  //         id
-  //       }
-  //     });
-
-  //     await language.update({
-  //       name,
-  //       nameDialect,
-  //       short,
-  //     });
-
-  //     return {
-  //       id: language.id,
-  //       name: language.name,
-  //       nameDialect: language.nameDialect,
-  //       short: language.short,
-  //     }
-  //   },
-  //   options: {
-  //     auth: {
-  //       mode: 'required'
-  //     }
-  //   }
-  // },
+      return map(compose(p => ({...p, reason: p.reason || '', filename: getUploadPath(p.filename)}), camelizeObject), await h.query(query, {
+        replacements: {
+          id,
+          userId
+        }
+      }));
+    },
+    options: {
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
 ];
 

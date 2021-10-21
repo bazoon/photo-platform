@@ -134,7 +134,7 @@ function Moder(Props) {
   };
   var loadSection = function (s) {
     var id = s !== undefined ? s.id : "";
-    return Curry._3(ApiJs.asyncGet("api/sections/" + id + "/images").fork, failed, (function (param) {
+    return Curry._3(ApiJs.asyncGet("api/admin/sections/" + id + "/images").fork, failed, (function (param) {
                   var id = s !== undefined ? s.id : "";
                   var images = Belt_Array.map(param, (function (im) {
                           return {
