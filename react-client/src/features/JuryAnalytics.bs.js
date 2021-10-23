@@ -5,6 +5,7 @@ import * as React from "react";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as ReactI18next from "react-i18next";
 import * as ApiJs from "../core/api.js";
+import * as ReactRecollect from "react-recollect";
 import * as ProfileMenuJs from "./ProfileMenu.js";
 import * as ReactRouterDom from "react-router-dom";
 
@@ -112,12 +113,18 @@ function JuryAnalytics(Props) {
       return "";
     }
   };
+  var i = ReactRecollect.store.info;
+  var i$1 = ReactRecollect.store.info;
   return React.createElement("div", {
               className: "container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"
             }, React.createElement("div", {
                   className: "relative flex flex-col items-center flex-1 w-full"
                 }, React.createElement("div", {
-                      className: "uppercase text-4xl text-semi-bright mb-20 font-header text-center mt-32"
+                      className: "uppercase text-semi-bright mb-5 text-4xl text-center mt-10"
+                    }, i !== undefined ? i.salone : React.createElement(React.Fragment, undefined)), React.createElement("div", {
+                      className: "uppercase text-semi-bright mb-10 text-3xl text-center"
+                    }, i$1 !== undefined ? i$1.name : React.createElement(React.Fragment, undefined)), React.createElement("div", {
+                      className: "uppercase text-4xl text-semi-bright mb-20 font-header text-center"
                     }, Curry._1(t, "jury-analytics")), React.createElement("div", {
                       className: "w-1/2 mb-10"
                     }, renderStats(stats)), React.createElement("div", {

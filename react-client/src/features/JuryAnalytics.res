@@ -18,8 +18,18 @@ type juryStat = {
 
 type juryStats = array<juryStat>
 
+type contestInfo = {
+  name: string,
+  salone: string
+}
+
+type store = {
+  info: option<contestInfo>
+}
+
 @module("../core/api.js") external asyncGet: string => async<'a> = "asyncGet"
 @module("../core/api.js") external asyncGetCan: string => async<'a> = "asyncGet"
+@module("react-recollect") external store: store = "store"
 
 module ProfileMenu = {
   @react.component @module("./ProfileMenu.js")
@@ -62,7 +72,7 @@ let make = (~id: string) => {
   })
 
   let renderStats = stats => {
-    stats -> Belt.Array.map(s => {
+    stats -> Belt.Array.map((s: juryStat) => {
       <div key={s.name} className="flex justify-between p-2">
       <div className="uppercase text-xl">{React.string(s.name)}</div>
       <div className="text-xl">
@@ -97,15 +107,28 @@ let make = (~id: string) => {
 
   <div className="container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"> 
     <div className="relative flex flex-col items-center flex-1 w-full">
-        <div className="uppercase text-4xl text-semi-bright mb-20 font-header text-center mt-32">
+        <div className="uppercase text-semi-bright mb-5 text-4xl text-center mt-10">
+        {
+          switch store.info {
+            |Some(i) => React.string(i.salone)
+            |None => <></>
+          }
+        }
+        </div>
+        <div className="uppercase text-semi-bright mb-10 text-3xl text-center">
+        {
+          switch store.info {
+            |Some(i) => React.string(i.name)
+            |None => <></>
+          }
+        }
+        </div>
+        <div className="uppercase text-4xl text-semi-bright mb-20 font-header text-center">
         {React.string(t("jury-analytics"))}
         </div>
         <div className="w-1/2 mb-10">{ renderStats(stats) }</div>
         <div className="w-1/2">{ renderTotal(stats) }</div>
         <div className="w-1/2 mt-10">{renderLink(canStart)}</div>
-
-
-        
     </div>
     <ProfileMenu/>
   </div>

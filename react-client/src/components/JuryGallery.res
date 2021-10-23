@@ -51,9 +51,23 @@ type rateT = {
   rate: int
 }
 
+
+type contestInfo = {
+  name: string,
+  salone: string
+}
+
+type store = {
+  info: option<contestInfo>
+}
+
+@module("react-recollect") external store: store = "store"
+
 @module("../core/api.js") external asyncGetSections: string => async<sectionsPayload> = "asyncGet"
 @module("../core/api.js") external asyncGetImages: string => async<images> = "asyncGet"
 @module("../core/api.js") external asyncPutRate: (string, 'b) => async<rateT> = "asyncPut"
+
+
 
 
 module Dialog = {
@@ -240,8 +254,6 @@ let make = (~id: string) => {
   }
 
   let rateOk = d => {
-    Js.log(d);
-
     ()
   }
 
@@ -281,6 +293,8 @@ let make = (~id: string) => {
         |None => false
       }
     }
+
+    Js.log(img)
 
     let baseCls = "z-10 font-text w-8 h-8 flex rounded-full text-base cursor-pointer mr-8 last:mr-0 justify-center
     rounded-round items-center text-semi-bright";
@@ -349,7 +363,7 @@ let make = (~id: string) => {
 
     let style = ReactDOM.Style.make(~minHeight = "calc(100vh - 16rem)", ())
 
-    <div className="container flex justify-center flex-1 bg-brown-dark" style={style}> 
+    <div className="container flex flex justify-center flex-1 bg-brown-dark" style={style}> 
       <div className="wrap">
         {
           renderSingle(selectedImage, sections, section)

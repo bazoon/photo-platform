@@ -65,37 +65,43 @@ module.exports = [
         return {};
       }
 
-      const query = `
-        select
-          photoworks.id,
-          name,
-          filename,
-          tcontent as description,
-          rate_value as rate
-        from
-          photoworks
-          left join rates r on r.photowork_id=photoworks.id
-        where
-          section_id = :sectionId and photoworks.moder=:moder
+      const contestQuery = `
+        SELECT
+          contests.id
+        FROM
+          contests
+          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
+          LEFT JOIN organizers AS o on salones.organizer_id=o.id
+          ORDER BY
+            date_start DESC
+          limit 1
       `;
 
+      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
+
+      const query = `
+        select  p.id, p.filename, tcontent as description, rate_value as rate
+        from  photoworks p
+        left join rates r on r.photowork_id  = p.id and r.jury_id=(select juries.id from juries where juries.user_id = :userId and juries.contest_id=:contestId)
+        left join juries j on r.jury_id=j.id
+        WHERE p.section_id = :sectionId and p.moder=:moder
+      `;
 
       let photoworks = await h.query(query, {
         replacements: {
           sectionId,
-          moder: MODER_ACCEPTED
+          moder: MODER_ACCEPTED,
+          userId,
+          contestId: contest.id
         }
       });
 
-      const dup = (arr, n) => {
-        const a = []
-        for(let i=0;i<n;i++)
-        a.push(arr.map(e =>({...e, id: Math.random()})))
-        return a.flat()
-      }
-
-
-
+      // const dup = (arr, n) => {
+      //   const a = []
+      //   for(let i=0;i<n;i++)
+      //   a.push(arr.map(e =>({...e, id: Math.random()})))
+      //   return a.flat()
+      // }
       return photoworks.map(p => ({...p, filename: getUploadFilePath(p.filename)}));
     },
     options: {
@@ -278,10 +284,11 @@ module.exports = [
           photoworks p,
           rates r 
         where
-          s.contest_id = 11
+          s.contest_id = :contestId
           and p.section_id = s.id
           and r.photowork_id = p.id 
-          and r.jury_id = 21	
+          and r.jury_id = :juryId	
+          and p.moder=:moder
         group by s.name
         order by s.name
       `
@@ -292,22 +299,25 @@ module.exports = [
           from
             sections s, photoworks p 
           where
-            s.contest_id = 11
+            s.contest_id = :contestId
             and p.section_id = s.id
+            and p.moder=:moder
           group  by s.name
           order by s.name
       `
 
-
       const done = await h.query(doneQuery, {
         replacements: {
           juryId: jury.id,
+          contestId: contest.id,
+          moder: MODER_ACCEPTED
         }
       });
 
       const total = await h.query(totalQuery, {
         replacements: {
-          contestId: contest.id
+          contestId: contest.id,
+          moder: MODER_ACCEPTED
         }
       });
 
@@ -318,7 +328,7 @@ module.exports = [
       }, {})
 
 
-      return Object.keys(all).map(name => ({name, all: all[name].all, done: all[name].done})  )
+      return Object.keys(all).map(name => ({name, all: all[name].all, done: all[name].all - all[name].done})  )
     },
     options: {
       tags: ['api'],

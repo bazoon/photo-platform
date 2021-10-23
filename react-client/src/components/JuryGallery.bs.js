@@ -221,7 +221,6 @@ function JuryGallery(Props) {
                   }));
   };
   var rateOk = function (d) {
-    console.log(d);
     
   };
   var renderRates = function (img, section) {
@@ -232,6 +231,7 @@ function JuryGallery(Props) {
         return false;
       }
     };
+    console.log(img);
     var baseCls = "z-10 font-text w-8 h-8 flex rounded-full text-base cursor-pointer mr-8 last:mr-0 justify-center\n    rounded-round items-center text-semi-bright";
     return React.createElement("div", {
                 className: "flex justify-between background:bg-brown-dark p-4 items-center before:backdrop-blur-md"
@@ -331,7 +331,7 @@ function JuryGallery(Props) {
     minHeight: "calc(100vh - 16rem)"
   };
   return React.createElement("div", {
-              className: "container flex justify-center flex-1 bg-brown-dark",
+              className: "container flex flex justify-center flex-1 bg-brown-dark",
               style: style
             }, React.createElement("div", {
                   className: "wrap"
