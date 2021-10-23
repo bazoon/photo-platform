@@ -87,6 +87,12 @@ module.exports = [
         WHERE p.section_id = :sectionId and p.moder=:moder
       `;
 
+      console.log('userId', userId);
+      console.log('contestId', contest.id);
+      console.log('sectionId', sectionId);
+
+
+
       let photoworks = await h.query(query, {
         replacements: {
           sectionId,
