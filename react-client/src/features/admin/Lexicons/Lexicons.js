@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import G from "../../../components/Crud/Grid";
 import CrudMachine from "../../machines/CrudMachine";
 
@@ -8,14 +8,23 @@ const rowExpansionTemplate = ({id}) => {
   return <Grid/>;
 };
 
+// const rowExpansionTemplate = ({id}) => {
+//   return (
+//     <div>
+//       {id}
+
+//     </div>
+//   );
+// };
+
+
 export default function() {
-  const [expandedRows, setExpandedRows] = useState([]);
   const machine = CrudMachine({api: "api/admin/lexicons"});
-  const Grid = G({machine, rowExpansionTemplate, onRowToggle: e => { setExpandedRows(e); } });
-  return <Grid expandedRows={expandedRows}/>;
+  const Grid = G({machine, rowExpansionTemplate });
+  return <Grid/>;
 }
 
-// import React, {useState, useEffect} from "react";
+
 // import {Button} from "primereact/button";
 // import { DataTable } from "primereact/datatable";
 // import { Column } from "primereact/column";
@@ -23,7 +32,6 @@ export default function() {
 // import Form from "../../../components/Crud/Form";
 // import Machine from "../../../features/machines/CrudMachine";
 // import useCrud from "../../../core/hooks/useCrud";
-// import G from "../../../components/Crud/Grid";
 // import {useMachine} from "@xstate/react";
 
 // export default function LexiconsGrid() {

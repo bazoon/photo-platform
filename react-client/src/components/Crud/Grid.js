@@ -32,7 +32,7 @@ export default ({
   hasCheck = false,
   Toolbar = null
 }) => {
-  return function Main({expandedRows}) {
+  return function Main() {
     const { t } = useTranslation("namespace1");
     const [current, send] = useMachine(machine, { devTools: true });
     const {context} = current;
@@ -40,6 +40,7 @@ export default ({
     const {onCancel, onOk, onChange, handleEdit, handleAdd, handleDelete} = useCrud(send, record);
     const canExpand = !! rowExpansionTemplate;
     const [selection, setSelection] = useState(null);
+    const [expandedRows, setExpandedRows] = useState({});
 
     setRefresh(() => send("refresh"));
 
@@ -129,7 +130,7 @@ export default ({
 
     return (
       <>
-        <div className="mb-10 text-lg text-3xl">{title}</div>
+        <div className="text-lg text-3xl">{title}</div>
         {Toolbar && <Toolbar refresh={() => send("load")} selection={selection}/>}
         {
           canAdd && (
@@ -142,7 +143,7 @@ export default ({
           value={records} 
           style={{width: "100%"}} 
           rowExpansionTemplate={rowExpansionTemplate}
-          onRowToggle={e => { onRowToggle(e.data); }}
+          onRowToggle={e => { setExpandedRows(e.data); }}
           expandedRows={expandedRows}
           onSelectionChange={({value}) => setSelection(value)}
           selection={selection}

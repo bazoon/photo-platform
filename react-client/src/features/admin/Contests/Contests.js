@@ -149,7 +149,7 @@ const Grid = ({store}) => {
       </DataTable>
 
       {
-        isOpen && <Form fields={fieldsFromSchema(fieldsSchema)} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
+        isOpen && <Form schema={fieldsSchema} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
       }
     </>
   );
