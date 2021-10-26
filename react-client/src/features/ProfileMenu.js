@@ -26,6 +26,7 @@ export function ProfileMenu() {
   const { t, i18n } = useTranslation("namespace1");
   const history = useHistory();
   const logout = useLogout(store);
+  console.log(111,  store.role);
 
   useEffect(() => {
     const links = [

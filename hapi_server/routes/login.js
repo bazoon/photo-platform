@@ -297,6 +297,7 @@ const isLoggedIn = {
   method: 'GET',
   path: '/api/isLoggedIn',
   handler: async function(request, h) {
+    console.log(request.auth)
     return {id: get('request.auth.credentials.id', h)};
   },
   options: {

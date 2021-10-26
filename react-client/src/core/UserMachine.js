@@ -101,7 +101,6 @@ export default function({ context = {}, guards, services, actions } = {}) {
           src: "loadRoles",
           onDone: [
             {
-              cond: "hasAuth",
               target: "done",
               actions: [
                 "saveRole"

@@ -84,7 +84,7 @@ function Init({store}) {
   const actions = {
     loadLocalUser: () => loadLocalUser(store),
     visitMainPage: () => location.href.endsWith("/login") && setTimeout(() => history.push("/"), 100),
-    saveRole: (_, {data}) => { store.role = data?.role; },
+    saveRole: (_, {data}) => { console.log(data); store.role = data?.role; },
     storeLoggedIn: (_, {data}) => { store.isLoggedIn = !!data.id;}
   };
 

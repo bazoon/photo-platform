@@ -43,6 +43,7 @@ function Main({store}) {
   const actions = {
     visitMainPage: () => setTimeout(() => history.push("/"), 100),
     saveUser: (_, {data}) => { 
+      console.log(111, data);
       localStorage.setItem("user", JSON.stringify(data)); 
       store.user = data;
       store.isLoggedIn = !!data.id;

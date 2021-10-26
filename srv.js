@@ -103,7 +103,7 @@ async function getEnforcer() {
       .concat(saloneAdminGroups)
       .concat(saloneModerGroups)
   ).map(p => p.join(', ')).join('\n')
-  fs.writeFileSync('f.txt', policy);
+  // fs.writeFileSync('f.txt', policy);
 
   return await newEnforcer('./perm/model.conf', new StringAdapter(policy));
 }
@@ -198,7 +198,8 @@ const init = async () => {
 
         const enforcer = await getEnforcer();
         const canDo = await enforcer.enforce(role.name, domain, obj, action);
-        return { valid: canDo, credentials: {...user, role} };
+        console.log(canDo, role, request.info.referrer, role)
+        return { valid: canDo || role.isJury, credentials: {...user, role} };
       }
 
 

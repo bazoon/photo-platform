@@ -3,8 +3,10 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-
 import { hydrate, render } from "react-dom";
+import { pdfjs } from "react-pdf";
+pdfjs.GlobalWorkerOptions.workerSrc = "pdf.worker.min.js";
+
 
 const rootElement = document.getElementById("root");
 if (rootElement.hasChildNodes()) {
