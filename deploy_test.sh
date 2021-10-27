@@ -1,6 +1,7 @@
 cd react-client
 npm run build
 
+
 ssh root@138.124.182.78 "bash -s" << HERE 
   rm -rf /var/www/photo-platform
 HERE
