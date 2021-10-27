@@ -509,7 +509,6 @@ const sectionsService = {
   
 const Thumb = ({image, onChange, checked}) => {
   const cls = cn("object-cover w-full h-full");
-  console.info(image);
   return (
     <div className="flex items-start">
       <Checkbox className="mr-10" checked={checked} onChange={(checked) => { onChange(checked); }} />

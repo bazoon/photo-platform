@@ -62,7 +62,6 @@ type store = {
 }
 
 @module("react-recollect") external store: store = "store"
-
 @module("../core/api.js") external asyncGetSections: string => async<sectionsPayload> = "asyncGet"
 @module("../core/api.js") external asyncGetImages: string => async<images> = "asyncGet"
 @module("../core/api.js") external asyncPutRate: (string, 'b) => async<rateT> = "asyncPut"

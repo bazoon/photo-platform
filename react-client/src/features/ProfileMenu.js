@@ -26,7 +26,6 @@ export function ProfileMenu() {
   const { t, i18n } = useTranslation("namespace1");
   const history = useHistory();
   const logout = useLogout(store);
-  console.log(111,  store.role);
 
   useEffect(() => {
     const links = [
@@ -35,6 +34,12 @@ export function ProfileMenu() {
         to: "jury",
         label: t("jury"),
         command: () => history.push("/jury-analytics")
+      } || {},
+     store?.role?.isJury && {
+        name: t("short-list"),
+        to: "short-list",
+        label: t("short-list"),
+        command: () => history.push("/short-list")
       } || {},
       {
         name: t("profile"),

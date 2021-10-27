@@ -10,9 +10,6 @@ module.exports =  {
   handler: async function (request, h) {
     // const { host } = request.info;
     const user = get('auth.credentials', request);
-
-    console.log(request.auth)
-
     return {role: user && user.role};
   },
   options: {

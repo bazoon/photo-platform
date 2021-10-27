@@ -182,8 +182,6 @@ module.exports = [
       const {referer: host } = request.headers;
       const [domain] = host.split(':');
 
-      console.log(h.request.auth);
-
       const {id} = h.request.auth.credentials;
 
       const user = await models.User.findOne({

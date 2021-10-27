@@ -36,23 +36,38 @@ async function getEnforcer() {
 
   const usersQuery = `
     select distinct domain from salones
-  `
+  `;
+  const juryQuery = `
+    select nick_name, domain
+    from users, juries, contests, salones
+    where users.id=juries.user_id and juries.contest_id = contests.id and contests.salone_id=salones.id
+  `;
 
   const actions = ['create', 'view', 'update', 'delete'];
+  const juryActions = ['view', 'update'];
 
   const admins = await query(adminsQuery, {replacements: {admType: 0}});
   const moders = await query(adminsQuery, {replacements: {admType: 1}});
   const saloneAdmins = await query(salonesQuery, {replacements: {admType: 1000}});
   const saloneModers = await query(salonesQuery, {replacements: {admType: 1010}});
   const domainUsers = await query(usersQuery);
+  const domainJuries = await query(juryQuery);
+
 
   const adminObjects = ['settings', 'moders', 'jury', 'contests', 'content', 'applications', 'review', 'stats'];
   const moderObjects = ['settings', 'jury', 'content', 'applications', 'review', 'stats'];
-  const userObjects = ['profile', 'meta', 'applications'];
+  const userObjects = ['profile', 'meta', 'applications', 'roles'];
+  const juryObjects = ['analytics', 'images', 'image', 'sections'];
  
   const userPolicies = domainUsers.map(({domain}) => {
     return userObjects.map(o => {
       return actions.map(a => [ 'p', 'user', domain, o, a]);
+    });
+  }).flat(2);
+
+  const juryPolicies = domainUsers.map(({domain}) => {
+    return juryObjects.map(o => {
+      return juryActions.map(a => [ 'p', 'jury', domain, o, a]);
     });
   }).flat(2);
 
@@ -91,19 +106,24 @@ async function getEnforcer() {
     return ['g', nickName, 'admin', domain,];
   });
 
+  const juryGroups = domainJuries.map(({nickName, domain}) => {
+    return ['g', nickName, 'jury', domain];
+  });
 
 
   const policy = (
       moderPolicies
       .concat(userPolicies)
+      .concat(juryPolicies)
       .concat(saloneAdminPolicies)
       .concat(saloneModerPolicies)
       .concat(adminGroups)
       .concat(moderGroups)
       .concat(saloneAdminGroups)
       .concat(saloneModerGroups)
+      .concat(juryGroups)
   ).map(p => p.join(', ')).join('\n')
-  // fs.writeFileSync('f.txt', policy);
+  fs.writeFileSync('f.txt', policy);
 
   return await newEnforcer('./perm/model.conf', new StringAdapter(policy));
 }
@@ -138,7 +158,6 @@ const init = async () => {
       version: pack.version,
     }
   };
-  console.log(hapiSwagger)
   await server.register([
     require('@hapi/inert'),
     require('@hapi/vision'),
@@ -170,6 +189,44 @@ const init = async () => {
 
   server.ext('onPreResponse', preResponse);
 
+  const Authorization = {
+    name: 'foo',
+    register: async function (server, options) {
+      server.ext('onPreAuth', async function (request, h) {
+        // const token = h.request.headers.cookie.split('=')[1]
+              
+        console.log(request.path, request.state && request.state.tok && request.state.tok.tok)
+        return h.continue
+          
+        if (token) {
+          const user = jwt.verify(token, process.env.API_TOKEN);
+          const u = await models.User.findOne({
+            where: {
+              id: user.id
+            }});
+
+          const enforcer = await getEnforcer();
+          const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+
+          const role = await getRole(u, domain);
+          const {path, method} = request.route;
+
+          const parts = path.split('/');
+          const obj = parts[parts.length - 1];
+          const action = { post: 'create', put: 'update', delete: 'delete', get: 'view'}[method];
+          const canDo = await enforcer.enforce(role.name, domain, obj, action);
+
+          if (!canDo) {
+            h.request.path = '/login';
+          }
+        }
+
+        return h.continue;
+      });
+
+    }
+  };
+
 
   server.auth.strategy('session', 'cookie', {
     cookie: {
@@ -188,20 +245,9 @@ const init = async () => {
             id: user.id
           }});
         const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
-
         const role = await getRole(u, domain);
-        const {path, method} = request.route;
-
-        const parts = path.split('/');
-        const obj = parts[parts.length - 1];
-        const action = { post: 'create', put: 'update', delete: 'delete', get: 'view' }[method];
-
-        const enforcer = await getEnforcer();
-        const canDo = await enforcer.enforce(role.name, domain, obj, action);
-        console.log(canDo, role, request.info.referrer, role)
-        return { valid: canDo || role.isJury, credentials: {...user, role} };
+        return { valid: u && !!u.id, credentials: {...user, role: role} };
       }
-
 
       return { valid: routeRole === '' };
     }
@@ -219,6 +265,7 @@ const init = async () => {
     isSameSite: false
   });
 
+  await server.register({ plugin: Authorization});
 
 
   server.route(routes);

@@ -79,6 +79,7 @@ const login = {
       r.fork((e) => {
         res(h.response({error: e}).code(401));
       }, ({user, token}) => {
+        console.log('log', token)
         request.cookieAuth.set({ tok: token });
         res({
           ...user,
@@ -297,7 +298,6 @@ const isLoggedIn = {
   method: 'GET',
   path: '/api/isLoggedIn',
   handler: async function(request, h) {
-    console.log(request.auth)
     return {id: get('request.auth.credentials.id', h)};
   },
   options: {
