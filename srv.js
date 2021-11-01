@@ -246,6 +246,7 @@ const init = async () => {
           }});
         const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
         const role = await getRole(u, domain);
+        console.log(role);
         return { valid: u && !!u.id, credentials: {...user, role: role} };
       }
 

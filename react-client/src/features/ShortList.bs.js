@@ -34,23 +34,34 @@ var ProfileMenu = {
 var Link = {};
 
 function ShortList(Props) {
-  ReactI18next.useTranslation("namespace1");
-  var match = React.useState(function () {
-        return [];
+  var match = ReactI18next.useTranslation("namespace1");
+  var t;
+  if (match.length !== 3) {
+    t = (function (a) {
+        return a;
       });
-  var setSections = match[1];
+  } else {
+    var t$1 = match[0];
+    t = (function (a) {
+        return Curry._2(t$1, a, a);
+      });
+  }
   var match$1 = React.useState(function () {
         return [];
       });
-  var setImages = match$1[1];
+  var setSections = match$1[1];
   var match$2 = React.useState(function () {
+        return [];
+      });
+  var setImages = match$2[1];
+  var match$3 = React.useState(function () {
         
       });
-  var setSection = match$2[1];
-  var match$3 = React.useState(function () {
+  var setSection = match$3[1];
+  var match$4 = React.useState(function () {
         return 0;
       });
-  var setImageIndex = match$3[1];
+  var setImageIndex = match$4[1];
   var cleanUp = function (param) {
     
   };
@@ -68,7 +79,7 @@ function ShortList(Props) {
     Curry._1(setSection, (function (param) {
             return s;
           }));
-    return Curry._3(ApiJs.asyncGet("api/jury/images/" + id).fork, failed, okImages, cleanUp);
+    return Curry._3(ApiJs.asyncGet("api/jury/shortList/" + id).fork, failed, okImages, cleanUp);
   };
   var sectionsOk = function (data) {
     Curry._1(setSections, (function (param) {
@@ -86,9 +97,11 @@ function ShortList(Props) {
     return Curry._1(setSections, (function (s) {
                   Curry._1(setImageIndex, (function (old) {
                           var newIndex = Caml_int32.mod_(old + dir | 0, s.length);
+                          var newSection = Belt_Array.get(s, newIndex);
                           Curry._1(setSection, (function (param) {
-                                  return Belt_Array.get(s, newIndex);
+                                  return newSection;
                                 }));
+                          loadSection(newSection);
                           return newIndex;
                         }));
                   return s;
@@ -102,9 +115,9 @@ function ShortList(Props) {
     return React.createElement("div", {
                 className: "grid grid-cols-2 gap-10"
               }, React.createElement("div", {
-                    className: "w-auto h-52"
+                    className: "w-auto h-52 justify-end flex"
                   }, React.createElement("img", {
-                        className: "object-contain w-full h-full",
+                        className: "object-contain h-full",
                         src: image.filename
                       })), React.createElement("div", {
                     className: "h-52 cursor-pointer flex-shrink-0 flex-grow-0 flex-col flex"
@@ -112,7 +125,15 @@ function ShortList(Props) {
                         className: "text-sm-2"
                       }, image.name), React.createElement("span", {
                         className: "text-sm-2"
-                      }, image.description)));
+                      }, image.author), React.createElement("span", {
+                        className: "text-sm-2"
+                      }, image.email), React.createElement("span", {
+                        className: "text-sm-2"
+                      }, Curry._1(t, "mean") + " - " + String(image.mean)), React.createElement("span", {
+                        className: "text-sm-2"
+                      }, Curry._1(t, "median") + " - " + String(image.median)), React.createElement("span", {
+                        className: "text-sm-2"
+                      }, Curry._1(t, "count") + " - " + String(image.count))));
   };
   var renderThumbs = function (images) {
     return React.createElement("div", {
@@ -152,9 +173,9 @@ function ShortList(Props) {
                       className: "uppercase text-semi-bright mb-10 text-3xl text-center"
                     }, i$1 !== undefined ? i$1.name : React.createElement(React.Fragment, undefined)), React.createElement("div", {
                       className: "mb-20 w-full flex justify-center"
-                    }, renderSection(match$2[0])), React.createElement("div", {
+                    }, renderSection(match$3[0])), React.createElement("div", {
                       className: "mb-40"
-                    }, renderThumbs(match$1[0]))), React.createElement(make, {}));
+                    }, renderThumbs(match$2[0]))), React.createElement(make, {}));
 }
 
 var make$1 = ShortList;

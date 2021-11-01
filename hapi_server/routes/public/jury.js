@@ -379,6 +379,80 @@ module.exports = [
       }
     }
   },
+  {
+    method: 'GET',
+    path: '/api/jury/shortList/{sectionId}',
+    handler: async function (request, h) {
+      const { sectionId } = request.params;
+      const userId = get('request.auth.credentials.id', h) || -1;
+      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+
+      if (!domain) {
+        return {};
+      }
+
+      const contestQuery = `
+        SELECT
+          contests.id
+        FROM
+          contests
+          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
+          LEFT JOIN organizers AS o on salones.organizer_id=o.id
+          ORDER BY
+            date_start DESC
+          limit 1
+      `;
+
+      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
+
+      const ratesQuery = `
+        SELECT CONCAT("first_name", ' ', "last_name") as author,
+          rates.photowork_id,
+          photoworks.name,
+          users.email,
+          photoworks.filename,
+          avg(rates.rate_value) AS mean,
+          percentile_cont(0.5)
+          WITHIN GROUP (ORDER BY rates.rate_value) AS median,
+          count(rates.id)
+        FROM
+          rates,
+          photoworks,
+          contests,
+          registration_contests,
+          users
+        WHERE
+          rates.photowork_id = photoworks.id
+          AND photoworks.registration_contest_id = registration_contests.id
+          AND registration_contests.contest_id = contests.id
+          AND contests.id = :contestId and photoworks.section_id=:sectionId
+          and registration_contests.user_id=users.id
+        GROUP BY
+          author,
+          email,
+          photoworks.name,
+          photoworks.filename,
+          rates.photowork_id
+        order by mean desc
+      `;
+      
+
+      const rates = await h.query(ratesQuery, {
+        replacements: {
+          contestId: contest.id,
+          sectionId
+        }
+      });
+
+      return rates.map(p => ({...p, filename: getUploadFilePath(p.filename)}));
+    },
+    options: {
+      tags: ['api'],
+      auth: {
+        mode: 'optional'
+      }
+    }
+  },
 ];
 
 

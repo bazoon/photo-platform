@@ -42,7 +42,8 @@ module.exports = [
       if (!domain) {
         return {};
       }
-
+      
+      console.log(domain)
 
       let query = `
         select contests.id from contests, salones
@@ -56,7 +57,7 @@ module.exports = [
           domain
         }
       });
-    
+
       query = `
         SELECT
           sections.id,
