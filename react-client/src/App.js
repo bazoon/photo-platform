@@ -37,7 +37,8 @@ import {addLocale} from "primereact/api";
 import Applications from "./features/Applications/Applications";
 import FooterLinks from "./FooterLinks";
 import {make as JuryAnalytics} from "./features/JuryAnalytics.bs";
-import {make as ShortList} from "./features/ShortList.bs";
+import JuryShortList from "./features/JuryShortList";
+
 
 
 const MainMenu = lazy(() => import("./MainMenu"));
@@ -115,7 +116,7 @@ function MainApp({store}) {
                 <Jury/>
               </Route>
               <Route path="/short-list">
-                <ShortList/>
+                <JuryShortList/>
               </Route>
               <Route path="/contacts">
                 <Contacts/>

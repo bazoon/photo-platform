@@ -393,7 +393,7 @@ module.exports = [
 
       const contestQuery = `
         SELECT
-          contests.id
+          contests.id, contests.short_best_count
         FROM
           contests
           LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
@@ -404,7 +404,6 @@ module.exports = [
       `;
 
       const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
-
       const ratesQuery = `
         SELECT CONCAT("first_name", ' ', "last_name") as author,
           rates.photowork_id,
@@ -434,13 +433,15 @@ module.exports = [
           photoworks.filename,
           rates.photowork_id
         order by mean desc
+        limit :limit
       `;
       
 
       const rates = await h.query(ratesQuery, {
         replacements: {
           contestId: contest.id,
-          sectionId
+          sectionId,
+          limit: contest.shortBestCount
         }
       });
 

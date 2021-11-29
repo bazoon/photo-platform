@@ -143,16 +143,16 @@ function ShortList(Props) {
   var renderSection = function (s) {
     if (s !== undefined) {
       return React.createElement("div", {
-                  className: "flex items-center space-between w-3/5"
+                  className: "flex items-center justify-between w-4/5"
                 }, React.createElement("div", {
-                      className: "mr-20 cursor-pointer",
+                      className: "mr-20 cursor-pointer text-3xl",
                       onClick: (function (param) {
                           return move(-1);
                         })
                     }, "<"), React.createElement("div", {
                       className: "text-2xl w-3/5 text-center"
                     }, s.name), React.createElement("div", {
-                      className: "ml-20 cursor-pointer",
+                      className: "ml-20 cursor-pointer text-3xl",
                       onClick: (function (param) {
                           return move(1);
                         })
@@ -164,18 +164,16 @@ function ShortList(Props) {
   var i = ReactRecollect.store.info;
   var i$1 = ReactRecollect.store.info;
   return React.createElement("div", {
-              className: "container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"
+              className: "relative flex flex-col items-center flex-1 w-full"
             }, React.createElement("div", {
-                  className: "relative flex flex-col items-center flex-1 w-full"
-                }, React.createElement("div", {
-                      className: "uppercase text-semi-bright mb-5 text-4xl text-center mt-10"
-                    }, i !== undefined ? i.salone : React.createElement(React.Fragment, undefined)), React.createElement("div", {
-                      className: "uppercase text-semi-bright mb-10 text-3xl text-center"
-                    }, i$1 !== undefined ? i$1.name : React.createElement(React.Fragment, undefined)), React.createElement("div", {
-                      className: "mb-20 w-full flex justify-center"
-                    }, renderSection(match$3[0])), React.createElement("div", {
-                      className: "mb-40"
-                    }, renderThumbs(match$2[0]))), React.createElement(make, {}));
+                  className: "uppercase text-semi-bright mb-5 text-4xl text-center mt-10"
+                }, i !== undefined ? i.salone : React.createElement(React.Fragment, undefined)), React.createElement("div", {
+                  className: "uppercase text-semi-bright mb-10 text-3xl text-center"
+                }, i$1 !== undefined ? i$1.name : React.createElement(React.Fragment, undefined)), React.createElement("div", {
+                  className: "mb-20 w-full flex justify-center"
+                }, renderSection(match$3[0])), React.createElement("div", {
+                  className: "mb-40"
+                }, renderThumbs(match$2[0])));
 }
 
 var make$1 = ShortList;

@@ -156,33 +156,30 @@ let make = (~id: string) => {
   let renderSection = (s: option<section>) => {
     switch s {
     | Some(section) =>
-      <div className="flex items-center space-between w-3/5">
-        <div className="mr-20 cursor-pointer" onClick={_ => move(-1)}> {"<"->React.string} </div>
+      <div className="flex items-center justify-between w-4/5">
+        <div className="mr-20 cursor-pointer text-3xl" onClick={_ => move(-1)}> {"<"->React.string} </div>
         <div className="text-2xl w-3/5 text-center"> {React.string(section.name)} </div>
-        <div className="ml-20 cursor-pointer" onClick={_ => move(1)}> {">"->React.string} </div>
+        <div className="ml-20 cursor-pointer text-3xl" onClick={_ => move(1)}> {">"->React.string} </div>
       </div>
 
     | None => <> </>
     }
   }
 
-  <div className="container flex justify-center flex-1 bg-brown-dark2 text-semi-bright">
-    <div className="relative flex flex-col items-center flex-1 w-full">
-      <div className="uppercase text-semi-bright mb-5 text-4xl text-center mt-10">
-        {switch store.info {
-        | Some(i) => React.string(i.salone)
-        | None => <> </>
-        }}
-      </div>
-      <div className="uppercase text-semi-bright mb-10 text-3xl text-center">
-        {switch store.info {
-        | Some(i) => React.string(i.name)
-        | None => <> </>
-        }}
-      </div>
-      <div className="mb-20 w-full flex justify-center"> {renderSection(section)} </div>
-      <div className="mb-40"> {renderThumbs(images)} </div>
+  <div className="relative flex flex-col items-center flex-1 w-full">
+    <div className="uppercase text-semi-bright mb-5 text-4xl text-center mt-10">
+      {switch store.info {
+      | Some(i) => React.string(i.salone)
+      | None => <> </>
+      }}
     </div>
-    <ProfileMenu />
+    <div className="uppercase text-semi-bright mb-10 text-3xl text-center">
+      {switch store.info {
+      | Some(i) => React.string(i.name)
+      | None => <> </>
+      }}
+    </div>
+    <div className="mb-20 w-full flex justify-center"> {renderSection(section)} </div>
+    <div className="mb-40"> {renderThumbs(images)} </div>
   </div>
 }

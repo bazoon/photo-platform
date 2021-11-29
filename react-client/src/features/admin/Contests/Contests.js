@@ -18,7 +18,7 @@ import {Dialog} from "primereact/dialog";
 import Applications from "./Applications";
 import {make as Moder} from "./Moder.bs";
 import {keys} from "lodash/fp";
-
+import {make as ShortList} from "../../ShortList.bs";
 
 // import { inspect } from "@xstate/inspect";
 // if (location.href.includes("foto.ru")) {
@@ -81,6 +81,10 @@ const Grid = ({store}) => {
     {
       title: "Модерация",
       Component: Moder
+    },
+    {
+      title: "Шорт лист",
+      Component: ShortList
     },
   ];
 
