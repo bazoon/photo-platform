@@ -203,8 +203,7 @@ let make = (~id: string) => {
   let hidePreview = () => setIsPreview(_ => false)
 
   let renderPreview = im => {
-    <Dialog visible={isPreview} onHide={hidePreview} header={false} maximized={true} maximizable={true}
-    contentClassName="flex justify-center">
+    <Dialog visible={isPreview} onHide={hidePreview} header={false} maximized={true} maximizable={true} contentClassName="flex justify-center">
     {
       switch im {
         | Some(img) => <div><img src={img.filename} className="preview"/></div>
