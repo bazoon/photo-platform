@@ -134,6 +134,8 @@ let make = (~id: string) => {
   let (moderFilter, setModerFilter) = React.useState(_ => Unseen)
   let (isPreview, setIsPreview) = React.useState(_ => false)
   let (reason, setReason) = React.useState(_ => "")
+  let images:images = []
+  let (visibleImages, setVisibleImages) = React.useState(_ => images)
 
   let okImages = (s: option<section>) => data => {
     let id = switch s {
@@ -147,12 +149,10 @@ let make = (~id: string) => {
       let newSections = sections -> Belt.Array.map(x => x.id == id ? {...x, images} : x)
       Js.log2("setting", s)
       setSection(_ => newSections -> Belt.Array.getBy(e => e.id == id))
-      setSelectedImage(_ => images -> Belt.Array.get(0))
       newSections
     })
     ()
   }
-
 
   let failed = () => {
     ()
@@ -188,6 +188,16 @@ let make = (~id: string) => {
     asyncGetTotalPhotoworks(`api/admin/moder/stats/${id}`).fork(failed, okContestInfo, cleanUp)
     None
   })
+
+  React.useEffect2(() => {
+    let visible = switch section {
+      | Some(s) => Js.Array.filter(im => im.moderResult == moderFilter, s.images)
+      | None => []
+    }
+    setVisibleImages(_ => visible)
+    setSelectedImage(_ => visible -> Belt.Array.get(0))
+    None
+  }, (section, moderFilter))
 
   let preview = _ => setIsPreview(_ => true)
   let hidePreview = () => setIsPreview(_ => false)
@@ -238,13 +248,10 @@ let make = (~id: string) => {
   }
 
 
-  let renderImages = (section, visibleModerResult) => {
-    let visible = Js.Array.filter(im => im.moderResult == visibleModerResult, section.images)
-      -> Belt.Array.map(renderImage)
-
+  let renderImages = () => {
     <div className={`flex gap-5 overflow-x-auto ml-5 mr-5 h-72 p-5 overflow-y-hidden hidden-scroll relative`}>
       {
-        React.array(visible)
+        visibleImages -> Belt.Array.map(renderImage) -> React.array
       }
     </div>
   }
@@ -306,6 +313,7 @@ let make = (~id: string) => {
 
   let handleFilter = mr => {
     setModerFilter(_ => mr)
+    setSelectedImage(_ => None)
     ()
   }
 
@@ -367,7 +375,7 @@ let make = (~id: string) => {
 
   <div>
     {renderStats(section, contestInfo)}
-    <div className="grid grid-cols-12 h-full p-5 gap-5">
+    <div className="grid grid-cols-12 p-5 gap-5">
     <div className="col-span-4 row-span-4 h-full">
       {
         renderSections(section)
@@ -380,10 +388,7 @@ let make = (~id: string) => {
 
     <div className="col-span-8 row-span-1 h-full">
       {
-        switch section {
-          | None => <div/>
-          | Some(section) => renderImages(section, moderFilter)
-        }
+        renderImages()
       }
     </div>
       

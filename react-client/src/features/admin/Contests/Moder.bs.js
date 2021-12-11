@@ -129,6 +129,12 @@ function Moder(Props) {
       });
   var setReason = match$7[1];
   var reason = match$7[0];
+  var images = [];
+  var match$8 = React.useState(function () {
+        return images;
+      });
+  var setVisibleImages = match$8[1];
+  var visibleImages = match$8[0];
   var failed = function (param) {
     
   };
@@ -170,9 +176,6 @@ function Moder(Props) {
                                                 return e.id === id;
                                               }));
                                 }));
-                          Curry._1(setSelectedImage, (function (param) {
-                                  return Belt_Array.get(images, 0);
-                                }));
                           return newSections;
                         }));
                   
@@ -201,6 +204,21 @@ function Moder(Props) {
           Curry._3(ApiJs.asyncGet("api/admin/moder/stats/" + id).fork, failed, okContestInfo, cleanUp);
           
         }), []);
+  React.useEffect((function () {
+          var visible = section !== undefined ? section.images.filter(function (im) {
+                  return im.moderResult === moderFilter;
+                }) : [];
+          Curry._1(setVisibleImages, (function (param) {
+                  return visible;
+                }));
+          Curry._1(setSelectedImage, (function (param) {
+                  return Belt_Array.get(visible, 0);
+                }));
+          
+        }), [
+        section,
+        moderFilter
+      ]);
   var hidePreview = function (param) {
     return Curry._1(setIsPreview, (function (param) {
                   return false;
@@ -253,13 +271,10 @@ function Moder(Props) {
                           })
                       })));
   };
-  var renderImages = function (section, visibleModerResult) {
-    var visible = Belt_Array.map(section.images.filter(function (im) {
-              return im.moderResult === visibleModerResult;
-            }), renderImage);
+  var renderImages = function (param) {
     return React.createElement("div", {
                 className: "flex gap-5 overflow-x-auto ml-5 mr-5 h-72 p-5 overflow-y-hidden hidden-scroll relative"
-              }, visible);
+              }, Belt_Array.map(visibleImages, renderImage));
   };
   var renderInfo = function (im) {
     var tdCls = "p-5";
@@ -317,6 +332,15 @@ function Moder(Props) {
                         className: "mr-2"
                       }, Curry._1(t, "declined")), String(match[1])));
   };
+  var handleFilter = function (mr) {
+    Curry._1(setModerFilter, (function (param) {
+            return mr;
+          }));
+    Curry._1(setSelectedImage, (function (param) {
+            
+          }));
+    
+  };
   var renderFilter = function (param) {
     return React.createElement("div", {
                 className: "flex justify-between w-1/2"
@@ -324,10 +348,7 @@ function Moder(Props) {
                         className: "mr-5"
                       }, Curry._1(t, "unseen")), React.createElement(Radiobutton.RadioButton, {
                         onChange: (function (param) {
-                            Curry._1(setModerFilter, (function (param) {
-                                    return /* Unseen */0;
-                                  }));
-                            
+                            return handleFilter(/* Unseen */0);
                           }),
                         checked: moderFilter === /* Unseen */0,
                         name: "radio"
@@ -335,10 +356,7 @@ function Moder(Props) {
                         className: "mr-5"
                       }, Curry._1(t, "approved")), React.createElement(Radiobutton.RadioButton, {
                         onChange: (function (param) {
-                            Curry._1(setModerFilter, (function (param) {
-                                    return /* Approved */1;
-                                  }));
-                            
+                            return handleFilter(/* Approved */1);
                           }),
                         checked: moderFilter === /* Approved */1,
                         name: "radio"
@@ -346,10 +364,7 @@ function Moder(Props) {
                         className: "mr-5"
                       }, Curry._1(t, "declined")), React.createElement(Radiobutton.RadioButton, {
                         onChange: (function (param) {
-                            Curry._1(setModerFilter, (function (param) {
-                                    return /* Declined */2;
-                                  }));
-                            
+                            return handleFilter(/* Declined */2);
                           }),
                         checked: moderFilter === /* Declined */2,
                         name: "radio"
@@ -440,14 +455,14 @@ function Moder(Props) {
                   }));
   };
   return React.createElement("div", undefined, renderStats(section, match$4[0]), React.createElement("div", {
-                  className: "grid grid-cols-12 h-full p-5 gap-5"
+                  className: "grid grid-cols-12 p-5 gap-5"
                 }, React.createElement("div", {
                       className: "col-span-4 row-span-4 h-full"
                     }, renderSections(section)), React.createElement("div", {
                       className: "col-span-8"
                     }, renderFilter(undefined)), React.createElement("div", {
                       className: "col-span-8 row-span-1 h-full"
-                    }, section !== undefined ? renderImages(section, moderFilter) : React.createElement("div", undefined)), React.createElement("div", {
+                    }, renderImages(undefined)), React.createElement("div", {
                       className: "col-span-8 h-72 row-span-1"
                     }, selectedImage !== undefined ? renderInfo(selectedImage) : React.createElement("div", undefined)), React.createElement("div", {
                       className: "col-span-8 row-span-1"

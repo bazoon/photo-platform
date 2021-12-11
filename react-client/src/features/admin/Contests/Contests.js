@@ -108,7 +108,7 @@ const Grid = ({store}) => {
     const section = contestSections[sectionId];
     const Component = section && section.Component;
     return (
-      <Dialog header={title} contentClassName="flex-1" visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "90vw", height: "60vh"}}  onHide={() => hideSection(dialogId) }>
+      <Dialog header={title} contentClassName="flex-1" visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "90vw"}}  onHide={() => hideSection(dialogId) }>
         {Component && <Component id={id}/>}
       </Dialog>
     );
