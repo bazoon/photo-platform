@@ -1,5 +1,11 @@
 const R = require('ramda');
 
+const fields = [
+    'id',
+    'maxCountImg',
+    'name'
+];
+
 module.exports = [
   {
     method: 'POST',
@@ -57,15 +63,15 @@ module.exports = [
     path: '/api/admin/nominations/{id}',
     handler: async function (request, h) {
       const { id } = request.params;
-      const lexiconValues = R.pick(fields, request.payload);
-      const lexicon = await h.models.Lexicon.findOne({
+      const sectionValues = R.pick(fields, request.payload);
+      const section = await h.models.Section.findOne({
         where: {
           id
         }
       });
 
-      await lexicon.update(lexiconValues);
-      return R.pick(fields, lexicon);
+      await section.update(sectionValues);
+      return R.pick(fields, section);
     },
     options: {
       tags: ['api'],
