@@ -109,7 +109,7 @@ let make = (~id: string) => {
   let move = (dir: int) => {
     setSections((s: array<section>) => {
       setImageIndex(old => {
-        let newIndex = mod(old + dir, s->Belt.Array.length)
+        let newIndex = mod(Js.Math.abs_int(old + dir), s->Belt.Array.length)
         let newSection = s->Belt.Array.get(newIndex)
         setSection(_ => newSection)
         loadSection(newSection)

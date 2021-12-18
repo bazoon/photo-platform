@@ -96,7 +96,7 @@ function ShortList(Props) {
   var move = function (dir) {
     return Curry._1(setSections, (function (s) {
                   Curry._1(setImageIndex, (function (old) {
-                          var newIndex = Caml_int32.mod_(old + dir | 0, s.length);
+                          var newIndex = Caml_int32.mod_(Math.abs(old + dir | 0), s.length);
                           var newSection = Belt_Array.get(s, newIndex);
                           Curry._1(setSection, (function (param) {
                                   return newSection;
