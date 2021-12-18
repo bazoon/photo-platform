@@ -1,4 +1,4 @@
-import React, {useEffect, Suspense} from "react";
+import React, {Suspense} from "react";
 import "./App.css";
 import "./tails.css";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -11,11 +11,7 @@ import {
 } from "react-router-dom";
 import Login from "./features/Login";
 import MainMenu from "./MainMenu";
-import {asyncGet} from "./core/api";
-import i18n from "./core/i18n";
 import Thesis from "./features/Thesis";
-import ifElse from "crocks/logic/ifElse";
-import Result from "crocks/Result";
 import Admin from "./features/admin/Layout";
 import PrivateRoute from "./core/PrivateRoute";
 import { collect } from "react-recollect";

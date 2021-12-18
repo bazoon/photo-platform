@@ -66,9 +66,6 @@ type store = {
 @module("../core/api.js") external asyncGetImages: string => async<images> = "asyncGet"
 @module("../core/api.js") external asyncPutRate: (string, 'b) => async<rateT> = "asyncPut"
 
-
-
-
 module Dialog = {
   @react.component @module("primereact/dialog")
   external make: (
@@ -100,6 +97,12 @@ module Dropdown = {
     ~optionLabel: string, 
     ~optionsValue: string,
     ~onChange: 'a => unit) => React.element = "Dropdown"
+}
+
+module Link = {
+  @react.component @module("react-router-dom")
+  external make: (~to: string, ~className: string, ~children: React.element) => React.element =
+    "Link"
 }
 
 @module("lodash-lens") external over: 'l => 'f => 'o = "over"
@@ -172,7 +175,8 @@ let make = (~id: string) => {
   })
 
   let renderSwitch = () => {
-    <div className="absolute left-0 grid grid-cols-2">
+    <div className="absolute left-0 grid grid-cols-3">
+      <Link to="/jury-analytics" className="text-bright"><i className="pi pi-chart-line"/></Link>      
       <i className="text-tiny pi pi-th-large text-semi-bright mr-5" onClick={_ => setMode(_ => SINGLE)}/>
       <i className="text-tiny pi pi-table text-semi-bright" onClick={_ => setMode(_ => MULTI)}/>
     </div>
@@ -315,6 +319,22 @@ let make = (~id: string) => {
     let (filename, name) = switch im { | Some(i) => (i.filename, i.name) | None => ("", "") }
 
     <div className="flex flex-col h-full">
+        <div className="uppercase text-semi-bright mb-5 text-4xl text-center mt-10">
+        {
+          switch store.info {
+            |Some(i) => React.string(i.salone)
+            |None => <></>
+          }
+        }
+        </div>
+        <div className="uppercase text-semi-bright mb-10 text-3xl text-center">
+        {
+          switch store.info {
+            |Some(i) => React.string(i.name)
+            |None => <></>
+          }
+        }
+        </div>
       <div className="flex justify-center h-full relative">
         <img src={filename} className="responsive"/>
         <div className="absolute bottom-32">

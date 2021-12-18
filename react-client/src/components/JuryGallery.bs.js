@@ -6,6 +6,8 @@ import * as Caml_obj from "rescript/lib/es6/caml_obj.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
 import * as ReactI18next from "react-i18next";
 import * as ApiJs from "../core/api.js";
+import * as ReactRecollect from "react-recollect";
+import * as ReactRouterDom from "react-router-dom";
 import * as Dialog from "primereact/dialog";
 import * as Dropdown from "primereact/dropdown";
 
@@ -28,6 +30,8 @@ var Button = {};
 var RadioButton = {};
 
 var Dropdown$1 = {};
+
+var Link = {};
 
 function JuryGallery(Props) {
   ReactI18next.useTranslation("namespace1");
@@ -119,8 +123,14 @@ function JuryGallery(Props) {
         }), []);
   var renderSwitch = function (param) {
     return React.createElement("div", {
-                className: "absolute left-0 grid grid-cols-2"
-              }, React.createElement("i", {
+                className: "absolute left-0 grid grid-cols-3"
+              }, React.createElement(ReactRouterDom.Link, {
+                    to: "/jury-analytics",
+                    className: "text-bright",
+                    children: React.createElement("i", {
+                          className: "pi pi-chart-line"
+                        })
+                  }), React.createElement("i", {
                     className: "text-tiny pi pi-th-large text-semi-bright mr-5",
                     onClick: (function (param) {
                         return Curry._1(setMode, (function (param) {
@@ -308,9 +318,15 @@ function JuryGallery(Props) {
         "",
         ""
       ];
+    var i = ReactRecollect.store.info;
+    var i$1 = ReactRecollect.store.info;
     return React.createElement("div", {
                 className: "flex flex-col h-full"
               }, React.createElement("div", {
+                    className: "uppercase text-semi-bright mb-5 text-4xl text-center mt-10"
+                  }, i !== undefined ? i.salone : React.createElement(React.Fragment, undefined)), React.createElement("div", {
+                    className: "uppercase text-semi-bright mb-10 text-3xl text-center"
+                  }, i$1 !== undefined ? i$1.name : React.createElement(React.Fragment, undefined)), React.createElement("div", {
                     className: "flex justify-center h-full relative"
                   }, React.createElement("img", {
                         className: "responsive",
@@ -348,6 +364,7 @@ export {
   Button ,
   RadioButton ,
   Dropdown$1 as Dropdown,
+  Link ,
   make ,
   
 }
