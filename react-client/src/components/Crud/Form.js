@@ -22,7 +22,9 @@ export default function FForm({
   saveError, 
   schema, 
   title,
-  dialogConfig = {}
+  fieldsConfig,
+  dialogConfig = {},
+  validateForm = () => {}
 }) {
   const {message} = saveError;
 
@@ -50,12 +52,6 @@ export default function FForm({
     }
   }, [saveError, schema]);
   
-  const validateForm = values => {
-    // let r = fields.reduce((a, {dataIndex, required}) => required && isNil(values[dataIndex]) ? ({...a, [dataIndex]: "required"}) : a, {});
-    // let d = isEmpty(r) ? true : r;
-    // return d;
-  };
-
   const fields = fieldsFromSchema(schema);
 
   return (
@@ -79,7 +75,7 @@ export default function FForm({
             {
               fields.map(field => (
                 <div className="mb-4" key={field.name}>
-                  <FormControl field={field}/>
+                  <FormControl field={field} fieldsConfig={fieldsConfig}/>
                 </div>
               ))
             }

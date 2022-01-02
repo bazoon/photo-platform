@@ -7,8 +7,6 @@ const getUploadFilePath = require('../utils/getUploadPath');
 router.get('/:sectionId', async ctx => {
   const { sectionId } = ctx.params;
 
-  console.log(2)
-
   const [limit] = await models.sequelize.query(`
     select short_best_count from contests, sections
     where sections.contest_id=contests.id and sections.id=:sectionId
@@ -17,7 +15,8 @@ router.get('/:sectionId', async ctx => {
         sectionId
       }
   });
-  console.log(limit)
+
+
 
   const query = `
     select photoworks.id, filename, average, awards_stack_id

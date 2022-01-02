@@ -73,8 +73,8 @@ export default ({name = "crud", api, idField = "id", apiParams, t = identity, ap
           },
           refresh: {
             actions: assign({
-              records: ({records}) => {
-                return [...records];
+              records: ({records}, {records: recs}) => {
+                return [...(recs || records)];
               }
             }),
           }

@@ -38,13 +38,10 @@ module.exports = [
     handler: async function (request, h) {
       const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
-
       if (!domain) {
         return {};
       }
       
-      console.log(domain)
-
       let query = `
         select contests.id from contests, salones
         where contests.salone_id = salones.id and salones."domain" = :domain

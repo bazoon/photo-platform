@@ -404,6 +404,7 @@ module.exports = [
       `;
 
       const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
+
       const ratesQuery = `
         SELECT CONCAT("first_name", ' ', "last_name") as author,
           rates.photowork_id,
@@ -444,6 +445,9 @@ module.exports = [
           limit: contest.shortBestCount
         }
       });
+
+
+      console.log(contest.shortBestCount, rates, sectionId, contest.id);
 
       return rates.map(p => ({...p, filename: getUploadFilePath(p.filename)}));
     },

@@ -152,7 +152,8 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
-  const renderDate = field => {
+  const renderDate = (field, config) => {
+    console.log(config);
     const {name, title} = field;
     return (
       <Field name={name} render={({ input, meta }) => (

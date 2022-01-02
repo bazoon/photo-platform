@@ -2,6 +2,8 @@ const Router = require('koa-router');
 const router = new Router();
 const models = require('../../../models');
 const R = require('ramda');
+const {isEmpty, compose, nth, split} = require('lodash/fp');
+const getCurrentSalone = require('../utils/getCurrentSalone');
 
 const fields = [
   'id',
@@ -19,7 +21,8 @@ const fields = [
   'sectionCount',
   'maxrate',
   'maxsize',
-  'maxWeight'
+  'maxWeight',
+  'inworknow'
 ];
 
 router.get('/', async ctx => {
@@ -39,7 +42,7 @@ router.get('/', async ctx => {
   if (isAdmin) {
     query = `
       select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight from
+      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, inworknow from
       contests, salones
       where contests.salone_id=salones.id
     `;
@@ -47,7 +50,7 @@ router.get('/', async ctx => {
     console.log('isModer');
     query = `
       select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight from
+      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, inworknow from
       contests, salones
       where contests.salone_id=salones.id and salones.domain=:domain
     `;
@@ -55,7 +58,7 @@ router.get('/', async ctx => {
     console.log('may be admin or moder for domain');
     query = `
       select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight 
+      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, inworknow 
       from contests, salones, admins, organizers
       where contests.salone_id=salones.id and salones.domain=:domain and salones.organizer_id=organizers.id and
       admins.organizer_id=organizers.id and admins.user_id=:userId
@@ -87,7 +90,8 @@ router.get('/', async ctx => {
       sectionCount: contest.section_count,
       maxrate: contest.maxrate,
       maxsize: contest.maxsize,
-      maxWeight: contest.max_weight
+      maxWeight: contest.max_weight,
+      inworknow: contest.inworknow
     };
   });
 });
@@ -165,6 +169,35 @@ module.exports = [
     method: 'POST',
     path: '/api/admin/contests',
     handler: async function (request, h) {
+      const dateStart = new Date(request.payload.dateStart);
+      const dateStop = new Date(request.payload.dateStop);
+      const dateJuriEnd = new Date(request.payload.dateJuriEnd);
+      const dateRateShow = new Date(request.payload.dateRateShow);
+
+      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      console.log(await getCurrentSalone(domain))
+
+      let errors = {};
+
+      if (dateStart >= dateStop) {
+        errors.dateStart = 'dateStartGtDateStop';
+        errors.dateStop = 'dateStopLsDateStart';
+      }
+
+      if (dateStop >= dateJuriEnd) {
+        errors.dateStop = 'dateStopGtDateJuryEnd';
+        errors.dateJuriEnd = 'dateJuryEndLsDateStop';
+      }
+
+      if (dateJuriEnd >= dateRateShow) {
+        errors.dateJuriEnd = 'dateJuryEndGtDateRateShow';
+        errors.dateRateShow = 'dateRateShowLsDateJuryEnd';
+      }
+      
+      if (!isEmpty(errors)) {
+        return h.response(errors).code(400);
+      }
+
       const contest = await h.models.Contest.create(request.payload);
       return contest.toJSON();
     },
@@ -197,21 +230,21 @@ module.exports = [
       if (isAdmin) {
         query = `
         select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-          show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight from
+          show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, inworknow from
         contests, salones
         where contests.salone_id=salones.id
         `;
       } else if (isModer) {
         query = `
         select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-          show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight from
+          show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, inworknow from
         contests, salones
         where contests.salone_id=salones.id and salones.domain=:domain
         `;
       } else {
         query = `
         select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-          show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight 
+          show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, inworknow 
         from contests, salones, admins, organizers
         where contests.salone_id=salones.id and salones.domain=:domain and salones.organizer_id=organizers.id and
         admins.organizer_id=organizers.id and admins.user_id=:userId
@@ -243,7 +276,8 @@ module.exports = [
           sectionCount: contest.section_count,
           maxrate: contest.maxrate,
           maxsize: contest.maxsize,
-          maxWeight: contest.max_weight
+          maxWeight: contest.max_weight,
+          inworknow: contest.inworknow
         };
       });
     },
@@ -260,7 +294,7 @@ module.exports = [
     handler: async function (request, h) {
       const { id } = request.params;
       const lexiconValues = R.pick(fields, request.payload);
-      const lexicon = await h.models.Lexicon.findOne({
+      const lexicon = await h.models.Contest.findOne({
         where: {
           id
         }

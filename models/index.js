@@ -1,5 +1,7 @@
 'use strict';
 
+const pc = require('picocolors');
+
 require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
@@ -7,6 +9,9 @@ const {Sequelize, DataTypes} = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const db = {};
+
+const colors = ['red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'gray'];
+let index = 0;
 
 const db_config = {
   username: process.env.DB_USER,
@@ -17,7 +22,11 @@ const db_config = {
   define: {
     underscored: true
   },
-  logging: l => () => {}
+  logging: l => {
+    const color = colors[index % 7];
+    console.log(pc[color](l));
+    index++;
+  }
 };
 
 let sequelize = new Sequelize(

@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     maxrate: DataTypes.NUMBER,
     maxsize: DataTypes.NUMBER,
     maxWeight: DataTypes.NUMBER,
+    inworknow: DataTypes.BOOLEAN,
   }, {
     timestamps: false
   });

@@ -17,8 +17,11 @@ import {collect} from "react-recollect";
 import {Dialog} from "primereact/dialog";
 import Applications from "./Applications";
 import {make as Moder} from "./Moder.bs";
+import { InputSwitch } from "primereact/inputswitch";
 import {keys} from "lodash/fp";
 import {make as ShortList} from "../../ShortList.bs";
+import {findLens, over, view} from "lodash-lens";
+import {asyncPut} from "../../../core/api";
 
 // import { inspect } from "@xstate/inspect";
 // if (location.href.includes("foto.ru")) {
@@ -131,6 +134,63 @@ const Grid = ({store}) => {
     );
   };
 
+  const saveFailed = () => {
+
+  };
+
+  const saveOk = d => {
+
+  };
+
+  
+
+  const onChangeBoolean = (value, record, fieldName) => {
+    const recs = over(findLens({id: record.id}), rec => ({...rec, [fieldName]: value}), records);
+    send("refresh", {records: recs});
+    asyncPut(`api/admin/contests/${record.id}`, {...record, [fieldName]: value}).fork(saveFailed, saveOk);
+  };
+
+
+  const valueTemplate = (rowData, fieldInfo) => {
+    const type = columnsSchema.properties[fieldInfo.field].type;
+    return (
+      type === "boolean" ? <InputSwitch checked={rowData[fieldInfo.field]} onChange={({value}) => onChangeBoolean(value, rowData, fieldInfo.field)}/> : rowData[fieldInfo.field]
+    );
+  };
+
+  const fieldsConfig = record => {
+    return {
+      dateStart: {},
+      dateStop: {
+        minDate: record.dateStart
+      },
+      dateJuryEnd: {},
+      dateRateShow: {}
+    };
+  };
+
+  const validateForm = ({dateStart, dateStop, dateJuriEnd, dateRateShow}) => {
+    let errors = {};
+
+    if (dateStart >= dateStop) {
+      errors.dateStart = "dateStartGtDateStop";
+      errors.dateStop = "dateStopLsDateStart";
+    }
+
+    if (dateStop >= dateJuriEnd) {
+      errors.dateStop = "dateStopGtDateJuryEnd";
+      errors.dateJuriEnd = "dateJuryEndLsDateStop";
+    }
+
+    if (dateJuriEnd >= dateRateShow) {
+      errors.dateJuriEnd = "dateJuryEndGtDateRateShow";
+      errors.dateRateShow = "dateRateShowLsDateJuryEnd";
+    }
+
+    return errors;
+
+  };
+
   return (
     <>
       <div className="mb-4">
@@ -147,13 +207,13 @@ const Grid = ({store}) => {
       >
         <Column expander style={{ width: "10em" }} />
         {
-          columnsFromSchema(columnsSchema, t).map(({name, title, width, body = record => record[name]}) => 
+          columnsFromSchema(columnsSchema, t).map(({name, title, width, body = valueTemplate }) => 
             <Column headerStyle={{width: "300px"}} key={name} field={name} header={title} body={body}></Column>)
         }
       </DataTable>
 
       {
-        isOpen && <Form schema={fieldsSchema} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
+        isOpen && <Form schema={fieldsSchema} validateForm={validateForm} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
       }
     </>
   );

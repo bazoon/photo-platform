@@ -178,7 +178,8 @@ body {
 }
 
 .p-datatable table {
-  table-layout: auto !important;
+  /* Выключил так как съезжало выравнивание */
+  /* table-layout: auto !important; */
 }
 
 

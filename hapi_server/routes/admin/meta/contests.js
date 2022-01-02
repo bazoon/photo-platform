@@ -34,6 +34,7 @@ module.exports = [
         'required': [
           'id',
           'saloneId',
+          'inworknow',
           'subname',
           'years',
           'dateStart',
@@ -57,7 +58,7 @@ module.exports = [
             'type': 'integer',
             'default': 0
           },
-          'salone': {
+          'saloneId': {
             '$id': '#root/saloneId', 
             'title': 'saloneId', 
             'type': 'array',
@@ -76,6 +77,13 @@ module.exports = [
             'pattern': '^.*$',
             width: 200
           },
+          'inworknow': {
+            '$id': '#root/inworknow', 
+            'title': 'inworknow', 
+            'type': 'boolean',
+            'default': false,
+            width: 100
+          },
           'years': {
             '$id': '#root/years', 
             'title': 'years', 
@@ -87,7 +95,7 @@ module.exports = [
           'dateStart': {
             '$id': '#root/dateStart', 
             'title': 'dateStart', 
-            'type': 'string',
+            'type': 'date',
             'default': '',
             'pattern': '^.*$',
             width: 200
@@ -95,7 +103,7 @@ module.exports = [
           'dateStop': {
             '$id': '#root/dateStop', 
             'title': 'dateStop', 
-            'type': 'string',
+            'type': 'date',
             'default': '',
             'pattern': '^.*$',
             width: 200
@@ -103,7 +111,7 @@ module.exports = [
           'dateJuriEnd': {
             '$id': '#root/dateJuriEnd', 
             'title': 'dateJuriEnd', 
-            'type': 'string',
+            'type': 'date',
             'default': '',
             'pattern': '^.*$',
             width: 200
@@ -111,7 +119,7 @@ module.exports = [
           'dateRateShow': {
             '$id': '#root/dateRateShow', 
             'title': 'dateRateShow', 
-            'type': 'string',
+            'type': 'date',
             'default': '',
             'pattern': '^.*$',
             width: 200
