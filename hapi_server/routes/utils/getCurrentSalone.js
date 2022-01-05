@@ -1,8 +1,8 @@
 const models = require('../../../models');
 
-async function getCurrentSalone(domain) {
+async function getCurrentSaloneId(domain) {
   const query = `
-    select * from salones
+    select salones.id from salones, contests
     where contests.salone_id=salones.id and salones.domain=:domain
   `;
  
@@ -11,7 +11,7 @@ async function getCurrentSalone(domain) {
       domain
     }
   });
-  return salone;
+  return salone.id;
 }
 
 async function getCurrentContests(domain) {
@@ -38,6 +38,6 @@ async function canCreateContestFor(domain, {dateStart, dateStop, dateJuriEnd, da
 
 
 module.exports = {
-  getCurrentSalone,
+  getCurrentSaloneId,
 
 }

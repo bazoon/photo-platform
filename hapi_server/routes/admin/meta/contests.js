@@ -32,7 +32,6 @@ module.exports = [
         'title': 'root', 
         'type': 'object',
         'required': [
-          'id',
           'saloneId',
           'inworknow',
           'subname',

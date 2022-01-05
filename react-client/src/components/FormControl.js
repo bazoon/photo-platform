@@ -54,13 +54,13 @@ const getFormErrorMessage = (meta) => {
   return isFormFieldValid(meta) && <small className="p-error">{meta.error}</small>;
 };
 
-  const renderEnum = field => {
+  const renderEnum = (field, required) => {
     const {name, title, items} = field;
     return (
       <Field name={name}  render={({ input, meta }) => (
         <div className="p-field">
           <div>
-            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
             <SelectButton className="grid grid-cols-4 p-5 gap-5" optionLabel="label" optionValue="name" value={input.value} options={items?.enum} onChange={(e) => {input.onChange(e.value);}} />  
           </div>
           {getFormErrorMessage(meta)}
@@ -69,12 +69,12 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
-  const renderSelect = field => {
+  const renderSelect = (field, required) => {
     const {name, title, items} = field;
     return (
       <Field name={name}  render={({ input, meta }) => (
         <div className="p-field">
-          <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+          <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
           <Dropdown id={name} {...input} options={items?.enum} optionLabel="label" />
           {getFormErrorMessage(meta)}
         </div>
@@ -82,13 +82,13 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
-  const renderSelectButton = field => {
+  const renderSelectButton = (field, required) => {
     const {name, title, items} = field;
     return (
       <Field name={name}  render={({ input, meta }) => (
         <div className="p-field">
           <span>
-            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
             <SelectButton optionLabel="label" optionValue="name" value={input.value} options={items?.enum} onChange={(e) => {input.onChange(e.value);}} />  
           </span>
           {getFormErrorMessage(meta)}
@@ -97,20 +97,20 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
-  const renderBoolean = field => {
+  const renderBoolean = (field, required) => {
     const {name, title} = field;
     return (
       <Field name={name} type="checkbox" render={({ input, meta }) => (
         <div className="p-field-checkbox">
           <Checkbox inputId={name} checked={input.checked} onChange={input.onChange} />
           &nbsp;&nbsp;
-          <label htmlFor={name}>{title}</label>
+          <label htmlFor={name}>{title} {required && <sup className="text-red-500">*</sup>}</label>
         </div>
       )} />
     );
   };
 
-  const renderFile = field => {
+  const renderFile = (field, required) => {
     const {name} = field;
     return (
       <Field name={name} render={({ input }) => (
@@ -119,12 +119,12 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
-  const renderEditor = field => {
+  const renderEditor = (field, required) => {
     const {name, title} = field;
     return (
       <Field name={name} render={({ meta, input }) => (
         <>
-          <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+          <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
           <CKEditor
             onReady={ editor => {
               // Insert the toolbar before the editable area.
@@ -152,14 +152,13 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
-  const renderDate = (field, config) => {
-    console.log(config);
+  const renderDate = (field, required) => {
     const {name, title} = field;
     return (
       <Field name={name} render={({ input, meta }) => (
         <div className="p-field">
           <span className="p-input-icon-right">
-            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
             <Calendar id="basic" {...input} value={input.value ? new Date(input.value) : ""} />
           </span>
           {getFormErrorMessage(meta)}
@@ -168,13 +167,13 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
-  const renderNumber = field => {
+  const renderNumber = (field, required) => {
     const {name, title, max} = field;
     return (
       <Field name={name} render={({ input, meta }) => (
         <div className="p-field">
           <span className="p-input-icon-right">
-            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <label required={required} htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
             <InputNumber id={name} max={max} value={input.value} onChange={({value}) => input.onChange(value)} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
           </span>
           {getFormErrorMessage(meta)}
@@ -183,13 +182,13 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
-  const renderText = field => {
+  const renderText = (field, required) => {
     const {name, title} = field;
     return (
       <Field name={name} render={({ input, meta }) => (
         <div className="p-field">
           <span className="p-input-icon-right">
-            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title}</label>
+            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
             <InputText id={name}  {...input} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
           </span>
           {getFormErrorMessage(meta)}
@@ -198,7 +197,7 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
-const FormControl = ({field}) => {
+const FormControl = ({field, required}) => {
   const render = {
     enum: renderEnum,
     array: renderSelect,
@@ -210,7 +209,7 @@ const FormControl = ({field}) => {
     number: renderNumber,
   }[field.type] || renderText;
   
-  return render(field);
+  return render(field, required);
 };
 
 export default FormControl;

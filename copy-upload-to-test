@@ -1,0 +1,6 @@
+ssh root@138.124.182.78 "bash -s" << HERE 
+  rm -rf /var/www/photo-platform/uploads
+HERE
+
+scp -r root@185.65.202.124:/var/www/photo-platform/uploads /Users/vn/temp
+scp -r /Users/vn/temp/uploads root@138.124.182.78:/var/www/photo-platform

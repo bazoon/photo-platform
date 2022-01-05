@@ -22,6 +22,7 @@ import {keys} from "lodash/fp";
 import {make as ShortList} from "../../ShortList.bs";
 import {findLens, over, view} from "lodash-lens";
 import {asyncPut} from "../../../core/api";
+import {isDefined} from "crocks";
 
 // import { inspect } from "@xstate/inspect";
 // if (location.href.includes("foto.ru")) {
@@ -169,7 +170,9 @@ const Grid = ({store}) => {
     };
   };
 
-  const validateForm = ({dateStart, dateStop, dateJuriEnd, dateRateShow}) => {
+  const validateForm = (values) => {
+    const {dateStart, dateStop, dateJuriEnd, dateRateShow} = values;
+
     let errors = {};
 
     if (dateStart >= dateStop) {
@@ -187,8 +190,16 @@ const Grid = ({store}) => {
       errors.dateRateShow = "dateRateShowLsDateJuryEnd";
     }
 
-    return errors;
+    const required = fieldsSchema.required;
 
+    const requiredErrors = required.reduce((a, e) => {
+      if (!isDefined(values[e])) {
+        a[e] = t("shouldNotBeEmpty");
+      }
+      return a;
+    }, {});
+
+    return {...requiredErrors, ...errors};
   };
 
   return (

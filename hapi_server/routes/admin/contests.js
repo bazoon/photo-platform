@@ -3,7 +3,7 @@ const router = new Router();
 const models = require('../../../models');
 const R = require('ramda');
 const {isEmpty, compose, nth, split} = require('lodash/fp');
-const getCurrentSalone = require('../utils/getCurrentSalone');
+const {getCurrentSaloneId} = require('../utils/getCurrentSalone');
 
 const fields = [
   'id',
@@ -24,110 +24,6 @@ const fields = [
   'maxWeight',
   'inworknow'
 ];
-
-router.get('/', async ctx => {
-  const { host } = ctx.request.header;
-  const [domain] = host.split(':');
-
-  const user = await models.User.findOne({
-    where: {
-      id: ctx.user.id
-    }
-  });
-
-  const isAdmin = user.userType == 0;
-  const isModer = user.userType === 2;
-  let query;
-
-  if (isAdmin) {
-    query = `
-      select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, inworknow from
-      contests, salones
-      where contests.salone_id=salones.id
-    `;
-  } else if (isModer) {
-    console.log('isModer');
-    query = `
-      select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, inworknow from
-      contests, salones
-      where contests.salone_id=salones.id and salones.domain=:domain
-    `;
-  } else {
-    console.log('may be admin or moder for domain');
-    query = `
-      select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-      show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, inworknow 
-      from contests, salones, admins, organizers
-      where contests.salone_id=salones.id and salones.domain=:domain and salones.organizer_id=organizers.id and
-      admins.organizer_id=organizers.id and admins.user_id=:userId
-    `;
-  }
-
-  const [contests] = await models.sequelize.query(query, {
-    replacements: {
-      domain,
-      userId: user.id
-    }
-  });
-
-  ctx.body = contests.map(contest => {
-    return {
-      id: contest.id,
-      saloneId: contest.salone_id,
-      salone: contest.salone,
-      subname: contest.subname,
-      years: contest.years,
-      dateStart: contest.date_start,
-      dateStop: contest.date_stop,
-      dateJuriEnd: contest.date_juri_end,
-      dateRateShow: contest.date_rate_show,
-      showType: contest.show_type,
-      showRateState: contest.show_rate_state,
-      democraty: contest.democraty,
-      payType: contest.pay_type,
-      sectionCount: contest.section_count,
-      maxrate: contest.maxrate,
-      maxsize: contest.maxsize,
-      maxWeight: contest.max_weight,
-      inworknow: contest.inworknow
-    };
-  });
-});
-
-router.post('/', async ctx => {
-  const contestValues = R.pick(fields, ctx.request.body);
-  delete contestValues.id;
-  let contest = await models.Contest.create(contestValues);
-  ctx.body = await getContest(contest);
-});
-
-router.put('/:id', async ctx => {
-  const { id } = ctx.params;
-  const contestValues = R.pick(fields, ctx.request.body);
-  const contest = await models.Contest.findOne({
-    where: {
-      id
-    }
-  });
-
-  await contest.update(contestValues);
-  ctx.body = await getContest(contest);
-});
-
-
-router.delete('/:id', async ctx => {
-  const { id } = ctx.params;
-
-  await models.Salone.destroy({
-    where: {
-      id
-    }
-  });
-
-  ctx.body = {};
-});
 
 async function getContest(record) {
   const query = `
@@ -173,9 +69,8 @@ module.exports = [
       const dateStop = new Date(request.payload.dateStop);
       const dateJuriEnd = new Date(request.payload.dateJuriEnd);
       const dateRateShow = new Date(request.payload.dateRateShow);
-
       const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
-      console.log(await getCurrentSalone(domain))
+      const saloneId= await getCurrentSaloneId(domain);
 
       let errors = {};
 
@@ -198,8 +93,24 @@ module.exports = [
         return h.response(errors).code(400);
       }
 
-      const contest = await h.models.Contest.create(request.payload);
-      return contest.toJSON();
+      const query = `select count(id) from contests where 
+                     ((date_start <= :dateStart and date_rate_show >= :dateStart) or (date_start <= :dateRateShow and date_rate_show >= :dateRateShow)) and salone_id = :saloneId
+                  `
+
+      const [[contest]] = await models.sequelize.query(query, {
+        replacements: {
+          dateStart: dateStart,
+          dateRateShow: dateRateShow,
+          saloneId: saloneId
+        }
+      });
+      
+      if (+contest.count > 0) {
+        return h.response({error: 'contestIntersectionError' }).code(400);
+      }
+
+      const newContest = await h.models.Contest.create(request.payload);
+      return newContest.toJSON();
     },
     options: {
       tags: ['api'],

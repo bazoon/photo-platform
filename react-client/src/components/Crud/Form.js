@@ -75,7 +75,7 @@ export default function FForm({
             {
               fields.map(field => (
                 <div className="mb-4" key={field.name}>
-                  <FormControl field={field} fieldsConfig={fieldsConfig}/>
+                  <FormControl field={field} required={schema?.required.includes(field.name)} fieldsConfig={fieldsConfig}/>
                 </div>
               ))
             }

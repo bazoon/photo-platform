@@ -165,7 +165,7 @@ export default ({name = "crud", api, idField = "id", apiParams, t = identity, ap
                 const hasFile = values(record).some(v => v instanceof File);
                 const payload = hasFile ? toFormData(record) : record;
                 const isJson = !hasFile;
-                asyncPost(combineApiWithParams(api)(apiParams), payload, isJson).fork(e => callback("postFailed", {error: e}), data => {
+                asyncPost(combineApiWithParams(api)(apiParams), payload, isJson).fork(e => callback({type: "postFailed", error: e}), data => {
                   callback({type: "saveOk", data});
                 });
               }
@@ -198,13 +198,13 @@ export default ({name = "crud", api, idField = "id", apiParams, t = identity, ap
         on: {
           saveFailed: {
             actions: assign({
-              error: (_, data) => ({message: "Ошибка сохранения", data})
+              error: (_, data) => ({message: "Ошибка сохранения: " + t(data?.error), data})
             }),
             target: "opened.saveFailed"
           },
           postFailed: {
             actions: assign({
-              error: (_, {error}) => ({message: "Ошибка сохранения", error})
+              error: (_, {error}) => ({message: "Ошибка сохранения" + t(error), error})
             }),
             target: "opened.add"
           },

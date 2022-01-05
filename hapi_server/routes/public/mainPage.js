@@ -53,6 +53,7 @@ module.exports = [
         LEFT JOIN salone_abouts AS sa ON sa.salone_id = salones.id AND sa.language_id = l.id
         LEFT JOIN organizers AS o on salones.organizer_id=o.id
         LEFT JOIN registration_contests as rc on rc.user_id=1 and rc.contest_id=contests.id and rc.user_id=:userId
+        where inworknow=true
         ORDER BY
           date_start DESC
       `;
@@ -67,6 +68,8 @@ module.exports = [
           userId
         }
       });
+
+      console.log(info, 111)
 
       return get('[0]', info);
     },
