@@ -64,7 +64,7 @@ const ApplyForm = ({onSubmit, sections}) => {
           {
             <form onSubmit={handleSubmit}>
 
-            <div className="grid grid-cols-2 m-auto w-3/5 text-base items-baseline">
+            <div className="grid grid-cols-2 m-auto w-3/5 text-base items-center">
                 <Sections className="flex-1 mr-10" sections={sections}/>
                 <div>
                   { 

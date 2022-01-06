@@ -1,7 +1,7 @@
 const {get, split, nth, compose} = require('lodash/fp');
 const getUploadFilePath = require('../utils/getUploadPath');
+const {getCurrentContestId, getCurrentContest} = require('../utils/getCurrentSalone');
 const MODER_ACCEPTED = 1;
-const {groupBy} = require('lodash/fp')
 
 module.exports = [
   {
@@ -15,19 +15,7 @@ module.exports = [
         return {};
       }
 
-      const contestQuery = `
-        SELECT
-          contests.id
-        FROM
-          contests
-          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
-          LEFT JOIN organizers AS o on salones.organizer_id=o.id
-          ORDER BY
-            date_start DESC
-          limit 1
-      `;
-
-      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
+      const contest = await getCurrentContest(domain);
       const query = `
         SELECT
           sections.name,
@@ -65,19 +53,7 @@ module.exports = [
         return {};
       }
 
-      const contestQuery = `
-        SELECT
-          contests.id
-        FROM
-          contests
-          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
-          LEFT JOIN organizers AS o on salones.organizer_id=o.id
-          ORDER BY
-            date_start DESC
-          limit 1
-      `;
-
-      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
+      const contest = await getCurrentContest(domain);
 
       const query = `
         select  p.id, p.filename, tcontent as description, rate_value as rate
@@ -86,11 +62,6 @@ module.exports = [
         left join juries j on r.jury_id=j.id
         WHERE p.section_id = :sectionId and p.moder=:moder
       `;
-
-      console.log('userId', userId);
-      console.log('contestId', contest.id);
-      console.log('sectionId', sectionId);
-
 
 
       let photoworks = await h.query(query, {
@@ -102,12 +73,6 @@ module.exports = [
         }
       });
 
-      // const dup = (arr, n) => {
-      //   const a = []
-      //   for(let i=0;i<n;i++)
-      //   a.push(arr.map(e =>({...e, id: Math.random()})))
-      //   return a.flat()
-      // }
       return photoworks.map(p => ({...p, filename: getUploadFilePath(p.filename)}));
     },
     options: {
@@ -130,21 +95,7 @@ module.exports = [
         return {};
       }
 
-
-      const contestQuery = `
-        SELECT
-          contests.id
-        FROM
-          contests
-          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
-          LEFT JOIN organizers AS o on salones.organizer_id=o.id
-          ORDER BY
-            date_start DESC
-          limit 1
-      `;
-
-      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
-      console.log(contest)
+      const contest = await getCurrentContest(domain);
 
       const query = `
         select 
@@ -156,12 +107,16 @@ module.exports = [
       `;
 
 
-      const [jury] = await h.query(query, {
+      const a = await h.query(query, {
         replacements: {
           userId,
           contestId: contest.id
         }
       });
+      
+      console.log(a);
+
+      const jury = a[0];
 
       let rateRecord = await h.models.Rate.findOne({
         where: { photoworkId: id, juryId: jury.id }
@@ -171,12 +126,9 @@ module.exports = [
         rateRecord = await h.models.Rate.create({ photoworkId: id, juryId: jury.id, rateValue: rate })
       }
 
-
-
       rateRecord.rateValue = rate;
 
       await rateRecord.save();
-      console.log(rateRecord)
       return rateRecord;
     },
     options: {
@@ -198,19 +150,7 @@ module.exports = [
         return {};
       }
 
-      const contestQuery = `
-        SELECT
-          contests.id
-        FROM
-          contests
-          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
-          LEFT JOIN organizers AS o on salones.organizer_id=o.id
-          ORDER BY
-            date_start DESC
-          limit 1
-      `;
-
-      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
+      const contest = await getCurrentContest(domain);
 
       const query = `
         select
@@ -242,27 +182,12 @@ module.exports = [
     method: 'GET',
     path: '/api/jury/analytics',
     handler: async function (request, h) {
-      const { sectionId } = request.params;
       const userId = get('request.auth.credentials.id', h) || -1;
       const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
       if (!domain) {
         return {};
       }
-
-      const contestQuery = `
-        SELECT
-          contests.id
-        FROM
-          contests
-          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
-          LEFT JOIN organizers AS o on salones.organizer_id=o.id
-          ORDER BY
-            date_start DESC
-          limit 1
-      `;
-
-      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
 
       const query = `
         select
@@ -272,15 +197,15 @@ module.exports = [
         where
           juries.user_id = :userId and juries.contest_id  = :contestId
       `;
-
+      
+      const contestId = await getCurrentContestId(domain);
 
       const [jury] = await h.query(query, {
         replacements: {
           userId,
-          contestId: contest.id
+          contestId
         }
       });
-
 
       const doneQuery = `
         select
@@ -315,14 +240,14 @@ module.exports = [
       const done = await h.query(doneQuery, {
         replacements: {
           juryId: jury.id,
-          contestId: contest.id,
+          contestId,
           moder: MODER_ACCEPTED
         }
       });
 
       const total = await h.query(totalQuery, {
         replacements: {
-          contestId: contest.id,
+          contestId,
           moder: MODER_ACCEPTED
         }
       });
@@ -355,20 +280,9 @@ module.exports = [
         return {};
       }
 
-      const contestQuery = `
-        SELECT
-          contests.date_stop
-        FROM
-          contests
-          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
-          LEFT JOIN organizers AS o on salones.organizer_id=o.id
-          ORDER BY
-            date_start DESC
-          limit 1
-      `;
 
-      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
-
+      const contest = await getCurrentContest(domain);
+      console.log(contest.dateStop, new Date);
       return (new Date(contest.dateStop)) < (new Date())
 
     },
@@ -391,19 +305,7 @@ module.exports = [
         return {};
       }
 
-      const contestQuery = `
-        SELECT
-          contests.id, contests.short_best_count
-        FROM
-          contests
-          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
-          LEFT JOIN organizers AS o on salones.organizer_id=o.id
-          ORDER BY
-            date_start DESC
-          limit 1
-      `;
-
-      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
+      const contest = await getCurrentContest(domain);
 
       const ratesQuery = `
         SELECT CONCAT("first_name", ' ', "last_name") as author,
@@ -445,9 +347,6 @@ module.exports = [
           limit: contest.shortBestCount
         }
       });
-
-
-      console.log(contest.shortBestCount, rates, sectionId, contest.id);
 
       return rates.map(p => ({...p, filename: getUploadFilePath(p.filename)}));
     },

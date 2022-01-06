@@ -102,7 +102,7 @@ function Init({store}) {
   const loadOk = info => {
     store.info = info;
     const t = getTitle(location.pathname, store.info.saloneName, store.info.name);
-
+    console.log(info);
     setTitle(t);
   };
 

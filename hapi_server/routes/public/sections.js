@@ -3,6 +3,7 @@ const camelizeObject = require('../utils/camelizeObject');
 const getUploadPath = require('../utils/getUploadPath');
 const uploadFiles = require('../utils/uploadFiles');
 const chalk = require('chalk');
+const {getCurrentContestId} = require('../utils/getCurrentSalone');
 
 
 const imageFields = [
@@ -42,20 +43,7 @@ module.exports = [
         return {};
       }
       
-      let query = `
-        select contests.id from contests, salones
-        where contests.salone_id = salones.id and salones."domain" = :domain
-        order by date_start desc
-        limit 1
-     `;
-
-      const contest = await h.query(query, {
-        replacements: {
-          domain
-        }
-      });
-
-      query = `
+      const query = `
         SELECT
           sections.id,
           sections.max_count_img,
@@ -76,7 +64,7 @@ module.exports = [
       const info = await h.query(query, {
         replacements: {
           domain,
-          contestId: get('[0].id', contest)
+          contestId: await getCurrentContestId(domain)
         }
       });
       

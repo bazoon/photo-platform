@@ -33,29 +33,20 @@ module.exports = [
       }
 
       const query = `
-        SELECT
-        contests.id AS contest_id,
-        contest_abouts.name,
-        date_start,
-        date_stop,
-        salones.name salone,
-        sa.name AS saloneName,
-        contest_abouts. "name",
-        phone_tech,
-        email_pub,
-        sa.name AS salone_name,
-        rc.id as reg_id
-      FROM
-        contest_abouts
-        JOIN languages l ON contest_abouts.language_id = l.id and l.short=:lang
-        LEFT JOIN contests ON contests.id = contest_abouts.contest_id
-        LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
-        LEFT JOIN salone_abouts AS sa ON sa.salone_id = salones.id AND sa.language_id = l.id
-        LEFT JOIN organizers AS o on salones.organizer_id=o.id
-        LEFT JOIN registration_contests as rc on rc.user_id=1 and rc.contest_id=contests.id and rc.user_id=:userId
-        where inworknow=true
-        ORDER BY
-          date_start DESC
+         SELECT
+            c.id AS contest_id,
+            ca.name,
+            date_start,
+            date_stop,
+            s.name salone,
+            sa.name AS salone,
+            ca."name",
+            phone_tech,
+            email_pub
+          FROM
+            contests as c, contest_abouts as ca, salones as s, salone_abouts as sa, organizers as o, languages as l
+            where ca.contest_id=c.id and c.salone_id=s.id and s.organizer_id=o.id and s.domain=:domain and sa.salone_id=s.id and 
+            ca.language_id=l.id and sa.language_id=l.id and l.short=:lang and inworknow
       `;
 
 
@@ -69,9 +60,7 @@ module.exports = [
         }
       });
 
-      console.log(info, 111)
-
-      return get('[0]', info);
+      return get('[0]', info) || {};
     },
     options: {
       tags: ['api'],
