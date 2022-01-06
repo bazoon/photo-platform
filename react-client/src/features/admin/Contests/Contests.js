@@ -49,7 +49,7 @@ const Grid = ({store}) => {
   const [current, send] = useMachine(Machine({api: "api/admin/contests"}), { devTools: true });
   const {context} = current;
   const {records, record, error, isOpen, meta} = context;
-  const {onCancel, onOk, onChange, handleAdd} = useCrud(send, record);
+  const {onCancel, onOk, onChange, handleAdd, handleEdit} = useCrud(send, record);
   const columnsSchema = meta.columnsSchema || {};
   const fieldsSchema = meta.fieldsSchema || {};
 
@@ -202,6 +202,16 @@ const Grid = ({store}) => {
     return {...requiredErrors, ...errors};
   };
 
+    const actionBodyTemplate = (rowData) => {
+      return (
+        <div className="flex w-40">
+          {
+            <Button icon="pi pi-pencil" className="mr-5 p-button-rounded p-button-success" onClick={() => handleEdit(rowData)} />
+          }
+        </div>
+      );
+    }; 
+
   return (
     <>
       <div className="mb-4">
@@ -214,9 +224,10 @@ const Grid = ({store}) => {
         rowExpansionTemplate={rowExpansionTemplate}
         onRowExpand={onRowExpand}
         style={{width: "4000px"}}
-        scrollable scrollHeight="400px"
       >
         <Column expander style={{ width: "10em" }} />
+        <Column key="actionBodyTemplate" headerStyle={{width: 150}} body={actionBodyTemplate}></Column>
+
         {
           columnsFromSchema(columnsSchema, t).map(({name, title, width, body = valueTemplate }) => 
             <Column headerStyle={{width: "300px"}} key={name} field={name} header={title} body={body}></Column>)

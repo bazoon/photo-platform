@@ -156,7 +156,7 @@ export default ({
           {
             hasCheck && <Column selectionMode="multiple" headerStyle={{ width: "3rem" }}></Column>
           }
-          <Column key="actionBodyTemplate" headerStyle={{width: 50}} body={actionBodyTemplate}></Column>
+          <Column key="actionBodyTemplate" headerStyle={{width: 150}} body={actionBodyTemplate}></Column>
           {
             columns.map(renderColumn)
           }
