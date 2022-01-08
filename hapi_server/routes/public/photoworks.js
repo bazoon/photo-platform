@@ -3,6 +3,7 @@ const getUploadFilePath = require('../utils/getUploadPath');
 const getHash = require('../utils/getHash');
 
 const {get, split, nth, compose, keys, groupBy} = require('lodash/fp');
+const {getCurrentDomain} = require('../utils/getCurrentDomain');
 
 module.exports = [
   {
@@ -12,7 +13,7 @@ module.exports = [
       const userId = get('request.auth.credentials.id', h);
       if (!userId) return [];
 
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
@@ -59,7 +60,8 @@ module.exports = [
           domain
         }
       });
-      return photoworks.map(p => ({...p, src: getUploadFilePath(p.filename)}));
+
+      return photoworks.map(async p => ({...p, src: await getUploadFilePath(p.filename, request)}));
     },
     options: {
       tags: ['api'],

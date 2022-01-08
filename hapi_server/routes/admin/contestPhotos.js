@@ -22,7 +22,7 @@ module.exports = [
         return {
           id: f.id,
           name: f.name,
-          img: getUploadFilePath(f.filename),
+          img: getUploadFilePath(f.filename, request),
           approved: f.moder === 1 ? true : (f.moder === 2 ? false : undefined)
         }
       });

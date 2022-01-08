@@ -1,5 +1,7 @@
 const uploadFiles = require('../utils/uploadFiles');
 const {get, split, nth, compose} = require('lodash/fp');
+const {getCurrentDomain} = require('../utils/getCurrentDomain');
+const {getCurrentContestIdFromRequest} = require('../utils/getCurrentSalone');
 
 module.exports = [
   {
@@ -9,7 +11,7 @@ module.exports = [
       const userId = get('request.auth.credentials.id', h);
       if (!userId) return [];
 
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
@@ -17,26 +19,9 @@ module.exports = [
 
       const {sections} = request.payload;
 
-      const contestsQuery = `
-        SELECT
-          contests.id
-        FROM
-          contests,
-          salones
-        WHERE
-          contests.salone_id = salones.id
-          AND salones. "domain" = :domain
-        ORDER by contests.date_start desc
-        limit 1
-      `;
-      const contestId = get('[0].id', await h.query(contestsQuery, {
-        replacements: {
-          domain
-        }
-      }));
-
+      const contestId = await getCurrentContestIdFromRequest(request);
       const registrationContest = await h.models.RegistrationContest.create({userId, contestId, sectionCount: sections.length, regState: 0 })
-
+      console.log(userId, contestId)
       return registrationContest;
     },
     options: {

@@ -1,22 +1,7 @@
 const models = require('../../../models');
 const {isDefined} = require('crocks/predicates');
 const {get} = require('lodash/fp');
-const Acl = require('virgen-acl').Acl;
-const acl = new Acl();
-
-
-// acl.addRole("superAdmin");
-// acl.addRole("superModer");
-// acl.addRole("admin");
-// acl.addRole("moder");
-
-// acl.deny();
-// acl.allow("superAdmin");
-
-// acl.allow("moder", "publication", "create", function (err, role, resource, action, result, next) {
-
-
-// });
+const {getCurrentContest} = require('../utils/getCurrentSalone');
 
 const roles = {
   superAdmin: {
@@ -58,7 +43,7 @@ const getJuryRole = async (userId, domain) => {
       limit 1
   `;
 
-  const [contest] = await models.sequelize.query(contestQuery, { replacements: { domain: domain} })
+  const contest = await getCurrentContest(domain);
 
   const query = `
     select
@@ -72,7 +57,7 @@ const getJuryRole = async (userId, domain) => {
   const [[jury]] = await models.sequelize.query(query, {
     replacements: {
       userId,
-      contestId: get('[0].id', contest) || 1000000000
+      contestId: contest.id
     }
   });
 

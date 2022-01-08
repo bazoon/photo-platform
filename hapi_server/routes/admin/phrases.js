@@ -1,9 +1,6 @@
-const Router = require('koa-router');
-const router = new Router();
 const models = require('../../../models');
 const R = require('ramda');
 const {pick} = require('lodash/fp');
-const mapValues = require('lodash/fp/mapValues');
 const compose = require('crocks/helpers/compose');
 
 const fields = [
@@ -12,7 +9,6 @@ const fields = [
   'languageId',
   'name'
 ];
-
 
 module.exports = [
   {

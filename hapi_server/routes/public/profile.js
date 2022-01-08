@@ -1,5 +1,3 @@
-const Router = require('koa-router');
-const router = new Router();
 const permissions = require('../services/permissions');
 const bcrypt = require('bcryptjs');
 const {get, pick} = require('lodash/fp');
@@ -7,7 +5,7 @@ const uploadFiles = require('../utils/uploadFiles');
 const getUploadPath = require('../utils/getUploadPath');
 const camelizeObject = require('../utils/camelizeObject');
 
-const getUserInfo = async (userId, query) => {
+const getUserInfo = async (userId, query, request) => {
   const sql = `
     SELECT
       users.id,
@@ -34,7 +32,7 @@ const getUserInfo = async (userId, query) => {
   `;
 
   const info = await query(sql, {replacements: {userId}})
-  return camelizeObject({...info[0], avatar: getUploadPath(get('[0].avatar', info))});
+  return camelizeObject({...info[0], avatar: await getUploadPath(get('[0].avatar', info), request)});
 }
 
 module.exports = [
@@ -43,7 +41,7 @@ module.exports = [
     path: '/api/profile',
     handler: async function (request, h) {
       const user = get('auth.credentials', request);
-      return await getUserInfo(user.id, h.query);
+      return await getUserInfo(user.id, h.query, request);
     },
     options: {
       tags: ['api'],
@@ -62,7 +60,7 @@ module.exports = [
       const {password, newPassword} = payload;
       const {avatar} = payload;
       if (avatar) {
-        await uploadFiles(avatar);
+        await uploadFiles(avatar, request);
       } else {
         delete payload.avatar;
       }
@@ -91,12 +89,12 @@ module.exports = [
         }
 
         if (avatar) {
-          user.avatar = getUploadPath(avatar.filename);
+          user.avatar = getUploadPath(avatar.filename, request);
         }
 
         customer = await h.models.Customer.findOne({where: { userId }});
 
-        return await getUserInfo(user.id, h.query);
+        return await getUserInfo(user.id, h.query, request);
       } catch (e) {
         return {ok: false, e: e.message}
       } 

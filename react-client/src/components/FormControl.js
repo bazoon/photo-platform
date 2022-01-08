@@ -156,6 +156,7 @@ const getFormErrorMessage = (meta) => {
     const {name, title} = field;
     return (
       <Field name={name} render={({ input, meta }) => (
+        console.log(input.value) ||
         <div className="p-field">
           <span className="p-input-icon-right">
             <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>

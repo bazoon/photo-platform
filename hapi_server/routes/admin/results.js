@@ -22,7 +22,7 @@ module.exports = [
         return {
           id: f.id,
           name: f.name,
-          img: getUploadFilePath(f.filename),
+          img: getUploadFilePath(f.filename, request),
           average: f.average,
           median: f.median
         }

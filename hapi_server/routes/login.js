@@ -10,6 +10,7 @@ const joinM = chain(identity);
 const mail = require('./services/mail.js');
 const {nth, split, get} = require('lodash/fp');
 const getUploadFilePath = require('./utils/getUploadPath');
+const {getCurrentDomain} = require('./utils/getCurrentDomain');
 
 
 const expiresIn = 24 * 60 * 60 * 30;
@@ -75,15 +76,14 @@ const login = {
       Async.Resolved 
     )(request.payload)
 
-    return new Promise((res) => {
+    return new Promise(res => {
       r.fork((e) => {
         res(h.response({error: e}).code(401));
-      }, ({user, token}) => {
-        console.log('log', token)
+      }, async ({user, token}) => {
         request.cookieAuth.set({ tok: token });
         res({
           ...user,
-          avatar: user.avatar && getUploadFilePath(user.avatar),
+          avatar: user.avatar && await getUploadFilePath(user.avatar, request),
         });
       })
     });
@@ -113,7 +113,7 @@ const signup = {
       phone
     } = request.payload;
 
-    const domain = request.info.referrer.includes('3000') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+    const domain = getCurrentDomain(request);
     var salt = bcrypt.genSaltSync(10);
     var hashedPassword = bcrypt.hashSync(password, salt);
 

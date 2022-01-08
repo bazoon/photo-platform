@@ -1,11 +1,12 @@
 const {get, split, nth, compose} = require('lodash/fp');
+const {getCurrentDomain} = require('../utils/getCurrentDomain');
 
 module.exports = [
   {
     method: 'GET',
     path: '/api/salones/about/{lang}',
     handler: async function (request, h) {
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
       const lang = request.params.lang || 'ru';
 
       if (!domain) {

@@ -2,17 +2,14 @@ const {compose, nth, split, get, map, pick, mapKeys, isEmpty, omit} = require('l
 const camelizeObject = require('../utils/camelizeObject');
 const getUploadPath = require('../utils/getUploadPath');
 const uploadFiles = require('../utils/uploadFiles');
-const chalk = require('chalk');
 const {getCurrentContestId} = require('../utils/getCurrentSalone');
-
-
+const {getCurrentDomain} = require('../utils/getCurrentDomain');
 const imageFields = [
   'name',
   'year',
   'place',
   'description',
 ];
-
 
 const createImageFields = [
   'name',
@@ -37,7 +34,7 @@ module.exports = [
     method: 'GET',
     path: '/api/sections',
     handler: async function (request, h) {
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
@@ -108,23 +105,18 @@ module.exports = [
           and users.id=:userId
       `;
  
-      
 
-      const e = await h.query(query, {
+      const getFilename = async p => await getUploadPath(p.filename, request);
+
+      const r = await h.query(query, {
         replacements: {
           id,
           userId
         }
       });
 
-      return map(compose(p => ({...p, reason: p.reason || '', filename: getUploadPath(p.filename)}), camelizeObject), await h.query(query, {
-        replacements: {
-          id,
-          userId
-        }
-      }));
-
-
+      const f = async p => ({...p, reason: p.reason || '', filename: await getFilename(p, request)});
+      return Promise.all(r.map(f));
     },
     options: {
       tags: ['api'],
@@ -143,7 +135,7 @@ module.exports = [
       const {id, file} = payload
 
       if (file) {
-        await uploadFiles([file]);
+        await uploadFiles([file], request);
       }
 
       const filename = file ? file.filename : payload.filename;

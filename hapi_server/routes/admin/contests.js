@@ -1,9 +1,8 @@
-const Router = require('koa-router');
-const router = new Router();
 const models = require('../../../models');
 const R = require('ramda');
 const {isEmpty, compose, nth, split} = require('lodash/fp');
 const {getCurrentSaloneId} = require('../utils/getCurrentSalone');
+const {getCurrentDomain} = require('../utils/getCurrentDomain');
 
 const fields = [
   'id',
@@ -69,7 +68,7 @@ module.exports = [
       const dateStop = new Date(request.payload.dateStop);
       const dateJuriEnd = new Date(request.payload.dateJuriEnd);
       const dateRateShow = new Date(request.payload.dateRateShow);
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
       const saloneId= await getCurrentSaloneId(domain);
 
       let errors = {};

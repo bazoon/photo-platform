@@ -4,6 +4,7 @@ const Hapi = require('@hapi/hapi');
 const roles = ['SUPERADMIN', 'ADMIN', 'MODER', 'USER', 'ANON'];
 const models = require('./models');
 const fs = require('fs');
+const getPath = require('crocks/Maybe/getPath');
 
 const hapiSwagger = require('hapi-swagger');
 const pack = require('./package');
@@ -18,6 +19,7 @@ const { newEnforcer, StringAdapter } = require('casbin')
 
 
 const {getRole} = require('./hapi_server/routes/services/permissions');
+const {getCurrentDomain} = require('./hapi_server/routes/utils/getCurrentDomain');
 const query = async (sql, options) => {
   const [rows] = await models.sequelize.query(sql, options);
   return L.map(L.mapKeys(toCamel), rows);
@@ -193,11 +195,8 @@ const init = async () => {
     name: 'foo',
     register: async function (server, options) {
       server.ext('onPreAuth', async function (request, h) {
-        // const token = h.request.headers.cookie.split('=')[1]
-              
-        console.log(request.path, request.state && request.state.tok && request.state.tok.tok)
-        return h.continue
-          
+        const token = getPath(['headers', 'cookie'], request).map(split('=')).map(nth(1)).option('');
+         console.log(token, process.env.API_TOKEN) 
         if (token) {
           const user = jwt.verify(token, process.env.API_TOKEN);
           const u = await models.User.findOne({
@@ -227,6 +226,27 @@ const init = async () => {
     }
   };
 
+  async function getAuth(token, request) {
+    const user = jwt.verify(token, process.env.API_TOKEN);
+    const u = await models.User.findOne({
+      where: {
+        id: user.id
+      }});
+
+    const enforcer = await getEnforcer();
+    const domain = getCurrentDomain(request);
+
+    const role = await getRole(u, domain);
+    const {path, method} = request.route;
+
+    const parts = path.split('/');
+    const obj = parts[parts.length - 1];
+    const action = { post: 'create', put: 'update', delete: 'delete', get: 'view'}[method];
+    const canDo = await enforcer.enforce(role.name, domain, obj, action);
+
+    return {canDo, role};
+  }
+
 
   server.auth.strategy('session', 'cookie', {
     cookie: {
@@ -239,14 +259,16 @@ const init = async () => {
       const {tok} = session;
       let routeRole = '';
       if (tok) {
+        console.log(123, tok)
         const user = jwt.verify(tok, process.env.API_TOKEN);
         const u = await models.User.findOne({
           where: {
             id: user.id
           }});
-        const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
-        const role = await getRole(u, domain);
-        console.log(role);
+      
+        const {canDo, role} = await getAuth(tok, request);
+        console.log(919, canDo, role);
+
         return { valid: u && !!u.id, credentials: {...user, role: role} };
       }
 
@@ -266,7 +288,7 @@ const init = async () => {
     isSameSite: false
   });
 
-  await server.register({ plugin: Authorization});
+  // await server.register({ plugin: Authorization});
 
 
   server.route(routes);

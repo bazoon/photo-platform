@@ -1,10 +1,6 @@
 const camelizeObject = require('../utils/camelizeObject');
 const {map, compose} = require('lodash/fp');
-const chalk = require('chalk');
 const joi = require('joi');
-
-
-
 
 const regStates = [ 
   'Подана',

@@ -3,6 +3,8 @@ const getUploadFilePath = require('../utils/getUploadPath');
 const getHash = require('../utils/getHash');
 
 const {get, split, nth, compose, keys} = require('lodash/fp');
+const {getCurrentDomain} = require('../utils/getCurrentDomain');
+const {getCurrentContestIdFromRequest, getCurrentContestFromRequest} = require('../utils/getCurrentSalone');
 
 const fields = [
   'id',
@@ -31,25 +33,13 @@ module.exports = [
       const userId = get('request.auth.credentials.id', h);
       if (!userId) return [];
 
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
       }
 
-      const contestQuery = `
-        SELECT
-          contests.date_stop
-        FROM
-          contests
-          LEFT JOIN salones ON contests.salone_id = salones.id and salones."domain"=:domain
-          LEFT JOIN organizers AS o on salones.organizer_id=o.id
-          ORDER BY
-            date_start DESC
-          limit 1
-      `;
-
-      const [contest] = await h.query(contestQuery, { replacements: { domain: domain} })
+      const contest = await getCurrentContestFromRequest(request);
       return (new Date(contest.dateStop)) > (new Date())
     },
     options: {
@@ -66,11 +56,7 @@ module.exports = [
       const userId = get('request.auth.credentials.id', h);
       if (!userId) return [];
 
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
-
-      if (!domain) {
-        return {};
-      }
+      const contestId = await getCurrentContestIdFromRequest(request);
 
       const applicationQuery = `
         SELECT
@@ -84,23 +70,20 @@ module.exports = [
           payment
         FROM
           contests,
-          salones,
           registration_contests
         WHERE
-          contests.salone_id = salones.id
-          AND salones. "domain" = :domain
-          AND registration_contests.contest_id = contests.id
+          contests.id = :contestId
           AND registration_contests.user_id=:userId
-          and registration_contests.contest_id = (select id from contests order by date_start desc limit 1 )
+          and registration_contests.contest_id=:contestId
       `;
 
       const applications = await h.query(applicationQuery, {
         replacements: {
           userId,
-          domain
+          contestId
         }
       });
-
+      console.log(applications, 111)
       return applications && applications[0] || {};
     },
     options: {
@@ -115,7 +98,7 @@ module.exports = [
     path: '/api/applications',
     handler: async function (request, h) {
       const userId = h.request.auth.credentials.id;
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
       const sectionIds = keys(request.payload);
 
       if (!domain) {
@@ -146,7 +129,7 @@ module.exports = [
       sectionIds.forEach(async sectionId => {
         let files = request.payload[sectionId];
         files = Array.isArray(files) ? files : [files];
-        await uploadFiles(files);
+        await uploadFiles(files, request);
         
         await h.models.Photowork.bulkCreate(
           files.map(f => {

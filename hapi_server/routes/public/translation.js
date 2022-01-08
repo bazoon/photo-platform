@@ -1,8 +1,3 @@
-const Router = require('koa-router');
-const koaBody = require('koa-body');
-const router = new Router();
-const models = require('../../../models');
-
 const expiresIn = 24 * 60 * 60 * 30;
 
 

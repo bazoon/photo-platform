@@ -1,8 +1,9 @@
 const models = require('../../../models');
+const {getCurrentDomain} = require('./getCurrentDomain');
 
-async function getCurrentSaloneId(domain) {
+async function getCurrentSalone(domain) {
   const query = `
-    select salones.id from salones, contests
+    select salones.id, slug from salones, contests
     where contests.salone_id=salones.id and salones.domain=:domain
   `;
  
@@ -11,7 +12,19 @@ async function getCurrentSaloneId(domain) {
       domain
     }
   });
-  return salone.id;
+
+  return salone;
+}
+
+async function getCurrentSlug(request) {
+  const domain = getCurrentDomain(request);
+  const salone = await getCurrentSalone(domain);
+  return salone && salone.slug;
+}
+
+async function getCurrentSaloneId(domain) {
+  const salone = await getCurrentSalone(domain);
+  return salone && salone.id;
 }
 
 async function getCurrentContests(domain) {
@@ -60,8 +73,22 @@ async function getCurrentContestId(domain) {
   return contest && contest.id;
 }
 
+async function getCurrentContestFromRequest(request) {
+  const domain = await getCurrentDomain(request);
+  return getCurrentContest(domain);
+}
+
+async function getCurrentContestIdFromRequest(request) {
+  const domain = await getCurrentDomain(request);
+  return getCurrentContestId(domain);
+}
+
 module.exports = {
   getCurrentSaloneId,
   getCurrentContestId,
-  getCurrentContest
+  getCurrentContest,
+  getCurrentSalone,
+  getCurrentSlug,
+  getCurrentContestIdFromRequest,
+  getCurrentContestFromRequest,
 }

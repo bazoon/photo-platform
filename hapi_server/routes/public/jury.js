@@ -1,6 +1,7 @@
 const {get, split, nth, compose} = require('lodash/fp');
 const getUploadFilePath = require('../utils/getUploadPath');
 const {getCurrentContestId, getCurrentContest} = require('../utils/getCurrentSalone');
+const {getCurrentDomain} = require('../utils/getCurrentDomain');
 const MODER_ACCEPTED = 1;
 
 module.exports = [
@@ -9,7 +10,7 @@ module.exports = [
     path: '/api/jury/sections',
     handler: async function (request, h) {
       const userId = get('request.auth.credentials.id', h) || -1;
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
@@ -47,7 +48,7 @@ module.exports = [
     handler: async function (request, h) {
       const { sectionId } = request.params;
       const userId = get('request.auth.credentials.id', h) || -1;
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
@@ -73,7 +74,7 @@ module.exports = [
         }
       });
 
-      return photoworks.map(p => ({...p, filename: getUploadFilePath(p.filename)}));
+      return photoworks.map(p => ({...p, filename: getUploadFilePath(p.filename, request)}));
     },
     options: {
       tags: ['api'],
@@ -89,7 +90,7 @@ module.exports = [
       const { id } = request.params;
       const { rate } = request.payload;
       const userId = get('request.auth.credentials.id', h) || -1;
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
@@ -144,7 +145,7 @@ module.exports = [
     handler: async function (request, h) {
       const { sectionId } = request.params;
       const userId = get('request.auth.credentials.id', h) || -1;
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
@@ -183,7 +184,7 @@ module.exports = [
     path: '/api/jury/analytics',
     handler: async function (request, h) {
       const userId = get('request.auth.credentials.id', h) || -1;
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
@@ -274,7 +275,7 @@ module.exports = [
     handler: async function (request, h) {
       const { sectionId } = request.params;
       const userId = get('request.auth.credentials.id', h) || -1;
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
@@ -299,7 +300,7 @@ module.exports = [
     handler: async function (request, h) {
       const { sectionId } = request.params;
       const userId = get('request.auth.credentials.id', h) || -1;
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
@@ -348,7 +349,7 @@ module.exports = [
         }
       });
 
-      return rates.map(p => ({...p, filename: getUploadFilePath(p.filename)}));
+      return rates.map(p => ({...p, filename: getUploadFilePath(p.filename, request)}));
     },
     options: {
       tags: ['api'],

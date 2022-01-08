@@ -1,13 +1,13 @@
 const startOfDay = require('date-fns/startOfDay');
 var dayjs = require('dayjs');
 const L = require('lodash/fp');
+const {getCurrentDomain} = require('../utils/getCurrentDomain');
 
 const staticMenu = {
   method: 'GET',
   path: '/api/staticMenu',
   handler: async function (request, h) {
-    const { host } = request.info;
-    const [domain] = host.split(':');
+    const domain = getCurrentDomain(request);
     const now = startOfDay(new Date());
     const t = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
     const q = `select distinct contest_menus.id, contest_menus.id as key, lexicon_id, position, parent_id, code as title,  domain from

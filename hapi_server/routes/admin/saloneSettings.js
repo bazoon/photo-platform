@@ -1,14 +1,14 @@
 const {get, split, nth, compose} = require('lodash/fp');
 const permissions = require('../services/permissions');
+const {getCurrentDomain} = require('../utils/getCurrentDomain');
 
 module.exports = [
   {
     method: 'GET',
     path: '/api/admin/saloneSettings',
     handler: async function (request, h) {
-      const { host } = request.info;
       const user = get('auth.credentials', request);
-      const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+      const domain = getCurrentDomain(request);
       const r = { role: await permissions.getRole(user, domain) };
       
       console.info(r);

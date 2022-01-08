@@ -1,7 +1,3 @@
-const Router = require('koa-router');
-const router = new Router();
-const permissions = require('../services/permissions');
-
 const {get} = require('lodash/fp');
 
 module.exports =  {
