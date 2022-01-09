@@ -30,7 +30,6 @@ module.exports = [
       const salonTypes = await h.query('select name as label, id as value from spr_salone_types');
       const organizers = await h.query('select name as label, id as value from organizers');
 
-
       const columnsSchema = {
         'definitions': {},
         '$schema': 'http://json-schema.org/draft-07/schema#', 
@@ -113,7 +112,15 @@ module.exports = [
             'title': 'rowState', 
             'type': 'integer',
             'default': 0
-          }
+          },
+          'slug': {
+            '$id': '#root/slug', 
+            'title': 'slug', 
+            'type': 'string',
+            'default': '',
+            'pattern': '^.*$',
+            'readOnly': true
+          },
         }
       }
 

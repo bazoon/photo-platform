@@ -74,7 +74,7 @@ module.exports = [
         }
       });
 
-      return photoworks.map(p => ({...p, filename: getUploadFilePath(p.filename, request)}));
+      return Promise.all(photoworks.map(async p => ({...p, filename: await getUploadFilePath(p.filename, request)})));
     },
     options: {
       tags: ['api'],
@@ -349,7 +349,7 @@ module.exports = [
         }
       });
 
-      return rates.map(p => ({...p, filename: getUploadFilePath(p.filename, request)}));
+      return Promise.all(rates.map(async p => ({...p, filename: await getUploadFilePath(p.filename, request)})));
     },
     options: {
       tags: ['api'],

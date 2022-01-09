@@ -1,6 +1,7 @@
 const models = require('../../../models');
 const R = require('ramda');
 const {pick} = require('lodash/fp');
+const fs = require('fs');
 
 const fields = [
   'id',
@@ -19,7 +20,7 @@ const fields = [
 async function getSalone(record) {
   const query = `
     select organizers.name as organizer, spr_salone_types.name as saloneType, spr_salone_type_id, organizer_id,
-    salones.name, regular, private, domain, design_code, salones.row_state, salones.id
+    salones.name, regular, private, domain, design_code, salones.row_state, salones.id, slug
     from salones, organizers, spr_salone_types
     where
     salones.spr_salone_type_id=spr_salone_types.id and salones.organizer_id=organizers.id and salones.id=:id
@@ -40,6 +41,7 @@ async function getSalone(record) {
     regular: salone.regular,
     private: salone.private,
     domain: salone.domain,
+    slug: salone.slug,
     designCode: salone.design_code,
     rowState: salone.row_state
   }
@@ -52,7 +54,7 @@ module.exports = [
     handler: async function (request, h) {
       const query = `
       select organizers.name as organizer, spr_salone_types.name as salone_type, spr_salone_type_id, organizer_id, 
-        salones.name, regular, private, domain, design_code, salones.row_state, salones.id
+        salones.name, regular, private, domain, design_code, salones.row_state, salones.id, slug
       from salones, organizers, spr_salone_types
       where
       salones.spr_salone_type_id=spr_salone_types.id and salones.organizer_id=organizers.id
@@ -72,7 +74,15 @@ module.exports = [
     handler: async function (request, h) {
       const saloneValues = R.pick(fields, request.payload);
       delete saloneValues.id;
+      saloneValues.slug = saloneValues.domain;
+ 
       let salone = await h.models.Salone.create(saloneValues);
+      const uploadFolder = process.env.UPLOAD_PATH + '/' + saloneValues.slug;
+
+      if (!fs.existsSync(uploadFolder)) {
+        fs.mkdirSync(uploadFolder)
+      }
+
       return await getSalone(salone);
     },
     options: {

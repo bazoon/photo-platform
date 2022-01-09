@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     regular: DataTypes.INTEGER,
     private: DataTypes.INTEGER,
     domain: DataTypes.STRING,
+    slug: DataTypes.STRING,
     designCode: DataTypes.STRING,
     rowState: DataTypes.STRING
   }, {

@@ -190,7 +190,7 @@ const getFormErrorMessage = (meta) => {
         <div className="p-field">
           <span className="p-input-icon-right">
             <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
-            <InputText id={name}  {...input} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
+            <InputText readOnly={field.readOnly} id={name}  {...input} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
           </span>
           {getFormErrorMessage(meta)}
         </div>
