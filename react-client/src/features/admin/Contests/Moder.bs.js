@@ -200,7 +200,7 @@ function Moder(Props) {
     
   };
   React.useEffect((function () {
-          Curry._3(ApiJs.asyncGet("api/sections").fork, failed, ok, cleanUp);
+          Curry._3(ApiJs.asyncGet("api/sections/" + id).fork, failed, ok, cleanUp);
           Curry._3(ApiJs.asyncGet("api/admin/moder/stats/" + id).fork, failed, okContestInfo, cleanUp);
           
         }), []);

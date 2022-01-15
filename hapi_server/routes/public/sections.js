@@ -32,9 +32,10 @@ const imageAlias = fieldName => {
 module.exports = [
   {
     method: 'GET',
-    path: '/api/sections',
+    path: '/api/sections/{contestId}',
     handler: async function (request, h) {
       const domain = getCurrentDomain(request);
+      const { contestId } = request.params;
 
       if (!domain) {
         return {};
@@ -61,7 +62,7 @@ module.exports = [
       const info = await h.query(query, {
         replacements: {
           domain,
-          contestId: await getCurrentContestId(domain)
+          contestId
         }
       });
       

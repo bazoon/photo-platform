@@ -17,6 +17,11 @@ module.exports = [
       }
 
       const contest = await getCurrentContest(domain);
+      
+      if (!contest) {
+        return {};
+      }
+
       const query = `
         SELECT
           sections.name,
@@ -54,7 +59,12 @@ module.exports = [
         return {};
       }
 
+      console.log(981)
       const contest = await getCurrentContest(domain);
+      console.log(982)
+      if (!contest) {
+        return {}
+      }
 
       const query = `
         select  p.id, p.filename, tcontent as description, rate_value as rate
@@ -307,6 +317,10 @@ module.exports = [
       }
 
       const contest = await getCurrentContest(domain);
+
+      if (!contest) {
+        return {};
+      }
 
       const ratesQuery = `
         SELECT CONCAT("first_name", ' ', "last_name") as author,

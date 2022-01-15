@@ -102,12 +102,12 @@ module.exports = [
           and registration_contests.user_id = users.id 
       `;
 
-      return map(compose(p => ({...p, reason: p.reason || '', filename: getUploadPath(p.filename)}), camelizeObject), await h.query(query, {
+      return Promise.all(map(compose(async p => ({...p, reason: p.reason || '', filename: await getUploadPath(p.filename, request)}), camelizeObject), await h.query(query, {
         replacements: {
           id,
           userId
         }
-      }));
+      })));
     },
     options: {
       tags: ['api'],

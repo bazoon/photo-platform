@@ -1,5 +1,5 @@
 const {compose} = require('crocks');
-const {nth, split} = require('lodash');
+const {nth, split} = require('lodash/fp');
 
 module.exports = {
   getCurrentDomain: function(request) {

@@ -184,7 +184,7 @@ let make = (~id: string) => {
   }
 
   React.useEffect0(() => {
-    asyncGetSections("api/sections").fork(failed, ok, cleanUp)
+    asyncGetSections("api/sections/" ++ id).fork(failed, ok, cleanUp)
     asyncGetTotalPhotoworks(`api/admin/moder/stats/${id}`).fork(failed, okContestInfo, cleanUp)
     None
   })

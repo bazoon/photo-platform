@@ -42,8 +42,13 @@ const getJuryRole = async (userId, domain) => {
         date_start DESC
       limit 1
   `;
-
+  
   const contest = await getCurrentContest(domain);
+
+  if (!contest) {
+    return false;
+  }
+
 
   const query = `
     select
@@ -85,7 +90,8 @@ module.exports = {
     try {
       isJury = await getJuryRole(user.id, domain); 
     } catch(e) {
-      isJury = e.message;
+      console.log(e)
+      isJury = e;
     }
 
     const r = get('[0].adm_type', role);

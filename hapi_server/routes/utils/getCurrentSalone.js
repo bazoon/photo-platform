@@ -58,7 +58,8 @@ async function getCurrentContest(domain) {
     }
   });
 
-  return { 
+
+  return contest && { 
     id: contest.id,
     shortBestCount: contest.short_best_count,
     dateStop: contest.date_stop,
