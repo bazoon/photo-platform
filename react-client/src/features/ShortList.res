@@ -102,7 +102,7 @@ let make = (~id: string) => {
   }
 
   let loadSections = () => {
-    asyncGetSections("api/jury/sections").fork(failed, sectionsOk, cleanUp)
+    asyncGetSections("api/jury/sections/" ++ id).fork(failed, sectionsOk, cleanUp)
     ()
   }
 

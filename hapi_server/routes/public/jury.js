@@ -1,25 +1,18 @@
 const {get, split, nth, compose} = require('lodash/fp');
 const getUploadFilePath = require('../utils/getUploadPath');
-const {getCurrentContestId, getCurrentContest} = require('../utils/getCurrentSalone');
+const {getCurrentContestId, getCurrentContest, getContestFromSection} = require('../utils/getCurrentSalone');
 const {getCurrentDomain} = require('../utils/getCurrentDomain');
 const MODER_ACCEPTED = 1;
 
 module.exports = [
   {
     method: 'GET',
-    path: '/api/jury/sections',
+    path: '/api/jury/sections/{contestId}',
     handler: async function (request, h) {
-      const userId = get('request.auth.credentials.id', h) || -1;
-      const domain = getCurrentDomain(request);
-
-      if (!domain) {
-        return {};
-      }
-
-      const contest = await getCurrentContest(domain);
+      const { contestId } = request.params;
       
-      if (!contest) {
-        return {};
+      if (!contestId) {
+        return [];
       }
 
       const query = `
@@ -34,7 +27,7 @@ module.exports = [
 
       const sections = await h.query(query, {
         replacements: {
-          contestId: contest.id,
+          contestId
         }
       });
 
@@ -309,14 +302,14 @@ module.exports = [
     path: '/api/jury/shortList/{sectionId}',
     handler: async function (request, h) {
       const { sectionId } = request.params;
-      const userId = get('request.auth.credentials.id', h) || -1;
       const domain = getCurrentDomain(request);
 
       if (!domain) {
         return {};
       }
 
-      const contest = await getCurrentContest(domain);
+      const contest = await getContestFromSection(sectionId);
+      console.log(1231, contest);
 
       if (!contest) {
         return {};
@@ -359,7 +352,7 @@ module.exports = [
         replacements: {
           contestId: contest.id,
           sectionId,
-          limit: contest.shortBestCount
+          limit: contest.short_best_count
         }
       });
 
