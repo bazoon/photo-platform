@@ -1,8 +1,9 @@
 const models = require('../../../models');
 const R = require('ramda');
 const {isEmpty, compose, nth, split} = require('lodash/fp');
-const {getCurrentSaloneId} = require('../utils/getCurrentSalone');
+const {getCurrentSalone} = require('../utils/getCurrentSalone');
 const {getCurrentDomain} = require('../utils/getCurrentDomain');
+const fs = require('fs');
 
 const fields = [
   'id',
@@ -69,10 +70,10 @@ module.exports = [
       const dateJuriEnd = new Date(request.payload.dateJuriEnd);
       const dateRateShow = new Date(request.payload.dateRateShow);
       const domain = getCurrentDomain(request);
-      const saloneId= await getCurrentSaloneId(domain);
+      const salone= await getCurrentSalone(domain);
 
       let errors = {};
-
+      
       if (dateStart >= dateStop) {
         errors.dateStart = 'dateStartGtDateStop';
         errors.dateStop = 'dateStopLsDateStart';
@@ -94,13 +95,14 @@ module.exports = [
 
       const query = `select count(id) from contests where 
                      ((date_start <= :dateStart and date_rate_show >= :dateStart) or (date_start <= :dateRateShow and date_rate_show >= :dateRateShow)) and salone_id = :saloneId
-                  `
+       
+      `
 
       const [[contest]] = await models.sequelize.query(query, {
         replacements: {
           dateStart: dateStart,
           dateRateShow: dateRateShow,
-          saloneId: saloneId
+          saloneId: salone.id
         }
       });
       
@@ -109,6 +111,13 @@ module.exports = [
       }
 
       const newContest = await h.models.Contest.create(request.payload);
+
+      const uploadFolder = process.env.UPLOAD_PATH + '/' + salone.slug + '/' + newContest.id;
+      
+      if (!fs.existsSync(uploadFolder)) {
+        fs.mkdirSync(uploadFolder)
+      }
+
       return newContest.toJSON();
     },
     options: {
