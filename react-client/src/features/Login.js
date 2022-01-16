@@ -79,9 +79,9 @@ function Main({store}) {
         <form className="w-full p-10 border rounded bg-brown-dark2">
           <div className="grid grid-cols-6 grid-rows-5 gap-12">
             <label className="col-span-2 text-tiny uppercase place-self-end">Имя</label>
-            <input autoFocus value={nickName} onChange={handleChange(setNickName)} className="col-span-4 text-semi-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+            <input autoFocus value={nickName} onChange={handleChange(setNickName)} className="col-span-4 text-semi-bright text-2xl focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
             <label className="col-span-2 place-self-end text-tiny uppercase">Пароль</label>
-            <input type="password" value={password} onChange={handleChange(setPassword)} className="col-span-4 text-semi-bright text-tiny focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+            <input type="password" value={password} onChange={handleChange(setPassword)} className="col-span-4 text-semi-bright text-2xl focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
             <input checked={agreed} onChange={handleChangeCheckbox(setAgreed)} className="col-span-2 place-self-end" type="checkbox"/>
             <label className="col-span-4 mr-8 text-tiny">Согласен на обработку личных данных</label>
             <div className="col-span-2"> </div>

@@ -29,6 +29,7 @@ module.exports = [
       const domain = getCurrentDomain(request);
       const lang = request.params.lang || 'ru';
 
+
       if (!domain) {
         return {};
       }
@@ -60,6 +61,10 @@ module.exports = [
           userId
         }
       });
+
+      
+      console.log('II',info, userId, domain)
+
 
       return get('[0]', info) || {};
     },
