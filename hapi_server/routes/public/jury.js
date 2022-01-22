@@ -52,9 +52,7 @@ module.exports = [
         return {};
       }
 
-      console.log(981)
       const contest = await getCurrentContest(domain);
-      console.log(982)
       if (!contest) {
         return {}
       }

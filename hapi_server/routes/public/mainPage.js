@@ -1,5 +1,6 @@
 const {get, split, nth, compose} = require('lodash/fp');
 const {getCurrentDomain} = require('../utils/getCurrentDomain');
+const {getCurrentContestIdFromRequest} = require('../utils/getCurrentSalone');
 
 const fields = [
   'id',
@@ -26,11 +27,10 @@ module.exports = [
     path: '/api/mainPage/{lang}',
     handler: async function (request, h) {
       const userId = get('request.auth.credentials.id', h) || -1;
-      const domain = getCurrentDomain(request);
+      const contestId = await getCurrentContestIdFromRequest(request);
       const lang = request.params.lang || 'ru';
 
-
-      if (!domain) {
+      if (!contestId) {
         return {};
       }
 
@@ -47,25 +47,15 @@ module.exports = [
             email_pub
           FROM
             contests as c, contest_abouts as ca, salones as s, salone_abouts as sa, organizers as o, languages as l
-            where ca.contest_id=c.id and c.salone_id=s.id and s.organizer_id=o.id and s.domain=:domain and sa.salone_id=s.id and 
-            ca.language_id=l.id and sa.language_id=l.id and l.short=:lang and inworknow
+            where ca.contest_id=c.id and c.salone_id=s.id and s.organizer_id=o.id and  sa.salone_id=s.id and 
+            ca.language_id=l.id and sa.language_id=l.id and l.short=:lang and inworknow and c.id=:contestId
       `;
-
-
-
-
       const info = await h.query(query, {
         replacements: {
           lang,
-          domain,
-          userId
+          contestId
         }
       });
-
-      
-      console.log('II',info, userId, domain)
-
-
       return get('[0]', info) || {};
     },
     options: {
