@@ -83,7 +83,6 @@ module.exports = [
           contestId
         }
       });
-      console.log(applications, 111)
       return applications && applications[0] || {};
     },
     options: {

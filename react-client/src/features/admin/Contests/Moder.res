@@ -163,7 +163,12 @@ let make = (~id: string) => {
       | None => ""
       | Some(sec) => sec.id
     }
-    asyncGetImages(`api/admin/sections/${id}/images`).fork(failed, okImages(s), cleanUp)
+    if (id != "") {
+      asyncGetImages(`api/admin/sections/${id}/images`).fork(failed, okImages(s), cleanUp)
+      ()
+    } else {
+      ()
+    }
   }
 
   let selectSection = (e: eventWithValue) => {

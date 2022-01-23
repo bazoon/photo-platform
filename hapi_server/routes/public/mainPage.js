@@ -1,32 +1,12 @@
-const {get, split, nth, compose} = require('lodash/fp');
-const {getCurrentDomain} = require('../utils/getCurrentDomain');
+const {get} = require('lodash/fp');
 const {getCurrentContestIdFromRequest} = require('../utils/getCurrentSalone');
 
-const fields = [
-  'id',
-  'saloneId',
-  'subname',
-  'years',
-  'dateStart',
-  'dateStop',
-  'dateJuriEnd',
-  'dateRateShow',
-  'showType',
-  'showRateState',
-  'democraty',
-  'payType',
-  'sectionCount',
-  'maxrate',
-  'maxsize',
-  'maxWeight'
-];
 
 module.exports = [
   {
     method: 'GET',
     path: '/api/mainPage/{lang}',
     handler: async function (request, h) {
-      const userId = get('request.auth.credentials.id', h) || -1;
       const contestId = await getCurrentContestIdFromRequest(request);
       const lang = request.params.lang || 'ru';
 

@@ -26,6 +26,7 @@ module.exports = [
       const regContest = await h.models.RegistrationContest.findOne({where: {id: ids[0]}});
       const contest = await h.models.Contest.findOne({where: {id: regContest.contestId}});
       
+      console.log('GOOD', contest);
       if (contest.payType === 0) {
         return await h.models.RegistrationContest.update({
           regState: 1, 

@@ -23,9 +23,9 @@ const db_config = {
     underscored: true
   },
   logging: l => {
-    const color = colors[index % 7];
-    console.log(pc[color](l));
-    index++;
+    // const color = colors[index % 7];
+    // console.log(pc[color](l));
+    // index++;
   }
 };
 

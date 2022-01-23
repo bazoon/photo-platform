@@ -14,7 +14,7 @@ module.exports = [
         return {
           id: awardType.id,
           name: awardType.name,
-          img: getUploadFilePath(awardType.img, request)
+          img: getUploadFilePath({name: awardType.img, request})
         };
       });
     },
@@ -37,7 +37,7 @@ module.exports = [
       });
       return {
         name: awardType.name,
-        img: getUploadFilePath(awardType.img, request)
+        img: getUploadFilePath({name: awardType.img, request})
       };
     },
     options: {
@@ -78,7 +78,7 @@ module.exports = [
 
       return {
         name: awardType.name,
-        img: getUploadFilePath(awardType.img, request),
+        img: getUploadFilePath({name: awardType.img, request}),
         id: awardType.id
       };
     },

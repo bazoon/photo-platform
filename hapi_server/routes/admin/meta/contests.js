@@ -33,7 +33,6 @@ module.exports = [
         'type': 'object',
         'required': [
           'saloneId',
-          'inworknow',
           'subname',
           'years',
           'dateStart',

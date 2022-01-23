@@ -2,6 +2,7 @@ const {compose, map} = require('lodash/fp');
 
 const camelizeObject = require('../utils/camelizeObject');
 const getUploadPath = require('../utils/getUploadPath');
+const {getContestIdFromSection} = require('../utils/getCurrentSalone');
 
 module.exports = [
   {
@@ -28,7 +29,7 @@ module.exports = [
         }
       });
 
-      return { totalPhotoworks: totalPhotoworks[0].count };
+      return { totalPhotoworks: totalPhotoworks && totalPhotoworks[0] && totalPhotoworks[0].count };
     },
     options: {
       tags: ['api'],
@@ -102,7 +103,9 @@ module.exports = [
           and registration_contests.user_id = users.id 
       `;
 
-      return Promise.all(map(compose(async p => ({...p, reason: p.reason || '', filename: await getUploadPath(p.filename, request)}), camelizeObject), await h.query(query, {
+      const contestId = await getContestIdFromSection(id);
+
+      return Promise.all(map(compose(async p => ({...p, reason: p.reason || '', filename: await getUploadPath({name: p.filename, contestId, request})}), camelizeObject), await h.query(query, {
         replacements: {
           id,
           userId

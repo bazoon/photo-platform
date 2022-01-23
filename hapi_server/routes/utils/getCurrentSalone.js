@@ -98,6 +98,22 @@ async function getContestFromSection(sectionId) {
   return contest;
 }
 
+async function getContestIdFromSection(sectionId) {
+  const query = `
+    select contest_id from sections where id = :sectionId
+  `;
+
+  const [[{contest_id}]] = await models.sequelize.query(query, {
+    replacements: {
+      sectionId
+    }
+  });
+
+  console.log(contest_id, 777)
+
+  return contest_id;
+}
+
 module.exports = {
   getCurrentSaloneId,
   getCurrentContestId,
@@ -106,5 +122,6 @@ module.exports = {
   getCurrentSlug,
   getCurrentContestIdFromRequest,
   getCurrentContestFromRequest,
-  getContestFromSection
+  getContestFromSection,
+  getContestIdFromSection
 }

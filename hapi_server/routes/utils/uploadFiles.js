@@ -1,24 +1,32 @@
 const fs = require('fs');
-const path = require('path');
 const util = require('util');
-const sharp = require('sharp');
-const getHash = require('./getHash');
-const Jimp = require('jimp');
 const {getCurrentSlug} = require('./getCurrentSalone');
 const renameP = util.promisify(fs.rename);
 const uploadPath = process.env.UPLOAD_PATH;
+const {getCurrentContestIdFromRequest} = require('./getCurrentSalone');
+
+const chooseUploadPath = (filename, slug, contestId) => {
+  if (slug && contestId) {
+    return `${uploadPath}/${slug}/${contestId}/${filename}`;
+  }
+  return `${uploadPath}/${filename}`;
+};
 
 module.exports = async function uploadFiles(f, request) {
+  const files = Array.isArray(f) ? f : [f];
   const slug = await getCurrentSlug(request)
-  const files = (Array.isArray(f) ? f : [f]);  //.map(f => ({...f, oldName: f.filename, filename: getHash()}))
+  const contestId = await getCurrentContestIdFromRequest(request);
+
   files.forEach(async f => {
-    const targetPath = `${uploadPath}/${slug}/${f.filename}`;
+    const targetPath = chooseUploadPath(f.filename, slug, contestId);
     try {
       await renameP(f.path, targetPath);
     } catch(e) {
       console.log('EXCEPTION!!!! f', e);
       return {e};
     }
-
   });
+
+
+
 };

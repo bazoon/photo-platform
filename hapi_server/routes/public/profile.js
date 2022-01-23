@@ -32,7 +32,7 @@ const getUserInfo = async (userId, query, request) => {
   `;
 
   const info = await query(sql, {replacements: {userId}})
-  return camelizeObject({...info[0], avatar: await getUploadPath(get('[0].avatar', info), request)});
+  return camelizeObject({...info[0], avatar: await getUploadPath({name: get('[0].avatar', info), request})});
 }
 
 module.exports = [
@@ -89,7 +89,7 @@ module.exports = [
         }
 
         if (avatar) {
-          user.avatar = getUploadPath(avatar.filename, request);
+          user.avatar = getUploadPath({name: avatar.filename, request});
         }
 
         customer = await h.models.Customer.findOne({where: { userId }});

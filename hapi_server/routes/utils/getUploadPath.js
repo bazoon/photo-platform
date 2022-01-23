@@ -1,14 +1,17 @@
-const {getCurrentSlug} = require('./getCurrentSalone');
+const {getCurrentSlug, getCurrentContestIdFromRequest} = require('./getCurrentSalone');
 
 const uploadFolder = 'uploads';
 
-const getUploadFilePath = async function getUploadFilePath(name = '', request) {
+const getUploadFilePath = async function getUploadFilePath({name = '', request, contestId}) {
   console.assert(name, 'Name is not defined !!!', name);
   const slug = await getCurrentSlug(request);
+  
+  if (contestId && slug) {
+    const fname = name && name.includes('http') ? name : `/${uploadFolder}/${slug}/${contestId}/${name}`;
+    return fname;
+  }
 
-  if (!name || !slug) return null;
-
-  const fname = name && name.includes('http') ? name : `/${uploadFolder}/${slug}/${name}`;
+  const fname = name && name.includes('http') ? name : `/${uploadFolder}/${name}`;
   return fname;
 };
 

@@ -1,15 +1,15 @@
 const {get, split, nth, compose} = require('lodash/fp');
 const getUploadFilePath = require('../utils/getUploadPath');
-const {getCurrentContestId, getCurrentContest, getContestFromSection} = require('../utils/getCurrentSalone');
+const {getCurrentContestId, getCurrentContest, getContestFromSection, getCurrentContestIdFromRequest} = require('../utils/getCurrentSalone');
 const {getCurrentDomain} = require('../utils/getCurrentDomain');
 const MODER_ACCEPTED = 1;
 
 module.exports = [
   {
     method: 'GET',
-    path: '/api/jury/sections/{contestId}',
+    path: '/api/jury/sections',
     handler: async function (request, h) {
-      const { contestId } = request.params;
+      const contestId = await getCurrentContestIdFromRequest(request);
       
       if (!contestId) {
         return [];
@@ -75,7 +75,7 @@ module.exports = [
         }
       });
 
-      return Promise.all(photoworks.map(async p => ({...p, filename: await getUploadFilePath(p.filename, request)})));
+      return Promise.all(photoworks.map(async p => ({...p, filename: await getUploadFilePath({name: p.filename, request, contestId: contest.id})})));
     },
     options: {
       tags: ['api'],
@@ -307,7 +307,6 @@ module.exports = [
       }
 
       const contest = await getContestFromSection(sectionId);
-      console.log(1231, contest);
 
       if (!contest) {
         return {};
@@ -354,7 +353,7 @@ module.exports = [
         }
       });
 
-      return Promise.all(rates.map(async p => ({...p, filename: await getUploadFilePath(p.filename, request)})));
+      return Promise.all(rates.map(async p => ({...p, filename: await getUploadFilePath({name: p.filename, request, contestId: contest.id})})));
     },
     options: {
       tags: ['api'],

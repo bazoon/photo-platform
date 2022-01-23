@@ -4,6 +4,7 @@ const getHash = require('../utils/getHash');
 
 const {get, split, nth, compose, keys, groupBy} = require('lodash/fp');
 const {getCurrentDomain} = require('../utils/getCurrentDomain');
+const {getCurrentContestIdFromRequest} = require('../utils/getCurrentSalone');
 
 module.exports = [
   {
@@ -14,9 +15,10 @@ module.exports = [
       if (!userId) return [];
 
       const domain = getCurrentDomain(request);
-
+      const contestId = await getCurrentContestIdFromRequest(request);
+      
       if (!domain) {
-        return {};
+        return {error: `domain ${domain} not found`};
       }
 
       const applicationQuery = `
@@ -61,7 +63,7 @@ module.exports = [
         }
       });
 
-      return photoworks.map(async p => ({...p, src: await getUploadFilePath(p.filename, request)}));
+      return Promise.all(photoworks.map(async p => ({...p, src: await getUploadFilePath({name: p.filename, request, contestId})})));
     },
     options: {
       tags: ['api'],

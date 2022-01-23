@@ -2,7 +2,7 @@ const {compose, nth, split, get, map, pick, mapKeys, isEmpty, omit} = require('l
 const camelizeObject = require('../utils/camelizeObject');
 const getUploadPath = require('../utils/getUploadPath');
 const uploadFiles = require('../utils/uploadFiles');
-const {getCurrentContestId} = require('../utils/getCurrentSalone');
+const {getContestIdFromSection, getCurrentContestIdFromRequest} = require('../utils/getCurrentSalone');
 const {getCurrentDomain} = require('../utils/getCurrentDomain');
 const imageFields = [
   'name',
@@ -34,9 +34,52 @@ module.exports = [
     method: 'GET',
     path: '/api/sections/{contestId}',
     handler: async function (request, h) {
+      const {contestId} = request.params;
       const domain = getCurrentDomain(request);
-      const { contestId } = request.params;
+      if (!domain) {
+        return {};
+      }
+      
+      const query = `
+        SELECT
+          sections.id,
+          sections.max_count_img,
+          sections.name
+        FROM
+          contests,
+          salones,
+          sections
+        WHERE
+          contests.salone_id = salones.id and
+          salones. "domain" = :domain and
+          sections.contest_id = contests.id and
+          sections.contest_id = :contestId
+        ORDER BY 
+          sections.name
+       `;
 
+      const info = await h.query(query, {
+        replacements: {
+          domain,
+          contestId
+        }
+      });
+      
+      return info.map(i => ({...i, images: []}));
+    },
+    options: {
+      tags: ['api'],
+      auth: {
+        mode: 'optional'
+      }
+    }
+  },
+  {
+    method: 'GET',
+    path: '/api/sections',
+    handler: async function (request, h) {
+      const domain = getCurrentDomain(request);
+      const contestId = await getCurrentContestIdFromRequest(request);
       if (!domain) {
         return {};
       }
@@ -106,8 +149,9 @@ module.exports = [
           and users.id=:userId
       `;
  
+      const contestId = getContestIdFromSection(id);
 
-      const getFilename = async p => await getUploadPath(p.filename, request);
+      const getFilename = async p => await getUploadPath({name: p.filename, request, contestId});
 
       const r = await h.query(query, {
         replacements: {

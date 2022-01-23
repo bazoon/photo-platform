@@ -9,6 +9,7 @@ import {ifElse} from "crocks";
 import {option, map} from "crocks/pointfree";
 import {Just, Nothing} from "crocks/Maybe";
 import identity from "crocks/combinators/identity";
+import {isObject} from "lodash/fp";
 
 const safe = pred =>
   ifElse(pred, Just, Nothing);
@@ -48,6 +49,13 @@ const getInitialContext = () => {
 };
 
 export default ({name = "crud", api, idField = "id", apiParams, t = identity, apiMetaParams = {}}) => {
+  
+  const formatError = (e) => {
+    if (isObject(e)) {
+      return t(e.message) || t(e.error) || t(e.errorMessage) || e?.errors?.map(e => t(e)).join(" ");
+    }
+  };
+
   return Machine({
     id: name,
     context: getInitialContext(),
@@ -198,13 +206,13 @@ export default ({name = "crud", api, idField = "id", apiParams, t = identity, ap
         on: {
           saveFailed: {
             actions: assign({
-              error: (_, data) => ({message: "Ошибка сохранения: " + t(data?.error), data})
+              error: (_, data) => ({message: "Ошибка сохранения: " + formatError(data?.error), data})
             }),
             target: "opened.saveFailed"
           },
           postFailed: {
             actions: assign({
-              error: (_, {error}) => ({message: "Ошибка сохранения" + t(error), error})
+              error: (_, {error}) => ({message: "Ошибка сохранения: " + formatError(error), error})
             }),
             target: "opened.add"
           },

@@ -34,7 +34,7 @@ var ProfileMenu = {
 var Link = {};
 
 function ShortList(Props) {
-  var id = Props.id;
+  var idd = Props.idd;
   var match = ReactI18next.useTranslation("namespace1");
   var t;
   if (match.length !== 3) {
@@ -91,7 +91,11 @@ function ShortList(Props) {
     
   };
   var loadSections = function (param) {
-    Curry._3(ApiJs.asyncGet("api/jury/sections/" + id).fork, failed, sectionsOk, cleanUp);
+    if (idd !== undefined) {
+      Curry._3(ApiJs.asyncGet("api/jury/sections/" + idd).fork, failed, sectionsOk, cleanUp);
+    } else {
+      Curry._3(ApiJs.asyncGet("api/jury/sections").fork, failed, sectionsOk, cleanUp);
+    }
     
   };
   var move = function (dir) {

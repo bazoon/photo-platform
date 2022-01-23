@@ -561,7 +561,7 @@ const Thumbs = ({images, onRemove}) => {
   );
 };
 
-export default function Main() {
+export default function Main(props) {
   const { t } = useTranslation("namespace1");
   const [current, send] = useMachine(Machine({api, context: initialContext, apiParams, t}), {devTools: true});
   const {context} = current;

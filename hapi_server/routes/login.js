@@ -83,7 +83,7 @@ const login = {
         request.cookieAuth.set({ tok: token });
         res({
           ...user,
-          avatar: user.avatar && await getUploadFilePath(user.avatar, request),
+          avatar: user.avatar && await getUploadFilePath({name: user.avatar, request}),
         });
       })
     });

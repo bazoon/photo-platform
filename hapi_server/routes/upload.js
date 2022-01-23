@@ -12,7 +12,7 @@ module.exports = [
       const { file } = request.payload;
       await uploadFiles(file, request);
       return {
-        file: await getUploadFilePath(file.filename, request)
+        file: await getUploadFilePath({name: file.filename, request})
       };
     },
     options: {

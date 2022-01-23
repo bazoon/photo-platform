@@ -259,7 +259,6 @@ const init = async () => {
       const {tok} = session;
       let routeRole = '';
       if (tok) {
-        console.log(123, tok)
         const user = jwt.verify(tok, process.env.API_TOKEN);
         const u = await models.User.findOne({
           where: {
@@ -267,8 +266,6 @@ const init = async () => {
           }});
       
         const {canDo, role} = await getAuth(tok, request);
-        console.log(919, canDo, role);
-
         return { valid: u && !!u.id, credentials: {...user, role: role} };
       }
 

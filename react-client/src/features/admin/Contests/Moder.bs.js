@@ -140,46 +140,50 @@ function Moder(Props) {
   };
   var loadSection = function (s) {
     var id = s !== undefined ? s.id : "";
-    return Curry._3(ApiJs.asyncGet("api/admin/sections/" + id + "/images").fork, failed, (function (param) {
-                  var id = s !== undefined ? s.id : "";
-                  var images = Belt_Array.map(param, (function (im) {
-                          return {
-                                  id: im.id,
-                                  description: im.description,
-                                  filename: im.filename,
-                                  name: im.name,
-                                  place: im.place,
-                                  year: im.year,
-                                  author: im.author,
-                                  dateAdd: im.dateAdd,
-                                  moder: im.moder,
-                                  moderResult: valueToModerResult(im.moder),
-                                  reason: im.reason
-                                };
-                        }));
-                  Curry._1(setSections, (function (sections) {
-                          var newSections = Belt_Array.map(sections, (function (x) {
-                                  if (x.id === id) {
-                                    return {
-                                            id: x.id,
-                                            maxCountImg: x.maxCountImg,
-                                            name: x.name,
-                                            images: images
-                                          };
-                                  } else {
-                                    return x;
-                                  }
-                                }));
-                          console.log("setting", s);
-                          Curry._1(setSection, (function (param) {
-                                  return Belt_Array.getBy(newSections, (function (e) {
-                                                return e.id === id;
-                                              }));
-                                }));
-                          return newSections;
-                        }));
-                  
-                }), cleanUp);
+    if (id !== "") {
+      Curry._3(ApiJs.asyncGet("api/admin/sections/" + id + "/images").fork, failed, (function (param) {
+              var id = s !== undefined ? s.id : "";
+              var images = Belt_Array.map(param, (function (im) {
+                      return {
+                              id: im.id,
+                              description: im.description,
+                              filename: im.filename,
+                              name: im.name,
+                              place: im.place,
+                              year: im.year,
+                              author: im.author,
+                              dateAdd: im.dateAdd,
+                              moder: im.moder,
+                              moderResult: valueToModerResult(im.moder),
+                              reason: im.reason
+                            };
+                    }));
+              Curry._1(setSections, (function (sections) {
+                      var newSections = Belt_Array.map(sections, (function (x) {
+                              if (x.id === id) {
+                                return {
+                                        id: x.id,
+                                        maxCountImg: x.maxCountImg,
+                                        name: x.name,
+                                        images: images
+                                      };
+                              } else {
+                                return x;
+                              }
+                            }));
+                      console.log("setting", s);
+                      Curry._1(setSection, (function (param) {
+                              return Belt_Array.getBy(newSections, (function (e) {
+                                            return e.id === id;
+                                          }));
+                            }));
+                      return newSections;
+                    }));
+              
+            }), cleanUp);
+      return ;
+    }
+    
   };
   var selectSection = function (e) {
     loadSection(Caml_option.nullable_to_opt(e.value));
