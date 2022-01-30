@@ -1,12 +1,13 @@
-8
+9
 Hello
 Moder
 ShortList
+MenuConfig
 Application
 JuryGallery
 JuryAnalytics
 ApplicationInfo
 ApplicationImages
-src	src/features/admin/Contests	src/features	src/features/Applications	src/components	
-1	
+src	src/features/admin/Contests	src/features	src/features/admin	src/features/Applications	src/components	
+1			
 0

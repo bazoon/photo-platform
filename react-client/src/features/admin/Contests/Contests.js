@@ -8,7 +8,6 @@ import Machine from "../../../features/machines/CrudMachine";
 import useCrud from "../../../core/hooks/useCrud";
 import {useMachine} from "@xstate/react";
 import Jury from "./Jury";
-import { Sidebar } from "primereact/sidebar";
 import About from "./About";
 import Results from "./Results";
 import Photos from "./Photos";
@@ -23,6 +22,7 @@ import {make as ShortList} from "../../ShortList.bs";
 import {findLens, over, view} from "lodash-lens";
 import {asyncPut} from "../../../core/api";
 import {isDefined} from "crocks";
+import MenuConfig from "../MenuConfig";
 
 // import { inspect } from "@xstate/inspect";
 // if (location.href.includes("foto.ru")) {
@@ -90,6 +90,10 @@ const Grid = ({store}) => {
       title: "Шорт лист",
       Component: ShortList
     },
+    {
+      title: "Меню",
+      Component: MenuConfig
+    },
   ];
 
   const showSection = ({id, index, title}) => {
@@ -112,7 +116,7 @@ const Grid = ({store}) => {
     const section = contestSections[sectionId];
     const Component = section && section.Component;
     return (
-      <Dialog header={title} contentClassName="flex-1" visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "90vw"}}  onHide={() => hideSection(dialogId) }>
+      <Dialog header={title} contentClassName="flex-1" visible={true} baseZIndex={baseZIndex} dismissableMask modal style={{width: "90vw", height: "50vh"}}  onHide={() => hideSection(dialogId) }>
         {Component && <Component id={id}/>}
       </Dialog>
     );

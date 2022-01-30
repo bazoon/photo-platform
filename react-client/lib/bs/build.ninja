@@ -4,7 +4,7 @@ rule astj
   command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsc.exe  -bs-v 9.1.4 -bs-jsx 3  -absname -bs-ast -o $out $i
 o src/Hello.ast : astj ../../src/Hello.res
 rule deps
-  command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsb_helper.exe -hash cafc9b606da4a5d2e24d1a650d53bac2 $in
+  command = /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/bsb_helper.exe -hash ec1d18f0927126fbe11f79ab6556fdc1 $in
   restat = 1
 o src/Hello.d : deps src/Hello.ast
 rule mij
@@ -30,6 +30,9 @@ o src/features/Applications/ApplicationInfo.cmj src/features/Applications/Applic
 o src/features/Applications/ApplicationImages.ast : astj ../../src/features/Applications/ApplicationImages.res
 o src/features/Applications/ApplicationImages.d : deps src/features/Applications/ApplicationImages.ast
 o src/features/Applications/ApplicationImages.cmj src/features/Applications/ApplicationImages.cmi ../../src/features/Applications/ApplicationImages.bs.js : mij src/features/Applications/ApplicationImages.ast
+o src/features/admin/MenuConfig.ast : astj ../../src/features/admin/MenuConfig.res
+o src/features/admin/MenuConfig.d : deps src/features/admin/MenuConfig.ast
+o src/features/admin/MenuConfig.cmj src/features/admin/MenuConfig.cmi ../../src/features/admin/MenuConfig.bs.js : mij src/features/admin/MenuConfig.ast
 o src/features/admin/Contests/Moder.ast : astj ../../src/features/admin/Contests/Moder.res
 o src/features/admin/Contests/Moder.d : deps src/features/admin/Contests/Moder.ast
 o src/features/admin/Contests/Moder.cmj src/features/admin/Contests/Moder.cmi ../../src/features/admin/Contests/Moder.bs.js : mij src/features/admin/Contests/Moder.ast

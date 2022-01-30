@@ -1,0 +1,15 @@
+9.1.4
+/Users/vn/projects/work/photo-platform
+0
+bsconfig.json	0x1.87b09f34b5e42p+30
+./hapi_server	0x1.84edf603fa7a5p+30
+./hapi_server/routes	0x1.875ab42d13eeep+30
+./hapi_server/routes/services	0x1.84edf603fe84bp+30
+./hapi_server/routes/public	0x1.87b090e2e5cd6p+30
+./hapi_server/routes/public/meta	0x1.84edf603fd7bdp+30
+./hapi_server/routes/utils	0x1.87afd1157243bp+30
+./hapi_server/routes/admin	0x1.87c554512e70ap+30
+./hapi_server/routes/admin/meta	0x1.857697c4c9c93p+30
+./hapi_server/meta	0x1.84edf603fa90ep+30
+===
+/Users/vn/projects/work/photo-platform/node_modules/rescript/darwin/rescript.exe	0x1.87b0876296873p+30

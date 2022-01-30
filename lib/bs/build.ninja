@@ -1,0 +1,17 @@
+rescript = 1
+g_finger := /Users/vn/projects/work/photo-platform/node_modules/@ryyppy/rescript-promise/lib/ocaml/install.stamp
+rule astj
+  command = /Users/vn/projects/work/photo-platform/node_modules/rescript/darwin/bsc.exe  -bs-v 9.1.4  -absname -bs-ast -o $out $i
+o ./hapi_server/routes/public/mainPage.ast : astj ../.././hapi_server/routes/public/mainPage.res
+rule deps
+  command = /Users/vn/projects/work/photo-platform/node_modules/rescript/darwin/bsb_helper.exe -hash 55aa48b96cfc6b9fbf2ae7ea5431bc2d $in
+  restat = 1
+o ./hapi_server/routes/public/mainPage.d : deps ./hapi_server/routes/public/mainPage.ast
+rule mij
+  command = /Users/vn/projects/work/photo-platform/node_modules/rescript/darwin/bsc.exe -I ./hapi_server/meta -I ./hapi_server/routes/admin/meta -I ./hapi_server/routes/admin -I ./hapi_server/routes/utils -I ./hapi_server/routes/public/meta -I ./hapi_server/routes/public -I ./hapi_server/routes/services -I ./hapi_server/routes -I ./hapi_server -I /Users/vn/projects/work/photo-platform/node_modules/@ryyppy/rescript-promise/lib/ocaml   -bs-package-name ph -bs-package-output commonjs:$in_d:.bs.js -bs-v $g_finger $i
+  dyndep = 1
+  restat = 1
+o ./hapi_server/routes/public/mainPage.cmj ./hapi_server/routes/public/mainPage.cmi ../.././hapi_server/routes/public/mainPage.bs.js : mij ./hapi_server/routes/public/mainPage.ast
+o ./hapi_server/routes/admin/contestMenus.ast : astj ../.././hapi_server/routes/admin/contestMenus.res
+o ./hapi_server/routes/admin/contestMenus.d : deps ./hapi_server/routes/admin/contestMenus.ast
+o ./hapi_server/routes/admin/contestMenus.cmj ./hapi_server/routes/admin/contestMenus.cmi ../.././hapi_server/routes/admin/contestMenus.bs.js : mij ./hapi_server/routes/admin/contestMenus.ast

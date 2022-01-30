@@ -31,8 +31,12 @@ o ApplicationImages.cmi : cp ../bs/src/features/Applications/ApplicationImages.c
 o ApplicationImages.cmj : cp ../bs/src/features/Applications/ApplicationImages.cmj
 o ApplicationImages.cmt : cp ../bs/src/features/Applications/ApplicationImages.cmt
 o ApplicationImages.res : cp ../../src/features/Applications/ApplicationImages.res
+o MenuConfig.cmi : cp ../bs/src/features/admin/MenuConfig.cmi
+o MenuConfig.cmj : cp ../bs/src/features/admin/MenuConfig.cmj
+o MenuConfig.cmt : cp ../bs/src/features/admin/MenuConfig.cmt
+o MenuConfig.res : cp ../../src/features/admin/MenuConfig.res
 o Moder.cmi : cp ../bs/src/features/admin/Contests/Moder.cmi
 o Moder.cmj : cp ../bs/src/features/admin/Contests/Moder.cmj
 o Moder.cmt : cp ../bs/src/features/admin/Contests/Moder.cmt
 o Moder.res : cp ../../src/features/admin/Contests/Moder.res
-build install.stamp : touch Hello.cmi Hello.cmj JuryGallery.cmi JuryGallery.cmj ShortList.cmi ShortList.cmj JuryAnalytics.cmi JuryAnalytics.cmj Application.cmi Application.cmj ApplicationInfo.cmi ApplicationInfo.cmj ApplicationImages.cmi ApplicationImages.cmj Moder.cmi Moder.cmj 
+build install.stamp : touch Hello.cmi Hello.cmj JuryGallery.cmi JuryGallery.cmj ShortList.cmi ShortList.cmj JuryAnalytics.cmi JuryAnalytics.cmj Application.cmi Application.cmj ApplicationInfo.cmi ApplicationInfo.cmj ApplicationImages.cmi ApplicationImages.cmj MenuConfig.cmi MenuConfig.cmj Moder.cmi Moder.cmj 

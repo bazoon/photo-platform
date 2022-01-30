@@ -20,7 +20,6 @@ import Contests from "./Contests/Contests";
 import Config from "./Config/Config";
 import { collect } from "react-recollect";
 import { initStore } from "react-recollect";
-import { store } from "react-recollect";
 import Settings from "./Settings/Settings";
 import SaloneSettings from "./Settings/SaloneSettings";
 

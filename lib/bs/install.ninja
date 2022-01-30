@@ -1,0 +1,14 @@
+rescript = 1
+rule cp
+  command = cp $i $out
+rule touch
+ command = touch $out
+o mainPage.cmi : cp ../bs/./hapi_server/routes/public/mainPage.cmi
+o mainPage.cmj : cp ../bs/./hapi_server/routes/public/mainPage.cmj
+o mainPage.cmt : cp ../bs/./hapi_server/routes/public/mainPage.cmt
+o mainPage.res : cp ../.././hapi_server/routes/public/mainPage.res
+o contestMenus.cmi : cp ../bs/./hapi_server/routes/admin/contestMenus.cmi
+o contestMenus.cmj : cp ../bs/./hapi_server/routes/admin/contestMenus.cmj
+o contestMenus.cmt : cp ../bs/./hapi_server/routes/admin/contestMenus.cmt
+o contestMenus.res : cp ../.././hapi_server/routes/admin/contestMenus.res
+build install.stamp : touch mainPage.cmi mainPage.cmj contestMenus.cmi contestMenus.cmj 
