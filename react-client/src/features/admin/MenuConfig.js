@@ -6,6 +6,9 @@ import { Dropdown } from "primereact/dropdown";
 import {Button} from "primereact/button";
 import Tree from "react-animated-tree";
 import useMessage from "../../core/useMessage";
+import find from "crocks/Maybe/find";
+import { InputText } from "primereact/inputtext";
+import { Checkbox } from "primereact/checkbox";
 
 const MenuConfig = ({id}) => {
   const [parent, setParent] = useState();
@@ -17,10 +20,6 @@ const MenuConfig = ({id}) => {
     console.log("FAILED");
   };
 
-  const add = () => {
-
-  };
-
   const cancel = () => {
 
   };
@@ -29,10 +28,28 @@ const MenuConfig = ({id}) => {
     return (
       <div>
         <Field name="lexiconId" render={({input}) => (
-          <div className="p-field">
+          <>
+          <div className="p-field mb-5">
             <div>
               <label htmlFor="lexiconId">Lexicon</label>
               <Dropdown id="id" value={input.value} onChange={input.onChange} options={lexicons} optionLabel="code" />
+            </div>
+          </div>
+          </>
+        )} />
+        <Field name="slug" render={({input}) => (
+          <div className="p-field mb-5">
+            <div>
+              <label htmlFor="slug">Slug</label>
+              <InputText id="slug" value={input.value} onChange={input.onChange} />
+            </div>
+          </div>
+        )} />
+        <Field name="readOnly" render={({input}) => (
+          <div className="p-field mb-5">
+            <div>
+              <label className="mr-5" htmlFor="readOnly">Readonly</label>
+              <Checkbox onChange={input.onChange} checked={input.value}></Checkbox>
             </div>
           </div>
         )} />
@@ -44,16 +61,34 @@ const MenuConfig = ({id}) => {
     return (
       <div>
         <Field name="lexiconId" render={({input}) => (
-          <div className="p-field">
+          <div className="p-field mb-5">
             <div>
               <label htmlFor="lexiconId">Lexicon</label>
               <Dropdown id="lexiconId" value={input.value} onChange={input.onChange} options={lexicons} optionValue="id" optionLabel="code" />
             </div>
           </div>
         )} />
+        <Field name="slug" render={({input}) => (
+          <div className="p-field mb-5">
+            <div>
+              <label htmlFor="slug">Slug</label>
+              <InputText id="slug" value={input.value} onChange={input.onChange} />
+            </div>
+          </div>
+        )} />
+        <Field name="readOnly" render={({input}) => (
+          <div className="p-field mb-5">
+            <div>
+              <label className="mr-5" htmlFor="readOnly">Readonly</label>
+              <Checkbox onChange={input.onChange} checked={input.value}></Checkbox>
+            </div>
+          </div>
+        )} />
       </div>
     );
   };
+
+
 
   const createItem = payload => {
     return asyncPost("api/admin/menuConfig", payload);
@@ -113,6 +148,59 @@ const MenuConfig = ({id}) => {
     asyncDel("api/admin/menuConfig/" + item.id).fork(deleteFailed, deleteOk);
   };
 
+  const handleDown = item => {
+    const downFailed = () => {
+
+    };
+
+    const downOk = d => {
+      setChildren(ch => {
+        const downItem = find(i => i.parentId == item.parentId && i.position === item.position + 1, ch).option(undefined);
+
+        if (downItem) {
+          const index = ch.indexOf(item);
+          const downIndex = ch.indexOf(downItem);
+          item.position = item.position + 1;
+          downItem.position = item.position - 1;
+          ch[index] = downItem;
+          ch[downIndex] = item;
+          return ch.slice();
+        }
+
+        return ch;
+      });
+    };
+
+    asyncPut("api/admin/menuConfig/down/" + item.id).fork(downFailed, downOk);
+  };
+
+
+  const handleUp = item => {
+    const upFailed = () => {
+
+    };
+
+    const upOk = d => {
+      setChildren(ch => {
+        const upItem = find(i => i.parentId == item.parentId && i.position === item.position - 1, ch).option(undefined);
+
+        if (upItem) {
+          const index = ch.indexOf(item);
+          const downIndex = ch.indexOf(upItem);
+          item.position = item.position - 1;
+          upItem.position = item.position + 1;
+          ch[index] = upItem;
+          ch[downIndex] = item;
+          return ch.slice();
+        }
+
+        return ch;
+      });
+    };
+
+    asyncPut("api/admin/menuConfig/up/" + item.id).fork(upFailed, upOk);
+  };
+
   const renderControls = item => {
     return (
       <div className="inline-flex">
@@ -120,8 +208,8 @@ const MenuConfig = ({id}) => {
         <Button className="mr-2" icon="pi pi-pencil" onClick={() => handleEdit(item)}/>
         <Button className="mr-2" icon="pi pi-plus" onClick={() => handleAdd(item)}/>
         <Button className="mr-2" icon="pi pi-trash" onClick={() => handleDelete(item)}/>
-        <Button className="mr-2" icon="pi pi-arrow-down" onClick={() => handleEdit(item)}/>
-        <Button className="mr-2" icon="pi pi-arrow-up" onClick={() => handleEdit(item)}/>
+        <Button className="mr-2" icon="pi pi-arrow-down" onClick={() => handleDown(item)}/>
+        <Button className="mr-2" icon="pi pi-arrow-up" onClick={() => handleUp(item)}/>
       </div>
     );
   };

@@ -29,8 +29,8 @@ export const showConfirm = function ShowConfirm({content, initialValues = {}, he
 
     const footer = (submit) => (
       <div className="flex mt-10 justify-end">
-        <Button label={cancelButton} icon="pi pi-check" onClick={cancel} />
-        <Button label={confirmButton} icon="pi pi-times" onClick={values => { submit(values); confirm(); } } />
+        <Button label={cancelButton} icon="pi pi-times" className="mr-5" onClick={cancel} />
+        <Button label={confirmButton} icon="pi pi-check" onClick={values => { submit(values); confirm(); } } />
       </div>
     );
 

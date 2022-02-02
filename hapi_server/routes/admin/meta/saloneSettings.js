@@ -13,6 +13,7 @@ module.exports = [
         'title': 'Root', 
         'type': 'array',
         'default': [],
+        'required': [],
         'properties': {
           'id': {
             '$id': '#root/items/id', 

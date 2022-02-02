@@ -3,8 +3,8 @@ const {getCurrentDomain} = require('./getCurrentDomain');
 
 async function getCurrentSalone(domain) {
   const query = `
-    select salones.id, slug from salones, contests
-    where contests.salone_id=salones.id and salones.domain=:domain
+    select salones.id, slug from salones
+    where salones.domain=:domain
   `;
  
   const [[salone]] = await models.sequelize.query(query, {

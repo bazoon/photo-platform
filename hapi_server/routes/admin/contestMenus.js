@@ -1,5 +1,6 @@
 const {get} = require('lodash/fp');
 const getPath = require('crocks/Maybe/getPath');
+const { Op } = require('sequelize');
 
 module.exports = [
   {
@@ -135,6 +136,86 @@ module.exports = [
           parentId: id
         }
       });
+
+      return {};
+    },
+    options: {
+      tags: ['api'],
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/api/admin/menuConfig/down/{id}',
+    handler: async function (request, h) {
+      const id = request.params.id;
+      
+      const item = await h.models.ContestMenu.findOne({
+        where: {
+          id
+        }
+      });
+
+      const downItem = await h.models.ContestMenu.findOne({
+        where: {
+          [Op.and]: [
+            { parentId: item.parentId },
+            { position: item.position + 1 }
+          ]
+        }
+      });
+
+      if (downItem) {
+        await item.update({
+          position: item.position + 1
+        });
+        
+        await downItem.update({
+          position: downItem.position - 1
+        });
+      }
+
+      return {};
+    },
+    options: {
+      tags: ['api'],
+      auth: {
+        mode: 'required'
+      }
+    }
+  },
+  {
+    method: 'PUT',
+    path: '/api/admin/menuConfig/up/{id}',
+    handler: async function (request, h) {
+      const id = request.params.id;
+      
+      const item = await h.models.ContestMenu.findOne({
+        where: {
+          id
+        }
+      });
+
+      const upItem = await h.models.ContestMenu.findOne({
+        where: {
+          [Op.and]: [
+            { parentId: item.parentId },
+            { position: item.position - 1 }
+          ]
+        }
+      });
+
+      if (upItem) {
+        await item.update({
+          position: item.position - 1
+        });
+        
+        await upItem.update({
+          position: upItem.position + 1
+        });
+      }
 
       return {};
     },
