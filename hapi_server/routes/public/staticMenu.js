@@ -44,39 +44,39 @@ const staticMenu = {
         name: 'photos',
         to: '/photos/sections'
       },
-      {
-        name: 'politics',
-        to: '/politics'
-      },
-      {
-        name: 'about-contest',
-        items: [
-          {
-            name: 'hello',
-            to: '/hello'
-          },
-          {
-            name: 'organizers',
-            to: '/organizers'
-          },
-          {
-            name: 'thesis',
-            to: '/thesis'
-          },
-          {
-            name: 'rules',
-            to: '/rules'
-          },
-          {
-            name: 'jury',
-            to: '/jury'
-          }
-        ]
-      },
-      {
-        name: 'contacts',
-        to: '/contacts'
-      }
+      // {
+      //   name: 'politics',
+      //   to: '/politics'
+      // },
+      // {
+      //   name: 'about-contest',
+      //   items: [
+      //     {
+      //       name: 'hello',
+      //       to: '/hello'
+      //     },
+      //     {
+      //       name: 'organizers',
+      //       to: '/organizers'
+      //     },
+      //     {
+      //       name: 'thesis',
+      //       to: '/thesis'
+      //     },
+      //     {
+      //       name: 'rules',
+      //       to: '/rules'
+      //     },
+      //     {
+      //       name: 'jury',
+      //       to: '/jury'
+      //     }
+      //   ]
+      // },
+      // {
+      //   name: 'contacts',
+      //   to: '/contacts'
+      // }
     ];
 
   },
