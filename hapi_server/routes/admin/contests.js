@@ -146,10 +146,11 @@ module.exports = [
       const isModer = user.userType === 2;
       let query;
 
+        console.log('isAdmin', isAdmin);
       if (isAdmin) {
         query = `
         select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
-          show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, inworknow from
+          show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, maxsize, max_count_img, inworknow from
         contests, salones
         where contests.salone_id=salones.id
         `;
@@ -196,7 +197,9 @@ module.exports = [
           maxrate: contest.maxrate,
           maxsize: contest.maxsize,
           maxWeight: contest.max_weight,
-          inworknow: contest.inworknow
+          inworknow: contest.inworknow,
+          maxSize: contest.maxsize,
+          maxCountImg: contest.max_count_img
         };
       });
     },
