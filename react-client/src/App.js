@@ -39,6 +39,9 @@ import FooterLinks from "./FooterLinks";
 import {make as JuryAnalytics} from "./features/JuryAnalytics.bs";
 import JuryShortList from "./features/JuryShortList";
 
+import AboutNotMagic from "./features/NotMagic/AboutNotMagic";
+import TechNotMagic from "./features/NotMagic/TechNotMagic";
+import PrizesNotMagic from "./features/NotMagic/PrizesNotMagic";
 
 
 const MainMenu = lazy(() => import("./MainMenu"));
@@ -144,6 +147,16 @@ function MainApp({store}) {
                   <Admin/>
                 </Suspense>
               </Route>
+
+                <Route path="/about-notmagic">
+                  <AboutNotMagic/>
+                </Route>
+                <Route path="/tech-notmagic">
+                  <TechNotMagic/>
+                </Route>
+                <Route path="/prizes-notmagic">
+                  <PrizesNotMagic/>
+                </Route>
               <Route path="/">
                 <div className="main-bg w-full">
                   <MainPage/>

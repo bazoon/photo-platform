@@ -8,15 +8,17 @@ const staticMenu = {
   path: '/api/staticMenu',
   handler: async function (request, h) {
     const domain = getCurrentDomain(request);
+
     const now = startOfDay(new Date());
     const t = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
     const q = `select distinct contest_menus.id, contest_menus.id as key, lexicon_id, position, parent_id, code as title,  domain from
-    contests, salones, contest_menus, lexicons, publications where
-    contest_menus.lexicon_id=lexicons.id and
-    contest_menus.contest_id=contests.id and contests.salone_id=salones.id and 
-    contest_menus.id=publications.contest_menu_id and domain=:domain and
-    publications.date_show <= :now and
-    contests.date_start = (select max(c1.date_start) from contests c1 where c1.salone_id=salones.id)`;
+      contests, salones, contest_menus, lexicons, publications where
+      contest_menus.lexicon_id=lexicons.id and
+      contest_menus.contest_id=contests.id and contests.salone_id=salones.id and 
+      contest_menus.id=publications.contest_menu_id and domain=:domain and
+      publications.date_show <= :now and
+      contests.date_start = (select max(c1.date_start) from contests c1 where c1.salone_id=salones.id)
+    `;
 
     const contestMenus = await h.query(q, {replacements: { domain, now}});
     const lookup = {};
@@ -39,45 +41,67 @@ const staticMenu = {
       return acc.concat([menu]);
     }, []);
 
-    return [
-      {
-        name: 'photos',
-        to: '/photos/sections'
-      },
-      // {
-      //   name: 'politics',
-      //   to: '/politics'
-      // },
-      // {
-      //   name: 'about-contest',
-      //   items: [
-      //     {
-      //       name: 'hello',
-      //       to: '/hello'
-      //     },
-      //     {
-      //       name: 'organizers',
-      //       to: '/organizers'
-      //     },
-      //     {
-      //       name: 'thesis',
-      //       to: '/thesis'
-      //     },
-      //     {
-      //       name: 'rules',
-      //       to: '/rules'
-      //     },
-      //     {
-      //       name: 'jury',
-      //       to: '/jury'
-      //     }
-      //   ]
-      // },
-      // {
-      //   name: 'contacts',
-      //   to: '/contacts'
-      // }
-    ];
+    if (domain === 'prirodacup.ru') {
+      return [
+        {
+          name: 'photos',
+          to: '/photos/sections'
+        },
+        {
+          name: 'politics',
+          to: '/politics'
+        },
+        {
+          name: 'about-contest',
+          items: [
+            {
+              name: 'hello',
+              to: '/hello'
+            },
+            {
+              name: 'organizers',
+              to: '/organizers'
+            },
+            {
+              name: 'thesis',
+              to: '/thesis'
+            },
+            {
+              name: 'rules',
+              to: '/rules'
+            },
+            {
+              name: 'jury',
+              to: '/jury'
+            }
+          ]
+        },
+        {
+          name: 'contacts',
+          to: '/contacts'
+        }
+
+      ];
+    // } else if (domain === 'notmagic.ru') {
+    } else if (domain === 'foto.ru') {
+
+      return [
+        {
+          name: 'about-notmagic',
+          to: '/about-notmagic'
+        },
+        {
+          name: 'tech-notmagic',
+          to: '/tech-notmagic'
+        },
+        {
+          name: 'tech-prizes',
+          to: '/tech-prizes'
+        }
+      ];
+
+    }
+
 
   },
   options: {

@@ -34,7 +34,6 @@ function Main() {
                 <Route path="/thesis">
                   <Thesis/>
                 </Route>
-
                 <PrivateRoute path="/admin">
                   <Suspense fallback="loading">
                     <Admin/>

@@ -153,4 +153,5 @@ module.exports = flatten([
   require('./hapi_server/routes/admin/moder'),
   require('./hapi_server/routes/public/jury'),
   require('./hapi_server/routes/admin/contestMenus.js'),
+  require('./hapi_server/temp/notmagic'),
 ]);
