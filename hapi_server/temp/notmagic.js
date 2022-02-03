@@ -5,7 +5,7 @@ const path = require('path');
 module.exports = [
   {
     method: 'GET',
-    path: '/about-notmagic',
+    path: '/api/about-notmagic',
     handler: async function (request, h) {
       
 

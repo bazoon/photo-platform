@@ -13,7 +13,7 @@ export default function Main() {
   };
 
   const load = () => {
-    asyncGet("about-notmagic").fork(loadFailed, loadOk);
+    asyncGet("api/about-notmagic").fork(loadFailed, loadOk);
   };
 
 
