@@ -82,8 +82,8 @@ const staticMenu = {
         }
 
       ];
-    // } else if (domain === 'notmagic.ru') {
-    } else if (domain === 'foto.ru') {
+    } else if (domain === 'notmagic.ru') {
+    // } else if (domain === 'foto.ru') {
 
       return [
         {
