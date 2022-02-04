@@ -82,8 +82,7 @@ const staticMenu = {
         }
 
       ];
-    } else if (domain === 'notmagic.ru') {
-    // } else if (domain === 'foto.ru') {
+    } else if (domain === 'notmagic.ru' || domain === 'foto.ru') {
 
       return [
         {
@@ -95,8 +94,8 @@ const staticMenu = {
           to: '/tech-notmagic'
         },
         {
-          name: 'tech-prizes',
-          to: '/tech-prizes'
+          name: 'prizes-notmagic',
+          to: '/prizes-notmagic'
         }
       ];
 

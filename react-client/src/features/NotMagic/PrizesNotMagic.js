@@ -2,15 +2,11 @@ import React from "react";
 export default function Main() {
 
   return (
-    <div className="container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"> 
-      <div className="text-center">
-        ПОЛОЖЕНИЕ
-      </div>
-      <div className="text-center">
-        о проведении II международного творческого конкурса#НеМагия
-      </div>
-      
-
+    <div className="bg-brown-dark2 pl-20 pr-20 text-semi-bright flex flex-col items-center">
+      <h1 className="text-7xl mb-5">Призы</h1>
+      <img className="mb-20 mt-20" src="images/p-01.jpg" />
+      <img className="mb-20" src="images/p-02.jpg" />
+      <img className="mb-20" src="images/p-03.jpg" />
     </div>
   );
 }
