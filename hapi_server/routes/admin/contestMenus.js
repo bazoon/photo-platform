@@ -9,6 +9,24 @@ module.exports = [
     handler: async (request, h) => {
       let { contestId } = request.params
 
+      const root = await h.models.ContestMenu.findOne({
+        where: {
+          [Op.and]: {
+            contestId,
+            parentId: -1
+          }
+        }
+      });
+
+      if (!root) {
+        await h.models.ContestMenu.create({
+          contestId,
+          parentId: -1,
+          slug: '',
+          position: 0
+        })
+      }
+
       let query = `
         select lexicons.id as lexicon_id, contest_menus.id, code, parent_id, position, slug, readonly as read_only from contest_menus, lexicons
         where contest_id = :id and contest_menus.contest_id = :id and contest_menus.lexicon_id=lexicons.id

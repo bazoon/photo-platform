@@ -36,14 +36,13 @@ const publicRoute = {
   }
 };
 
-
 const indexRoute = {
     method: 'GET',
     path: '/',
     handler: async function (request, h) {
       const salone = getCurrentSaloneFromReques(request);
       const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8').replace('__TITLE__', salone.name);
-      return 'cool';
+      return html;
     },
     options: {
       auth: {
