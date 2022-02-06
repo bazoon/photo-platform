@@ -109,9 +109,12 @@ async function getContestIdFromSection(sectionId) {
     }
   });
 
-  console.log(contest_id, 777)
-
   return contest_id;
+}
+
+async function getCurrentSaloneFromReques(request) {
+  const domain = await getCurrentDomain(request);
+  return getCurrentSalone(domain);
 }
 
 module.exports = {
@@ -123,5 +126,6 @@ module.exports = {
   getCurrentContestIdFromRequest,
   getCurrentContestFromRequest,
   getContestFromSection,
-  getContestIdFromSection
+  getContestIdFromSection,
+  getCurrentSaloneFromReques
 }

@@ -16,11 +16,13 @@ const isActiveMenuItem = item => {
 
 const setTemplateForItems = (items = [], history, t, i) => {
   items.forEach(item => {
-    item.command = item.command || (() => history.push(item.to));
+    item.command = item.command || (() => history.push(item.to || item.slug));
     item.label = t(item.name);
     item.className = isActiveMenuItem(item) ? "p-menuitem--active" : "";
-    if (item.items) {
+    if (item.items?.length > 0) {
       setTemplateForItems(item.items, history, t);
+    } else {
+      delete item.items;
     }
   });
   return [...items];
