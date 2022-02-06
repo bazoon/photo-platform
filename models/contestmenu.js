@@ -4,7 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     contestId: DataTypes.INTEGER,
     position: DataTypes.INTEGER,
     parentId: DataTypes.INTEGER,
-    lexiconId: DataTypes.INTEGER
+    lexiconId: DataTypes.INTEGER,
+    slug: DataTypes.STRING,
+    readonly: DataTypes.BOOLEAN
   }, {
       timestamps: false
     });

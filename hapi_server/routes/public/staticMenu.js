@@ -2,6 +2,7 @@ const startOfDay = require('date-fns/startOfDay');
 var dayjs = require('dayjs');
 const L = require('lodash/fp');
 const {getCurrentDomain} = require('../utils/getCurrentDomain');
+const {getCurrentContestIdFromRequest} = require('../utils/getCurrentSalone');
 
 const staticMenu = {
   method: 'GET',
@@ -11,7 +12,7 @@ const staticMenu = {
 
     const now = startOfDay(new Date());
     const t = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
-    const q = `select distinct contest_menus.id, contest_menus.id as key, lexicon_id, position, parent_id, code as title,  domain from
+    const q = `select distinct contest_menus.id, contest_menus.id as key, lexicon_id, position, parent_id, code as title, domain from
       contests, salones, contest_menus, lexicons, publications where
       contest_menus.lexicon_id=lexicons.id and
       contest_menus.contest_id=contests.id and contests.salone_id=salones.id and 
@@ -20,7 +21,15 @@ const staticMenu = {
       contests.date_start = (select max(c1.date_start) from contests c1 where c1.salone_id=salones.id)
     `;
 
-    const contestMenus = await h.query(q, {replacements: { domain, now}});
+    const query = `
+      select distinct contest_menus.id, contest_menus.id as key, lexicon_id, position, parent_id, code as name, contest_menus.slug as to, domain from
+      contests, salones, contest_menus, lexicons where contest_menus.lexicon_id=lexicons.id and
+      contest_menus.contest_id=contests.id and contests.salone_id=salones.id and contests.id=:contestId
+    `;
+
+    const contestId = await getCurrentContestIdFromRequest(request);
+
+    const contestMenus = await h.query(query, {replacements: { contestId }});
     const lookup = {};
 
     contestMenus.forEach(menu => {
@@ -29,6 +38,9 @@ const staticMenu = {
 
     const menu = contestMenus.reduce((acc, menu) => {
       menu.items = menu.items || [];
+      if (!menu.to) {
+        delete menu.to;
+      }
 
       if (menu.parentId && menu.parentId !== -1) {
         const parentMenu = lookup[menu.parentId];
@@ -82,7 +94,7 @@ const staticMenu = {
         }
 
       ];
-    } else if (domain === 'notmagic.ru' || domain === 'foto.ru') {
+    } else if (domain === 'notmagic.ru') {
 
       return [
         {
@@ -99,6 +111,8 @@ const staticMenu = {
         }
       ];
 
+    } else if (domain === 'foto.ru') {
+      return menu;
     }
 
 

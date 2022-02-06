@@ -9,6 +9,7 @@ import useMessage from "../../core/useMessage";
 import find from "crocks/Maybe/find";
 import { InputText } from "primereact/inputtext";
 import { Checkbox } from "primereact/checkbox";
+import {filter} from "lodash/fp";
 
 const MenuConfig = ({id}) => {
   const [parent, setParent] = useState();
@@ -98,7 +99,7 @@ const MenuConfig = ({id}) => {
     return asyncPut("api/admin/menuConfig/" + payload.id, payload);
   };
 
-  const addOk = (item, {lexiconId}) => {
+  const addOk = (item, {lexiconId, slug, readOnly}) => {
     const createItemFailed = e => {
       showErrorMessage("Во время сохранения произошла ошибка");
     };
@@ -106,10 +107,10 @@ const MenuConfig = ({id}) => {
     const createItemOk = newItem => {
       setChildren(ch => ch.concat([newItem]));
     };
-    createItem({lexiconId: lexiconId.id, parentId: item.id, contestId: id}).fork(createItemFailed, createItemOk);
+    createItem({lexiconId: lexiconId.id, parentId: item.id, contestId: id, slug, readOnly}).fork(createItemFailed, createItemOk);
   };
 
-  const editOk = (item, {lexiconId}) => {
+  const editOk = (item, {lexiconId, slug, readOnly}) => {
     const editItemFailed = () => {
       showErrorMessage("Во время сохранения произошла ошибка");
     };
@@ -117,7 +118,7 @@ const MenuConfig = ({id}) => {
     const editItemOk = updatedItem => {
       setChildren(ch => ch.map(item =>  item.id === updatedItem.id ? updatedItem : item));
     };
-    updateItem({...item, lexiconId}).fork(editItemFailed, editItemOk);
+    updateItem({...item, lexiconId, slug, readOnly}).fork(editItemFailed, editItemOk);
   };
 
   const handleAdd = item => {
@@ -149,56 +150,64 @@ const MenuConfig = ({id}) => {
   };
 
   const handleDown = item => {
-    const downFailed = () => {
+    const downFailed = () => {};
+    const downOk = d => {};
 
-    };
 
-    const downOk = d => {
-      setChildren(ch => {
-        const downItem = find(i => i.parentId == item.parentId && i.position === item.position + 1, ch).option(undefined);
+    setChildren(ch => {
+      const items = filter(i => i.parentId == item.parentId, ch);
+      const index = items.indexOf(item);
+      const downIndex = index + 1;
+      const downItem = items[downIndex];  
 
-        if (downItem) {
-          const index = ch.indexOf(item);
-          const downIndex = ch.indexOf(downItem);
-          item.position = item.position + 1;
-          downItem.position = item.position - 1;
-          ch[index] = downItem;
-          ch[downIndex] = item;
-          return ch.slice();
-        }
+      if (downItem) {
+        const index = ch.indexOf(item);
+        const downIndex = ch.indexOf(downItem);
 
-        return ch;
-      });
-    };
+        const p = item.position;
+        item.position = downItem.position;
+        downItem.position = p;
 
-    asyncPut("api/admin/menuConfig/down/" + item.id).fork(downFailed, downOk);
+        ch[index] = downItem;
+        ch[downIndex] = item;
+        asyncPut("api/admin/menuConfig/down", { item, downItem }).fork(downFailed, downOk);
+        return ch.slice();
+      }
+
+      return ch;
+    });
+
   };
 
 
   const handleUp = item => {
-    const upFailed = () => {
+    const upFailed = () => {};
+    const upOk = () => {};
 
-    };
+    setChildren(ch => {
+      const items = filter(i => i.parentId == item.parentId, ch);
+      const index = items.indexOf(item);
+      const upIndex = index - 1;
+      const upItem = items[upIndex];  
 
-    const upOk = d => {
-      setChildren(ch => {
-        const upItem = find(i => i.parentId == item.parentId && i.position === item.position - 1, ch).option(undefined);
+      if (upItem) {
+        const index = ch.indexOf(item);
+        const upIndex = ch.indexOf(upItem);
 
-        if (upItem) {
-          const index = ch.indexOf(item);
-          const downIndex = ch.indexOf(upItem);
-          item.position = item.position - 1;
-          upItem.position = item.position + 1;
-          ch[index] = upItem;
-          ch[downIndex] = item;
-          return ch.slice();
-        }
+        const p = item.position;
+        item.position = upItem.position;
+        upItem.position = p;
 
-        return ch;
-      });
-    };
+        ch[index] = upItem;
+        ch[upIndex] = item;
 
-    asyncPut("api/admin/menuConfig/up/" + item.id).fork(upFailed, upOk);
+        asyncPut("api/admin/menuConfig/up", {item, upItem}).fork(upFailed, upOk);
+        return ch.slice();
+      }
+
+      return ch;
+    });
+
   };
 
   const renderControls = item => {
