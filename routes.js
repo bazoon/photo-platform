@@ -43,8 +43,7 @@ const indexRoute = {
     handler: async function (request, h) {
       const salone = getCurrentSaloneFromReques(request);
       const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8').replace('__TITLE__', salone.name);
-      console.log(html)
-      return html;
+      return 'cool';
     },
     options: {
       auth: {
