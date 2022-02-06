@@ -23,7 +23,8 @@ module.exports = [
           contestId,
           parentId: -1,
           slug: '',
-          position: 0
+          position: 0,
+          lexiconId: -1
         })
       }
 
