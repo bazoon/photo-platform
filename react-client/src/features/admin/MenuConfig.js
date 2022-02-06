@@ -266,6 +266,9 @@ const MenuConfig = ({id}) => {
       {
         parent && renderItem(parent, children, 1)
       }
+      {
+        !parent && renderItem({id: -1, name: "root"},[], 1)
+      }
     </div>
   );
 };

@@ -17,17 +17,7 @@ module.exports = [
           }
         }
       });
-
-      if (!root) {
-        await h.models.ContestMenu.create({
-          contestId,
-          parentId: -1,
-          slug: '',
-          position: 0,
-          lexiconId: -1
-        })
-      }
-
+ 
       let query = `
         select lexicons.id as lexicon_id, contest_menus.id, code, parent_id, position, slug, readonly as read_only from contest_menus, lexicons
         where contest_id = :id and contest_menus.contest_id = :id and contest_menus.lexicon_id=lexicons.id
@@ -42,8 +32,8 @@ module.exports = [
 
       const items = a.map(e => ({...e, lexiconId: e.lexicon_id, readOnly: e.read_only, parentId: e.parent_id}));
       return {
-        parent: items.find(e => e.parent_id === -1),
-        children: items.filter(e => e.parent_id > 0)
+        parent: {id: -1, slug: '', code: 'root'},
+        children: items
       };
     },
     options: {
