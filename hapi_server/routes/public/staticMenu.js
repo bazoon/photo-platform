@@ -111,7 +111,7 @@ const staticMenu = {
         }
       ];
 
-    } else if (domain === 'foto.ru') {
+    } else if (domain === 'foto.ru' || domain === 'jstest.space') {
       return menu;
     }
 

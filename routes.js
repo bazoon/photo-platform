@@ -38,7 +38,23 @@ const publicRoute = {
 
 const indexRoute = {
     method: 'GET',
-    path: '/',
+    path: '/api/index',
+    handler: async function (request, h) {
+      const salone = await getCurrentSaloneFromRequest(request);
+      const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8').replace('__TITLE__', salone.name);
+      return html;
+    },
+    options: {
+      auth: {
+        mode: 'optional'
+      }
+    }
+  };
+
+
+const defaultRoute = {
+    method: '*',
+    path: '{any*}',
     handler: async function (request, h) {
       const salone = await getCurrentSaloneFromRequest(request);
       const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8').replace('__TITLE__', salone.name);
@@ -113,4 +129,5 @@ module.exports = flatten([
   require('./hapi_server/routes/public/jury'),
   require('./hapi_server/routes/admin/contestMenus.js'),
   require('./hapi_server/temp/notmagic'),
+  defaultRoute
 ]);
