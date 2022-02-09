@@ -54,7 +54,7 @@ const indexRoute = {
 
 const defaultRoute = {
     method: '*',
-    path: '{any*}',
+    path: '/{any*}',
     handler: async function (request, h) {
       const salone = await getCurrentSaloneFromRequest(request);
       const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8').replace('__TITLE__', salone.name);
