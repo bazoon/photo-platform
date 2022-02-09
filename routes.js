@@ -2,7 +2,7 @@ const flatten = require('ramda/src/flatten');
 const {compose, nth, split, get} = require('lodash/fp');
 const fs = require('fs');
 const path = require('path');
-const {getCurrentSaloneFromReques} = require('./hapi_server/routes/utils/getCurrentSalone')
+const {getCurrentSaloneFromRequest} = require('./hapi_server/routes/utils/getCurrentSalone')
 
 const imgRoute = {
   method: 'GET',
@@ -40,7 +40,7 @@ const indexRoute = {
     method: 'GET',
     path: '/',
     handler: async function (request, h) {
-      const salone = getCurrentSaloneFromReques(request);
+      const salone = await getCurrentSaloneFromRequest(request);
       const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8').replace('__TITLE__', salone.name);
       return html;
     },

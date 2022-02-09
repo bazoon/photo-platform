@@ -3,7 +3,7 @@ const {getCurrentDomain} = require('./getCurrentDomain');
 
 async function getCurrentSalone(domain) {
   const query = `
-    select salones.id, slug from salones
+    select salones.id, slug, name from salones
     where salones.domain=:domain
   `;
  
@@ -112,7 +112,7 @@ async function getContestIdFromSection(sectionId) {
   return contest_id;
 }
 
-async function getCurrentSaloneFromReques(request) {
+async function getCurrentSaloneFromRequest(request) {
   const domain = await getCurrentDomain(request);
   return getCurrentSalone(domain);
 }
@@ -127,5 +127,5 @@ module.exports = {
   getCurrentContestFromRequest,
   getContestFromSection,
   getContestIdFromSection,
-  getCurrentSaloneFromReques
+  getCurrentSaloneFromRequest
 }
