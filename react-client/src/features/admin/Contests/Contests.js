@@ -147,14 +147,11 @@ const Grid = ({store}) => {
 
   };
 
-  
-
   const onChangeBoolean = (value, record, fieldName) => {
     const recs = over(findLens({id: record.id}), rec => ({...rec, [fieldName]: value}), records);
     send("refresh", {records: recs});
     asyncPut(`api/admin/contests/${record.id}`, {...record, [fieldName]: value}).fork(saveFailed, saveOk);
   };
-
 
   const valueTemplate = (rowData, fieldInfo) => {
     const type = columnsSchema.properties[fieldInfo.field].type;
@@ -175,7 +172,10 @@ const Grid = ({store}) => {
   };
 
   const validateForm = (values) => {
-    const {dateStart, dateStop, dateJuriEnd, dateRateShow} = values;
+    const dateStart = new Date(values.dateStart);
+    const dateStop = new Date(values.dateStop);
+    const dateJuriEnd = new Date(values.dateJuriEnd);
+    const dateRateShow = new Date(values.dateRateShow);
 
     let errors = {};
 

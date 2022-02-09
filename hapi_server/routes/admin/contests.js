@@ -146,7 +146,6 @@ module.exports = [
       const isModer = user.userType === 2;
       let query;
 
-        console.log('isAdmin', isAdmin);
       if (isAdmin) {
         query = `
         select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
@@ -215,15 +214,15 @@ module.exports = [
     path: '/api/admin/contests/{id}',
     handler: async function (request, h) {
       const { id } = request.params;
-      const lexiconValues = R.pick(fields, request.payload);
-      const lexicon = await h.models.Contest.findOne({
+      const values = R.pick(fields, request.payload);
+      const contest = await h.models.Contest.findOne({
         where: {
           id
         }
       });
 
-      await lexicon.update(lexiconValues);
-      return R.pick(fields, lexicon);
+      await contest.update(values);
+      return R.pick(fields, contest);
     },
     options: {
       tags: ['api'],

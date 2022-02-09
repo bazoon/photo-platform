@@ -2,8 +2,8 @@
 module.exports = (sequelize, DataTypes) => {
   const Publication = sequelize.define('Publication', {
     contestMenuId: DataTypes.NUMBER,
-    dateCreate: DataTypes.DATE,
-    dateShow: DataTypes.DATE,
+    dateCreate: DataTypes.STRING,
+    dateShow: DataTypes.STRING,
     visible: DataTypes.NUMBER,
     pubtype: DataTypes.NUMBER,
     archive: DataTypes.NUMBER

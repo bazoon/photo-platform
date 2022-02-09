@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const RegistrationContest = sequelize.define('RegistrationContest', {
     userId: DataTypes.INTEGER,
     contestId: DataTypes.INTEGER,
-    dateReg: DataTypes.DATE,
+    dateReg: DataTypes.STRING,
     sectionCount: DataTypes.INTEGER,
     regState: DataTypes.INTEGER,
     rejectionReason: DataTypes.STRING,

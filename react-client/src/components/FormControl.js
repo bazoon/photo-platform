@@ -3,7 +3,6 @@ import { Dropdown } from "primereact/dropdown";
 import { Field } from "react-final-form";
 import { InputText } from "primereact/inputtext";
 import { classNames } from "primereact/utils";
-import { Calendar } from "primereact/calendar";
 import { FileUpload } from "primereact/fileupload";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import DecoupledEditor from "@ckeditor/ckeditor5-build-decoupled-document";
@@ -12,6 +11,7 @@ import {useTranslation} from "react-i18next";
 import { Checkbox } from "primereact/checkbox";
 import {SelectButton} from "primereact/selectbutton";
 import { InputNumber } from "primereact/inputnumber";
+import {literalDateFormat} from "../core/utils";
 
 const editorConfig = {
   alignment: {
@@ -152,15 +152,27 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
+  const onDateChange = onChange => ({target}) => {
+    const match = target.value.match(/(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      onChange(`${match[1]}-${match[2]}-${match[3]}`);
+    }
+  };
+
   const renderDate = (field, required) => {
     const {name, title} = field;
     return (
       <Field name={name} render={({ input, meta }) => (
-        console.log(input.value) ||
         <div className="p-field">
           <span className="p-input-icon-right">
             <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
-            <Calendar id="basic" {...input} value={input.value ? new Date(input.value) : ""} />
+            <input 
+              type="date" 
+              {...input}
+              onChange= {onDateChange(input.onChange)} 
+              value={input.value ? literalDateFormat(input.value) : ""}
+              className="text-bright bg-transparent border-0 pt-2 pb-2 w-full"
+            />
           </span>
           {getFormErrorMessage(meta)}
         </div>

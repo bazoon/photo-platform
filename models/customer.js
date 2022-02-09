@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Customer = sequelize.define('Customer', {
     memoField: DataTypes.STRING,
-    birthday: DataTypes.DATE,
+    birthday: DataTypes.STRING,
     postIndex: DataTypes.STRING,
     address: DataTypes.STRING,
     countryId: DataTypes.INTEGER,

@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     filename: DataTypes.STRING,
     moder: DataTypes.INTEGER,
     reasonModeration: DataTypes.STRING,
-    dateAdd: DataTypes.DATE,
+    dateAdd: DataTypes.STRING,
     average: DataTypes.DOUBLE,
     median: DataTypes.DOUBLE,
     demosRate: DataTypes.DOUBLE,

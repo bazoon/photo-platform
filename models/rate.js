@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     photoworkId: DataTypes.INTEGER,
     juryId: DataTypes.INTEGER,
     rateValue: DataTypes.DOUBLE,
-    dateRate: DataTypes.DATE
+    dateRate: DataTypes.STRING
   }, {
       timestamps: true,
       createdAt: 'date_rate',

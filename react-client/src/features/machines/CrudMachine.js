@@ -9,7 +9,7 @@ import {ifElse} from "crocks";
 import {option, map} from "crocks/pointfree";
 import {Just, Nothing} from "crocks/Maybe";
 import identity from "crocks/combinators/identity";
-import {isObject} from "lodash/fp";
+import {isObject, mapValues} from "lodash/fp";
 
 const safe = pred =>
   ifElse(pred, Just, Nothing);
@@ -20,6 +20,14 @@ const toFormData = (obj) => {
     formData.append(key, obj[key]);
   }
   return formData;
+};
+
+const normalizeDates = (values, {properties}) => {
+  return Object.keys(values).reduce((a, k) => {
+    let value = values[k];
+    const isDate = properties[k]?.type === "date";
+    return {...a, [k]: isDate? new Date(value) : value};
+  }, {});
 };
 
 const fake = recs => recs.reduce((a, e) => [...a, e, {...e, id: e.id + Math.random()}] , []);
@@ -113,7 +121,7 @@ export default ({name = "crud", api, idField = "id", apiParams, t = identity, ap
         invoke: {
           id: "loadGrid",
           src: () => (callback) => {
-            Async.all([asyncGet(combineApiWithParams(api)(apiParams)), asyncGet(api + "/meta", apiMetaParams)]) .fork(() => callback("loadFailed"), data => {
+            Async.all([asyncGet(combineApiWithParams(api)(apiParams)), asyncGet(api + "/meta", apiMetaParams)]).fork(() => callback("loadFailed"), data => {
               callback({type: "loadOk", data});
             });
           }
@@ -169,7 +177,8 @@ export default ({name = "crud", api, idField = "id", apiParams, t = identity, ap
           post: {
             invoke: {
               id: "post",
-              src: (_, {data: record}) => (callback) => {
+              src: ({meta}, {data: rawData}) => (callback) => {
+                const record = rawData;
                 const hasFile = values(record).some(v => v instanceof File);
                 const payload = hasFile ? toFormData(record) : record;
                 const isJson = !hasFile;
@@ -182,7 +191,7 @@ export default ({name = "crud", api, idField = "id", apiParams, t = identity, ap
           update: {
             invoke: {
               id: "update",
-              src: (_, {data}) => (callback) => {
+              src: ({meta}, {data}) => (callback) => {
                 const hasFile = values(data).some(v => v instanceof File);
                 const payload = hasFile ? toFormData(data) : data;
                 const isJson = !hasFile;

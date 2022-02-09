@@ -19,9 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       field: 'smtp_psw'
     },
     smtpUsePub: DataTypes.INTEGER,
-    dateCreate: DataTypes.DATE,
+    dateCreate: DataTypes.STRING,
     rowState: DataTypes.INTEGER,
-    dateStatus: DataTypes.DATE
+    dateStatus: DataTypes.STRING
   }, {
       timestamps: true,
       createdAt: 'date_create',

@@ -83,6 +83,14 @@ export const dateFormat = (date = new Date, locale = "ru-RU") => {
   return new Intl.DateTimeFormat(locale).format(new Date(date));
 };
 
+export const literalDateFormat = (date = new Date) => {
+  const d = (new Date(date));
+  const z = n => n < 10 ? "0" + n : n;
+  const t = `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
+  console.log(t);
+  return t;
+};
+
 export const loadLanguage = () => compose(option("ru"), safe(identity))(localStorage.getItem("lang"));
 export const saveLanguage = lang => { localStorage.setItem("lang", lang); };
 
