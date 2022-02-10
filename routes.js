@@ -41,7 +41,36 @@ const indexRoute = {
     path: '/api/index',
     handler: async function (request, h) {
       const salone = await getCurrentSaloneFromRequest(request);
-      const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8').replace('__TITLE__', salone.name);
+      const query = `
+        select salon_settings.content from salon_settings, settings
+        where salon_settings.setting_id=settings.id and code='yandex_metrika' and salon_settings.salone_id=:saloneId
+      `;
+
+      const [{content}] = await h.query(query, {
+        replacements: {
+          saloneId: salone.id
+        }
+      });
+
+      const yaCode = `
+        <script type="text/javascript" >
+           (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+           m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+           (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+           ym("${content}", "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true
+           });
+        </script>
+        <noscript><div><img src="https://mc.yandex.ru/watch/${content}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+      `;
+
+      const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8')
+        .replace('__TITLE__', salone.name)
+        .replace('__YA__METRICA__', yaCode);
+
       return html;
     },
     options: {
