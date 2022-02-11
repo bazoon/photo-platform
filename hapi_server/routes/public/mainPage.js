@@ -45,7 +45,7 @@ module.exports = [
 
       const logo = get('[0].content', await h.query(logoQuery));
       const slug = await getCurrentSlug(request);
-      const logoPath = slug && logo ? `/${slug}/${logo}` : '';
+      const logoPath = slug && logo ? `/uploads/${slug}/${logo}` : '';
 
       return {...get('[0]', info) || {}, logo: logoPath };
     },
