@@ -45,7 +45,7 @@ module.exports = [
           'content': {
             '$id': '#root/items/content', 
             'title': 'Content', 
-            'type': 'string',
+            'type': 'memo',
             'default': '',
             'examples': [
               '33'

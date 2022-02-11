@@ -69,7 +69,7 @@ const indexRoute = {
 
       const html = fs.readFileSync(path.resolve('./react-client/build/index.html'), 'utf8')
         .replace('__TITLE__', salone.name)
-        .replace('__YA__METRICA__', yaCode);
+        .replace('__YA__METRICA__', content);
 
       return html;
     },

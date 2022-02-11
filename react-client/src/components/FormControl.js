@@ -12,6 +12,7 @@ import { Checkbox } from "primereact/checkbox";
 import {SelectButton} from "primereact/selectbutton";
 import { InputNumber } from "primereact/inputnumber";
 import {literalDateFormat} from "../core/utils";
+import { InputTextarea } from "primereact/inputtextarea";
 
 const editorConfig = {
   alignment: {
@@ -210,6 +211,21 @@ const getFormErrorMessage = (meta) => {
     );
   };
 
+  const renderMemo = (field, required) => {
+    const {name, title} = field;
+    return (
+      <Field name={name} render={({ input, meta }) => (
+        <div className="p-field">
+          <span className="p-input-icon-right">
+            <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
+            <InputTextarea rows={5} cols={30} readOnly={field.readOnly} id={name}  {...input} className={classNames({ "p-invalid": isFormFieldValid(meta) })} />
+          </span>
+          {getFormErrorMessage(meta)}
+        </div>
+      )} />
+    );
+  };
+
 const FormControl = ({field, required}) => {
   const render = {
     enum: renderEnum,
@@ -218,6 +234,7 @@ const FormControl = ({field, required}) => {
     boolean: renderBoolean,
     file: renderFile,
     text: renderEditor,
+    memo: renderMemo,
     date: renderDate,
     number: renderNumber,
   }[field.type] || renderText;
