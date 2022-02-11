@@ -38,6 +38,27 @@ module.exports = [
       }
     }
   },
+  {
+    method: 'POST',
+    path: '/api/admin/settings',
+    handler: async function (request, h) {
+      const {payload} = request;
+        
+      const setting = await h.models.Setting.create({
+        code: payload.code,
+        levelable: payload.levelable,
+        enable: payload.enable,
+        typeSet: payload.typeSet
+      });
 
+      return setting;
+    },
+    options: {
+      tags: ['api'],
+      auth: {
+        mode: 'optional'
+      }
+    }
+  },
 ];
 

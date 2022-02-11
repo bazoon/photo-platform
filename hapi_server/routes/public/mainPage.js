@@ -1,5 +1,5 @@
 const {get} = require('lodash/fp');
-const {getCurrentContestIdFromRequest} = require('../utils/getCurrentSalone');
+const {getCurrentContestIdFromRequest, getCurrentSlug} = require('../utils/getCurrentSalone');
 
 
 module.exports = [
@@ -30,13 +30,24 @@ module.exports = [
             where ca.contest_id=c.id and c.salone_id=s.id and s.organizer_id=o.id and  sa.salone_id=s.id and 
             ca.language_id=l.id and sa.language_id=l.id and l.short=:lang and inworknow and c.id=:contestId
       `;
+
       const info = await h.query(query, {
         replacements: {
           lang,
           contestId
         }
       });
-      return get('[0]', info) || {};
+
+
+      const logoQuery = `
+        select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='contestLogoFileName'
+      `;
+
+      const logo = get('[0].content', await h.query(logoQuery));
+      const slug = await getCurrentSlug(request);
+      const logoPath = slug && logo ? `/${slug}/${logo}` : '';
+
+      return {...get('[0]', info) || {}, logo: logoPath };
     },
     options: {
       tags: ['api'],

@@ -59,16 +59,12 @@ addLocale("ru", {
 });
 
 function MainApp({store}) {
-
-
   const sidebars = () => {
     return store.sidebars.map(sidebar => {
       const {Component} = sidebar;
       return <Component key={sidebar.key} {...sidebar.props}/>;
     });
   };
-
-
 
   return (
     <>
@@ -80,7 +76,7 @@ function MainApp({store}) {
 
               <div className="flex wrap-0 items-center justify-between">
                 <div className="relative">
-                  <Link to="/"> <img src="/logo.png" className="w-32 h-32 object-contain relative -left-12"/></Link>
+                  <Link to="/"> <img src={store?.info?.logo || "/logo.png"} className="w-32 h-32 object-contain relative -left-12"/></Link>
                 </div>
                 <MainMenu />
               </div>
