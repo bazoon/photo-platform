@@ -53,9 +53,7 @@ module.exports = [
       const bg = get('[0].content', await h.query(bgQuery, {replacements: {saloneId: info.saloneId}}));
       const slug = await getCurrentSlug(request);
       const logoPath = (slug && logo) ? `/uploads/${slug}/${logo}` : '';
-      const bgPath = (slug && logo) ? `/uploads/${slug}/${bg}` : '';
-
-      console.log(1,slug,2, bg,3, bgPath,4, (slug && logo), 5, (slug && logo) ? `/uploads/${slug}/${bg}` : '999')
+      const bgPath = (slug && bg) ? `/uploads/${slug}/${bg}` : '';
 
       return {...info || {}, logo: logoPath, bg: bgPath || ''};
     },
