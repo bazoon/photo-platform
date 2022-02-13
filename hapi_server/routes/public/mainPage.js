@@ -50,8 +50,8 @@ module.exports = [
       );
 
       console.log(info);
-      const logo = get('[0].content', await h.query(logoQuery, {replacements: { saloneId: info.salone_id}}));
-      const bg = get('[0].content', await h.query(bgQuery, {replacements: {saloneId: info.salone_id}}));
+      const logo = get('[0].content', await h.query(logoQuery, {replacements: { saloneId: info.saloneId}}));
+      const bg = get('[0].content', await h.query(bgQuery, {replacements: {saloneId: info.saloneId}}));
       const slug = await getCurrentSlug(request);
       const logoPath = slug && logo ? `/uploads/${slug}/${logo}` : '';
       const bgPath = slug && logo ? `/uploads/${slug}/${bg}` : '';
