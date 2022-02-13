@@ -22,6 +22,7 @@ module.exports = [
             date_stop,
             s.name salone,
             sa.name AS salone,
+            s.id as salone_id,
             ca."name",
             phone_tech,
             email_pub
@@ -31,25 +32,25 @@ module.exports = [
             ca.language_id=l.id and sa.language_id=l.id and l.short=:lang and inworknow and c.id=:contestId
       `;
 
-      const info = await h.query(query, {
-        replacements: {
-          lang,
-          contestId
-        }
-      });
-
-
       const logoQuery = `
-        select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='contestLogoFileName'
+        select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='contestLogoFileName and salon_settings.salone_id=:saloneId'
       `;
 
-  
       const bgQuery = `
-        select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='backGroundImages'
+        select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='backGroundImages salon_settings.salone_id=:saloneId'
       `;
 
-      const logo = get('[0].content', await h.query(logoQuery));
-      const bg = get('[0].content', await h.query(bgQuery));
+      const info = get('[0].content', 
+        await h.query(query, {
+          replacements: {
+            lang,
+            contestId
+          }
+        })
+      );
+
+      const logo = get('[0].content', await h.query(logoQuery, {replacements: { saloneId: info.salone_id}}));
+      const bg = get('[0].content', await h.query(bgQuery, {replacements: {saloneId: info.salone_id}}));
       const slug = await getCurrentSlug(request);
 
       const logoPath = slug && logo ? `/uploads/${slug}/${logo}` : '';
