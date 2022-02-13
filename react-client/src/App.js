@@ -66,6 +66,19 @@ function MainApp({store}) {
     });
   };
 
+  const bg = store?.info?.bg || "./images/bg.jpg";
+
+  const bgStyle = {
+    backgroundImage: `linear-gradient(
+              rgba(0, 0, 0, 0.6),
+              rgba(0, 0, 0, 0.6)
+            ), url('${bg}')`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "cover",
+    backgroundPosition: "50% 50%"
+  };
+
+
   return (
     <>
       <Router>
@@ -154,7 +167,7 @@ function MainApp({store}) {
                   <PrizesNotMagic/>
                 </Route>
               <Route path="/">
-                <div className="main-bg w-full">
+                <div className="main-bg w-full" style={bgStyle}>
                   <MainPage/>
                 </div>
               </Route>

@@ -43,11 +43,19 @@ module.exports = [
         select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='contestLogoFileName'
       `;
 
-      const logo = get('[0].content', await h.query(logoQuery));
-      const slug = await getCurrentSlug(request);
-      const logoPath = slug && logo ? `/uploads/${slug}/${logo}` : '';
+  
+      const bgQuery = `
+        select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='backGroundImages'
+      `;
 
-      return {...get('[0]', info) || {}, logo: logoPath };
+      const logo = get('[0].content', await h.query(logoQuery));
+      const bg = get('[0].content', await h.query(bgQuery));
+      const slug = await getCurrentSlug(request);
+
+      const logoPath = slug && logo ? `/uploads/${slug}/${logo}` : '';
+      const bgPath = slug && logo ? `/uploads/${slug}/${bg}` : '';
+
+      return {...get('[0]', info) || {}, logo: logoPath, bg: bgPath };
     },
     options: {
       tags: ['api'],
