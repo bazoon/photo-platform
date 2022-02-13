@@ -49,6 +49,9 @@ module.exports = [
         })
       );
 
+      const r = await h.query(bgQuery, {replacements: {saloneId: info.saloneId}});
+      console.log('r', r)
+
       console.log(info);
       const logo = get('[0].content', await h.query(logoQuery, {replacements: { saloneId: info.saloneId}}));
       const bg = get('[0].content', await h.query(bgQuery, {replacements: {saloneId: info.saloneId}}));
