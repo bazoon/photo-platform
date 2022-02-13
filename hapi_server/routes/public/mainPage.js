@@ -49,17 +49,13 @@ module.exports = [
         })
       );
 
-      const r = await h.query(bgQuery, {replacements: {saloneId: info.saloneId}});
-      console.log('r', r)
-
-      console.log(info);
       const logo = get('[0].content', await h.query(logoQuery, {replacements: { saloneId: info.saloneId}}));
       const bg = get('[0].content', await h.query(bgQuery, {replacements: {saloneId: info.saloneId}}));
       const slug = await getCurrentSlug(request);
-      const logoPath = slug && logo ? `/uploads/${slug}/${logo}` : '';
-      const bgPath = slug && logo ? `/uploads/${slug}/${bg}` : '';
+      const logoPath = (slug && logo) ? `/uploads/${slug}/${logo}` : '';
+      const bgPath = (slug && logo) ? `/uploads/${slug}/${bg}` : '';
 
-      console.log(slug, 1,logoPath,1, bgPath,1, logo, 1,bg);
+      console.log(1,slug,2, bg,3, bgPath,4)
 
       return {...info || {}, logo: logoPath, bg: bgPath || ''};
     },
