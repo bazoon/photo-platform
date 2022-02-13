@@ -63,7 +63,7 @@ export default function Main() {
       count: [file51, file52, file53]
     },
     {
-      text: "Протезы рук SmartLi компании Технобионик",
+      text: "Протезы рук SmartLi компании Техбионик",
       n: 6,
       count: [file61, file62, file63]
     },

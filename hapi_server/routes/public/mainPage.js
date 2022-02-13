@@ -55,7 +55,7 @@ module.exports = [
       const logoPath = slug && logo ? `/uploads/${slug}/${logo}` : '';
       const bgPath = slug && logo ? `/uploads/${slug}/${bg}` : '';
 
-      return {...get('[0]', info) || {}, logo: logoPath, bg: bgPath };
+      return {...get('[0]', info) || {}, logo: logoPath, bg: bgPath || ''};
     },
     options: {
       tags: ['api'],

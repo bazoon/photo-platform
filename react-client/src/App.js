@@ -167,7 +167,7 @@ function MainApp({store}) {
                   <PrizesNotMagic/>
                 </Route>
               <Route path="/">
-                <div className="main-bg w-full" style={bgStyle}>
+                <div className="w-full" style={bgStyle}>
                   <MainPage/>
                 </div>
               </Route>
