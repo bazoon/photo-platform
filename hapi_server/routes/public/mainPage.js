@@ -33,11 +33,11 @@ module.exports = [
       `;
 
       const logoQuery = `
-        select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='contestLogoFileName and salon_settings.salone_id=:saloneId'
+        select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='contestLogoFileName' and salon_settings.salone_id=:saloneId
       `;
 
       const bgQuery = `
-        select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='backGroundImages salon_settings.salone_id=:saloneId'
+        select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='backGroundImages' salon_settings.salone_id=:saloneId
       `;
 
       const info = get('[0]', 
