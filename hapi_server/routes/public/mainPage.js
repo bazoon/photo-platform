@@ -56,7 +56,7 @@ module.exports = [
       const logoPath = slug && logo ? `/uploads/${slug}/${logo}` : '';
       const bgPath = slug && logo ? `/uploads/${slug}/${bg}` : '';
 
-      console.log(slug)
+      console.log(slug, 1,logoPath,1, bgPath,1, logo, 1,bg);
 
       return {...info || {}, logo: logoPath, bg: bgPath || ''};
     },
