@@ -187,7 +187,7 @@ function MainApp({store}) {
                   </div>
 
                   <FooterLinks/>                 
-                  {SocialLinks()}
+                  {SocialLinks(store?.info?.socials || {})}
 
                   <div className="grid grid-rows-2 text-gray2">
                     <div>
@@ -210,11 +210,11 @@ function MainApp({store}) {
 
 export default collect(MainApp);
 
-function SocialLinks() {
+function SocialLinks({vkLink = "", twitterLink = "", facebookLink = "", instagramLink = ""}) {
   return <div className="max-w-max gap-8 grid grid-cols-2 grid-rows-2">
-    <a href="" rel="noreferrer" target="_blank"><Vk /></a>
-    <a href="" rel="noreferrer" target="_blank"><Twitter /></a>
-    <a href="" target="_blank" rel="noreferrer"><Fb /></a>
-    <a href="" target="_blank" rel="noreferrer"><Insta /></a>
+    <a href={vkLink} rel="noreferrer" target="_blank"><Vk /></a>
+    <a href={twitterLink} rel="noreferrer" target="_blank"><Twitter /></a>
+    <a href={facebookLink} target="_blank" rel="noreferrer"><Fb /></a>
+    <a href={instagramLink} target="_blank" rel="noreferrer"><Insta /></a>
   </div>;
 }

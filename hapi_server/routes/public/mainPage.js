@@ -40,6 +40,11 @@ module.exports = [
         select content from salon_settings, settings where salon_settings.setting_id=settings.id and settings.code='backGroundImages' and salon_settings.salone_id=:saloneId
       `;
 
+      const socialsQuery = `
+        select code, content from salon_settings, settings where salon_settings.setting_id=settings.id 
+        and settings.code in ('vkLink', 'instagramLink', 'facebookLink', 'twitterLink') and salon_settings.salone_id=:saloneId
+      `;
+
       const info = get('[0]', 
         await h.query(query, {
           replacements: {
@@ -54,8 +59,9 @@ module.exports = [
       const slug = await getCurrentSlug(request);
       const logoPath = (slug && logo) ? `/uploads/${slug}/${logo}` : '';
       const bgPath = (slug && bg) ? `/uploads/${slug}/${bg}` : '';
+      const socials = await h.query(socialsQuery, {replacements: {saloneId: info.saloneId}});
 
-      return {...info || {}, logo: logoPath, bg: bgPath || ''};
+      return {...info || {}, logo: logoPath, bg: bgPath || '', socials: socials.reduce((a, e) => ({...a, [e.code]: e.content}), {})};
     },
     options: {
       tags: ['api'],

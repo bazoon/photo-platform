@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import { collect } from "react-recollect";
 
-function FooterLinks(){
+function FooterLinks({store}) {
   const { t } = useTranslation("namespace1");
   return(
     <div className="grid gap-2 text-lg grid-cols-2 grid-rows-3">
@@ -16,4 +17,4 @@ function FooterLinks(){
   );
 }
 
-export default FooterLinks;
+export default collect(FooterLinks);
