@@ -20,7 +20,7 @@ module.exports = [
       const {sections} = request.payload;
 
       const contestId = await getCurrentContestIdFromRequest(request);
-      const registrationContest = await h.models.RegistrationContest.create({userId, contestId, sectionCount: sections.length, regState: 0 });
+      const registrationContest = await h.models.RegistrationContest.create({userId, contestId, sectionCount: sections.length, regState: 0, dateReg: Date.now() });
       return registrationContest;
     },
     options: {
