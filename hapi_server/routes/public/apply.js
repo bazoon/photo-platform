@@ -18,9 +18,8 @@ module.exports = [
       }
 
       const {sections} = request.payload;
-
       const contestId = await getCurrentContestIdFromRequest(request);
-      const registrationContest = await h.models.RegistrationContest.create({userId, contestId, sectionCount: sections.length, regState: 0, dateReg: new Date() });
+      const registrationContest = await h.models.RegistrationContest.create({userId, contestId, sectionCount: sections.length, regState: 0, dateReg: '2022-02-02' });
       return registrationContest;
     },
     options: {
