@@ -2,20 +2,21 @@
 /Users/vn/projects/work/photo-platform/react-client
 0
 bsconfig.json	0x1.8516df05ee202p+30
-src	0x1.8566a5b84685bp+30
+src	0x1.8834a36e218e3p+30
 src/fonts	0x1.85815df5d74a6p+30
 src/fonts/Futura-400	0x1.857ca7805fc6ep+30
 src/fonts/Futura-300	0x1.85815e0769ebbp+30
 src/fonts/Bebas-700	0x1.857c9642b4c6fp+30
 src/fonts/Futura-600	0x1.85815e622b0d6p+30
 src/icons	0x1.84edf60414396p+30
-src/components	0x1.85afa8c12641ep+30
+src/components	0x1.880f3a45188c8p+30
 src/components/Crud	0x1.8566a5b847388p+30
-src/features	0x1.8693aaa66e9aap+30
+src/features	0x1.87f0075d8aa83p+30
+src/features/NotMagic	0x1.87f009c04106fp+30
 src/features/Applications	0x1.85e5515d287d6p+30
-src/features/machines	0x1.8566a5b849616p+30
-src/features/admin	0x1.87c54a769bcdap+30
-src/features/admin/Salones	0x1.84edf60413177p+30
+src/features/machines	0x1.8834a36e23219p+30
+src/features/admin	0x1.8834a36e227bfp+30
+src/features/admin/Salones	0x1.8834a36e22d32p+30
 src/features/admin/AwardTypes	0x1.84edf6040fd2ep+30
 src/features/admin/Contests	0x1.86939a31a2ad6p+30
 src/features/admin/Organizers	0x1.84edf60412e3p+30
@@ -26,8 +27,10 @@ src/features/admin/Admins	0x1.84edf6040fa1bp+30
 src/features/admin/Config	0x1.84edf6041002ep+30
 src/features/admin/Words	0x1.84edf60413a9fp+30
 src/features/admin/Settings	0x1.8576b92fb2868p+30
-src/images	0x1.84edf604145fep+30
-src/core	0x1.84edf6040ca58p+30
+src/features/admin/SaloneFiles	0x1.8834a36e2289p+30
+src/images	0x1.87f536541f61p+30
+src/images/nomagic-tech	0x1.87f4f9d92ad17p+30
+src/core	0x1.87d9dd8ce0e8ep+30
 src/core/hooks	0x1.8566b22447927p+30
 ===
 /Users/vn/projects/work/photo-platform/react-client/node_modules/rescript/darwin/rescript.exe	0x1.85128b42178d5p+30

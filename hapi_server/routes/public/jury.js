@@ -7,6 +7,41 @@ const MODER_ACCEPTED = 1;
 module.exports = [
   {
     method: 'GET',
+    path: '/api/jury/sections/{contestId}',
+    handler: async function (request, h) {
+      const {contestId} = request.params;
+      
+      if (!contestId) {
+        return [];
+      }
+
+      const query = `
+        SELECT
+          sections.name,
+          sections.id
+        FROM
+          contests, sections 
+        WHERE
+          contests.id=:contestId and sections.contest_id = contests.id
+      `;
+
+      const sections = await h.query(query, {
+        replacements: {
+          contestId
+        }
+      });
+
+      return sections;
+    },
+    options: {
+      tags: ['api'],
+      auth: {
+        mode: 'optional'
+      }
+    }
+  },
+  {
+    method: 'GET',
     path: '/api/jury/sections',
     handler: async function (request, h) {
       const contestId = await getCurrentContestIdFromRequest(request);

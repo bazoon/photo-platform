@@ -66,7 +66,7 @@ module Link = {
 }
 
 @react.component
-let make = (~idd: option<string>) => {
+let make = (~id: option<string>) => {
   let t = switch useTranslation("namespace1") {
   | [t, _, _] => a => t(a, a)
   | _ => (a: string) => a
@@ -102,8 +102,8 @@ let make = (~idd: option<string>) => {
   }
 
   let loadSections = () => {
-    switch idd {
-      | Some(id) => asyncGetSections(`api/jury/sections/${id}`).fork(failed, sectionsOk, cleanUp)
+    switch id {
+      | Some(idd) => asyncGetSections(`api/jury/sections/${idd}`).fork(failed, sectionsOk, cleanUp)
       | None => asyncGetSections(`api/jury/sections`).fork(failed, sectionsOk, cleanUp)
     }
     ()
