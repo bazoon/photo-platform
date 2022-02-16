@@ -32,7 +32,7 @@ function Main({store, history}) {
   const [items, setItems] = useState([]);
   const [links, setLinks] = useState([]);
   const { t, i18n } = useTranslation("namespace1");
-  const {canAdmin} = useAuth();
+  const {canAdmin, canModer} = useAuth();
   const logout = useLogout(store);
 
   const changeLanguage = lang => {
@@ -47,7 +47,7 @@ function Main({store, history}) {
         className: "flex-1",
         template: <div></div>
       },
-      canAdmin(store.role) ? {
+      canAdmin(store.role) || canModer(store.role) ? {
         label: "admin",
         className: isActiveMenuItem({to: "/admin"}) ? "p-menuitem--active" : "",
         command: () => history.push("/admin"),

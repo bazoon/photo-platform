@@ -22,6 +22,7 @@ import { collect } from "react-recollect";
 import { initStore } from "react-recollect";
 import Settings from "./Settings/Settings";
 import SaloneSettings from "./Settings/SaloneSettings";
+import SaloneFiles from "./SaloneFiles/SaloneFiles";
 
 initStore({sidebars: []});
 
@@ -84,6 +85,10 @@ function App() {
     {
       path: "/admin/saloneSettings",
       Component: SaloneSettings
+    },
+    {
+      path: "/admin/files",
+      Component: SaloneFiles
     },
     {
       path: "/admin",

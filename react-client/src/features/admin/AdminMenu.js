@@ -30,6 +30,10 @@ function App({history}) {
           command: () => history.push("/admin/settings")
         },
         {
+          label: t("files"),
+          command: () => history.push("/admin/files")
+        },
+        {
           label: t("saloneSettings"),
           command: () => history.push("/admin/saloneSettings")
         },

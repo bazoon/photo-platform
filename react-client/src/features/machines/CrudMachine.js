@@ -30,6 +30,8 @@ const normalizeDates = (values, {properties}) => {
   }, {});
 };
 
+const defaultDelRecordToParams = (api, record) => api + "/" + record.id;
+
 const fake = recs => recs.reduce((a, e) => [...a, e, {...e, id: e.id + Math.random()}] , []);
 const log = x => { x.inspect ? console.log(x.inspect()) : console.log(x); return x; };
 
@@ -56,7 +58,7 @@ const getInitialContext = () => {
   };
 };
 
-export default ({name = "crud", api, idField = "id", apiParams, t = identity, apiMetaParams = {}}) => {
+export default ({name = "crud", api, idField = "id", apiParams, t = identity, apiMetaParams = {}, delRecordToParams=defaultDelRecordToParams}) => {
   
   const formatError = (e) => {
     if (isObject(e)) {
@@ -99,8 +101,8 @@ export default ({name = "crud", api, idField = "id", apiParams, t = identity, ap
       remove: {
         invoke: {
           id: "removeRecord",
-          src: (_, {id}) => (callback) => {
-            asyncDel(api + "/" + id).fork(() => callback("removeFailed"), () => callback({type: "removeOk",  id}));
+          src: (_, record) => (callback) => {
+            asyncDel(delRecordToParams(api, record)).fork(() => callback("removeFailed"), () => callback({type: "removeOk",  id: record.id}));
           }
         },
         on: {

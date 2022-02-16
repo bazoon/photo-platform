@@ -158,5 +158,7 @@ module.exports = flatten([
   require('./hapi_server/routes/public/jury'),
   require('./hapi_server/routes/admin/contestMenus.js'),
   require('./hapi_server/temp/notmagic'),
-  defaultRoute
+  require('./hapi_server/routes/admin/meta/saloneFiles'),
+  require('./hapi_server/routes/admin/saloneFiles'),
+  // defaultRoute
 ]);
