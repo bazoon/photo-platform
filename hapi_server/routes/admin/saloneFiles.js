@@ -8,16 +8,16 @@ const {promisify} = require('util');
 module.exports = [
   {
     method: 'POST',
-    path: '/api/admin/saloneFiles',
+    path: '/api/admin/saloneFiles/{_t}/{slug}',
     handler: async function (request, h) {
-      const { image } = request.payload;
-      await uploadFiles(image, request);
+      const { file } = request.payload;
+      const {slug} = request.params;
+      const filePaths = await Promise.all(uploadFileForSalone(file, slug));
 
-      const filePaths = await uploadFileForSalone(image, request);
       return {
-        files: filePaths
+        file: filePaths[0],
+        id: filePaths[0]
       }
-
     },
     options: {
       tags: ['api'],
