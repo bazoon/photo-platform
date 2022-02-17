@@ -11,6 +11,7 @@ import i18n from "./core/i18n";
 
 function MainPage({history}) {
   const [config, setConfig] = useState({});
+  const { t } = useTranslation("namespace1");
   const info = store.info || {};
 
   const loadConfigFailed = () => {
@@ -78,8 +79,8 @@ function MainPage({history}) {
         <br/><br/>
         {renderStats()}
         <div className="flex m-48 justify-center">
-          <Button className="uppercase w-72 h-12 flex justify-center" onClick={handleSendPhoto}>отправить фото</Button>
-          <Button className="uppercase w-72 h-12 p-button-secondary flex justify-center ml-14">проголосовать</Button>
+          <Button className="uppercase w-72 h-12 flex justify-center" onClick={handleSendPhoto}>{t("sendPhoto")}</Button>
+          {null && <Button className="uppercase w-72 h-12 p-button-secondary flex justify-center ml-14">{t("vote")}</Button>}
         </div>
       </div>
     );
