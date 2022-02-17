@@ -233,6 +233,7 @@ const FormControl = ({field, required}) => {
     selectButton: renderSelectButton,
     boolean: renderBoolean,
     file: renderFile,
+    image: renderFile,
     text: renderEditor,
     memo: renderMemo,
     date: renderDate,
