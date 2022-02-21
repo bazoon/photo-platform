@@ -82,7 +82,10 @@ export default ({
           {
             canDelete && <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={e => onDelete(e, rowData)} />
           }
-          {customOperations.map(operation => operation(rowData))}
+
+          {
+            customOperations.map(operation => operation(rowData))
+          }
         </div>
       );
     }; 

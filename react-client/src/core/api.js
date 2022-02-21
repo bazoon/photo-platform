@@ -1,5 +1,6 @@
 import Async from "crocks/Async";
 import {keys} from "lodash/fp";
+import {isPromise} from "crocks";
 
 function makeUrl(url, params) {
   return keys(params).length > 0 ? `/${url}?${new URLSearchParams(params).toString()}` : `/${url}`;
@@ -38,17 +39,29 @@ export const asyncGet = (url, params) => Async((reject, resolve) => {
   fetch(makeUrl(url, params)).then(r => processResponse(r, resolve, reject)).catch(reject);
 });
 
+
 export const asyncPost = (url, params, json = true) => Async((reject, resolve) => {
   const headers = {};
   if (json) {
     headers["Content-Type"] = "application/json";
   }
 
-  fetch(makeUrl(url), {
-    method: "POST",
-    headers,
-    body: params instanceof FormData ? params: JSON.stringify(params),
-  }, json).then(r => processResponse(r, resolve, reject)).catch(reject);
+  if (isPromise(params)) {
+    params.then(payload => {
+      fetch(makeUrl(url), {
+        method: "POST",
+        headers,
+        body: payload instanceof FormData ? payload: JSON.stringify(payload),
+      }, json).then(r => processResponse(r, resolve, reject)).catch(reject);
+    });
+  } else {
+    fetch(makeUrl(url), {
+      method: "POST",
+      headers,
+      body: params instanceof FormData ? params: JSON.stringify(params),
+    }, json).then(r => processResponse(r, resolve, reject)).catch(reject);
+  }
+
 });
 
 export const asyncPut = (url, params, json = true) => Async((reject, resolve) => {
@@ -57,11 +70,21 @@ export const asyncPut = (url, params, json = true) => Async((reject, resolve) =>
     headers["Content-Type"] = "application/json";
   }
 
-  fetch(makeUrl(url), {
-    method: "PUT",
-    headers,
-    body: params instanceof FormData ? params: JSON.stringify(params),
-  }, json).then(r => processResponse(r, resolve, reject)).catch(reject);
+  if (isPromise(params)) {
+    params.then(payload => {
+      fetch(makeUrl(url), {
+        method: "PUT",
+        headers,
+        body: payload instanceof FormData ? payload: JSON.stringify(payload),
+      }, json).then(r => processResponse(r, resolve, reject)).catch(reject);
+    });
+  } else {
+    fetch(makeUrl(url), {
+      method: "PUT",
+      headers,
+      body: params instanceof FormData ? params: JSON.stringify(params),
+    }, json).then(r => processResponse(r, resolve, reject)).catch(reject);
+  }
 });
 
 export const asyncDel = (url, params) => Async((reject, resolve) => {

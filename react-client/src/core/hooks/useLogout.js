@@ -8,7 +8,6 @@ export default function(store) {
   };
 
   const logoutOk = () => {
-    store.toast.current.show({severity: "info", summary: "logout_ok"});
     store.user = null;
     store.isLoggedIn = false;
     loadRoles();

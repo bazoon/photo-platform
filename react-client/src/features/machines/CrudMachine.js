@@ -14,7 +14,7 @@ import {isObject, mapValues} from "lodash/fp";
 const safe = pred =>
   ifElse(pred, Just, Nothing);
 
-const toFormData = (obj) => {
+const defaultToFormData = (obj) => {
   const formData = new FormData;
   for (let key in obj) {
     formData.append(key, obj[key]);
@@ -58,7 +58,7 @@ const getInitialContext = () => {
   };
 };
 
-export default ({name = "crud", api, idField = "id", apiParams, t = identity, apiMetaParams = {}, delRecordToParams=defaultDelRecordToParams}) => {
+export default ({name = "crud", api, idField = "id", apiParams, t = identity, apiMetaParams = {}, delRecordToParams=defaultDelRecordToParams, toFormData = defaultToFormData}) => {
   
   const formatError = (e) => {
     if (isObject(e)) {
@@ -181,9 +181,10 @@ export default ({name = "crud", api, idField = "id", apiParams, t = identity, ap
               id: "post",
               src: ({meta}, {data: rawData}) => (callback) => {
                 const record = rawData;
-                const hasFile = values(record).some(v => v instanceof File);
+                const hasFile = values(record).some(v => v instanceof File || (Array.isArray(v) && v.some(e => e instanceof File)));
                 const payload = hasFile ? toFormData(record) : record;
                 const isJson = !hasFile;
+
                 asyncPost(combineApiWithParams(api)(apiParams), payload, isJson).fork(e => callback({type: "postFailed", error: e}), data => {
                   callback({type: "saveOk", data});
                 });
@@ -231,7 +232,7 @@ export default ({name = "crud", api, idField = "id", apiParams, t = identity, ap
             target: "idle",
             actions: assign({
               records: ({records}, {data}) => {
-                return [data,...records];
+                return Array.isArray(data) ? [...data, ...records] : [data,...records];
               }
             })
           },

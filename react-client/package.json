@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^12.8.3",
     "@xstate/react": "^1.3.3",
     "antd": "^4.15.2",
+    "compress.js": "^1.2.2",
     "crocks": "^0.12.4",
     "final-form": "^4.20.2",
     "i18next": "^20.2.1",

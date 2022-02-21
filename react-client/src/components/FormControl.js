@@ -46,7 +46,7 @@ const editorConfig = {
 
 const Upl = ({onChange}) => {
   return (
-    <FileUpload name="demo[]" onSelect={({files}) => onChange(files[0])} multiple accept="image/*" maxFileSize={1000000} />
+    <FileUpload name="demo[]" onSelect={({files}) => onChange(Array.from(files))} multiple accept="image/*" maxFileSize={30000000} />
   );
 };
 
@@ -113,9 +113,15 @@ const getFormErrorMessage = (meta) => {
 
   const renderFile = (field, required) => {
     const {name} = field;
+
+      const onChange = input => value => {
+        console.log(value);
+        input.onChange(value);
+      };
+
     return (
       <Field name={name} render={({ input }) => (
-        <Upl {...input} />
+        <Upl onChange={onChange(input)} />
       )}/>
     );
   };
