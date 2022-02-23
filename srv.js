@@ -318,7 +318,7 @@ const init = async () => {
     isSameSite: false
   });
 
-  await server.register({ plugin: Authorization});
+  // await server.register({ plugin: Authorization});
   server.route(routes);
 
 
