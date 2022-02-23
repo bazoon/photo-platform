@@ -17,6 +17,10 @@ const L = require('lodash/fp');
 const routes = require('./routes');
 const { newEnforcer, StringAdapter } = require('casbin')
 
+  const getUserLanguage = userId => {
+    return 'ru';
+  };
+
 
 const {getRole} = require('./hapi_server/routes/services/permissions');
 const {getCurrentDomain} = require('./hapi_server/routes/utils/getCurrentDomain');
@@ -196,28 +200,43 @@ const init = async () => {
     register: async function (server, options) {
       server.ext('onPreAuth', async function (request, h) {
         const token = getPath(['headers', 'cookie'], request).map(split('=')).map(nth(1)).option('');
-         console.log(token, process.env.API_TOKEN) 
+        console.log('')
+        console.log('get token from headers:  ' + token);
+        console.log('')
+
+        try {
+          token && jwt.verify(token, process.env.API_TOKEN);
+        } catch (e) {
+          console.log(e)
+        }
+        
         if (token) {
-          const user = jwt.verify(token, process.env.API_TOKEN);
-          const u = await models.User.findOne({
-            where: {
-              id: user.id
-            }});
+        //   const user = jwt.verify(token, process.env.API_TOKEN);
+        //   const u = await models.User.findOne({
+        //     where: {
+        //       id: user.id
+        //     }});
 
-          const enforcer = await getEnforcer();
-          const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
+        //   const lang = getUserLanguage(u.id);
+        //   h.state('lang', lang);
+        //   console.log(122, lang)
 
-          const role = await getRole(u, domain);
-          const {path, method} = request.route;
+        //   const enforcer = await getEnforcer();
+        //   const domain = request.info.referrer.includes('foto.ru') ? 'foto.ru' : compose(nth(2), split('/'))(request.info.referrer);
 
-          const parts = path.split('/');
-          const obj = parts[parts.length - 1];
-          const action = { post: 'create', put: 'update', delete: 'delete', get: 'view'}[method];
-          const canDo = await enforcer.enforce(role.name, domain, obj, action);
+        //   const role = await getRole(u, domain);
+        //   const {path, method} = request.route;
 
-          if (!canDo) {
-            h.request.path = '/login';
-          }
+        //   const parts = path.split('/');
+        //   const obj = parts[parts.length - 1];
+        //   const action = { post: 'create', put: 'update', delete: 'delete', get: 'view'}[method];
+        //   const canDo = await enforcer.enforce(role.name, domain, obj, action);
+
+
+
+        //   if (!canDo) {
+        //     h.request.path = '/login';
+        //   }
         }
 
         return h.continue;
@@ -257,6 +276,10 @@ const init = async () => {
     },
     validateFunc: async (request, session) => {
       const {tok} = session;
+      console.log('')
+      console.log('validateFunc', tok)
+      console.log('')
+
       let routeRole = '';
       if (tok) {
         const user = jwt.verify(tok, process.env.API_TOKEN);
@@ -279,15 +302,23 @@ const init = async () => {
     ttl: null,
     isSecure: false,
     isHttpOnly: false,
+    encoding: 'base64',
+    clearInvalid: true,
+    strictHeader: false,
+    isSameSite: false
+  });
+
+  server.state('lang', {
+    ttl: null,
+    isSecure: false,
+    isHttpOnly: false,
     encoding: 'base64json',
     clearInvalid: true,
     strictHeader: false,
     isSameSite: false
   });
 
-  // await server.register({ plugin: Authorization});
-
-
+  await server.register({ plugin: Authorization});
   server.route(routes);
 
 

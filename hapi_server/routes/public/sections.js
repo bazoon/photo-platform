@@ -35,10 +35,6 @@ module.exports = [
     path: '/api/sections/{contestId}',
     handler: async function (request, h) {
       const {contestId} = request.params;
-      const domain = getCurrentDomain(request);
-      if (!domain) {
-        return {};
-      }
       
       const query = `
         SELECT
@@ -47,11 +43,8 @@ module.exports = [
           sections.name
         FROM
           contests,
-          salones,
           sections
         WHERE
-          contests.salone_id = salones.id and
-          salones. "domain" = :domain and
           sections.contest_id = contests.id and
           sections.contest_id = :contestId
         ORDER BY 
@@ -60,7 +53,6 @@ module.exports = [
 
       const info = await h.query(query, {
         replacements: {
-          domain,
           contestId
         }
       });

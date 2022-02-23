@@ -17,7 +17,7 @@ const expiresIn = 24 * 60 * 60 * 30;
 
 
 function signToken(user) {
-  return jwt.sign(
+  const s =  jwt.sign(
     {
       firstName: user.first_name,
       lastName: user.last_name,
@@ -29,6 +29,12 @@ function signToken(user) {
       expiresIn: expiresIn
     }
   );
+
+  console.log('')
+  console.log('signToken', s)
+  console.log('')
+
+  return s;
 }
 
 const login2 = {
@@ -80,7 +86,11 @@ const login = {
       r.fork((e) => {
         res(h.response({error: e}).code(401));
       }, async ({user, token}) => {
+        
+        console.log('***', token, '***')
         request.cookieAuth.set({ tok: token });
+        console.log(h.state.toString())
+
         res({
           ...user,
           avatar: user.avatar && await getUploadFilePath({name: user.avatar, request}),
