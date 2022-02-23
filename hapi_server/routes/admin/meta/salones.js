@@ -54,6 +54,20 @@ module.exports = [
             'type': 'integer',
             'default': 0
           },
+          'name': {
+            '$id': '#root/name', 
+            'title': 'name', 
+            'type': 'string',
+            'default': '',
+            'pattern': '^.*$'
+          },
+          'domain': {
+            '$id': '#root/domain', 
+            'title': 'domain', 
+            'type': 'string',
+            'default': '',
+            'pattern': '^.*$'
+          },
           'sprSaloneTypeId': {
             '$id': '#root/sprSaloneTypeId', 
             'title': 'sprSaloneTypeId', 
@@ -74,13 +88,6 @@ module.exports = [
               enum: organizers
             }
           },
-          'name': {
-            '$id': '#root/name', 
-            'title': 'name', 
-            'type': 'string',
-            'default': '',
-            'pattern': '^.*$'
-          },
           'regular': {
             '$id': '#root/regular', 
             'title': 'regular', 
@@ -92,13 +99,6 @@ module.exports = [
             'title': 'private', 
             'type': 'integer',
             'default': 0
-          },
-          'domain': {
-            '$id': '#root/domain', 
-            'title': 'domain', 
-            'type': 'string',
-            'default': '',
-            'pattern': '^.*$'
           },
           'designCode': {
             '$id': '#root/designCode', 
