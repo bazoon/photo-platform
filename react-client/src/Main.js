@@ -12,11 +12,9 @@ import {
 import Login from "./features/Login";
 import MainMenu from "./MainMenu";
 import Thesis from "./features/Thesis";
-import Admin from "./features/admin/Layout";
-import PrivateRoute from "./core/PrivateRoute";
 import { collect } from "react-recollect";
 
-function Main() {
+function MainLayout() {
 
   return (
     <>
@@ -34,19 +32,9 @@ function Main() {
                 <Route path="/thesis">
                   <Thesis/>
                 </Route>
-                <PrivateRoute path="/admin">
-                  <Suspense fallback="loading">
-                    <Admin/>
-                  </Suspense>
-                </PrivateRoute>
-                <Route path="/">
-                </Route>
               </Switch>
-
             </main>
-
-            <footer className="h-10 bg-red-100">
-            </footer>
+            <footer className="h-10 bg-red-100"></footer>
           </div>
         </Suspense>
       </Router>
@@ -54,4 +42,4 @@ function Main() {
   );
 }
 
-export default collect(Main);
+export default collect(MainLayout);

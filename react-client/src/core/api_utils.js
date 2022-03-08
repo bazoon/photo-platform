@@ -1,4 +1,3 @@
-import {store} from "react-recollect";
 import identity from "crocks/combinators/identity";
 
 const {asyncGet} = require("./api");
@@ -14,16 +13,7 @@ const load = ({api, params = {}}) => {
 };
 
 export const loadRoles = () => {
-
-  const loadRolesFailed = () => {};
-
-  const loadRolesOk = ({role}) => {
-    store.role = role;
-  };
-
-  const a = load({api: "api/roles"});
-  a.fork(loadRolesFailed, loadRolesOk);
-  return a;
+  return asyncGet("api/roles");
 };
 
 export const loadUser = () => {
@@ -31,7 +21,7 @@ export const loadUser = () => {
 
   };
 
-  const loadUserOk = data => {
+  const loadUserOk = (data, store) => {
     store.user = data;
   };
 

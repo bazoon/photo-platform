@@ -2,14 +2,13 @@ import React, {useEffect, useState} from "react";
 import { Button } from "primereact/button";
 import {asyncGet} from "./core/api";
 import {dateFormat} from "./core/utils";
-import { store } from "react-recollect";
 import {withRouter} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {identity} from "lodash/fp";
 import i18n from "./core/i18n";
+import {collect} from "react-recollect";
 
-
-function MainPage({history}) {
+function MainPage({history, store}) {
   const [config, setConfig] = useState({});
   const { t } = useTranslation("namespace1");
   const info = store.info || {};
@@ -94,7 +93,6 @@ function MainPage({history}) {
           {
             config.isOnService ? tempNote() : renderContent()
           }
-
         </div>
       </div>
     </>
@@ -102,4 +100,4 @@ function MainPage({history}) {
 }
 
 
-export default(withRouter(MainPage));
+export default(withRouter(collect(MainPage)));

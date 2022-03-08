@@ -21,9 +21,7 @@ const makeupFileName = (path, name) => {
     const fileWithSuffixRe = /(.+)-([0-9])+\.(.+)/
 
     {
-      console.log(22, name);
       const [_, partName, n, extension] = name.match(fileWithSuffixRe) || [];
-      console.log(11, partName, n, extension);
       if (partName && n && extension) {
         return makeupFileName(path, `${partName}-${+n + 1}.${extension}`);
       }
@@ -42,12 +40,10 @@ module.exports = function uploadFileForSalone(f, slug) {
 
   return files.map(async f => {
     let [path, name] = makeupFileName(`${uploadPath}/${slug}/`, f.filename);
-    console.log(path, name, 1)
     
     try {
       return rename(f.path, `${path}${name}`).then(_ => name);
     } catch(e) {
-      console.log('EXCEPTION!!!! f', e);
       return {e};
     }
   });

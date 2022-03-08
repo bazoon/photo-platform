@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from "react";
 import { useTranslation } from "react-i18next";
-import { store } from "react-recollect";
 import {useHistory} from "react-router-dom";
 import { SlideMenu } from "primereact/slidemenu";
 import useLogout from "../core/hooks/useLogout";
+import {collect} from "react-recollect";
 
 const isActiveMenuItem = item => {
   return location.href.includes(item.to) || (item.items && item.items.some(isActiveMenuItem));
@@ -21,7 +21,7 @@ const setTemplateForItems = (items = [], history, t) => {
   return [...items];
 };
 
-export function ProfileMenu() {
+export function ProfileMenu({store}) {
   const [links, setLinks] = useState([]);
   const { t, i18n } = useTranslation("namespace1");
   const history = useHistory();
@@ -78,4 +78,4 @@ export function ProfileMenu() {
 
 }
 
-export default ProfileMenu;
+export default collect(ProfileMenu);

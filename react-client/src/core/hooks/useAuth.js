@@ -1,9 +1,24 @@
-const useAuth = () => {
+import {typeCheck} from "type-check";
+
+window.typeCheck = typeCheck;
+
+const useAuth = (permissions = new Set([])) => {
+  console.assert(typeCheck("Set", permissions), "typeCheck failed");
+
   return {
-    canAdmin: role => role?.name === "admin" || role?.name === "superAdmin",
-    canModer: role => role?.name === "moder",
-    canSuperAdmin: role => role?.name === "superAdmin",
-    isLogged: role => role?.name === "user"
+    can: ps => {
+      console.assert(typeCheck("[String]", ps), "typeCheck failed");
+      if (permissions.has("all")) return true;
+      return ps.some(p => permissions.has(p));
+    },
+    canNot: ps => {
+      console.assert(typeCheck("[String]", ps), "typeCheck failed");
+      if (permissions.has("all")) {
+        return false;
+      }
+      return !ps.some(p => permissions.has(p));
+    }
   };
 };
 export default useAuth;
+

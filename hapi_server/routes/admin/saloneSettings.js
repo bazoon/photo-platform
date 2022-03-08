@@ -9,9 +9,6 @@ module.exports = [
     handler: async function (request, h) {
       const user = get('auth.credentials', request);
       const domain = getCurrentDomain(request);
-      const r = { role: await permissions.getRole(user, domain) };
-      
-      console.info(r);
 
       const query = `
         select salon_settings.id, setting_id, salone_id, name as salone, code as setting, content, keycheck 

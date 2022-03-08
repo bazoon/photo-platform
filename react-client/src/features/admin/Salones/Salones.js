@@ -58,10 +58,12 @@ const Grid = ({store}) => {
       id
     };
 
+    store.sidebars = store.sidebars || [];
     store.sidebars.push({Component: renderSidebar, props});
   };
 
   const hideSection = (dialogId) => {
+    store.sidebars = store.sidebars || [];
     store.sidebars = store.sidebars.filter(s => s.props.dialogId !== dialogId);
   };
 

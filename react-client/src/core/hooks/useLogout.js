@@ -10,7 +10,8 @@ export default function(store) {
   const logoutOk = () => {
     store.user = null;
     store.isLoggedIn = false;
-    loadRoles();
+    store.permissions = new Set([]);
+    loadRoles().fork(logoutFailed, ({roles}) => store.roles = roles);
     localStorage.clear();
   };
 

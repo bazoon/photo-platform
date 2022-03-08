@@ -6,11 +6,11 @@ import {Button} from "primereact/button";
 import {Field, Form, FormSpy} from "react-final-form";
 import {filter, memoize, values, keys, pick} from "lodash/fp";
 import ProfileMenu from "./ProfileMenu";
-import {store} from "react-recollect";
 import {Dropdown} from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
 import {debounce} from "lodash";
+import {collect} from "react-recollect";
 
 const fieldCls = "col-span-8 text-semi-bright text-lg focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright";
 const SAVE_INTERVAL = 2000;
@@ -115,7 +115,7 @@ const setTemplateForItems = (items = [], history, t) => {
   return [...items];
 };
 
-export default function Main() {
+const Main = ({store}) => {
   const [profile, setProfile] = useState({});
   const [agreed] = useState(true);
   const [fields, setFields] = useState([]);
@@ -282,5 +282,5 @@ export default function Main() {
       <ProfileMenu/>
     </div>
   );
-
-}
+};
+export default collect(Main);

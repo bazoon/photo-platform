@@ -151,8 +151,6 @@ module.exports = [
         }
       });
       
-      console.log(a);
-
       const jury = a[0];
 
       let rateRecord = await h.models.Rate.findOne({
@@ -317,11 +315,8 @@ module.exports = [
         return {};
       }
 
-
       const contest = await getCurrentContest(domain);
-      console.log(contest.dateStop, new Date);
       return (new Date(contest.dateStop)) < (new Date())
-
     },
     options: {
       tags: ['api'],

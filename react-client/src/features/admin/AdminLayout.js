@@ -3,39 +3,34 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  withRouter,
 } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import Users from "./Users/Users";
+import "primereact/resources/primereact.min.css";
+import "primereact/resources/themes/saga-blue/theme.css";
+import AdminMenu from "./AdminMenu";
 import Admins from "./Admins/Admins";
+import Moders from "./Moders/Moders";
+import AwardTypes from "./AwardTypes/AwardTypes";
+import Config from "./Config/Config";
+import Contests from "./Contests/Contests";
 import Languages from "./Languages/Languages";
 import Lexicons from "./Lexicons/Lexicons";
 import Organizers from "./Organizers/Organizers";
-import AwardTypes from "./AwardTypes/AwardTypes";
-import Words from "./Words/Words";
-import "primereact/resources/themes/saga-blue/theme.css";
-import "primereact/resources/primereact.min.css";
-import AdminMenu from "./AdminMenu";
-import Salones from "./Salones/Salones";
-import Contests from "./Contests/Contests";
-import Config from "./Config/Config";
-import { collect } from "react-recollect";
-import { initStore } from "react-recollect";
-import Settings from "./Settings/Settings";
-import SaloneSettings from "./Settings/SaloneSettings";
 import SaloneFiles from "./SaloneFiles/SaloneFiles";
-
-initStore({sidebars: []});
-
+import SaloneSettings from "./Settings/SaloneSettings";
+import Salones from "./Salones/Salones";
+import Settings from "./Settings/Settings";
+import Users from "./Users/Users";
+import Words from "./Words/Words";
+import { collect, initStore } from "react-recollect";
 
 const Empty = function Empty () {
   return <div></div>;
 };
 
-function App() {
+initStore({sidebars: []});
 
-  useEffect(() => {
-  }, []);
-
+function AdminLayout({store}) {
 
   const routes = [
     {
@@ -46,6 +41,10 @@ function App() {
       path: "/admin/admins",
       Component: Admins
     },
+    // {
+    //   path: "/moders/moders",
+    //   Component: Moders
+    // },
     {
       path: "/admin/languages",
       Component: Languages
@@ -119,4 +118,4 @@ function App() {
   );
 }
 
-export default collect(App);
+export default withRouter(collect(AdminLayout));

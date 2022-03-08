@@ -21,7 +21,7 @@ import Politics from "./features/Politics";
 import Rules from "./features/Rules";
 import Jury from "./features/Jury";
 import Contacts from "./features/Contacts";
-import Admin from "./features/admin/Layout";
+import AdminLayout from "./features/admin/AdminLayout";
 import Init from "./core/Init";
 import MainPage from "./MainPage";
 import Vk from "./icons/Vk";
@@ -60,7 +60,7 @@ addLocale("ru", {
 
 function MainApp({store}) {
   const sidebars = () => {
-    return store.sidebars.map(sidebar => {
+    return (store.sidebars || []).map(sidebar => {
       const {Component} = sidebar;
       return <Component key={sidebar.key} {...sidebar.props}/>;
     });
@@ -112,7 +112,6 @@ function MainApp({store}) {
                 <Thesis/>
               </Route>
 
-
               <Route path="/politics">
                 <Politics/>
               </Route>
@@ -120,6 +119,7 @@ function MainApp({store}) {
               <Route path="/hello">
                 <Hello/>
               </Route>
+
               <Route path="/rules">
                 <Rules/>
               </Route>
@@ -127,50 +127,61 @@ function MainApp({store}) {
               <Route path="/jury">
                 <Jury/>
               </Route>
+
               <Route path="/short-list">
                 <JuryShortList/>
               </Route>
+
               <Route path="/contacts">
                 <Contacts/>
               </Route>
+
               <Route path="/partners">
                 <Partners/>
               </Route>
+
               <Route path="/organizers">
                 <Organizers/>
               </Route>
+
               <Route path="/jgallery">
                 <JuryGallery/>
               </Route>
+
               <Route path="/profile">
                 <Profile/>
               </Route>
+
               <Route path="/jury-analytics">
                 <JuryAnalytics/>
               </Route>
+
               <Route path="/applications">
                 <Applications/>
               </Route>
+
               <Route path="/admin">
-                <Suspense fallback="loading">
-                  <Admin/>
-                </Suspense>
+                <AdminLayout/>
               </Route>
 
-                <Route path="/about-notmagic">
-                  <AboutNotMagic/>
-                </Route>
-                <Route path="/tech-notmagic">
-                  <TechNotMagic/>
-                </Route>
-                <Route path="/prizes-notmagic">
-                  <PrizesNotMagic/>
-                </Route>
+              <Route path="/about-notmagic">
+                <AboutNotMagic/>
+              </Route>
+
+              <Route path="/tech-notmagic">
+                <TechNotMagic/>
+              </Route>
+
+              <Route path="/prizes-notmagic">
+                <PrizesNotMagic/>
+              </Route>
+
               <Route path="/">
                 <div className="w-full" style={bgStyle}>
                   <MainPage/>
                 </div>
               </Route>
+
             </Switch>
           </main>
 

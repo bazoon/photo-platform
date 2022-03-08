@@ -105,7 +105,7 @@ const Grid = ({store}) => {
       dialogId: "Section",
       title
     };
-    store.sidebars.push({Component: renderSidebar, props});
+    store.sidebars && store.sidebars.push({Component: renderSidebar, props});
   };
 
   const hideSection = (dialogId) => {

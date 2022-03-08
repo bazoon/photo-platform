@@ -13,7 +13,6 @@ module.exports = [
         }
       });
 
-
       return juries.map(j => {
         return {
           id: j.id,
@@ -29,6 +28,11 @@ module.exports = [
       tags: ['api'],
       auth: {
         mode: 'required'
+      },
+      plugins: {
+        hacli: {
+          permissions: ['superAdmin', 'domainAdmin', 'superModer', 'domainModer']
+        }
       }
     }
   },
@@ -64,6 +68,11 @@ module.exports = [
       tags: ['api'],
       auth: {
         mode: 'required'
+      },
+      plugins: {
+        hacli: {
+          permissions: ['superAdmin', 'domainAdmin', 'superModer', 'domainModer']
+        }
       }
     }
   },
@@ -87,6 +96,11 @@ module.exports = [
       tags: ['api'],
       auth: {
         mode: 'required'
+      },
+      plugins: {
+        hacli: {
+          permissions: ['superAdmin', 'domainAdmin', 'superModer', 'domainModer']
+        }
       }
     }
   },
@@ -124,6 +138,11 @@ module.exports = [
       tags: ['api'],
       auth: {
         mode: 'required'
+      },
+      plugins: {
+        hacli: {
+          permissions: ['superAdmin', 'domainAdmin', 'superModer', 'domainModer']
+        }
       }
     }
   },

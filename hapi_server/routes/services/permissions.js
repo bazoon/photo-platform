@@ -5,19 +5,19 @@ const {getCurrentContest} = require('../utils/getCurrentSalone');
 
 const roles = {
   superAdmin: {
-    name: 'admin',
+    name: 'superAdmin',
     level: 0,
   },
   admin: {
-    name: 'admin',
+    name: 'domainAdmin',
     level: 1,
   },
   superModer: {
-    name: 'moder',
+    name: 'domainModer',
     level: 3,
   },
   moder: {
-    name: 'moder',
+    name: 'superModer',
     level: 4,
   },
   user: {
@@ -87,16 +87,14 @@ module.exports = {
     });
     
     let isJury;
+
     try {
       isJury = await getJuryRole(user.id, domain); 
     } catch(e) {
-      console.log(e)
       isJury = e;
     }
 
     const r = get('[0].adm_type', role);
-
-    if (!isDefined(r)) return {...roles.user, isJury}
 
     const t = {
       0: roles.superAdmin,
@@ -105,6 +103,22 @@ module.exports = {
       1010: roles.moder
     }[r];
 
-    return isDefined(t) ? {...t, isJury} : {...roles.user, isJury};
+
+    const permissions = [];
+
+    if (isDefined(t)) {
+      permissions.push(t.name);
+    }
+
+    if (isJury) {
+      permissions.push('jury');
+    }
+
+
+    // return ['superAdmin']
+    // return ['superModer']
+    // return ['domainAdmin']
+    return ['domainModer']
+    // return permissions;
   }
 };

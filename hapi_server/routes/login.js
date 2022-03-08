@@ -30,10 +30,6 @@ function signToken(user) {
     }
   );
 
-  console.log('')
-  console.log('signToken', s)
-  console.log('')
-
   return s;
 }
 
@@ -86,20 +82,15 @@ const login = {
       r.fork((e) => {
         res(h.response({error: e}).code(401));
       }, async ({user, token}) => {
-        
-        console.log('***', token, '***')
-        request.cookieAuth.set({ tok: token });
-        console.log(h.state.toString())
 
+        request.cookieAuth.set({ tok: token });
+        
         res({
           ...user,
           avatar: user.avatar && await getUploadFilePath({name: user.avatar, request}),
         });
       })
     });
-
-
-
   },
   options: {
     auth: {
@@ -108,7 +99,6 @@ const login = {
     plugins: {'hapiAuthorization': false},
   }
 };
-
 
 const signup = {
   method: 'POST',

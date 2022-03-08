@@ -63,6 +63,7 @@ const getTitle = (pathname, saloneName, name) => {
 };
 
 function Init({store}) {
+  window.store = store;
   const history = useHistory();
   const toast = useRef();
   const {canAdmin} = useAuth();
@@ -84,7 +85,10 @@ function Init({store}) {
   const actions = {
     loadLocalUser: () => loadLocalUser(store),
     visitMainPage: () => location.href.endsWith("/login") && setTimeout(() => history.push("/"), 100),
-    saveRole: (_, {data}) => { store.role = data?.role; },
+    saveRole: (_, {data}) => { 
+      store.role = data?.role;
+      store.permissions = new Set(data?.permissions);
+    },
     storeLoggedIn: (_, {data}) => { store.isLoggedIn = !!data.id;}
   };
 

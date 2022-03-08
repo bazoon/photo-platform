@@ -1,10 +1,35 @@
+const {getCurrentDomain} = require('../../utils/getCurrentDomain');
+
 module.exports = [
   {
     method: 'GET',
     path: '/api/admin/admins/meta',
     handler: async function (request, h) {
+      const { permissions } = h.request.auth.credentials
+      const domain = getCurrentDomain(request);
+
       const users = await h.query('select CONCAT("first_name", \' \', "last_name") as label, id as value from users');
-      const organizers = await h.query('select name as label, id as value from organizers');
+      const organizers = await h.query(`
+        select distinct organizers.name as label, organizers.id as value 
+        from organizers, salones
+        where salones.domain=:domain
+      `, {
+        replacements: {
+          domain
+        }
+      });
+
+      const adminTypes = [];
+      
+      if (permissions.includes('admins.update') || permissions.includes('all')) {
+        adminTypes.push({label: 'admin', value: 0});
+      }
+
+      if (permissions.includes('moders.update') || permissions.includes('all')) {
+        adminTypes.push({label: 'moder', value: 1});
+      }
+
+
 
       const columnsSchema = {
         'definitions': {},
@@ -34,8 +59,12 @@ module.exports = [
           'admType': {
             '$id': '#root/adm_type', 
             'title': 'admType', 
-            'type': 'integer',
-            'default': 0
+            'default': 0,
+            'type': 'array',
+            items: {
+              type: 'object',
+              enum: [{label: 'admin', value: 0}, {label: 'moder', value: 1}]
+            }
           },
           'id': {
             '$id': '#root/id', 
@@ -68,7 +97,7 @@ module.exports = [
             items: {
               type: 'object',
               enum: organizers
-            }
+            },
           },
           'userId': {
             '$id': '#root/user_id', 
@@ -83,8 +112,12 @@ module.exports = [
           'admType': {
             '$id': '#root/adm_type', 
             'title': 'admType', 
-            'type': 'integer',
-            'default': 0
+            'default': 0,
+            'type': 'array',
+            items: {
+              type: 'object',
+              enum: adminTypes
+            }
           },
           'id': {
             '$id': '#root/id', 

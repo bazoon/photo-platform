@@ -1,8 +1,6 @@
 import React from "react";
 import {Route, Redirect} from "react-router-dom";
-import { store, collect } from "react-recollect";
-import {Link} from "react-router-dom";
-
+import { collect } from "react-recollect";
 
 function PrivateRoute({ children, path, can, ...rest }) {
   return (

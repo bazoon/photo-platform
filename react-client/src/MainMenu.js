@@ -28,11 +28,11 @@ const setTemplateForItems = (items = [], history, t, i) => {
   return [...items];
 };
 
-function Main({store, history}) {
+function MainMenu({store, history}) {
   const [items, setItems] = useState([]);
   const [links, setLinks] = useState([]);
   const { t, i18n } = useTranslation("namespace1");
-  const {canAdmin, canModer} = useAuth();
+  const {canNot} = useAuth(store.permissions);
   const logout = useLogout(store);
 
   const changeLanguage = lang => {
@@ -47,11 +47,12 @@ function Main({store, history}) {
         className: "flex-1",
         template: <div></div>
       },
-      canAdmin(store.role) || canModer(store.role) ? {
+      {
         label: "admin",
         className: isActiveMenuItem({to: "/admin"}) ? "p-menuitem--active" : "",
         command: () => history.push("/admin"),
-      }: {},
+        disabled: canNot(["adminMenu.view"])
+      },
       {
         name: "ru",
         label: "ru",
@@ -101,7 +102,7 @@ function Main({store, history}) {
     ];
 
     setLinks(links);
-  }, [store.role, store.user, location.href, i18n.language]);
+  }, [store.permissions, store.user, location.href, i18n.language]);
 
   function menuLoaded(menu) {
     setItems(setTemplateForItems(menu, history, t, i18n));
@@ -124,5 +125,5 @@ function Main({store, history}) {
   );
 }
 
-export default(withRouter(collect(Main)));
+export default(withRouter(collect(MainMenu)));
 

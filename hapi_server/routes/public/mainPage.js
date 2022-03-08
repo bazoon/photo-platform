@@ -45,6 +45,7 @@ module.exports = [
         and settings.code in ('vkLink', 'instagramLink', 'facebookLink', 'twitterLink') and salon_settings.salone_id=:saloneId
       `;
 
+
       const info = get('[0]', 
         await h.query(query, {
           replacements: {
@@ -63,12 +64,12 @@ module.exports = [
 
       return {...info || {}, logo: logoPath, bg: bgPath || '', socials: socials.reduce((a, e) => ({...a, [e.code]: e.content}), {})};
     },
-    options: {
+    config: {
       tags: ['api'],
       auth: {
         mode: 'optional'
-      }
-    }
+      },
+    },
   },
 ];
 

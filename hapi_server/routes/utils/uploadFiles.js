@@ -22,7 +22,6 @@ module.exports = async function uploadFiles(f, request) {
     try {
       await renameP(f.path, targetPath);
     } catch(e) {
-      console.log('EXCEPTION!!!! f', e);
       return {e};
     }
   });

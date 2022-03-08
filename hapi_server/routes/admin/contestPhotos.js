@@ -38,7 +38,6 @@ module.exports = [
     method: 'PUT',
     path: '/api/admin/contestPhotos/approve/{id}',
     handler: async function (request, h) {
-      console.log('EE');
       const { id } = request.params;
       const query = `
         update photoworks set moder = 1 where id=:id

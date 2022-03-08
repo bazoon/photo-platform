@@ -13,6 +13,7 @@
   "license": "ISC",
   "proxy": "http://localhost:7000",
   "dependencies": {
+    "@antoniogiordano/hacli": "^1.0.2",
     "@ckeditor/ckeditor5-build-decoupled-document": "^24.0.0",
     "@hapi/cookie": "^11.0.2",
     "@hapi/hapi": "^20.0.0",

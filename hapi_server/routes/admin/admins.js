@@ -36,10 +36,11 @@ module.exports =  [
     method: 'GET',
     path: '/api/admin/admins',
     handler: async function (request, h) {
-      const q = h.sql`select CONCAT(first_name, ' ', last_name) as user, admins.user_id, adm_type, organizers.name as organizer,
+      const query = `select CONCAT(first_name, ' ', last_name) as user, admins.user_id, adm_type, organizers.name as organizer,
         organizers.id as organizer_id, adm_type from users, organizers, admins where admins.user_id=users.id
         and admins.organizer_id=organizers.id`
-      const {rows} = await h.pool.query(q);
+
+      const rows = await h.query(query);      
       return rows;
     },
     options: {
@@ -47,6 +48,11 @@ module.exports =  [
       auth: {
         mode: 'required'
       },
+      plugins: {
+        hacli: {
+          permissions: ['superAdmin']
+        }
+      }
     }
   },
   {
@@ -87,6 +93,12 @@ module.exports =  [
       auth: {
         mode: 'required'
       },
+      plugins: {
+        hacli: {
+          permissions: ['superAdmin']
+        }
+      }
+
     }
   },
   {
@@ -102,6 +114,11 @@ module.exports =  [
       auth: {
         mode: 'required'
       },
+      plugins: {
+        hacli: {
+          permissions: ['superAdmin']
+        }
+      }
     }
   },
   {
@@ -123,6 +140,11 @@ module.exports =  [
       auth: {
         mode: 'required'
       },
+      plugins: {
+        hacli: {
+          permissions: ['superAdmin']
+        }
+      }
     }
   }
 ];

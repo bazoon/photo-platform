@@ -68,7 +68,6 @@ export default ({
       columns = meta.columns.map(addRender);
     } else if (columnsSchema) {
       columns = columnsFromSchema(columnsSchema, t);
-      console.info(columns);
       // columns = meta.properties.columns.enum.filter(e => !e.hidden).map(e => ({...e, dataIndex: e.name, title: e.title, key: e.name, type: e.type})).map(addRender);
       // fields = meta.properties.fields.enum.filter(e => !e.hidden).map(e => ({...e, dataIndex: e.name, title: e.title, key: e.name, type: e.type})).map(addRender);
     }
@@ -77,10 +76,10 @@ export default ({
       return (
         <div className="flex w-40">
           {
-            canEdit && <Button icon="pi pi-pencil" className="mr-5 p-button-rounded p-button-success" onClick={() => handleEdit(rowData)} />
+            <Button disabled={!canEdit} icon="pi pi-pencil" className="mr-5 p-button-rounded p-button-success" onClick={() => handleEdit(rowData)} />
           }
           {
-            canDelete && <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={e => onDelete(e, rowData)} />
+            <Button disabled={!canDelete} icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={e => onDelete(e, rowData)} />
           }
 
           {
@@ -165,7 +164,19 @@ export default ({
           }
         </DataTable>
         {
-          isOpen && <Form schema={meta.fieldsSchema} title={dialogTitle} dialogConfig={dialogConfig} saveError={error} record={record} visible={isOpen} onCancel={onCancel} onOk={onOk} onChange={onChange}/> 
+          isOpen && (
+            <Form 
+              schema={meta.fieldsSchema} 
+              title={dialogTitle} 
+              dialogConfig={dialogConfig}
+              saveError={error}
+              record={record}
+              visible={isOpen}
+              onCancel={onCancel} 
+              onOk={onOk} 
+              onChange={onChange}
+            />
+          )
         }
       </>
     );

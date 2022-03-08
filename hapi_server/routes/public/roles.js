@@ -4,9 +4,8 @@ module.exports =  {
   method: 'GET',
   path: '/api/roles',
   handler: async function (request, h) {
-    // const { host } = request.info;
     const user = get('auth.credentials', request);
-    return {role: user && user.role};
+    return { permissions: user && user.permissions, role: ''};
   },
   options: {
     tags: ['api'],
