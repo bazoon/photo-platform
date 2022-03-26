@@ -1,7 +1,7 @@
 const permissions = require('../services/permissions');
 const bcrypt = require('bcryptjs');
 const {get, pick} = require('lodash/fp');
-const uploadFiles = require('../utils/uploadFiles');
+const uploadToRoot = require('../utils/uploadToRoot');
 const getUploadPath = require('../utils/getUploadPath');
 const camelizeObject = require('../utils/camelizeObject');
 
@@ -60,7 +60,7 @@ module.exports = [
       const {password, newPassword} = payload;
       const {avatar} = payload;
       if (avatar) {
-        await uploadFiles(avatar, request);
+        await uploadToRoot(avatar, request);
       } else {
         delete payload.avatar;
       }
