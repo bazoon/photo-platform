@@ -2,7 +2,7 @@ const {compose, map} = require('lodash/fp');
 
 const camelizeObject = require('../utils/camelizeObject');
 const getUploadPath = require('../utils/getUploadPath');
-const {getContestIdFromSection} = require('../utils/getCurrentSalone');
+const {getContestFromSection} = require('../utils/getCurrentSalone');
 
 module.exports = [
   {
@@ -103,9 +103,11 @@ module.exports = [
           and registration_contests.user_id = users.id 
       `;
 
-      const contestId = await getContestIdFromSection(id);
+      const contest = await getContestFromSection(id);
+      const salone = await h.models.Salone.findOne({where: {id: contest.salone_id}});
+      const toUploadPath = p => `/uploads/${salone.slug}/${contest.id}/${p.filename}`;
 
-      return Promise.all(map(compose(async p => ({...p, reason: p.reason || '', filename: await getUploadPath({name: p.filename, contestId, request})}), camelizeObject), await h.query(query, {
+      return Promise.all(map(compose(async p => ({...p, reason: p.reason || '', filename: toUploadPath(p)}), camelizeObject), await h.query(query, {
         replacements: {
           id,
           userId

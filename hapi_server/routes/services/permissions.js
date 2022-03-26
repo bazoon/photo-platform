@@ -82,10 +82,12 @@ module.exports = {
     const [role] = await models.sequelize.query(query, {
       replacements: {
         userId: user.id,
-        domain
+        domain: domain.split(':')[0]
       }
     });
     
+    console.log(1, role, 2, domain);
+
     let isJury;
 
     try {
