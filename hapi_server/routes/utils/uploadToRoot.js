@@ -18,6 +18,7 @@ module.exports = async function uploadToRoot(f, request) {
   const contestId = await getCurrentContestIdFromRequest(request);
   files.forEach(async f => {
     try {
+      console.log(f.path, uploadPath);
       await renameP(f.path, uploadPath);
     } catch(e) {
       return {e};
