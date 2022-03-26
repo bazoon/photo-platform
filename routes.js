@@ -159,5 +159,5 @@ module.exports = flatten([
   require('./hapi_server/temp/notmagic'),
   require('./hapi_server/routes/admin/meta/saloneFiles'),
   require('./hapi_server/routes/admin/saloneFiles'),
-  // defaultRoute
+  defaultRoute
 ]);

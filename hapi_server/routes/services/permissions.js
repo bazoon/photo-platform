@@ -113,7 +113,7 @@ module.exports = {
       permissions.push('jury');
     }
 
-    console.log(role);
+    console.log(role, user.id, domain);
 
     return t;
     // return ['superAdmin']

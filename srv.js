@@ -112,7 +112,7 @@ const init = async () => {
         const domain = getCurrentDomain(request);
 
         const role = await getRole(u, domain);
-        // console.log('Role', role);
+        console.log('Role', role);
         return { valid: u && !!u.id, credentials: {...user, permissions: permissions[role] }};
       }
 
