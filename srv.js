@@ -1,12 +1,13 @@
-require('dotenv').config();
+const path = require('path');
+// const envPath = process.env.NODE_ENV === 'test' ? path.resolve(process.cwd(), '.env-test') : path.resolve(process.cwd(), '.env-test');
+// require('dotenv').config({ path: envPath });
+// console.log(`Using ${envPath}`)
+
 const jwt = require('jsonwebtoken');
 const Hapi = require('@hapi/hapi');
 const models = require('./models');
-const fs = require('fs');
-const getPath = require('crocks/Maybe/getPath');
 const hapiSwagger = require('hapi-swagger');
 const pack = require('./package');
-const {nth, split, isObject} = require('lodash/fp');
 const L = require('lodash/fp');
 const routes = require('./routes');
 const {getRole} = require('./hapi_server/routes/services/permissions');
@@ -20,6 +21,8 @@ const query = async (sql, options) => {
   const [rows] = await models.sequelize.query(sql, options);
   return L.map(L.mapKeys(toCamel), rows);
 }
+
+module.exports.query = query;
 
 const toCamel = (s) => {
   return s.replace(/([-_][a-z])/ig, ($1) => {
@@ -104,9 +107,12 @@ const init = async () => {
             id: user.id
           }});
 
+      
+
         const domain = getCurrentDomain(request);
 
         const role = await getRole(u, domain);
+        // console.log('Role', role);
         return { valid: u && !!u.id, credentials: {...user, permissions: permissions[role] }};
       }
 

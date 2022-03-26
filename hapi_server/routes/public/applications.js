@@ -40,6 +40,10 @@ module.exports = [
       }
 
       const contest = await getCurrentContestFromRequest(request);
+        
+      if (!contest) return false;
+
+
       return (new Date(contest.dateStop)) > (new Date())
     },
     options: {
@@ -57,6 +61,8 @@ module.exports = [
       if (!userId) return [];
 
       const contestId = await getCurrentContestIdFromRequest(request);
+
+      if (!contestId) return [];
 
       const applicationQuery = `
         SELECT

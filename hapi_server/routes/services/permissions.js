@@ -12,7 +12,7 @@ const roles = {
     name: 'domainAdmin',
     level: 1,
   },
-  superModer: {
+  domainModer: {
     name: 'domainModer',
     level: 3,
   },
@@ -97,12 +97,11 @@ module.exports = {
     const r = get('[0].adm_type', role);
 
     const t = {
-      0: roles.superAdmin,
-      1: roles.superModer,
-      1000: roles.admin,
-      1010: roles.moder
+      0: 'superAdmin',
+      1: 'superModer',
+      1000: 'domainAdmin',
+      1010: 'domainModer',
     }[r];
-
 
     const permissions = [];
 
@@ -114,11 +113,12 @@ module.exports = {
       permissions.push('jury');
     }
 
+    console.log(role);
 
+    return t;
     // return ['superAdmin']
     // return ['superModer']
-    // return ['domainAdmin']
-    return ['domainModer']
-    // return permissions;
+    // return ['domainModer']
+  
   }
 };

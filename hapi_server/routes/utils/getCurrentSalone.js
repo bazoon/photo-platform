@@ -117,6 +117,12 @@ async function getCurrentSaloneFromRequest(request) {
   return getCurrentSalone(domain);
 }
 
+async function getSaloneFromContestId(contestId) {
+  const contest = await models.Contest.findOne({where: {id: contestId}});
+  const salone = await models.Salone.findOne({where: {id: contest.saloneId}});
+  return salone;
+}
+
 module.exports = {
   getCurrentSaloneId,
   getCurrentContestId,
@@ -127,5 +133,6 @@ module.exports = {
   getCurrentContestFromRequest,
   getContestFromSection,
   getContestIdFromSection,
-  getCurrentSaloneFromRequest
+  getCurrentSaloneFromRequest,
+  getSaloneFromContestId,
 }

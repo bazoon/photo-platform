@@ -46,10 +46,12 @@ const renderTextField = ({name, title, required, input}) => {
 };
 
 const renderDateField = ({name, title, required, input}) => {
+  const d = input.value ? new Date(input.value) : input.value;
+
   return (
       <>
         {renderLabel(title, required)}
-        <Calendar {...input} monthNavigator yearNavigator inputClassName="col-span-4 bg-transparent border-0" className={fieldCls} yearRange="1940:2030" />
+        <Calendar value={d} monthNavigator yearNavigator inputClassName="col-span-4 bg-transparent border-0" className={fieldCls} yearRange="1940:2030" />
       </>
   );
 };

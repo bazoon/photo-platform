@@ -29,8 +29,6 @@ module.exports = [
         adminTypes.push({label: 'moder', value: 1});
       }
 
-
-
       const columnsSchema = {
         'definitions': {},
         '$schema': 'http://json-schema.org/draft-07/schema#', 

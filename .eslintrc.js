@@ -2,10 +2,14 @@ module.exports = {
   'env': {
     'browser': true,
     'commonjs': true,
-    'es6': true
+    'es6': true,
+    'cypress/globals': true
   },
   extends: [
     'eslint:recommended'
+  ],
+  'plugins': [
+    'cypress'
   ],
   'globals': {
     'Atomics': 'readonly',

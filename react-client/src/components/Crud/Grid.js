@@ -137,7 +137,7 @@ export default ({
         {
           canAdd && (
             <div className="mb-4">
-              <Button onClick={handleAdd}>{t("add")}</Button>
+              <Button data-cy="addButton" onClick={handleAdd}>{t("add")}</Button>
             </div>
           )
         }

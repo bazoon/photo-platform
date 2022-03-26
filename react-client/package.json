@@ -92,6 +92,7 @@
     "@editorjs/warning": "^1.2.0",
     "@tailwindcss/postcss7-compat": "^2.1.0",
     "autoprefixer": "^9.8.6",
+    "cypress": "^9.5.1",
     "eslint": "^7.24.0",
     "eslint-plugin-react": "^7.23.2",
     "postcss": "^7.0.35",

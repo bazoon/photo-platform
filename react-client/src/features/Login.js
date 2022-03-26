@@ -9,13 +9,13 @@ import { useMachine } from "@xstate/react";
 import useAuth from "../core/hooks/useAuth";
 
 
-import { inspect } from "@xstate/inspect";
-if (location.href.includes("foto.ru")) {
-  inspect({
-    url: "https://statecharts.io/inspect",
-    iframe: false
-  });
-}
+// import { inspect } from "@xstate/inspect";
+// if (location.href.includes("foto.ru")) {
+//   inspect({
+//     url: "https://statecharts.io/inspect",
+//     iframe: false
+//   });
+// }
 
 const handleChange = setfn => e => setfn(e.target.value);
 const handleChangeCheckbox = setfn => e => setfn(e.target.checked);
@@ -81,14 +81,14 @@ function Main({store}) {
         <form className="w-full p-10 border rounded bg-brown-dark2">
           <div className="grid grid-cols-6 grid-rows-5 gap-12">
             <label className="col-span-2 text-tiny uppercase place-self-end">Имя</label>
-            <input autoFocus value={nickName} onChange={handleChange(setNickName)} className="col-span-4 text-semi-bright text-2xl focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+            <input data-cy="nickName" autoFocus value={nickName} onChange={handleChange(setNickName)} className="col-span-4 text-semi-bright text-2xl focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
             <label className="col-span-2 place-self-end text-tiny uppercase">Пароль</label>
-            <input type="password" value={password} onChange={handleChange(setPassword)} className="col-span-4 text-semi-bright text-2xl focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
+            <input data-cy="password" type="password" value={password} onChange={handleChange(setPassword)} className="col-span-4 text-semi-bright text-2xl focus:outline-none bg-transparent border-solid border-t-0 border-l-0 border-r-0 border-b border-bright"/>
             <input checked={agreed} onChange={handleChangeCheckbox(setAgreed)} className="col-span-2 place-self-end" type="checkbox"/>
             <label className="col-span-4 mr-8 text-tiny">Согласен на обработку личных данных</label>
             <div className="col-span-2"> </div>
             <div className="col-span-4">
-              <Button disabled={!agreed} onClick={handleLogin} className="uppercase text-center">Войти</Button>
+              <Button data-cy="loginButton" disabled={!agreed} onClick={handleLogin} className="uppercase text-center">Войти</Button>
             </div>
           </div>
         </form>

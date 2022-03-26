@@ -96,7 +96,7 @@ function AdminMenu({history, store}) {
         {
           label: t("contests"),
           command: () => history.push("/admin/contests"),
-          disabled: canNot(["contests.view"])
+          disabled: canNot(["contests.view", "contests.view.domain"])
         }
       ]
     }

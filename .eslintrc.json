@@ -4,6 +4,12 @@
     "rules": {
       "additional-rule": "warn"
     },
+    "env": {
+      "cypress/globals": true
+    },
+    "plugins": [
+      "cypress"
+    ],
     "overrides": [
       {
         "files": ["**/*.js?(x)"],

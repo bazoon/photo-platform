@@ -8,6 +8,7 @@ import useAuth from "./core/hooks/useAuth";
 import useLogout from "./core/hooks/useLogout";
 import { locale, PrimeIcons } from "primereact/api";
 import {saveLanguage} from "./core/utils";
+import cn from "classnames";
 
 
 const isActiveMenuItem = item => {
@@ -41,6 +42,13 @@ function MainMenu({store, history}) {
     locale(lang);
   };
 
+
+  const adminItemCls = cn("admin-menu", {
+    "p-menuitem--active": isActiveMenuItem({to: "/admin"}),
+    "p-menuitem--disabled": canNot(["adminMenu.view"]),
+    "p-menuitem--enabled": !canNot(["adminMenu.view"])
+  });
+
   useEffect(() => {
     const links = [
       { 
@@ -49,7 +57,7 @@ function MainMenu({store, history}) {
       },
       {
         label: "admin",
-        className: isActiveMenuItem({to: "/admin"}) ? "p-menuitem--active" : "",
+        className: adminItemCls,
         command: () => history.push("/admin"),
         disabled: canNot(["adminMenu.view"])
       },
@@ -71,6 +79,7 @@ function MainMenu({store, history}) {
       },
       !store.user && {
         label: t("login"),
+        className: "login-link",
         command: () => history.push("/login")
       } || {},
       !store.user && {

@@ -34,12 +34,12 @@ const Section = daggy.taggedSum("Section", {
   None: []
 });
 
-if (location.href.includes("foto.ru")) {
-  inspect({
-    url: "https://statecharts.io/inspect",
-    iframe: false
-  });
-}
+// if (location.href.includes("foto.ru")) {
+//   inspect({
+//     url: "https://statecharts.io/inspect",
+//     iframe: false
+//   });
+// }
 
 const initialContext = {
   isOpen: false,

@@ -2,6 +2,8 @@ run:
 	cd ./react-client; HTTPS=true npm run start
 srv:
 	nodemon srv.js
+srv-test:
+	DB=photo_test nodemon srv.js
 r: 
 	run srv
 start:

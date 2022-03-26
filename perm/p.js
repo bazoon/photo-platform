@@ -4,21 +4,24 @@ const permissions = {
   ],
   superModer: [
     'settings.view', 'adminMenu.view',
-    'jury.create', 'jury.delete', 'jury.update',
+    'admin.create', 'jury.delete', 'jury.update', 'jury.view',
+    'jury.create', 'jury.delete', 'jury.update', 'jury.view',
     'salones.view', 'salones.update',
     'contestRegistations.view', 'contestRegistations.delete', 'contestRegistations.update',
-    'moder.view', 'moder.update',
+    'moders.view', 'moders.update',
     'stats.view.2', 'stats.view.3', 'stats.update.2', 'stats.update.3',
+    'contests.view.domain'
   ],
   domainAdmin: [
     'settings.view', 'adminMenu.view', 'moders.view', 'moders.update', 'moders.delete',
-    'jury.create', 'jury.edit', 'jury.delete', 'jury.update',
+    'jury.create', 'jury.edit', 'jury.delete', 'jury.update', 'jury.view',
     'salones.view', 'salones.delete', 'salones.update',
+    'contests.view.domain',
   ],
   domainModer: [
     'settings.view', 'adminMenu.view',
-    'jury.create', 'jury.edit', 'jury.delete', 'jury.update',
-    'salones.view', 'salones.delete', 'salones.update',
+    'jury.create.domain', 'jury.edit.domain', 'jury.delete.domain', 'jury.update.domain',
+    'salones.view', 'salones.delete', 'salones.update'
   ]
 };
 

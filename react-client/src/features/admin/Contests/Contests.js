@@ -23,6 +23,7 @@ import {findLens, over, view} from "lodash-lens";
 import {asyncPut} from "../../../core/api";
 import {isDefined} from "crocks";
 import MenuConfig from "../MenuConfig";
+import useAuth from "../../../core/hooks/useAuth";
 
 // import { inspect } from "@xstate/inspect";
 // if (location.href.includes("foto.ru")) {
@@ -44,14 +45,14 @@ const columnsFromSchema = ({properties}, t) => {
 const Grid = ({store}) => {
   const { t } = useTranslation("namespace1");
   const [expandedRows, setExpandedRows] = useState([]);
-  const [section, setSection] = useState(-1);
-  
   const [current, send] = useMachine(Machine({api: "api/admin/contests"}), { devTools: true });
   const {context} = current;
   const {records, record, error, isOpen, meta} = context;
   const {onCancel, onOk, onChange, handleAdd, handleEdit} = useCrud(send, record);
   const columnsSchema = meta.columnsSchema || {};
   const fieldsSchema = meta.fieldsSchema || {};
+
+  const { canNot } = useAuth(store.permissions);
 
   const contestSections = [ 
     {
@@ -64,7 +65,8 @@ const Grid = ({store}) => {
     },
     {
       title: "Жюри",
-      Component: Jury
+      Component: Jury,
+      permissions: ["jury.view"]
     },
     {
       title: "Номинации",
@@ -133,7 +135,10 @@ const Grid = ({store}) => {
     return (
       <div style={{width: "100%", overflowX: "auto"}}>
         {
-          contestSections.map(({title}, i) => <div className="inline mr-5"  key={i}><Button className="p-button-outlined p-button-sm p-button-text"  label={title} onClick={() => showSection({id, index: i, title})}/></div>)
+          contestSections.map(({title, permissions = []}, i) => (
+            <Button disabled={canNot(permissions)} key={i} className="mr-5 p-button-outlined p-button-sm p-button-text" label={title} onClick={() => showSection({id, index: i, title})}/>
+          )
+          )
         }
       </div>
     );

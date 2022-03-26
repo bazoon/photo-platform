@@ -1,3 +1,6 @@
+const {getCurrentDomain} = require('../utils/getCurrentDomain');
+const {getSaloneFromContestId} = require('../utils/getCurrentSalone');
+
 module.exports = [
   {
     method: 'GET',
@@ -45,6 +48,17 @@ module.exports = [
         rank,
         userId
       } = request.payload;
+
+      const {permissions} = h.request.auth.credentials;
+      
+      const contestDomain = getCurrentDomain(request);
+      const salone = await getSaloneFromContestId(id)
+
+      console.log(contestDomain, salone.domain);
+
+       if (contestDomain !== salone.domain) {
+          return h.response({error: 'Access denied'}).code(403);
+       }
 
       const jury = await h.models.Jury.create({
         rank,

@@ -71,11 +71,17 @@ module.exports = [
     path: '/api/sections',
     handler: async function (request, h) {
       const domain = getCurrentDomain(request);
-      const contestId = await getCurrentContestIdFromRequest(request);
-      if (!domain) {
-        return {};
-      }
       
+      if (!domain) {
+        return [];
+      }
+
+      const contestId = await getCurrentContestIdFromRequest(request);
+      
+      if (!contestId) {
+        return [];
+      }
+
       const query = `
         SELECT
           sections.id,
@@ -141,7 +147,7 @@ module.exports = [
           and users.id=:userId
       `;
  
-      const contestId = getContestIdFromSection(id);
+      const contestId = await getContestIdFromSection(id);
 
       const getFilename = async p => await getUploadPath({name: p.filename, request, contestId});
 
