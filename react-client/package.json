@@ -95,7 +95,7 @@
     "cypress": "^9.5.1",
     "eslint": "^7.24.0",
     "eslint-plugin-react": "^7.23.2",
-    "postcss": "^7.0.35",
+    "postcss": "^7.0.36",
     "progress-bar-webpack-plugin": "^2.1.0",
     "react-editor-js": "^1.9.0",
     "rescript": "^9.1.4",
