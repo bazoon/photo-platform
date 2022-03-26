@@ -16,9 +16,11 @@ module.exports = async function uploadFiles(f, request) {
   const files = Array.isArray(f) ? f : [f];
   const slug = await getCurrentSlug(request)
   const contestId = await getCurrentContestIdFromRequest(request);
-
   files.forEach(async f => {
     const targetPath = chooseUploadPath(f.filename, slug, contestId);
+
+    console.log('upload files', files, 1, slug, 2, contestId, 3, targetPath);
+
     try {
       await renameP(f.path, targetPath);
     } catch(e) {
