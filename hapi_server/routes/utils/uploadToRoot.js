@@ -16,8 +16,7 @@ module.exports = async function uploadToRoot(f, request) {
   const files = Array.isArray(f) ? f : [f];
   files.forEach(async f => {
     try {
-      console.log(f, uploadPath);
-      await renameP(f.path, `uploadPath/${f.name}`);
+      await renameP(f.path, `uploadPath/${f.filename}`);
     } catch(e) {
       return {e};
     }
