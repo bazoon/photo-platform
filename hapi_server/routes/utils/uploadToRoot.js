@@ -14,12 +14,10 @@ const chooseUploadPath = (filename, slug, contestId) => {
 
 module.exports = async function uploadToRoot(f, request) {
   const files = Array.isArray(f) ? f : [f];
-  const slug = await getCurrentSlug(request)
-  const contestId = await getCurrentContestIdFromRequest(request);
   files.forEach(async f => {
     try {
       console.log(f.path, uploadPath);
-      await renameP(f.path, uploadPath);
+      await renameP(f.path, `uploadPath/${f.name}`);
     } catch(e) {
       return {e};
     }
