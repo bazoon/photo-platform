@@ -17,8 +17,6 @@ const useAuth = (permissions = new Set([])) => {
         return false;
       }
 
-      console.log(ps, permissions);
-
       return !ps.some(p => permissions.has(p));
     }
   };

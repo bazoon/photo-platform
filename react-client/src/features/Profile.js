@@ -46,12 +46,14 @@ const renderTextField = ({name, title, required, input}) => {
 };
 
 const renderDateField = ({name, title, required, input}) => {
+  console.log(1, input.value);
   const d = input.value ? new Date(input.value) : input.value;
+  console.log(2, d);
 
   return (
       <>
         {renderLabel(title, required)}
-        <Calendar value={d} monthNavigator yearNavigator inputClassName="col-span-4 bg-transparent border-0" className={fieldCls} yearRange="1940:2030" />
+        <Calendar value={d} monthNavigator yearNavigator onChange={input.onChange} inputClassName="col-span-4 bg-transparent border-0" className={fieldCls} yearRange="1940:2030" />
       </>
   );
 };
@@ -228,6 +230,8 @@ const Main = ({store}) => {
       saveRequired(changed,form);
     }
   };
+
+  console.log(profile);
 
   return (
     <div className="container flex justify-center flex-1 bg-brown-dark2 text-semi-bright"> 
