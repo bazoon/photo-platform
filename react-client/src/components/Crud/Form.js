@@ -40,7 +40,7 @@ export default function FForm({
   const renderFooter = (submit) => {
     return (
       <div>
-        <Button label="cancel" icon="pi pi-times" onClick={cancel} className="p-button-text" />
+        <Button data-cy="cancel" label="cancel" icon="pi pi-times" onClick={cancel} className="p-button-text" />
         <Button label="Ok" type="submit" icon="pi pi-check" onClick={submit} autoFocus />
       </div>
     );

@@ -36,9 +36,21 @@ module.exports =  [
     method: 'GET',
     path: '/api/admin/admins',
     handler: async function (request, h) {
-      const query = `select CONCAT(first_name, ' ', last_name) as user, admins.user_id, adm_type, organizers.name as organizer,
+      const {permissions} = h.request.auth.credentials;
+      
+      console.log(permissions)
+
+      if (!(permissions.includes('admins.update') || permissions.includes('moders.update') || permissions.includes('domain.moders.update'))) {
+          return h.response({error: 'Access denied'}).code(403);
+      }
+
+      let query = `select CONCAT(first_name, ' ', last_name) as user, admins.user_id, adm_type, organizers.name as organizer,
         organizers.id as organizer_id, adm_type from users, organizers, admins where admins.user_id=users.id
         and admins.organizer_id=organizers.id`
+
+      if (permissions.includes('domain.moders.update')) {
+        query += ' and adm_type=1010';
+      }
 
       const rows = await h.query(query);      
       return rows;

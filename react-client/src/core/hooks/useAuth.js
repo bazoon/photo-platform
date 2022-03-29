@@ -16,6 +16,9 @@ const useAuth = (permissions = new Set([])) => {
       if (permissions.has("all")) {
         return false;
       }
+
+      console.log(ps, permissions);
+
       return !ps.some(p => permissions.has(p));
     }
   };

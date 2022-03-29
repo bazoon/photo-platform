@@ -46,6 +46,7 @@ module.exports = [
       `;
 
 
+
       const info = get('[0]', 
         await h.query(query, {
           replacements: {
@@ -54,6 +55,9 @@ module.exports = [
           }
         })
       );
+
+        
+      if (!info) return {};
 
       const logo = get('[0].content', await h.query(logoQuery, {replacements: { saloneId: info.saloneId}}));
       const bg = get('[0].content', await h.query(bgQuery, {replacements: {saloneId: info.saloneId}}));

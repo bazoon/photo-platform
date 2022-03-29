@@ -19,6 +19,8 @@ import {keys} from "lodash/fp";
 import {findLens, over, view} from "lodash-lens";
 import {asyncPut} from "../../../core/api";
 import SaloneFiles from "../SaloneFiles/SaloneFiles";
+import useAuth from "../../../core/hooks/useAuth";
+
 
 const fieldsFromSchema = ({properties}) => {
   return keys(properties).filter(e => e !== "id").map(name => ({name, ...properties[name]}));
@@ -32,6 +34,8 @@ const Grid = ({store}) => {
   const { t } = useTranslation("namespace1");
   const [expandedRows, setExpandedRows] = useState([]);
   const [section, setSection] = useState(-1);
+
+  const {canNot} = useAuth(store.permissions);
   
   const [current, send] = useMachine(Machine({api: "api/admin/salones"}), { devTools: true });
   const {context} = current;
@@ -144,7 +148,7 @@ const Grid = ({store}) => {
   return (
     <>
       <div className="mb-4">
-        <Button onClick={handleAdd}>{t("add")}</Button>
+        <Button data-cy="addButton" disabled={canNot(["salones.update"])} onClick={handleAdd}>{t("add")}</Button>
       </div>
       <DataTable 
         value={records}

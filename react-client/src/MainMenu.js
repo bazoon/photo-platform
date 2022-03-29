@@ -59,7 +59,7 @@ function MainMenu({store, history}) {
         label: "admin",
         className: adminItemCls,
         command: () => history.push("/admin"),
-        disabled: canNot(["adminMenu.view"])
+        disabled: canNot(["adminMenu.view", "domain.adminMenu.view"])
       },
       {
         name: "ru",

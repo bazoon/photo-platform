@@ -71,7 +71,7 @@ const createAdmin = ({organizer, user, admType}) => {
 const createOrganizer = ({organizer, lang}) => {
   return db.Language.create(lang).then(l => {
     return db.Organizer.create({...organizer, languageId: l.id}).then(o => {
-      return o;
+      return { o, l};
     }).catch(e => {
       return e;
     });
@@ -100,7 +100,7 @@ const createFromQuery = ({query, replacements}) => {
 
 const createSalone = ({organizer, lang, salone}) => {
 
-  return createOrganizer({organizer, lang}).then(o => {
+  return createOrganizer({organizer, lang}).then(({o, l}) => {
 
     return createFromQuery({
       query: 'insert into categories_lexics(id, name, international_name, slug) values(1, :name, :internationalName, :slug) returning id',
@@ -133,18 +133,35 @@ const createSalone = ({organizer, lang, salone}) => {
           ...salone,
           sprSaloneTypeId: id,
         }).then(salone => {
-          return {
-            salone,
-            organizer: o
-          }
+          return db.SaloneAbout.create({
+            saloneId: salone.id,
+            languageId: l.id,
+            name: 'Foo',
+            content: 'create'
+          }).then(sa => {
+
+            return {
+              salone,
+              organizer: o
+            }
+          });
         })
       });
     });
-
-
   });
+};
 
-
+const createContest = ({organizer, lang, salone, contest}) => {
+  return createSalone({organizer, lang, salone}).then(({salone, organizer}) => {
+    return db.Contest.create({
+      ...contest,
+      saloneId: salone.id,
+    }).then(contest => {
+      return {
+        salone, organizer, contest 
+      }
+    })
+  });
 };
 
 const create = ({model, data}) => {
@@ -175,7 +192,7 @@ const createMany = list => {
     });
   })
   console.log('ms', ms);
-  return Promise.all(ms);
+  return Promise.all(ms)
 };
 
 module.exports = (on, config) => {
@@ -184,6 +201,7 @@ module.exports = (on, config) => {
     createOrganizer,
     createAdmin,
     createSalone,
+    createContest,
     create,
     createMany,
     async dropDb() {

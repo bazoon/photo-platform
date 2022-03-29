@@ -42,6 +42,7 @@ import JuryShortList from "./features/JuryShortList";
 import AboutNotMagic from "./features/NotMagic/AboutNotMagic";
 import TechNotMagic from "./features/NotMagic/TechNotMagic";
 import PrizesNotMagic from "./features/NotMagic/PrizesNotMagic";
+import JuryNotMagic from "./features/NotMagic/JuryNotMagic";
 
 
 const MainMenu = lazy(() => import("./MainMenu"));
@@ -176,6 +177,10 @@ function MainApp({store}) {
                 <PrizesNotMagic/>
               </Route>
 
+              <Route path="/jury-notmagic">
+                <JuryNotMagic/>
+              </Route>
+
               <Route path="/">
                 <div className="w-full" style={bgStyle}>
                   <MainPage/>
@@ -225,7 +230,7 @@ function SocialLinks({vkLink = "", twitterLink = "", facebookLink = "", instagra
   return <div className="max-w-max gap-8 grid grid-cols-2 grid-rows-2">
     <a href={vkLink} rel="noreferrer" target="_blank"><Vk /></a>
     <a href={twitterLink} rel="noreferrer" target="_blank"><Twitter /></a>
-    <a href={facebookLink} target="_blank" rel="noreferrer"><Fb /></a>
-    <a href={instagramLink} target="_blank" rel="noreferrer"><Insta /></a>
+    <a href={facebookLink} target="_blank" rel="noreferrer"></a>
+    <a href={instagramLink} target="_blank" rel="noreferrer"></a>
   </div>;
 }

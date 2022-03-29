@@ -72,12 +72,16 @@ const getJuryRole = async (userId, domain) => {
 
 module.exports = {
   getRole: async function (user, domain) {
+    if (!user) return '';
+
     const query = `
       select distinct(admins.adm_type)
       from admins, organizers, salones 
       where admins.organizer_id=organizers.id and salones.organizer_id=organizers.id and
       admins.user_id=:userId and salones.domain=:domain
     `;
+
+
 
     const [role] = await models.sequelize.query(query, {
       replacements: {
@@ -91,7 +95,7 @@ module.exports = {
     let isJury;
 
     try {
-      isJury = await getJuryRole(user.id, domain); 
+      isJury = await getJuryRole(user && user.id, domain); 
     } catch(e) {
       isJury = e;
     }
@@ -115,7 +119,7 @@ module.exports = {
       permissions.push('jury');
     }
 
-    console.log(role, user.id, domain);
+    console.log('ROLE', role, 1, user && user.id, 2, domain, 3);
 
     return t;
     // return ['superAdmin']

@@ -11,7 +11,7 @@ function AdminMenu({history, store}) {
   window.store=store;
   const { t } = useTranslation("namespace1");
   const { canNot } = useAuth(store.permissions);
-
+    
 
   const items = [
     {
@@ -25,7 +25,7 @@ function AdminMenu({history, store}) {
         {
           label: t("admins"),
           command: () => history.push("/admin/admins"),
-          disabled: canNot(["admins.view", "moders.view"])
+          disabled: canNot(["admins.view", "moders.view", "domain.admins.view", "domain.moders.view"])
         },
         // {
         //   label: t("moders"),
@@ -96,7 +96,7 @@ function AdminMenu({history, store}) {
         {
           label: t("contests"),
           command: () => history.push("/admin/contests"),
-          disabled: canNot(["contests.view", "contests.view.domain"])
+          disabled: canNot(["contests.view", "domain.contests.view"])
         }
       ]
     }

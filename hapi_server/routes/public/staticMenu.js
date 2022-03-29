@@ -84,7 +84,7 @@ const staticMenu = {
         }
 
       ];
-    } else if (domain === 'notmagic.ru') {
+    } else if (domain === 'foto.ru') {
 
       return [
         {
@@ -98,6 +98,10 @@ const staticMenu = {
         {
           name: 'prizes-notmagic',
           to: '/prizes-notmagic'
+        },
+        {
+          name: 'jury-notmagic',
+          to: '/jury-notmagic'
         }
       ];
 

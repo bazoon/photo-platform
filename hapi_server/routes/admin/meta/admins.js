@@ -25,9 +25,16 @@ module.exports = [
         adminTypes.push({label: 'admin', value: 0});
       }
 
-      if (permissions.includes('moders.update') || permissions.includes('all')) {
+
+      if (permissions.includes('moders.update')  || permissions.includes('all')) {
         adminTypes.push({label: 'moder', value: 1});
       }
+
+      if (permissions.includes('domain.moders.update') || permissions.includes('all')) {
+        adminTypes.push({label: 'domainModer', value: 1010});
+      }
+
+
 
       const columnsSchema = {
         'definitions': {},

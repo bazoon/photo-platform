@@ -148,14 +148,21 @@ module.exports = [
           contests, salones
           where contests.salone_id=salones.id
         `;
-      } else if (permissions.includes('contests.view.domain')) {
+      } else if (permissions.includes('domain.contests.view')) {
         query = `
           select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
             show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, maxsize, max_count_img, inworknow from
           contests, salones
           where contests.salone_id=salones.id and salones.domain=:domain
         `;
-      } 
+      } else if (permissions.includes('contests.view')) {
+        query = `
+          select salones.name as salone, salone_id, contests.id, subname, years, date_start, date_stop, date_juri_end, date_rate_show,
+            show_type, show_rate_state, democraty, pay_type, section_count, maxrate, max_weight, maxsize, max_count_img, inworknow from
+          contests, salones
+          where contests.salone_id=salones.id
+        `;
+      }
 
       if (!query) return [];
 

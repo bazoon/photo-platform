@@ -57,24 +57,29 @@ const Grid = ({store}) => {
   const contestSections = [ 
     {
       title: "О конкурсе",
-      Component: About
+      Component: About,
+      permissions: ["contestAbout.view", "domain.contestAbout.view"]
     },
     {
       title: "Фотографии",
-      Component: Photos
+      Component: Photos,
+      permissions: ["photos.view", "domain.photos.view"]
     },
     {
       title: "Жюри",
       Component: Jury,
-      permissions: ["jury.view"]
+      testId: "jury",
+      permissions: ["jury.view", "domain.jury.view"]
     },
     {
       title: "Номинации",
-      Component: Nominations
+      Component: Nominations,
+      permissions: ["nominations.view", "domain.nominations.view"]
     },
     {
       title: "Результаты",
-      Component: Results
+      Component: Results,
+      permissions: ["results.view", "domain.results.view"]
     },
     {
       title: "Награды",
@@ -82,15 +87,18 @@ const Grid = ({store}) => {
     },
     {
       title: "Заявки",
-      Component: Applications
+      Component: Applications,
+      permissions: ["applications.view", "domain.applications.view"]
     },
     {
       title: "Модерация",
-      Component: Moder
+      Component: Moder,
+      permissions: ["moderate.view", "domain.moderate.view"]
     },
     {
       title: "Шорт лист",
-      Component: ShortList
+      Component: ShortList,
+      permissions: ["shortList.view", "domain.shortList.view"]
     },
     {
       title: "Меню",
@@ -135,8 +143,8 @@ const Grid = ({store}) => {
     return (
       <div style={{width: "100%", overflowX: "auto"}}>
         {
-          contestSections.map(({title, permissions = []}, i) => (
-            <Button disabled={canNot(permissions)} key={i} className="mr-5 p-button-outlined p-button-sm p-button-text" label={title} onClick={() => showSection({id, index: i, title})}/>
+          contestSections.map(({title, permissions = [], testId}, i) => (
+            <Button disabled={canNot(permissions)} key={i} data-cy={testId} className="mr-5 p-button-outlined p-button-sm p-button-text" label={title} onClick={() => showSection({id, index: i, title})}/>
           )
           )
         }
@@ -224,7 +232,7 @@ const Grid = ({store}) => {
   return (
     <>
       <div className="mb-4">
-        <Button onClick={handleAdd}>{t("add")}</Button>
+        <Button data-cy="addButton" onClick={handleAdd}>{t("add")}</Button>
       </div>
       <DataTable 
         value={records}
