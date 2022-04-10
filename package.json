@@ -73,7 +73,7 @@
     "rescript": "^9.1.4",
     "sequelize-cli": "^5.5.1",
     "shar": "^0.2.0",
-    "shelljs": "^0.8.4",
+    "shelljs": "^0.8.5",
     "systeminformation": "^5.8.0",
     "telegraf": "^4.4.1"
   }
