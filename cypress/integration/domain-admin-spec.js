@@ -10,15 +10,16 @@ import {
   genDomainModer,
 } from './gens';
 
+
 const globals = {};
 
 
 describe('Domain admin', () => {
   before(() => {
     cy.task('dropDb');
-    const user = genUser();
-    const user1 = genUser();
-
+    const user = genUser({email: 'one'});
+    const user1 = genUser({email: 'two'});
+    
     cy.task('createMany', [
       {
         model: 'User',
@@ -56,14 +57,12 @@ describe('Domain admin', () => {
       cy.task('createContest', {
         organizer,
         lang: genLang(),
-        salone: genSalone({ domain: 'foto.ru' }),
+        salone: genSalone({domain: 'foto.ru'}),
         contest: genContest(),
       }).then(({ salone, organizer, contest }) => {
         globals.salone = salone;
         globals.organizer = organizer;
         globals.contest = contest;
-
-        console.log(111, user);
 
         cy.task('createAdmin', { organizer, user: superAdmin, admType: 0 });
         cy.task('createAdmin', { organizer, user: moder, admType: 1 });
@@ -72,11 +71,10 @@ describe('Domain admin', () => {
       });
     });
 
-
     cy.task('createMany', [
       {
         model: 'User',
-        data: user,
+        data: user1,
       },
       {
         model: 'User',
@@ -84,7 +82,7 @@ describe('Domain admin', () => {
       },
       {
         model: 'User',
-        data: genDomainModer(),
+        data: genDomainModer(),       
       },
     ]).then(([user, domainAdmin, domainModer]) => {
       const organizer = genOrganizer();
@@ -96,12 +94,12 @@ describe('Domain admin', () => {
       cy.task('createContest', {
         organizer,
         lang: genLang(),
-        salone: genSalone({ domain: 'outside.ru' }),
+        salone: genSalone(),
         contest: genContest(),
       }).then(({ salone, organizer, contest }) => {
-        globals.salone = salone;
-        globals.organizer = organizer;
-        globals.contest = contest;
+        globals.saloneOutside = salone;
+        globals.organizerOutside = organizer;
+        globals.contestOutside = contest;
 
         cy.task('createAdmin', { organizer, user: domainAdmin, admType: 1000 });
         cy.task('createAdmin', { organizer, user: domainModer, admType: 1010 });
@@ -127,7 +125,6 @@ describe('Domain admin', () => {
       expect(p).to.contain(domainModer.id);
     });
   });
-
 
   it('Can not create admins and moders', () => {
     const { superAdmin, organizer, salone, domainAdmin, user } = globals;
@@ -182,7 +179,7 @@ describe('Domain admin', () => {
   });
 
 
-  it.skip('Can assign jury', () => {
+  it('Can assign jury', () => {
     const { superAdmin, organizer, salone, domainAdmin, user } = globals;
 
     cy.visit('https://foto.ru:3000');
@@ -207,7 +204,7 @@ describe('Domain admin', () => {
   });
 
 
-  it.skip('Can not add salone', () => {
+  it('Can not add salone', () => {
     const { superAdmin, organizer, salone, domainAdmin, user } = globals;
     cy.visit('https://foto.ru:3000');
     cy.get('.login-link').click();
@@ -217,5 +214,44 @@ describe('Domain admin', () => {
     cy.visit('https://foto.ru:3000/admin/salones');
     cy.get('[data-cy=addButton]').should('be.disabled');
   });
+
+
+  it.only('On create moder he can not select salones from outside his salone', () => {
+    const { superAdmin, organizer, salone, domainAdmin, user } = globals;
+
+    cy.visit('https://foto.ru:3000');
+    cy.get('.login-link').click();
+    cy.get('[data-cy=nickName]').type(domainAdmin.nickName);
+    cy.get('[data-cy=password]').type(domainAdmin.psw);
+    cy.get('[data-cy=loginButton]').click({timeout: 1000});
+    cy.visit('https://foto.ru:3000/admin/admins');
+
+    // Create admin
+    // cy.get('[data-cy=addButton]').should('not.be.disabled');
+    cy.get('[data-cy=addButton]').click({timeout: 5000});
+    
+    cy.get(`[aria-label=${organizer.name}]`).click();
+    // cy.get('#userId').click();
+    // cy.get(`[aria-label="${user.firstName} ${user.lastName}"]`).click();
+    // cy.get('#admType').click();
+    // cy.get('[aria-label="admin"]').should('not.exist');
+    // cy.get('[data-cy=cancel]').click()
+
+    // cy.get('table[role=grid]').should(p => {
+    //   expect(p).to.contain(`${user.firstName} ${user.lastName}`)
+    // });
+
+
+    // cy.get(`[aria-label=${organizer.name}]`).click();
+    // cy.get('#userId').click();
+    // cy.get(`[aria-label="${user.firstName} ${user.lastName}"]`).click();
+    // cy.get('#admType').click();
+    // cy.get('[aria-label="moder"]').should('not.exist');
+    // cy.get('[data-cy=cancel]').click();
+
+
+  });
+
+
 });
 

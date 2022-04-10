@@ -7,16 +7,28 @@ module.exports = [
     method: 'GET',
     path: '/api/admin/saloneSettings',
     handler: async function (request, h) {
+      const { permissions } = h.request.auth.credentials
       const user = get('auth.credentials', request);
       const domain = getCurrentDomain(request);
 
-      const query = `
+      let query = '';
+
+      let baseQuery = `
         select salon_settings.id, setting_id, salone_id, name as salone, code as setting, content, keycheck 
         from salon_settings, salones, settings
-        where salon_settings.salone_id=salones.id and salon_settings.setting_id=settings.id and salones.domain=:domain
+        where salon_settings.salone_id=salones.id and salon_settings.setting_id=settings.id 
       `;
-      const saloneSettings = await h.query(query, { replacements: { domain: domain } });
-      return saloneSettings;
+
+      if (permissions.includes('all')) {
+        query += baseQuery;
+      } else if (permissions.includes('domain.settings.update.3')) {
+        query += baseQuery + ' and levelable >= 3 and salones.domain=:domain';
+      } else if (permissions.includes('domain.settings.update.2')) {
+        query += baseQuery + ' and levelable >= 2 and salones.domain=:domain';
+      } else if (permissions.includes('domain.settings.update.1')) {
+        query += baseQuery + ' and levelable >= 1 and salones.domain=:domain';
+      }
+      return await h.query(query, { replacements: { domain: domain } });
     },
     options: {
       tags: ['api'],
@@ -66,9 +78,10 @@ module.exports = [
         select salon_settings.id, name as salone, code as setting, keycheck, content from
         salones, settings, salon_settings where
         salones.id=salon_settings.salone_id and settings.id=salon_settings.setting_id
+        and salon_settings.id=:id
       `;
 
-      const [r] = await h.query(query)
+      const [r] = await h.query(query, { replacements: { id }});
       return r;
     },
     options: {

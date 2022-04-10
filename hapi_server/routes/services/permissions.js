@@ -78,19 +78,35 @@ module.exports = {
       select distinct(admins.adm_type)
       from admins, organizers, salones 
       where admins.organizer_id=organizers.id and salones.organizer_id=organizers.id and
+      admins.user_id=:userId
+    `;
+    
+    const domainQuery = `
+      select distinct(admins.adm_type)
+      from admins, organizers, salones 
+      where admins.organizer_id=organizers.id and salones.organizer_id=organizers.id and
       admins.user_id=:userId and salones.domain=:domain
     `;
 
 
-
-    const [role] = await models.sequelize.query(query, {
+    let [role] = await models.sequelize.query(query, {
       replacements: {
         userId: user.id,
-        domain: domain.split(':')[0]
       }
     });
-    
-    console.log(1, role, 2, domain);
+ 
+    let r = get('[0].adm_type', role);
+
+    if (!(r === 0 || r === 1)) {
+      [role] = await models.sequelize.query(domainQuery, {
+        replacements: {
+          userId: user.id,
+          domain: domain.split(':')[0]
+        }
+      });
+      r = get('[0].adm_type', role);
+    }
+
 
     let isJury;
 
@@ -100,7 +116,6 @@ module.exports = {
       isJury = e;
     }
 
-    const r = get('[0].adm_type', role);
 
     const t = {
       0: 'superAdmin',
@@ -118,8 +133,9 @@ module.exports = {
     if (isJury) {
       permissions.push('jury');
     }
-
-    console.log('ROLE', role, 1, user && user.id, 2, domain, 3);
+  
+    console.log(1, r, 3)
+    // console.log('ROLE', role, 1, user && user.id, 2, domain, 3);
 
     return t;
     // return ['superAdmin']

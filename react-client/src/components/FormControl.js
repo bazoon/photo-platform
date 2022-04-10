@@ -76,7 +76,9 @@ const getFormErrorMessage = (meta) => {
       <Field name={name}  render={({ input, meta }) => (
         <div className="p-field">
           <label htmlFor={name} className={classNames({ "p-error": isFormFieldValid(meta) })}>{title} {required && <sup className="text-red-500">*</sup>}</label>
-          <Dropdown id={name} {...input} options={items?.enum} optionLabel="label" />
+          <div data-cy={`select-${field.name}`}>
+            <Dropdown id={name} {...input} options={items?.enum} optionLabel="label" />
+          </div>
           {getFormErrorMessage(meta)}
         </div>
       )} />

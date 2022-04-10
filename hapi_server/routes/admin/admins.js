@@ -38,7 +38,7 @@ module.exports =  [
     handler: async function (request, h) {
       const {permissions} = h.request.auth.credentials;
       
-      console.log(permissions)
+      console.log('PERMS', permissions)
 
       if (!(permissions.includes('admins.update') || permissions.includes('moders.update') || permissions.includes('domain.moders.update'))) {
           return h.response({error: 'Access denied'}).code(403);

@@ -130,3 +130,5 @@ tg.pub
 tg.pub.pub
 db_backup
 db_backup
+test-results/
+playwright-report/

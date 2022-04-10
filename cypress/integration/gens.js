@@ -1,25 +1,72 @@
-const random = () => Math.random().toString().slice(0, 5);
+const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-export const genUser = () => {
+function rndString(length) {
+    let result = '';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+}
+
+const genDate = () => {
+  return (new Date()).toUTCString();
+};
+
+const casual = {
+  get first_name() {
+    return 'first_name' + rndString(8);
+  },
+  get last_name() {
+    return 'last_name' + rndString(8);
+  },
+  get domain_first_name() {
+    return 'domain_first_name' + rndString(4);
+  },
+  get domain_last_name() {
+    return 'domain_last_name' + rndString(4);
+  },
+  get domain_username() {
+    return 'domain_username' + rndString(4);
+  },
+  get username() {
+    return 'nickname' + rndString(8);
+  },
+  get domain() {
+    return 'domain' + rndString(8);
+  },
+  get salone_name() {
+    return 'salone_name' + rndString(8);
+  },
+  get email() {
+    return 'email' + rndString(8);
+  },
+  get name() {
+    return 'name' + rndString(8);
+  },
+};
+
+const genUser = ({email}) => {
   return {
-    firstName: 'John',
-    lastName: 'Smith',
-    nickName: 'js' + random(),
+    firstName: casual.first_name,
+    lastName: casual.last_name,
+    nickName: casual.username,
     psw: '111',
-    email: `john${Math.random()}@example.com`,
+    email: email || casual.email,
     userType: 1,
     emailState: 1,
     rowState: 1,
   };
 };
 
-export const genSuperAdmin = () => {
+const genSuperAdmin = () => {
   return {
-    firstName: 'Super',
-    lastName: 'Admin',
-    nickName: 'super' + random(),
+    firstName: 'SA-' + casual.first_name,
+    lastName: casual.last_name,
+    nickName: casual.username,
     psw: '111',
-    email: `john${Math.random()}@example.com`,
+    email: casual.email,
     userType: 0,
     emailState: 1,
     rowState: 1,
@@ -27,13 +74,13 @@ export const genSuperAdmin = () => {
   };
 };
 
-export const genModer = () => {
+const genModer = () => {
   return {
-    firstName: 'Moder',
-    lastName: 'M',
-    nickName: 'moder' + random(),
+    firstName: 'MO-' + casual.first_name,
+    lastName: casual.last_name,
+    nickName: casual.username,
     psw: '111',
-    email: `john${Math.random()}@example.com`,
+    email: casual.email,
     userType: 0,
     emailState: 1,
     rowState: 1,
@@ -41,13 +88,13 @@ export const genModer = () => {
   };
 };
 
-export const genDomainAdmin = () => {
+const genDomainAdmin = () => {
   return {
-    firstName: 'Domain',
-    lastName: 'Admin',
-    nickName: 'domainAdmin' + random(),
+    firstName: 'DA-' + casual.domain_first_name,
+    lastName: casual.domain_last_name,
+    nickName: casual.domain_username,
     psw: '111',
-    email: `john${Math.random()}@example.com`,
+    email: casual.email,
     userType: 0,
     emailState: 1,
     rowState: 1,
@@ -55,13 +102,13 @@ export const genDomainAdmin = () => {
   };
 };
 
-export const genDomainModer = () => {
+const genDomainModer = () => {
   return {
-    firstName: 'Domain',
-    lastName: 'Moder',
-    nickName: 'domainModer' + random(),
+    firstName: 'DM-'+casual.domain_first_name + '-M',
+    lastName: casual.last_name,
+    nickName: casual.username,
     psw: '111',
-    email: `john${Math.random()}@example.com`,
+    email: casual.email,
     userType: 0,
     emailState: 1,
     rowState: 1,
@@ -69,32 +116,32 @@ export const genDomainModer = () => {
   };
 };
 
-export const genLang = () => {
+const genLang = () => {
   return {
     name: 'Russian',
     short: 'ru'
   };
 }
-
-export const genOrganizer = () => {
+const genOrganizer = () => {
   return {
-    name: 'Organizer1',
-    emailSys: 'a@a.com',
-    emailPub: 'b@a.com',
+    name: casual.name,
+    emailSys: casual.email,
+    emailPub: casual.email,
     virtual: 1,
     smtpUsePub: 0,
-    dateCreate: new Date(),
+    dateCreate: genDate(),
     rowState: 1,
     userType: 0,
     emailState: 1,
-    dateStatus: new Date()
+    dateStatus: genDate()
   };
 };
 
-export const genSalone = ({domain}) => {
+const genSalone = (p) => {
+  const domain = p && p.domain || casual.domain;
   return {
     sprSaloneTypeId: 0,
-    name: `salone-${Math.random()}`,
+    name: casual.salone_name,
     regular: 1,
     private: 0,
     domain,
@@ -104,13 +151,13 @@ export const genSalone = ({domain}) => {
   };
 };
 
-export const genContest = () => {
+const genContest = () => {
   return {
-    subname: `contest-${Math.random()}`,
-    dateStart: new Date(),
-    dateStop: new Date(),
-    dateJuriEnd: new Date(),
-    dateRateShow: new Date(),
+    subname: casual.name,
+    dateStart: genDate(),
+    dateStop: genDate(),
+    dateJuriEnd: genDate(),
+    dateRateShow: genDate(),
     showType: 0,
     showRateState: 0,
     democraty: 0,
@@ -118,6 +165,31 @@ export const genContest = () => {
     inworknow: true
   };
 };
+
+
+const genSettings = ({levelable}) => {
+  return {
+    code: casual.name,
+    levelable,
+    enable: true,
+    type_set: 'string'
+  };
+};
+
+module.exports = {
+  genUser,
+  genSuperAdmin, 
+  genModer, 
+  genDomainAdmin,
+  genDomainModer,
+  genLang, 
+  genOrganizer, 
+  genSalone, 
+  genContest,
+  genSettings
+};
+
+
 
 
 

@@ -76,10 +76,10 @@ export default ({
       return (
         <div className="flex w-40">
           {
-            <Button disabled={!canEdit} icon="pi pi-pencil" className="mr-5 p-button-rounded p-button-success" onClick={() => handleEdit(rowData)} />
+            <Button disabled={!canEdit} icon="pi pi-pencil" className="mr-5 p-button-rounded p-button-success editButton" onClick={() => handleEdit(rowData)} />
           }
           {
-            <Button disabled={!canDelete} icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={e => onDelete(e, rowData)} />
+            <Button disabled={!canDelete} icon="pi pi-trash" className="p-button-rounded p-button-warning delButton" onClick={e => onDelete(e, rowData)} />
           }
 
           {
@@ -135,11 +135,9 @@ export default ({
         <div className="text-lg text-3xl">{title}</div>
         {Toolbar && <Toolbar refresh={() => send("load")} selection={selection}/>}
         {
-          canAdd && (
-            <div className="mb-4">
-              <Button data-cy="addButton" onClick={handleAdd}>{t("add")}</Button>
-            </div>
-          )
+          <div className="mb-4">
+            <Button disabled={!canAdd} data-cy="addButton" onClick={handleAdd}>{t("add")}</Button>
+          </div>
         }
         <DataTable 
           value={records} 

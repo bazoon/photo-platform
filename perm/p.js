@@ -9,7 +9,7 @@ const permissions = {
     'salones.view', 'salones.update',
     'contestRegistations.view', 'contestRegistations.delete', 'contestRegistations.update',
     'moders.view', 'moders.update',
-    'stats.view.2', 'stats.view.3', 'stats.update.2', 'stats.update.3',
+    'stats.view.2', 'stats.view.3', 'stats.update.2', 'stats.update.3', 'domain.settings.update.2',
     'contests.view'
   ],
   domainAdmin: [
@@ -18,11 +18,12 @@ const permissions = {
     'salones.view', 'salones.delete', 'salones.update',
     'contests.view', 'adminMenu.view', 'nominations.view', 'results.view', 
     'applications.view', 'moderate.view', 'shortList.view', 'photos.view',
-    'domain.photos.view', 'contestAbout.view'
+    'domain.photos.view', 'contestAbout.view', 'domain.settings.update.1'
   ].map(e => `domain.${e}`),
   domainModer: [
     'settings.view', 'adminMenu.view', 'contests.view', 'jury.view',
     'jury.create.domain', 'jury.edit.domain', 'jury.delete.domain', 'jury.update.domain',
+    'domain.settings.update.3', 'domain.saloneSettings.view.3', 'domain.saloneSettings.update.3'
   ]
 };
 

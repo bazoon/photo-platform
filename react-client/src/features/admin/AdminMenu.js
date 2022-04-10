@@ -35,10 +35,11 @@ function AdminMenu({history, store}) {
       ]
     },
     {
-      label: t("settings"),
+      label: t("allSettings"),
       items: [
         {
           label: t("settings"),
+          className: "settings",
           command: () => history.push("/admin/settings"),
           disabled: canNot(["settings.view"])
         },
@@ -50,7 +51,7 @@ function AdminMenu({history, store}) {
         {
           label: t("saloneSettings"),
           command: () => history.push("/admin/saloneSettings"),
-          disabled: canNot(["saloneSettings.view"])
+          disabled: canNot(["saloneSettings.view", "domain.saloneSettings.view", "domain.saloneSettings.view.3"])
         },
         {
           label: t("languages"),

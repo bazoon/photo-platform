@@ -45,8 +45,8 @@ function MainMenu({store, history}) {
 
   const adminItemCls = cn("admin-menu", {
     "p-menuitem--active": isActiveMenuItem({to: "/admin"}),
-    "p-menuitem--disabled": canNot(["adminMenu.view"]),
-    "p-menuitem--enabled": !canNot(["adminMenu.view"])
+    "p-menuitem--disabled": canNot(["adminMenu.view", "domain.adminMenu.view"]),
+    "p-menuitem--enabled": !canNot(["adminMenu.view", "domain.adminMenu.view"])
   });
 
   useEffect(() => {

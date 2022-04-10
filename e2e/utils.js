@@ -1,10 +1,7 @@
 const { QueryTypes } = require('sequelize');
-const db = require('../../models/index');
-const {query} = require('../../srv');
+const db = require('../models/index');
 const bcrypt = require('bcryptjs');
-
 const { Pool, Client } = require('pg')
-
 const _ = require('lodash');
 
 const rndString = n => Math.random().toString(36).substring(0, n);
@@ -74,6 +71,7 @@ const createOrganizer = ({organizer, lang}) => {
 
       return { o, l };
     }).catch(e => {
+      console.log('catch createOrganizer', e)
       return e;
     });
   });
@@ -200,22 +198,17 @@ const createMany = list => {
   return Promise.all(ms)
 };
 
-module.exports = (on, config) => {
-  on('task', {
-    createUser,
-    createOrganizer,
-    createAdmin,
-    createSalone,
-    createContest,
-    create,
-    createMany,
-    async dropDb() {
-      return db.sequelize.query('TRUNCATE TABLE ' + tableNames.join(', '))
-    },
-  })
-
-
-
+module.exports = {
+  createUser,
+  createOrganizer,
+  createAdmin,
+  createSalone,
+  createContest,
+  create,
+  createMany,
+  dropDb() {
+    return db.sequelize.query('TRUNCATE TABLE ' + tableNames.join(', '))
+  }
 }
 
 

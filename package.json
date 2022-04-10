@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "prod-restart": "git pull && pm2 restart server.js",
     "re:build": "rescript",
     "re:start": "rescript build -w"
@@ -25,6 +24,7 @@
     "bcryptjs": "^2.4.3",
     "casbin": "^5.11.5",
     "casbin-sequelize-adapter": "^2.3.1",
+    "casual": "^1.6.2",
     "chalk": "^5.0.0",
     "classnames": "^2.3.1",
     "crocks": "^0.12.4",
@@ -42,6 +42,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "lodash-lens": "^1.0.3",
+    "mocker-data-generator": "^2.12.0",
     "nodemailer": "^6.3.1",
     "nodemon": "^2.0.14",
     "pg": "^8.7.3",
@@ -54,11 +55,11 @@
     "typescript": "^3.6.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.20.2",
     "@welldone-software/why-did-you-render": "^6.2.1",
     "add": "^2.0.6",
     "axios": "^0.19.2",
     "bs-platform": "^9.0.2",
-    "cypress": "^9.5.1",
     "eslint-plugin-cypress": "^2.12.1",
     "faker": "^5.5.3",
     "gentype": "^4.2.0",

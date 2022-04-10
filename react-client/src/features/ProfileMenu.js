@@ -4,6 +4,7 @@ import {useHistory} from "react-router-dom";
 import { SlideMenu } from "primereact/slidemenu";
 import useLogout from "../core/hooks/useLogout";
 import {collect} from "react-recollect";
+import useAuth from "../core/hooks/useAuth";
 
 const isActiveMenuItem = item => {
   return location.href.includes(item.to) || (item.items && item.items.some(isActiveMenuItem));
@@ -21,21 +22,24 @@ const setTemplateForItems = (items = [], history, t) => {
   return [...items];
 };
 
-export function ProfileMenu({store}) {
+export function ProfileMenu(p) {
+  const store = p.store;
+  debugger;
   const [links, setLinks] = useState([]);
   const { t, i18n } = useTranslation("namespace1");
   const history = useHistory();
   const logout = useLogout(store);
+  const {can} = useAuth(store.permissions);
 
   useEffect(() => {
     const links = [
-     store?.role?.isJury && {
+     (can(["all"]) || store?.role?.isJury) && {
         name: t("jury"),
         to: "jury",
         label: t("jury"),
         command: () => history.push("/jury-analytics")
       } || {},
-     store?.role?.isJury && {
+     (can(["all"]) || store?.role?.isJury) && {
         name: t("short-list"),
         to: "short-list",
         label: t("short-list"),

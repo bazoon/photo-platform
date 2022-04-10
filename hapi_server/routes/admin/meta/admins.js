@@ -5,15 +5,28 @@ module.exports = [
     method: 'GET',
     path: '/api/admin/admins/meta',
     handler: async function (request, h) {
-      const { permissions } = h.request.auth.credentials
+      const { permissions } = h.request.auth.credentials;
+      console.log('PERMISSIONS', permissions);
       const domain = getCurrentDomain(request);
 
       const users = await h.query('select CONCAT("first_name", \' \', "last_name") as label, id as value from users');
-      const organizers = await h.query(`
-        select distinct organizers.name as label, organizers.id as value 
-        from organizers, salones
-        where salones.domain=:domain
-      `, {
+      
+      let organizersQuery = '';
+
+      if (permissions.includes('all')) {
+        organizersQuery = `
+          select distinct organizers.name as label, organizers.id as value
+          from organizers
+        `
+      } else {
+        organizersQuery = `
+          select distinct organizers.name as label, organizers.id as value 
+          from organizers, salones
+          where salones.domain=:domain and organizers.id=salones.organizer_id
+        `
+      }
+
+      const organizers = await h.query(organizersQuery, {
         replacements: {
           domain
         }
@@ -33,8 +46,6 @@ module.exports = [
       if (permissions.includes('domain.moders.update') || permissions.includes('all')) {
         adminTypes.push({label: 'domainModer', value: 1010});
       }
-
-
 
       const columnsSchema = {
         'definitions': {},
