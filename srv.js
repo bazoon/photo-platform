@@ -35,7 +35,7 @@ const toCamel = (s) => {
 const init = async () => {
   const server = Hapi.server({
     port: process.env.APP_PORT,
-    host: 'localhost',
+    host: process.env.HOST,
     routes: {
       cors: {
         origin: ['*'], 

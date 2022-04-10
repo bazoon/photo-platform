@@ -336,6 +336,8 @@ module.exports = [
         return {};
       }
 
+      console.log('DOM', domain)
+
       const contest = await getContestFromSection(sectionId);
 
       if (!contest) {

@@ -22,9 +22,7 @@ const setTemplateForItems = (items = [], history, t) => {
   return [...items];
 };
 
-export function ProfileMenu(p) {
-  const store = p.store;
-  debugger;
+export const ProfileMenu = collect(function ProfileMenu({store}) {
   const [links, setLinks] = useState([]);
   const { t, i18n } = useTranslation("namespace1");
   const history = useHistory();
@@ -73,13 +71,12 @@ export function ProfileMenu(p) {
     ];
       
     setLinks(setTemplateForItems(links, history, t));
-  }, [store.role, store.user, location.href, i18n.language]);
+  }, [store.role, store.user, location.href, i18n.language, store.permissions]);
 
 
   return (
     <SlideMenu model={links} className="bg-brown-medium border-0"/>
   );
 
-}
-
+});
 export default collect(ProfileMenu);
