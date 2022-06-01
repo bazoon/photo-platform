@@ -50,7 +50,7 @@
     "ramda": "^0.26.1",
     "react-pdf": "^5.5.0",
     "sequelize": "^6.6.2",
-    "sharp": "^0.28.3",
+    "sharp": "^0.30.5",
     "simple-json-db": "^1.2.3",
     "typescript": "^3.6.4"
   },
