@@ -39,7 +39,7 @@
     "humps": "^2.0.1",
     "im-resize": "^2.3.2",
     "joi": "17.x",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.21",
     "lodash-lens": "^1.0.3",
     "mocker-data-generator": "^2.12.0",
