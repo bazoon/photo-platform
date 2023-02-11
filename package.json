@@ -44,7 +44,7 @@
     "lodash-lens": "^1.0.3",
     "mocker-data-generator": "^2.12.0",
     "nodemailer": "^6.3.1",
-    "nodemon": "^2.0.14",
+    "nodemon": "^2.0.20",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.3",
     "ramda": "^0.26.1",
