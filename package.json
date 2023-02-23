@@ -49,7 +49,7 @@
     "pg-hstore": "^2.3.3",
     "ramda": "^0.26.1",
     "react-pdf": "^5.5.0",
-    "sequelize": "^6.6.2",
+    "sequelize": "^6.28.2",
     "sharp": "^0.28.3",
     "simple-json-db": "^1.2.3",
     "typescript": "^3.6.4"
